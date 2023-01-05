@@ -1,4 +1,4 @@
-package cc.trixey.invero.panel
+package cc.trixey.invero.bukkit.panel
 
 import cc.trixey.invero.common.*
 
@@ -9,7 +9,7 @@ import cc.trixey.invero.common.*
 class FreeformPanel(
     parent: PanelContainer,
     weight: PanelWeight,
-    scale: Pair<Int, Int>,
+    override val scale: ScaleFreeform,
     locate: Pos
 ) : PanelInstance(parent, weight, scale, locate), ElementalPanel {
 
@@ -19,12 +19,10 @@ class FreeformPanel(
         return elements
     }
 
-    var viewport: Pair<Int, Int> = 0 to 0
-
-    fun setViewport(x: Int, y: Int) {
-        viewport = x to y
-    }
-
-
+    var viewport: Pos = Pos(0 to 0)
+        set(value) {
+            field = value
+            scale.viewport = value
+        }
 
 }

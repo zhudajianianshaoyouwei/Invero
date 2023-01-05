@@ -6,7 +6,7 @@ package cc.trixey.invero.common
  */
 class ElementMap : Elemap {
 
-    private val elementStatic = hashMapOf<ElementStatic, Positions>()
+    internal val elementStatic = hashMapOf<ElementStatic, Positions>()
 
     private val elementDynamic = mutableSetOf<ElementDynamic>()
 
@@ -18,12 +18,26 @@ class ElementMap : Elemap {
         elementStatic.forEach { it.key.block(it.value) }
     }
 
-    fun find(element: Element): Positions? {
-        return elementStatic[element] ?: elementDynamic.find { it == element }?.getDynamicPositions()
+    fun forEach(block: Element.() -> Unit) {
+        elementStatic.forEach { it.key.block() }
+        elementDynamic.forEach(block)
     }
 
-    override fun setElement(pos: Pos, element: ElementStatic) {
-        elementStatic.computeIfAbsent(element) { Positions() }.add(pos)
+    fun find(element: Element): Positions? {
+        return elementStatic[element] ?: elementDynamic.find { it == element }?.getDynamicPositions().also {
+            println(
+                """
+                    ---
+                    Notfound in static
+                    ${elementStatic.size}
+                    ${elementStatic[element]}
+                """.trimIndent()
+            )
+        }
+    }
+
+    override fun addElement(element: ElementStatic, pos: Pos) {
+        elementStatic.computeIfAbsent(element) { Positions() } += pos
     }
 
     override fun addElement(element: ElementDynamic) {

@@ -1,4 +1,4 @@
-package cc.trixey.invero.panel
+package cc.trixey.invero.bukkit.panel
 
 import cc.trixey.invero.common.*
 
@@ -9,7 +9,7 @@ import cc.trixey.invero.common.*
 class StandardPanel(
     parent: PanelContainer,
     weight: PanelWeight,
-    scale: Pair<Int, Int>,
+    scale: Scale,
     locate: Pos
 ) : PanelInstance(parent, weight, scale, locate), ElementalPanel {
 

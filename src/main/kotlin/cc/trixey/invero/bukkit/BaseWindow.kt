@@ -1,4 +1,4 @@
-package cc.trixey.invero
+package cc.trixey.invero.bukkit
 
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Viewer
@@ -41,9 +41,9 @@ abstract class BaseWindow(
     override fun locatePanel(panel: Panel): Set<Int> {
         if (panel in panels) {
             val locate = panel.locate
-            val index = if (locate.isPureSlot) locate.pureSlot
-            else locate.locate.let { locate(it.first, it.second) }
-            val (width, height) = panel.scale
+//            val index = if (locate.isPureSlot) locate.pureSlot
+//            else locate.locate.let { locate(it.first, it.second) }
+//            val (width, height) = panel.scale
 
 
         }

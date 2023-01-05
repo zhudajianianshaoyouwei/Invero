@@ -1,12 +1,10 @@
 package cc.trixey.invero.common
 
-import cc.trixey.invero.panel.ElementalPanel
-
 /**
  * @author Arasple
  * @since 2022/12/22 14:50
  */
-interface PanelContainer {
+interface PanelContainer : Gridable {
 
     val panels: ArrayList<Panel>
 

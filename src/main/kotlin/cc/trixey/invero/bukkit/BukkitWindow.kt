@@ -1,6 +1,5 @@
 package cc.trixey.invero.bukkit
 
-import cc.trixey.invero.BaseWindow
 import cc.trixey.invero.common.Viewer
 import cc.trixey.invero.common.WindowType
 import org.bukkit.entity.Player
@@ -13,20 +12,23 @@ abstract class BukkitWindow(type: WindowType, title: String) : BaseWindow(type, 
 
     abstract override val inventory: BukkitInventory
 
-    fun render() {
-        panels.sortedBy { it.weight }.forEach {
+    fun open(player: Player) = open(BukkitViewer(player))
 
-            it.parent
-        }
+    override fun render() {
+        panels
+            .sortedBy { it.weight }
+            .forEach {
+                it.render()
+            }
     }
 
-    fun open(player: Player) =open(BukkitViewer(player))
-
     override fun open(viewer: Viewer) {
-        if (viewers.add(viewer))
+        if (viewers.add(viewer)) {
             inventory.open(viewer)
-        else
+            render()
+        } else {
             error("Viewer {$viewer} is already viewing this window")
+        }
     }
 
     override fun close(viewer: Viewer) {

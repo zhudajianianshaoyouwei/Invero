@@ -2,42 +2,33 @@ package cc.trixey.invero.common
 
 /**
  * @author Arasple
- * @since 2022/12/29 22:16
+ * @since 2023/1/4 22:41
+ *
+ * 槽位的准确坐标
+ * 采用 (x,y) 计法
+ *
+ * 相对任意 Scale 运算可得到一个 Slot 值
+ * 真实的 Slot 值只有最高层（Window）需要利用
  */
 @JvmInline
-value class Pos(private val value: IntArray) {
+value class Pos(private val value: Pair<Int, Int>) {
 
-    /**
-     * 纯 Slot (<100)
-     * 1 000 023
-     */
-    constructor(slot: Int) : this(IntArray(7) { 0 }.apply {
-        this[0] = 1
+    val x: Int
+        get() = value.first
 
-        var lastIndex = 6
-        val digits = slot.toString().toCharArray().map { it.digitToInt() }.reversed()
-        digits.forEach { this[lastIndex--] = it }
-    })
+    val y: Int
+        get() = value.second
 
-    /**
-     * 行，列 (x/y）定位
-     * 0 010 045
-     */
-    constructor(x: Int, y: Int) : this(IntArray(7) { 0 }.apply {
-        this[0] = 0
+    constructor(x: Int, y: Int) : this(x to y)
 
-        x.toString().toCharArray().let { for (index in 0..2) this[index + 1] = it[index].digitToInt() }
-        y.toString().toCharArray().let { for (index in 0..2) this[index + 4] = it[index].digitToInt() }
-    })
+    constructor(slot: Int, scale: IScale) : this(scale.toPosition(slot))
 
-    val isPureSlot: Boolean
-        get() = value[0] == 1
+    fun toSlot(scale: IScale): Int {
+        return scale.toSlot(x, y)
+    }
 
-    val pureSlot: Int
-        // Slot>100 的情况暂时忽略
-        get() = value[5] * 10 + value[6]
-
-    val locate: Pair<Int, Int>
-        get() = value[1] * 100 + value[2] * 10 + value[3] to value[4] * 100 + value[5] * 10 + value[6]
+    fun advance(previous: IScale, destination: IScale): Pos {
+        return Pos(destination.toPosition(previous.toSlot(x, y)))
+    }
 
 }

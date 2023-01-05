@@ -1,7 +1,4 @@
-package cc.trixey.invero.panel
-
-import cc.trixey.invero.common.ElementMap
-import cc.trixey.invero.common.Panel
+package cc.trixey.invero.common
 
 /**
  * @author Arasple
@@ -10,5 +7,9 @@ import cc.trixey.invero.common.Panel
 interface ElementalPanel : Panel {
 
     fun getElemap(): ElementMap
+
+    override fun render() {
+        getElemap().forEach { push() }
+    }
 
 }

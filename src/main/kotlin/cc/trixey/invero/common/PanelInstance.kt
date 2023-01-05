@@ -7,10 +7,6 @@ package cc.trixey.invero.common
 abstract class PanelInstance(
     override val parent: PanelContainer,
     override val weight: PanelWeight,
-    override val scale: Pair<Int, Int>,
+    override val scale: IScale,
     override val locate: Pos
-) : Panel {
-
-    val size by lazy { scale.first * scale.second }
-
-}
+) : Panel

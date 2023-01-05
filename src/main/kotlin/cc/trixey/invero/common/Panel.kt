@@ -4,7 +4,7 @@ package cc.trixey.invero.common
  * @author Arasple
  * @since 2022/12/20 20:43
  */
-interface Panel {
+interface Panel : Gridable {
 
     /**
      * The parent of this panel
@@ -21,15 +21,13 @@ interface Panel {
     val weight: PanelWeight
 
     /**
-     * The scale of this panel
-     *
-     * Width * Height
-     */
-    val scale: Pair<Int, Int>
-
-    /**
      * The location of this panel relative to its parent
      */
     val locate: Pos
+
+    /**
+     * Render this panel
+     */
+    fun render()
 
 }

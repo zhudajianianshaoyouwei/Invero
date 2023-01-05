@@ -9,7 +9,8 @@ import java.util.*
  * @author Arasple
  * @since 2022/12/29 13:11
  */
-class BukkitViewer(override val uuid: UUID) : Viewer {
+@JvmInline
+value class BukkitViewer(override val uuid: UUID) : Viewer {
 
     fun getSafely() = getProxyPlayer(uuid)?.cast<Player>()
 

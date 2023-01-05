@@ -6,7 +6,7 @@ package cc.trixey.invero.common
  */
 interface Elemap {
 
-    fun setElement(pos: Pos, element: ElementStatic)
+    fun addElement(element: ElementStatic, pos: Pos)
 
     fun addElement(element: ElementDynamic)
 

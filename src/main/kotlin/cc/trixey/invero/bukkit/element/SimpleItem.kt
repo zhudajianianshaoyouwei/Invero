@@ -1,9 +1,8 @@
-package cc.trixey.invero.element
+package cc.trixey.invero.bukkit.element
 
 import cc.trixey.invero.common.ElementStatic
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Viewer
-import cc.trixey.invero.panel.ElementalPanel
 import org.bukkit.inventory.ItemStack
 
 /**
