@@ -7,8 +7,13 @@ package cc.trixey.invero.common
 @JvmInline
 value class Positions(val values: MutableSet<Pos> = mutableSetOf()) {
 
+
     operator fun plusAssign(pos: Pos) {
         values += pos
+    }
+
+    operator fun contains(pos: Pos): Boolean {
+        return pos in values
     }
 
 }

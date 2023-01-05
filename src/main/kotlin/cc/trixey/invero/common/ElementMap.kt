@@ -10,6 +10,10 @@ class ElementMap : Elemap {
 
     private val elementDynamic = mutableSetOf<ElementDynamic>()
 
+    fun occupiedPositions(): Set<Pos> {
+        return elementStatic.values.flatMap { it.values }.toSet()
+    }
+
     fun forEachDynamic(block: ElementDynamic.() -> Unit) {
         elementDynamic.forEach(block)
     }
@@ -23,17 +27,12 @@ class ElementMap : Elemap {
         elementDynamic.forEach(block)
     }
 
-    fun find(element: Element): Positions? {
-        return elementStatic[element] ?: elementDynamic.find { it == element }?.getDynamicPositions().also {
-            println(
-                """
-                    ---
-                    Notfound in static
-                    ${elementStatic.size}
-                    ${elementStatic[element]}
-                """.trimIndent()
-            )
-        }
+    fun locate(element: Element): Positions? {
+        return elementStatic[element] ?: elementDynamic.find { it == element }?.getDynamicPositions()
+    }
+
+    fun find(pos: Pos): Element? {
+        return elementStatic.entries.firstOrNull { pos in it.value }?.key ?: elementDynamic.find { pos in it.getDynamicPositions() }
     }
 
     override fun addElement(element: ElementStatic, pos: Pos) {

@@ -51,17 +51,21 @@ class BukkitInventory(private val window: Window, val container: Inventory) : Pr
     }
 
     override operator fun get(slot: Int): ItemStack? {
-        if (slot + 1 > getContainerSize()) {
+        return  if (slot + 1 > getContainerSize()) {
             getPlayerInventory(window.viewers.first()).getItem(slot.outflowCorrect())
+        } else {
+            container.getItem(slot)
         }
-        return container.getItem(slot)
     }
 
     override operator fun set(slot: Int, itemStack: ItemStack?) {
         if (slot + 1 > getContainerSize()) {
-            getPlayerInventory(window.viewers.first()).setItem(slot.outflowCorrect(), itemStack)
+            window.viewers.forEach {
+                getPlayerInventory(it).setItem(slot.outflowCorrect(), itemStack)
+            }
+        } else {
+            container.setItem(slot, itemStack)
         }
-        return container.setItem(slot, itemStack)
     }
 
 }

@@ -26,28 +26,4 @@ abstract class BaseWindow(
 
     override val size: Int = type.entireWindowSize
 
-    override fun locate(x: Int, y: Int): Int {
-        return when {
-            type.isOrdinaryChest -> y * 9 + x
-            type == WindowType.GENERIC_3X3 -> {
-                if (y >= 3) 3 * 3 + y * 9 + x
-                else y * 3 + x
-            }
-
-            else -> TODO("Not yet implemented")
-        }
-    }
-
-    override fun locatePanel(panel: Panel): Set<Int> {
-        if (panel in panels) {
-            val locate = panel.locate
-//            val index = if (locate.isPureSlot) locate.pureSlot
-//            else locate.locate.let { locate(it.first, it.second) }
-//            val (width, height) = panel.scale
-
-
-        }
-        return setOf()
-    }
-
 }

@@ -2,6 +2,7 @@ package cc.trixey.invero.bukkit.element
 
 import cc.trixey.invero.common.*
 import org.bukkit.Material
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.submitAsync
 import taboolib.platform.util.ItemBuilder
@@ -13,8 +14,11 @@ import java.util.function.Supplier
  * @since 2022/12/29 22:38
  */
 abstract class ItemElement(
-    override val panel: Panel, internal var value: ItemStack = ItemStack(Material.STONE)
-) : Supplier<ItemStack>, Element {
+    override val panel: Panel,
+    internal var value: ItemStack = ItemStack(Material.STONE)
+) : Supplier<ItemStack>, Element, ClickableElement {
+
+    override var handler: (InventoryClickEvent, ClickableElement) -> Unit = { _, _ -> }
 
     fun modify(builder: ItemBuilder.() -> Unit) {
         value = buildItem(value, builder)
@@ -35,7 +39,7 @@ abstract class ItemElement(
             // 如果其是 Window（理解为顶层，支持进行渲染）
             if (parent.isWindow()) {
                 val elemap = (panel as ElementalPanel).getElemap()
-                val positions = elemap.find(this) ?: error("Not found position for this itemElement")
+                val positions = elemap.locate(this) ?: error("Not found position for this itemElement")
                 val window = parent.cast<Window>()
                 // 向外渲染逻辑：定位槽位
                 // TODO 检查性能损耗
@@ -50,7 +54,7 @@ abstract class ItemElement(
                         previous = destination as Panel
                         destination = previous.parent
                     }
-                    result.toSlot(destination.scale)
+                    result.toSlot(destination.scale, previous.locate)
                 }
                 positions.values.map(locating).filter { it >= 0 }.forEach {
                     window.inventory.toBukkitProxy()[it] = value

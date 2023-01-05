@@ -12,9 +12,11 @@ data class ScaleFreeform(var viewport: Pos, private val value: Pair<Int, Int>) :
     override val height: Int
         get() = value.second
 
-    override fun toSlot(x: Int, y: Int): Int {
-        return if (x >= viewport.x + width || y >= viewport.y + height) -1
-        else (y - viewport.y) * height + (x - viewport.x)
+    override fun toSlot(x: Int, y: Int, index: Pos): Int {
+        val (rX, rY) = x + index.x to y + index.y
+
+        return if (rX >= viewport.x + width || rY >= viewport.y + height) -1
+        else (rY - viewport.y) * height + (rX - viewport.x)
     }
 
     override fun toPosition(slot: Int): Pair<Int, Int> {

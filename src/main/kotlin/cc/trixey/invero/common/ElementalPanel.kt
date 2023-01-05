@@ -8,6 +8,10 @@ interface ElementalPanel : Panel {
 
     fun getElemap(): ElementMap
 
+    fun getUnoccupiedPositions(): Set<Pos> {
+        return scale.toArea() - getElemap().occupiedPositions()
+    }
+
     override fun render() {
         getElemap().forEach { push() }
     }

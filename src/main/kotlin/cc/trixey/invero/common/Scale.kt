@@ -13,9 +13,11 @@ value class Scale(private val value: Pair<Int, Int>) : IScale {
     override val height: Int
         get() = value.second
 
-    override fun toSlot(x: Int, y: Int): Int {
-        return if (x >= width || y >= height) -1
-        else y * height + x
+    override fun toSlot(x: Int, y: Int, index: Pos): Int {
+        val (rX, rY) = x + index.x to y + index.y
+
+        return if (rX >= width || rY >= height) -1
+        else rY * (height - 1) + rX
     }
 
     override fun toPosition(slot: Int): Pair<Int, Int> {

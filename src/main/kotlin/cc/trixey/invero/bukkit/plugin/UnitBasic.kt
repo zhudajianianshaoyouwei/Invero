@@ -1,8 +1,9 @@
 package cc.trixey.invero.bukkit.plugin
 
-import cc.trixey.invero.bukkit.api.bukkitChestWindow
-import cc.trixey.invero.bukkit.api.item
-import cc.trixey.invero.bukkit.api.standardPanel
+import cc.trixey.invero.bukkit.api.dsl.bukkitChestWindow
+import cc.trixey.invero.bukkit.api.dsl.fillup
+import cc.trixey.invero.bukkit.api.dsl.item
+import cc.trixey.invero.bukkit.api.dsl.standardPanel
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
@@ -16,13 +17,27 @@ object UnitBasic {
 
         bukkitChestWindow(6, "Hello Invero") {
 
-            standardPanel(3 to 3, 0 to 0) {
-
+            var count = 1
+            standardPanel(3 to 3) {
 
                 item(0, Material.APPLE) {
                     modify { name = "Hello Apple" }
+
+                    onClick {
+                        modify { amount = ++count }
+                        push()
+                    }
                 }
 
+                item(Material.DIAMOND).fillup().onClick {
+                    isCancelled = false
+                }
+            }
+
+            standardPanel(3 to 7) {
+                item(Material.EMERALD).fillup().onClick {
+                    player.sendMessage("6")
+                }
             }
 
 

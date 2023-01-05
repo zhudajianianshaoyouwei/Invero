@@ -1,5 +1,7 @@
 package cc.trixey.invero.common
 
+import cc.trixey.invero.common.event.WindowEvent
+
 /**
  * @author Arasple
  * @since 2022/12/20 20:04
@@ -32,18 +34,6 @@ interface Window : PanelContainer, Gridable {
     val inventory: ProxyInventory
 
     /**
-     * Locating slot index
-     */
-    fun locate(x: Int, y: Int): Int
-
-    /**
-     * Locating panels' occupied slots
-     *
-     * @return a set of Slots (INT)
-     */
-    fun locatePanel(panel: Panel): Set<Int>
-
-    /**
      * Open this window for a viewer
      */
     fun open(viewer: Viewer)
@@ -57,6 +47,11 @@ interface Window : PanelContainer, Gridable {
      * Render panels
      */
     fun render()
+
+    /**
+     * Handle relevant event
+     */
+    fun handleEvent(event: WindowEvent)
 
     fun <T : Viewer> forViewers(block: (it: T) -> Unit) = viewers
         .filter { it.isAvailable() }

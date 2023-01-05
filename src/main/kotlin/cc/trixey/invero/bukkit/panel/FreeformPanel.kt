@@ -1,6 +1,8 @@
 package cc.trixey.invero.bukkit.panel
 
+import cc.trixey.invero.bukkit.BukkitPanel
 import cc.trixey.invero.common.*
+import org.bukkit.event.inventory.InventoryClickEvent
 
 /**
  * @author Arasple
@@ -11,7 +13,7 @@ class FreeformPanel(
     weight: PanelWeight,
     override val scale: ScaleFreeform,
     locate: Pos
-) : PanelInstance(parent, weight, scale, locate), ElementalPanel {
+) : BukkitPanel(parent, weight, scale, locate), ElementalPanel {
 
     private val elements: ElementMap = ElementMap()
 
@@ -24,5 +26,9 @@ class FreeformPanel(
             field = value
             scale.viewport = value
         }
+
+    override fun handleClick(pos: Pos, e: InventoryClickEvent) {
+        TODO("Not yet implemented")
+    }
 
 }

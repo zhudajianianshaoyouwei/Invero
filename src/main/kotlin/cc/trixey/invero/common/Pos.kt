@@ -11,7 +11,7 @@ package cc.trixey.invero.common
  * 真实的 Slot 值只有最高层（Window）需要利用
  */
 @JvmInline
-value class Pos(private val value: Pair<Int, Int>) {
+value class Pos(internal val value: Pair<Int, Int>) {
 
     val x: Int
         get() = value.first
@@ -23,12 +23,16 @@ value class Pos(private val value: Pair<Int, Int>) {
 
     constructor(slot: Int, scale: IScale) : this(scale.toPosition(slot))
 
-    fun toSlot(scale: IScale): Int {
-        return scale.toSlot(x, y)
+    fun toSlot(scale: IScale, index: Pos = Pos(0, 0)): Int {
+        return scale.toSlot(x, y, index)
     }
 
     fun advance(previous: IScale, destination: IScale): Pos {
         return Pos(destination.toPosition(previous.toSlot(x, y)))
+    }
+
+    operator fun minus(pos: Pos): Pos {
+        return Pos(x - pos.x, y - pos.y)
     }
 
 }

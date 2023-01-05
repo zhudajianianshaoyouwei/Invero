@@ -25,6 +25,9 @@ interface Panel : Gridable {
      */
     val locate: Pos
 
+    val area: Set<Pos>
+        get() = scale.toArea(locate)
+
     /**
      * Render this panel
      */
