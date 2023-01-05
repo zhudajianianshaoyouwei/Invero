@@ -16,6 +16,11 @@ interface Panel : Gridable {
     val parent: PanelContainer
 
     /**
+     * The window that hold this panel
+     */
+    val window: Window
+
+    /**
      * The weight of this panel
      */
     val weight: PanelWeight

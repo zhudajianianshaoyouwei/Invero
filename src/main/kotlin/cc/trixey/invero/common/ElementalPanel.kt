@@ -12,6 +12,13 @@ interface ElementalPanel : Panel {
         return scale.toArea() - getElemap().occupiedPositions()
     }
 
+    fun wipe(pos: Set<Pos>) {
+        window.let { window ->
+            val slots = pos.map { it.toSlot(window.scale) }.toSet()
+            window.inventory.clear(slots)
+        }
+    }
+
     override fun render() {
         getElemap().forEach { push() }
     }

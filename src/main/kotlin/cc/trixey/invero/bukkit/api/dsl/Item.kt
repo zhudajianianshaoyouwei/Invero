@@ -1,9 +1,10 @@
 package cc.trixey.invero.bukkit.api.dsl
 
 import cc.trixey.invero.bukkit.element.SimpleItem
-import cc.trixey.invero.common.ElementStatic
+import cc.trixey.invero.common.Element
 import cc.trixey.invero.common.ElementalPanel
 import cc.trixey.invero.common.Pos
+import cc.trixey.invero.common.Positions
 import org.bukkit.Material
 
 /**
@@ -32,14 +33,45 @@ inline fun ElementalPanel.item(
     block(it)
 }
 
-fun <T:ElementStatic> T.fillup(): T {
+fun <T : Element> T.getPosition(): Positions? {
+    val panel = panel as ElementalPanel
+    val elemap = panel.getElemap()
+
+    return elemap.locateElement(this)
+}
+
+fun <T : Element> T.set(vararg slots: Int): T {
+    val panel = panel as ElementalPanel
+    val elemap = panel.getElemap()
+
+    // Wipe previous cache
+    elemap.setElement(this, Positions(slots.map { panel.scale.toPos(it) }.toMutableSet()))
+        ?.let {
+            panel.wipe(it)
+        }
+
+    return this
+}
+
+fun <T : Element> T.add(vararg slots: Int): T {
+    val panel = panel as ElementalPanel
+    val elemap = panel.getElemap()
+
+    slots
+        .map { panel.scale.toPos(it) }
+        .forEach {
+            elemap.addElement(this, it)
+        }
+
+    return this
+}
+
+fun <T : Element> T.fillup(): T {
     val panel = panel as ElementalPanel
     val elemap = panel.getElemap()
 
     panel.getUnoccupiedPositions()
-        .forEach {
-            elemap.addElement(this, it)
-        }
+        .forEach { elemap.addElement(this, it) }
 
     return this
 }

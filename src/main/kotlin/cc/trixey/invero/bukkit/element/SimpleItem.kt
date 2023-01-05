@@ -1,6 +1,5 @@
 package cc.trixey.invero.bukkit.element
 
-import cc.trixey.invero.common.ElementStatic
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Viewer
 import org.bukkit.inventory.ItemStack
@@ -9,7 +8,7 @@ import org.bukkit.inventory.ItemStack
  * @author Arasple
  * @since 2022/12/29 22:37
  */
-class SimpleItem(panel: Panel) : ElementStatic, ItemElement(panel) {
+class SimpleItem(panel: Panel) : ItemElement(panel) {
 
     override fun get(viewer: Viewer): ItemStack {
         return value

@@ -1,5 +1,6 @@
 package cc.trixey.invero.bukkit
 
+import cc.trixey.invero.bukkit.api.InveroAPI
 import cc.trixey.invero.common.*
 import org.bukkit.event.inventory.InventoryClickEvent
 
@@ -13,6 +14,18 @@ abstract class BukkitPanel(
     override val scale: IScale,
     override val locate: Pos
 ) : Panel {
+
+    override val window: Window
+        get() {
+            return InveroAPI.manager.findWindow(this) ?: let {
+                var p = parent
+                while (p.isPanel()) {
+                    p = p.cast<Panel>().parent
+                }
+
+                p as Window
+            }
+        }
 
     abstract fun handleClick(pos: Pos, e: InventoryClickEvent)
 

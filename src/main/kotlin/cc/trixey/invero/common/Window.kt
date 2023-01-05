@@ -59,4 +59,6 @@ interface Window : PanelContainer, Gridable {
             block(it.getInstance())
         }
 
+    fun hasViewer() = viewers.isNotEmpty()
+
 }

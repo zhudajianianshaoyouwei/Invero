@@ -32,42 +32,34 @@ abstract class ItemElement(
         submitAsync { value = supplier.get() }
     }
 
-    override fun push(parent: PanelContainer) {
-        // 元素真实父级 Panel 需要支持容纳元素
+    override fun push() {
         if (panel is ElementalPanel) {
-            // 默认 parent = panel.parent，即元素的父级 Panel 的父级
-            // 如果其是 Window（理解为顶层，支持进行渲染）
-            if (parent.isWindow()) {
-                val elemap = (panel as ElementalPanel).getElemap()
-                val positions = elemap.locate(this) ?: error("Not found position for this itemElement")
-                val window = parent.cast<Window>()
-                // 向外渲染逻辑：定位槽位
-                // TODO 检查性能损耗
-                val locating: (Pos) -> Int = { pos ->
-                    var previous = panel
-                    var destination = previous.parent
-                    var result = pos
-
-                    while (destination.isPanel()) {
-                        result = pos.advance(previous.scale, destination.scale)
-
-                        previous = destination as Panel
-                        destination = previous.parent
-                    }
-                    result.toSlot(destination.scale, previous.locate)
-                }
-                positions.values.map(locating).filter { it >= 0 }.forEach {
-                    window.inventory.toBukkitProxy()[it] = value
-                }
-            }
-            // 当遇到其是容纳元素的 Panel，则抛错
-            // 元素的父级必然是 ElementalPanel, 那么其爷级必然不能是一个 ElementalPanel
-            else if (parent.isElementalPanel()) {
-                error("not supported parent")
-            } else if (parent.isPanel()) {
-                push(parent.cast<Panel>().parent)
+            val window = panel.window
+            val elemap = (panel as ElementalPanel).getElemap()
+            val positions = elemap.locateElement(this) ?: error("Not found position for this itemElement")
+            // 向外渲染逻辑：定位槽位
+            positions.values.map { locatingSlot(it) }.filter { it >= 0 }.forEach {
+                window.inventory.toBukkitProxy()[it] = value
             }
         }
+//            // 默认 parent = panel.parent，即元素的父级 Panel 的父级
+//            // 如果其是 Window（理解为顶层，支持进行渲染）
+//            if (parent.isWindow()) {
+//                val elemap = (panel as ElementalPanel).getElemap()
+//                val positions = elemap.locateElement(this) ?: error("Not found position for this itemElement")
+//                val window = parent.cast<Window>()
+//                // 向外渲染逻辑：定位槽位
+//                positions.values.map { locatingSlot(it) }.filter { it >= 0 }.forEach {
+//                    window.inventory.toBukkitProxy()[it] = value
+//                }
+//            }
+//            // 当遇到其是容纳元素的 Panel，则抛错
+//            // 元素的父级必然是 ElementalPanel, 那么其爷级必然不能是一个 ElementalPanel
+//            else if (parent.isElementalPanel()) {
+//                error("not supported parent")
+//            } else if (parent.isPanel()) {
+//                push(parent.cast<Panel>().parent)
+//            }
     }
 
     abstract fun get(viewer: Viewer): ItemStack

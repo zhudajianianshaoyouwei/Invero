@@ -25,4 +25,8 @@ interface PanelContainer : Gridable {
         panels -= panel
     }
 
+    operator fun contains(panel: Panel): Boolean {
+        return panel in panels
+    }
+
 }

@@ -6,9 +6,9 @@ import org.bukkit.event.inventory.InventoryClickEvent
 
 /**
  * @author Arasple
- * @since 2022/12/22 20:32
+ * @since 2023/1/5 20:49
  */
-class StandardPanel(
+class PagedStandardPanel(
     parent: PanelContainer,
     weight: PanelWeight,
     scale: Scale,
@@ -17,16 +17,12 @@ class StandardPanel(
 
     private val elements: ElementMap = ElementMap()
 
-    override fun getElemap(): ElementMap {
-        return elements
+    override fun handleClick(pos: Pos, e: InventoryClickEvent) {
+        TODO("Not yet implemented")
     }
 
-    override fun handleClick(pos: Pos, e: InventoryClickEvent) {
-        elements.findElement(pos)?.let {
-            if (it is ClickableElement) {
-                it.passClickEvent(e)
-            }
-        }
+    override fun getElemap(): ElementMap {
+        TODO("Not yet implemented")
     }
 
 }

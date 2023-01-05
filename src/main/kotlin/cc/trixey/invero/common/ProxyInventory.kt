@@ -20,6 +20,8 @@ interface ProxyInventory {
 
     fun clear()
 
+    fun clear(slots: Set<Int>)
+
     fun toBukkitProxy() = this as ProxyBukkitInventory
 
 }

@@ -1,8 +1,12 @@
 package cc.trixey.invero.bukkit.plugin
 
+import cc.trixey.invero.bukkit.plugin.unit.showBasic
+import cc.trixey.invero.bukkit.plugin.unit.showRunningApple
+import org.bukkit.entity.Player
 import taboolib.common.platform.Plugin
 import taboolib.common.platform.command.CommandBody
 import taboolib.common.platform.command.CommandHeader
+import taboolib.common.platform.command.SimpleCommandBody
 import taboolib.common.platform.command.subCommand
 import taboolib.common.platform.function.info
 
@@ -20,9 +24,16 @@ object Invero : Plugin() {
     object Handler {
 
         @CommandBody
-        val basic = subCommand {
-            execute { sender, _, _ ->
-                UnitBasic.show(sender)
+        val basic = construct { showBasic(this) }
+
+        @CommandBody
+        val basic_dynamicItem = construct { showRunningApple(this) }
+
+        private fun construct(block: Player.() -> Unit): SimpleCommandBody {
+            return subCommand {
+                execute { sender, _, _ ->
+                    block(sender)
+                }
             }
         }
 

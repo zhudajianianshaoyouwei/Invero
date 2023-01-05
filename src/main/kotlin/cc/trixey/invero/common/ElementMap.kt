@@ -4,43 +4,33 @@ package cc.trixey.invero.common
  * @author Arasple
  * @since 2022/12/29 13:51
  */
-class ElementMap : Elemap {
-
-    internal val elementStatic = hashMapOf<ElementStatic, Positions>()
-
-    private val elementDynamic = mutableSetOf<ElementDynamic>()
+@JvmInline
+value class ElementMap(val elements: HashMap<Element, Positions> = hashMapOf()) {
 
     fun occupiedPositions(): Set<Pos> {
-        return elementStatic.values.flatMap { it.values }.toSet()
-    }
-
-    fun forEachDynamic(block: ElementDynamic.() -> Unit) {
-        elementDynamic.forEach(block)
-    }
-
-    fun forEachStatic(block: ElementStatic.(Positions) -> Unit) {
-        elementStatic.forEach { it.key.block(it.value) }
+        return elements.values.flatMap { it.values }.toSet()
     }
 
     fun forEach(block: Element.() -> Unit) {
-        elementStatic.forEach { it.key.block() }
-        elementDynamic.forEach(block)
+        elements.forEach { it.key.block() }
     }
 
-    fun locate(element: Element): Positions? {
-        return elementStatic[element] ?: elementDynamic.find { it == element }?.getDynamicPositions()
+    fun locateElement(element: Element): Positions? {
+        return elements[element]
     }
 
-    fun find(pos: Pos): Element? {
-        return elementStatic.entries.firstOrNull { pos in it.value }?.key ?: elementDynamic.find { pos in it.getDynamicPositions() }
+    fun findElement(pos: Pos): Element? {
+        return elements.entries.firstOrNull { pos in it.value }?.key
     }
 
-    override fun addElement(element: ElementStatic, pos: Pos) {
-        elementStatic.computeIfAbsent(element) { Positions() } += pos
+    fun addElement(element: Element, pos: Pos) {
+        elements.computeIfAbsent(element) { Positions() } += pos
     }
 
-    override fun addElement(element: ElementDynamic) {
-        elementDynamic += element
+    fun setElement(element: Element, positions: Positions): Set<Pos>? {
+        val removable = locateElement(element)?.minus(positions)
+        elements[element] = positions
+        return removable
     }
 
 }
