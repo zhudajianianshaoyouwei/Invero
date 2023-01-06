@@ -13,10 +13,14 @@ value class Scale(private val value: Pair<Int, Int>) : ScaleInterface {
     override val height: Int
         get() = value.second
 
-    override fun toSlot(x: Int, y: Int, index: Pos): Int {
+    override fun isOutOfBounds(x: Int, y: Int, index: Pos): Boolean {
         val (rX, rY) = x + index.x to y + index.y
-        return if (rX >= width || rY >= height) -1
-        else rY * width + rX
+
+        return rX < 0 || rY < 0 || rX >= width || rY >= height
+    }
+
+    override fun toSlot(x: Int, y: Int, index: Pos): Int {
+        return (y + index.y) * width + (x + index.x)
     }
 
     override fun toPosition(slot: Int): Pair<Int, Int> {

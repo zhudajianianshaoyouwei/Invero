@@ -7,6 +7,8 @@ package cc.trixey.invero.common
 @JvmInline
 value class Positions(val values: MutableSet<Pos> = mutableSetOf()) {
 
+    constructor(values: Collection<Pos>) : this(values.toMutableSet())
+
     operator fun plusAssign(pos: Pos) {
         values += pos
     }

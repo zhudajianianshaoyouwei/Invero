@@ -35,4 +35,22 @@ value class Pos(internal val value: Pair<Int, Int>) {
         return Pos(x - pos.x, y - pos.y)
     }
 
+    operator fun plus(pos: Pos): Pos {
+        return Pos(x + pos.x, y + pos.y)
+    }
+
+    operator fun plus(pos: Pair<Int, Int>): Pos {
+        return Pos(x + pos.first, y + pos.second)
+    }
+
+    operator fun unaryMinus(): Pos {
+        return Pos(-x, -y)
+    }
+
+    companion object {
+
+        val NIL = Pos(0, 0)
+
+    }
+
 }

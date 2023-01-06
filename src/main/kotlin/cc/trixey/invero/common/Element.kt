@@ -10,17 +10,29 @@ interface Element {
 
     fun push()
 
-    fun locatingSlot(pos: Pos): Int {
-        var previous = panel
-        var destination = previous.parent
-        var result = pos
+    fun Pos.locatingSlot(): Int {
+        val layout = panel.scale
+        var position = this
+        var current = panel
+        var forward = current.parent
 
-        while (destination.isPanel()) {
-            result = pos.advance(previous.scale, destination.scale)
-            previous = destination as Panel
-            destination = previous.parent
+        // 可视度检查
+        if (current is FreeformPanel) {
+            val viewport = -current.viewport
+
+            if (layout.isOutOfBounds(x, y, viewport)) return -1
+            position += viewport
+        } else if (layout.isOutOfBounds(x, y)) return -1
+
+        // 逐层寻找父级
+        while (forward.isPanel()) {
+            position = position.advance(current.scale, forward.scale)
+            current = forward as Panel
+            forward = current.parent
         }
-        return result.toSlot(destination.scale, previous.locate)
+
+        // 返回相对窗口（最高层）的槽位
+        return position.toSlot(forward.scale, current.locate)
     }
 
 }

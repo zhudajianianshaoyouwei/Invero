@@ -11,7 +11,13 @@ import org.bukkit.inventory.PlayerInventory
  * @author Arasple
  * @since 2022/12/30 12:57
  */
-class BukkitInventory(private val window: Window, val container: Inventory) : ProxyBukkitInventory {
+class BukkitInventory(
+    private val window: Window,
+    val container: Inventory,
+    var emptyPlayerInventory: Boolean = true
+) : ProxyBukkitInventory {
+
+    private val playerItems = mutableMapOf<Viewer, PlayerItems>()
 
     override fun getWindow(): Window {
         return window
@@ -21,10 +27,20 @@ class BukkitInventory(private val window: Window, val container: Inventory) : Pr
         viewer.safeBukkitPlayer()?.let {
             it.closeInventory()
             it.updateInventory()
+
+            playerItems.remove(viewer)?.let {
+                getPlayerInventory(viewer).apply {
+                    storageContents = it.storage
+                }
+            }
         }
     }
 
     override fun open(viewer: Viewer) {
+        getPlayerInventory(viewer).apply {
+            playerItems[viewer] = PlayerItems(storageContents)
+            if (emptyPlayerInventory) clear()
+        }
         viewer.safeBukkitPlayer()?.openInventory(container)
     }
 

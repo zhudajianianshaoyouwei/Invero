@@ -1,4 +1,4 @@
-package cc.trixey.invero.bukkit.panel
+package cc.trixey.invero.common.panel
 
 import cc.trixey.invero.bukkit.BukkitPanel
 import cc.trixey.invero.common.*

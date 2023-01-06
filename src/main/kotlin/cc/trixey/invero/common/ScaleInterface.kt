@@ -13,13 +13,15 @@ interface ScaleInterface {
     val size: Int
         get() = width * height
 
-    fun toSlot(x: Int, y: Int, index: Pos = Pos(0, 0)): Int
+    fun toSlot(x: Int, y: Int, index: Pos = Pos.NIL): Int
 
     fun toPosition(slot: Int): Pair<Int, Int>
 
     fun toPos(slot: Int) = Pos(toPosition(slot))
 
-    fun toArea(index: Pos = Pos(0, 0)): Set<Pos> {
+    fun isOutOfBounds(x: Int, y: Int, index: Pos = Pos.NIL): Boolean
+
+    fun toArea(index: Pos = Pos.NIL): Set<Pos> {
         val pos = mutableSetOf<Pos>()
         for (x in 0 until width) {
             for (y in 0 until height) {

@@ -46,22 +46,19 @@ interface Panel : Gridable {
     /**
      * Wipe this panel
      */
-    fun wipe() = wipe(area)
+    fun wipe() = wipe(area, true)
 
-    fun wipe(pos: Set<Pos>) {
-        if (parent.isPanel()) return parent.cast<Panel>().wipe(pos)
+    fun wipe(wiping: Set<Pos>, absolute: Boolean = false) {
+        if (parent.isPanel()) return parent.cast<Panel>().wipe(wiping, absolute)
 
-        window.let { window ->
-            val slots = pos.map { it.toSlot(window.scale) }.toSet()
+        else window.let { window ->
+            val slots = wiping.map { it.toSlot(window.scale) }.toSet()
             window.inventory.clear(slots)
         }
     }
 
     fun rerender() = wipe().also { render() }
 
-    /**
-     * Event handler
-     */
     fun handleClick(pos: Pos, e: WindowClickEvent)
 
 }

@@ -11,3 +11,7 @@ import org.bukkit.entity.Player
 fun Viewer.toBukkitViewer() = this as BukkitViewer
 
 fun Viewer.safeBukkitPlayer(): Player? = getInstanceSafe<Player>()
+
+fun middle(pos1: Pair<Int, Int>, pos2: Pair<Int, Int>): Pair<Int, Int> {
+    return (pos1.first + pos2.first) / 2 to (pos1.second + pos2.second) / 2
+}

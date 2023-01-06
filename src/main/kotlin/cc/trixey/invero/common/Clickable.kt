@@ -8,15 +8,17 @@ import cc.trixey.invero.common.event.WindowClickEvent
  */
 interface Clickable : Element {
 
-    var handler: (WindowClickEvent, Clickable) -> Unit
+    fun getHandler(): (WindowClickEvent, Clickable) -> Unit
+
+    fun setHandler(handler: (WindowClickEvent, Clickable) -> Unit)
 
     fun onClick(event: WindowClickEvent.(element: Clickable) -> Unit): Clickable {
-        handler = event
+        setHandler(event)
         return this
     }
 
     fun passClickEvent(e: WindowClickEvent) {
-        handler(e, this)
+        getHandler()(e, this)
     }
 
 }

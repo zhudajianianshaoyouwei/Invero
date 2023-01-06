@@ -21,11 +21,16 @@ inline fun ElementalPanel.item(
     pos: Pair<Int, Int>,
     material: Material,
     block: SimpleItem.() -> Unit = {}
-) = item(material, block).also {
+) = buildItem(material, block).also {
     getElements().addElement(it, Pos(pos))
 }
 
 inline fun ElementalPanel.item(
+    material: Material,
+    block: SimpleItem.() -> Unit = {}
+) = buildItem(material, block).set(Pos(firstAvailablePositionForElement()))
+
+inline fun ElementalPanel.buildItem(
     material: Material,
     block: SimpleItem.() -> Unit = {}
 ) = SimpleItem(this).also {
@@ -49,7 +54,7 @@ fun <T : Element> T.set(pos: Set<Pos>): T {
     val elemap = panel.getElements()
 
     // Wipe previous cache
-    elemap.setElement(this, Positions(pos.toMutableSet()))
+    elemap.setElement(this, Positions(pos))
         ?.let {
             panel.wipe(it)
         }

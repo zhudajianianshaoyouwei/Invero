@@ -2,6 +2,7 @@ package cc.trixey.invero.test
 
 import cc.trixey.invero.test.unit.showBasic
 import cc.trixey.invero.test.unit.showDynamicTitle
+import cc.trixey.invero.test.unit.showFreeformStandard
 import cc.trixey.invero.test.unit.showRunningApple
 import org.bukkit.entity.Player
 import taboolib.common.platform.Plugin
@@ -32,6 +33,9 @@ object TestPlugin : Plugin() {
 
         @CommandBody
         val basic_dynamicTitle = construct { showDynamicTitle(this) }
+
+        @CommandBody
+        val freeform = construct { showFreeformStandard(this) }
 
         private fun construct(block: Player.() -> Unit): SimpleCommandBody {
             return subCommand {

@@ -26,13 +26,13 @@ fun showBasic(player: Player) = bukkitChestWindow(6, "Hello TestPlugin") {
             }
         }.add(1)
 
-        item(Material.DIAMOND).fillup().onClick {
+        buildItem(Material.DIAMOND).fillup().onClick {
             isCancelled = false
         }
     }
 
     standardPanel(3 to 7) {
-        item(Material.EMERALD).fillup().onClick {
+        buildItem(Material.EMERALD).fillup().onClick {
             player.sendMessage("6")
         }
     }
@@ -76,7 +76,7 @@ fun showDynamicTitle(player: Player) = bukkitChestWindow(3, "_") {
     standardPanel(9 to 3) {
         getUnoccupiedPositions().let { posSet ->
             posSet.forEach { pos ->
-                item(randomMaterial()) {
+                buildItem(randomMaterial()) {
                     onClick {
                         modify { amount += (if (clickType.isLeftClick) 1 else -1) }
                         player.sendMessage(pos.toString())
