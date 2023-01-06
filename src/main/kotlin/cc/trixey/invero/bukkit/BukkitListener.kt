@@ -1,8 +1,9 @@
 package cc.trixey.invero.bukkit
 
+import cc.trixey.invero.bukkit.event.*
+import cc.trixey.invero.common.Window
 import org.bukkit.event.inventory.*
 import taboolib.common.platform.event.SubscribeEvent
-import java.util.*
 
 /**
  * @author Arasple
@@ -11,33 +12,30 @@ import java.util.*
 object BukkitListener {
 
     @SubscribeEvent
-    fun e(e: InventoryClickEvent) {
-        e.inventory.holder.let {
-            if (it is BukkitWindowHolder) {
+    fun e(e: InventoryClickEvent) = e.delegatedEvent {
+        // def cancel
+        e.isCancelled = true
 
-//                BukkitClickEvent(e, BukkitViewer(e.whoClicked.uniqueId), it.window)
-//                it.window.handleClick()
-            }
+        when (e.action) {
+            InventoryAction.MOVE_TO_OTHER_INVENTORY -> handleItemsMove(DelegatedItemsMoveEvent(e))
+            InventoryAction.COLLECT_TO_CURSOR -> handleItemsCollect(DelegatedItemsCollectEvent(e))
+            else -> handleClick(DelegatedClickEvent(e))
         }
-
-        e.passInventoryEvent(e.whoClicked.uniqueId)
     }
 
-    @SubscribeEvent
-    fun e(e: InventoryDragEvent) = e.passInventoryEvent(e.whoClicked.uniqueId)
 
     @SubscribeEvent
-    fun e(e: InventoryOpenEvent) = e.passInventoryEvent(e.player.uniqueId)
+    fun e(e: InventoryDragEvent) = e.delegatedEvent { handleDrag(DelegatedDragEvent(e)) }
 
     @SubscribeEvent
-    fun e(e: InventoryCloseEvent) = e.passInventoryEvent(e.player.uniqueId)
+    fun e(e: InventoryOpenEvent) = e.delegatedEvent { handleOpen(DelegatedOpenEvent(e)) }
 
-    private fun InventoryEvent.passInventoryEvent(uniqueId: UUID) = inventory.holder.let {
+    @SubscribeEvent
+    fun e(e: InventoryCloseEvent) = e.delegatedEvent { handleClose(DelegatedCloseEvent(e)) }
+
+    private fun InventoryEvent.delegatedEvent(block: Window.() -> Unit) = inventory.holder.let {
         if (it is BukkitWindowHolder) {
-
-            // TODO
-
-//            it.window.handleEvent(BukkitWindowEvent(this, BukkitViewer(uniqueId), it.window))
+            it.window.block()
         }
     }
 

@@ -5,31 +5,31 @@ package cc.trixey.invero.common
  * @since 2022/12/29 13:51
  */
 @JvmInline
-value class ElementMap(val elements: HashMap<Element, Positions> = hashMapOf()) {
+value class Elements(private val value: HashMap<Element, Positions> = hashMapOf()) {
 
     fun occupiedPositions(): Set<Pos> {
-        return elements.values.flatMap { it.values }.toSet()
+        return value.values.flatMap { it.values }.toSet()
     }
 
     fun forEach(block: Element.() -> Unit) {
-        elements.forEach { it.key.block() }
+        value.forEach { it.key.block() }
     }
 
     fun locateElement(element: Element): Positions? {
-        return elements[element]
+        return value[element]
     }
 
     fun findElement(pos: Pos): Element? {
-        return elements.entries.firstOrNull { pos in it.value }?.key
+        return value.entries.firstOrNull { pos in it.value }?.key
     }
 
     fun addElement(element: Element, pos: Pos) {
-        elements.computeIfAbsent(element) { Positions() } += pos
+        value.computeIfAbsent(element) { Positions() } += pos
     }
 
     fun setElement(element: Element, positions: Positions): Set<Pos>? {
         val removable = locateElement(element)?.minus(positions)
-        elements[element] = positions
+        value[element] = positions
         return removable
     }
 

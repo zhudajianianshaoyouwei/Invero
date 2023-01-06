@@ -6,25 +6,14 @@ package cc.trixey.invero.common
  */
 interface ElementalPanel : Panel {
 
-    fun getElemap(): ElementMap
+    fun getElements(): Elements
 
     fun getUnoccupiedPositions(): Set<Pos> {
-        return scale.toArea() - getElemap().occupiedPositions()
-    }
-
-    fun wipe(pos: Set<Pos>) {
-        window.let { window ->
-            val slots = pos.map { it.toSlot(window.scale) }.toSet()
-            window.inventory.clear(slots)
-        }
-    }
-
-    override fun wipe() {
-        wipe(area)
+        return scale.toArea() - getElements().occupiedPositions()
     }
 
     override fun render() {
-        getElemap().forEach { push() }
+        getElements().forEach { push() }
     }
 
 }

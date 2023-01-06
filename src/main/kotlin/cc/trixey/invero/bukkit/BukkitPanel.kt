@@ -27,6 +27,4 @@ abstract class BukkitPanel(
             }
         }
 
-    abstract fun handleClick(pos: Pos, e: WindowClickEvent)
-
 }

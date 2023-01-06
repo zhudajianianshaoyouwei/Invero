@@ -5,26 +5,20 @@ import cc.trixey.invero.bukkit.BukkitWindowHolder
 import cc.trixey.invero.common.Viewer
 import cc.trixey.invero.common.Window
 import cc.trixey.invero.common.event.EventType
-import cc.trixey.invero.common.event.WindowDragEvent
-import org.bukkit.event.inventory.InventoryDragEvent
+import cc.trixey.invero.common.event.WindowOpenEvent
+import org.bukkit.event.inventory.InventoryOpenEvent
 
 /**
  * @author Arasple
  * @since 2023/1/6 11:53
  */
 @JvmInline
-value class DelegatedDragEvent(
-    override val event: InventoryDragEvent
-) : WindowDragEvent, DelegatedInventoryEvent {
-
-    override var isCancelled: Boolean
-        get() = event.isCancelled
-        set(value) {
-            event.isCancelled = value
-        }
+value class DelegatedOpenEvent(
+    override val event: InventoryOpenEvent
+) : WindowOpenEvent, DelegatedInventoryEvent {
 
     override fun getViewer(): Viewer {
-        return BukkitViewer(event.whoClicked.uniqueId)
+        return BukkitViewer(event.player.uniqueId)
     }
 
     override fun getWindow(): Window {
@@ -32,7 +26,7 @@ value class DelegatedDragEvent(
     }
 
     override fun getType(): EventType {
-        return EventType.ITEMS_DRAG
+        return EventType.INVENTORY_OPEN
     }
 
 }

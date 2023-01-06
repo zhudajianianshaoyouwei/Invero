@@ -26,15 +26,15 @@ class PagedStandardPanel(
             field = value
         }
 
-    private val pagedElements: LinkedList<ElementMap> = LinkedList<ElementMap>()
+    private val pagedElements: LinkedList<Elements> = LinkedList<Elements>()
 
-    override fun getElemap(): ElementMap {
+    override fun getElements(): Elements {
         return pagedElements[pageIndex]
     }
 
     override fun handleClick(pos: Pos, e: WindowClickEvent) {
-        getElemap().findElement(pos)?.let {
-            if (it is ClickableElement) {
+        getElements().findElement(pos)?.let {
+            if (it is Clickable) {
                 it.passClickEvent(e)
             }
         }

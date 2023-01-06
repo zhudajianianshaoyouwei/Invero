@@ -15,15 +15,15 @@ class StandardPanel(
     locate: Pos
 ) : BukkitPanel(parent, weight, scale, locate), ElementalPanel {
 
-    private val elements: ElementMap = ElementMap()
+    private val elements: Elements = Elements()
 
-    override fun getElemap(): ElementMap {
+    override fun getElements(): Elements {
         return elements
     }
 
     override fun handleClick(pos: Pos, e: WindowClickEvent) {
-        getElemap().findElement(pos)?.let {
-            if (it is ClickableElement) {
+        getElements().findElement(pos)?.let {
+            if (it is Clickable) {
                 it.passClickEvent(e)
             }
         }

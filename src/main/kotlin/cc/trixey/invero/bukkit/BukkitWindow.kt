@@ -70,19 +70,17 @@ abstract class BukkitWindow(val type: WindowType, title: String = "Untitled_Inve
     }
 
     override fun handleClose(e: WindowCloseEvent) {
-        TODO("Not yet implemented")
+        close(e.getViewer())
     }
 
     override fun handleClick(e: WindowClickEvent) {
-        val click = scale.toPos(e.rawSlot)
+        val clickedSlot = scale.toPos(e.rawSlot)
 
         panels
             .sortedByDescending { it.weight }
             .forEach {
-                if (click in it.area) {
-                    it as BukkitPanel
-
-                    it.handleClick(click - it.locate, e)
+                if (clickedSlot in it.area) {
+                    it.handleClick(clickedSlot - it.locate, e)
                     return@forEach
                 }
             }

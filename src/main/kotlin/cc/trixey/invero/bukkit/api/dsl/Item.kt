@@ -22,7 +22,7 @@ inline fun ElementalPanel.item(
     material: Material,
     block: SimpleItem.() -> Unit = {}
 ) = item(material, block).also {
-    getElemap().addElement(it, Pos(pos))
+    getElements().addElement(it, Pos(pos))
 }
 
 inline fun ElementalPanel.item(
@@ -35,14 +35,14 @@ inline fun ElementalPanel.item(
 
 fun <T : Element> T.getPosition(): Positions? {
     val panel = panel as ElementalPanel
-    val elemap = panel.getElemap()
+    val elemap = panel.getElements()
 
     return elemap.locateElement(this)
 }
 
 fun <T : Element> T.set(vararg slots: Int): T {
     val panel = panel as ElementalPanel
-    val elemap = panel.getElemap()
+    val elemap = panel.getElements()
 
     // Wipe previous cache
     elemap.setElement(this, Positions(slots.map { panel.scale.toPos(it) }.toMutableSet()))
@@ -55,7 +55,7 @@ fun <T : Element> T.set(vararg slots: Int): T {
 
 fun <T : Element> T.add(vararg slots: Int): T {
     val panel = panel as ElementalPanel
-    val elemap = panel.getElemap()
+    val elemap = panel.getElements()
 
     slots
         .map { panel.scale.toPos(it) }
@@ -68,7 +68,7 @@ fun <T : Element> T.add(vararg slots: Int): T {
 
 fun <T : Element> T.fillup(): T {
     val panel = panel as ElementalPanel
-    val elemap = panel.getElemap()
+    val elemap = panel.getElements()
 
     panel.getUnoccupiedPositions()
         .forEach { elemap.addElement(this, it) }

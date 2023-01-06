@@ -15,9 +15,9 @@ class FreeformPanel(
     locate: Pos
 ) : BukkitPanel(parent, weight, scale, locate), ElementalPanel {
 
-    private val elements: ElementMap = ElementMap()
+    private val elements: Elements = Elements()
 
-    override fun getElemap(): ElementMap {
+    override fun getElements(): Elements {
         return elements
     }
 

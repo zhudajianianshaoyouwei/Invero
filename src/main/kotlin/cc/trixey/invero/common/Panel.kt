@@ -1,5 +1,7 @@
 package cc.trixey.invero.common
 
+import cc.trixey.invero.common.event.WindowClickEvent
+
 /**
  * @author Arasple
  * @since 2022/12/20 20:43
@@ -30,6 +32,9 @@ interface Panel : Gridable {
      */
     val locate: Pos
 
+    /**
+     * Scale area related to its locate
+     */
     val area: Set<Pos>
         get() = scale.toArea(locate)
 
@@ -41,6 +46,20 @@ interface Panel : Gridable {
     /**
      * Wipe this panel
      */
-    fun wipe()
+    fun wipe() = wipe(area)
+
+    fun wipe(pos: Set<Pos>) {
+        if (parent.isPanel()) return parent.cast<Panel>().wipe(pos)
+
+        window.let { window ->
+            val slots = pos.map { it.toSlot(window.scale) }.toSet()
+            window.inventory.clear(slots)
+        }
+    }
+
+    /**
+     * Event handler
+     */
+    fun handleClick(pos: Pos, e: WindowClickEvent)
 
 }

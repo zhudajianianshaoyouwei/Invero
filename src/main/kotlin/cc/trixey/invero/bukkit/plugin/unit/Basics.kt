@@ -32,7 +32,6 @@ fun showBasic(player: Player) = bukkitChestWindow(6, "Hello Invero") {
     standardPanel(3 to 7) {
         item(Material.EMERALD).fillup().onClick {
             player.sendMessage("6")
-
         }
     }
 

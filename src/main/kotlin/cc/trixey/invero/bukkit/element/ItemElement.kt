@@ -16,9 +16,9 @@ import java.util.function.Supplier
 abstract class ItemElement(
     override val panel: Panel,
     internal var value: ItemStack = ItemStack(Material.STONE)
-) : Supplier<ItemStack>, Element, ClickableElement {
+) : Supplier<ItemStack>, Element, Clickable {
 
-    override var handler: (WindowClickEvent, ClickableElement) -> Unit = { _, _ -> }
+    override var handler: (WindowClickEvent, Clickable) -> Unit = { _, _ -> }
 
     fun modify(builder: ItemBuilder.() -> Unit) {
         value = buildItem(value, builder)
@@ -35,7 +35,7 @@ abstract class ItemElement(
     override fun push() {
         if (panel is ElementalPanel) {
             val window = panel.window
-            val elemap = (panel as ElementalPanel).getElemap()
+            val elemap = (panel as ElementalPanel).getElements()
             val positions = elemap.locateElement(this) ?: error("Not found position for this itemElement")
             // 向外渲染逻辑：定位槽位
             positions.values.map { locatingSlot(it) }.filter { it >= 0 }.forEach {
