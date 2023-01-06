@@ -1,8 +1,8 @@
 package cc.trixey.invero.bukkit.element
 
 import cc.trixey.invero.common.*
+import cc.trixey.invero.common.event.WindowClickEvent
 import org.bukkit.Material
-import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.submitAsync
 import taboolib.platform.util.ItemBuilder
@@ -18,7 +18,7 @@ abstract class ItemElement(
     internal var value: ItemStack = ItemStack(Material.STONE)
 ) : Supplier<ItemStack>, Element, ClickableElement {
 
-    override var handler: (InventoryClickEvent, ClickableElement) -> Unit = { _, _ -> }
+    override var handler: (WindowClickEvent, ClickableElement) -> Unit = { _, _ -> }
 
     fun modify(builder: ItemBuilder.() -> Unit) {
         value = buildItem(value, builder)

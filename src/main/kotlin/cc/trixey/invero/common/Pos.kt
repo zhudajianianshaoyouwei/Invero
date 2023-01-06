@@ -21,13 +21,13 @@ value class Pos(internal val value: Pair<Int, Int>) {
 
     constructor(x: Int, y: Int) : this(x to y)
 
-    constructor(slot: Int, scale: IScale) : this(scale.toPosition(slot))
+    constructor(slot: Int, scale: ScaleInterface) : this(scale.toPosition(slot))
 
-    fun toSlot(scale: IScale, index: Pos = Pos(0, 0)): Int {
+    fun toSlot(scale: ScaleInterface, index: Pos = Pos(0, 0)): Int {
         return scale.toSlot(x, y, index)
     }
 
-    fun advance(previous: IScale, destination: IScale): Pos {
+    fun advance(previous: ScaleInterface, destination: ScaleInterface): Pos {
         return Pos(destination.toPosition(previous.toSlot(x, y)))
     }
 

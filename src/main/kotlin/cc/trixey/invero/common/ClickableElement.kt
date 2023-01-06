@@ -1,6 +1,6 @@
 package cc.trixey.invero.common
 
-import org.bukkit.event.inventory.InventoryClickEvent
+import cc.trixey.invero.common.event.WindowClickEvent
 
 /**
  * @author Arasple
@@ -8,14 +8,14 @@ import org.bukkit.event.inventory.InventoryClickEvent
  */
 interface ClickableElement : Element {
 
-    var handler: (InventoryClickEvent, ClickableElement) -> Unit
+    var handler: (WindowClickEvent, ClickableElement) -> Unit
 
-    fun onClick(event: InventoryClickEvent.(element: ClickableElement) -> Unit): ClickableElement {
+    fun onClick(event: WindowClickEvent.(element: ClickableElement) -> Unit): ClickableElement {
         handler = event
         return this
     }
 
-    fun passClickEvent(e: InventoryClickEvent) {
+    fun passClickEvent(e: WindowClickEvent) {
         e.isCancelled = true
 
         handler(e, this)

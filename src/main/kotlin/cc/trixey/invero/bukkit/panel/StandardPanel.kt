@@ -2,7 +2,7 @@ package cc.trixey.invero.bukkit.panel
 
 import cc.trixey.invero.bukkit.BukkitPanel
 import cc.trixey.invero.common.*
-import org.bukkit.event.inventory.InventoryClickEvent
+import cc.trixey.invero.common.event.WindowClickEvent
 
 /**
  * @author Arasple
@@ -21,8 +21,8 @@ class StandardPanel(
         return elements
     }
 
-    override fun handleClick(pos: Pos, e: InventoryClickEvent) {
-        elements.findElement(pos)?.let {
+    override fun handleClick(pos: Pos, e: WindowClickEvent) {
+        getElemap().findElement(pos)?.let {
             if (it is ClickableElement) {
                 it.passClickEvent(e)
             }

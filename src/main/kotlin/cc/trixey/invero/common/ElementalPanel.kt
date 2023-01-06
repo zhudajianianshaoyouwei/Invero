@@ -19,6 +19,10 @@ interface ElementalPanel : Panel {
         }
     }
 
+    override fun wipe() {
+        wipe(area)
+    }
+
     override fun render() {
         getElemap().forEach { push() }
     }

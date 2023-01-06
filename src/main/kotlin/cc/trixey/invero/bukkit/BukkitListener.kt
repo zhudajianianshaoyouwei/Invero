@@ -1,6 +1,5 @@
 package cc.trixey.invero.bukkit
 
-import cc.trixey.invero.common.event.BukkitWindowEvent
 import org.bukkit.event.inventory.*
 import taboolib.common.platform.event.SubscribeEvent
 import java.util.*
@@ -12,7 +11,17 @@ import java.util.*
 object BukkitListener {
 
     @SubscribeEvent
-    fun e(e: InventoryClickEvent) = e.passInventoryEvent(e.whoClicked.uniqueId)
+    fun e(e: InventoryClickEvent) {
+        e.inventory.holder.let {
+            if (it is BukkitWindowHolder) {
+
+//                BukkitClickEvent(e, BukkitViewer(e.whoClicked.uniqueId), it.window)
+//                it.window.handleClick()
+            }
+        }
+
+        e.passInventoryEvent(e.whoClicked.uniqueId)
+    }
 
     @SubscribeEvent
     fun e(e: InventoryDragEvent) = e.passInventoryEvent(e.whoClicked.uniqueId)
@@ -25,7 +34,10 @@ object BukkitListener {
 
     private fun InventoryEvent.passInventoryEvent(uniqueId: UUID) = inventory.holder.let {
         if (it is BukkitWindowHolder) {
-            it.window.handleEvent(BukkitWindowEvent(this, BukkitViewer(uniqueId), it.window))
+
+            // TODO
+
+//            it.window.handleEvent(BukkitWindowEvent(this, BukkitViewer(uniqueId), it.window))
         }
     }
 

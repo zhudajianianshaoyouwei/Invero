@@ -4,7 +4,7 @@ package cc.trixey.invero.common
  * @author Arasple
  * @since 2023/1/5 12:21
  */
-interface IScale {
+interface ScaleInterface {
 
     val width: Int
 

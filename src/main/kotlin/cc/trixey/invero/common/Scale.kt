@@ -5,7 +5,7 @@ package cc.trixey.invero.common
  * @since 2023/1/4 22:41
  */
 @JvmInline
-value class Scale(private val value: Pair<Int, Int>) : IScale {
+value class Scale(private val value: Pair<Int, Int>) : ScaleInterface {
 
     override val width: Int
         get() = value.first

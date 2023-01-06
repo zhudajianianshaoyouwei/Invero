@@ -38,4 +38,9 @@ interface Panel : Gridable {
      */
     fun render()
 
+    /**
+     * Wipe this panel
+     */
+    fun wipe()
+
 }

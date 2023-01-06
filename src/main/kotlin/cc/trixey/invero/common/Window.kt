@@ -1,6 +1,6 @@
 package cc.trixey.invero.common
 
-import cc.trixey.invero.common.event.WindowEvent
+import cc.trixey.invero.common.event.*
 
 /**
  * @author Arasple
@@ -51,7 +51,17 @@ interface Window : PanelContainer, Gridable {
     /**
      * Handle relevant event
      */
-    fun handleEvent(event: WindowEvent)
+    fun handleDrag(e: WindowDragEvent)
+
+    fun handleItemsMove(e: WindowItemsMoveEvent)
+
+    fun handleItemsCollect(e: WindowItemsCollectEvent)
+
+    fun handleClick(e: WindowClickEvent)
+
+    fun handleOpen(e: WindowOpenEvent)
+
+    fun handleClose(e: WindowCloseEvent)
 
     fun <T : Viewer> forViewers(block: (it: T) -> Unit) = viewers
         .filter { it.isAvailable() }

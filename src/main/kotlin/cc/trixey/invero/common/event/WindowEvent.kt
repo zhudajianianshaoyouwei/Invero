@@ -9,10 +9,10 @@ import cc.trixey.invero.common.Window
  */
 interface WindowEvent {
 
-    val viewer: Viewer
+    fun getViewer(): Viewer
 
-    val window: Window
+    fun getWindow(): Window
 
-    val type: EventType
+    fun getType(): EventType
 
 }

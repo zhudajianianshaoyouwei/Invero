@@ -4,7 +4,7 @@ package cc.trixey.invero.common
  * @author Arasple
  * @since 2023/1/5 12:24
  */
-data class ScaleFreeform(var viewport: Pos, private val value: Pair<Int, Int>) : IScale {
+data class ScaleViewport(var viewport: Pos, private val value: Pair<Int, Int>) : ScaleInterface {
 
     override val width: Int
         get() = value.first

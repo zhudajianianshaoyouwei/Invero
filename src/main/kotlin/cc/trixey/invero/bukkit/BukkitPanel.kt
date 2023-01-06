@@ -2,7 +2,7 @@ package cc.trixey.invero.bukkit
 
 import cc.trixey.invero.bukkit.api.InveroAPI
 import cc.trixey.invero.common.*
-import org.bukkit.event.inventory.InventoryClickEvent
+import cc.trixey.invero.common.event.WindowClickEvent
 
 /**
  * @author Arasple
@@ -11,7 +11,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 abstract class BukkitPanel(
     override val parent: PanelContainer,
     override val weight: PanelWeight,
-    override val scale: IScale,
+    override val scale: ScaleInterface,
     override val locate: Pos
 ) : Panel {
 
@@ -27,6 +27,6 @@ abstract class BukkitPanel(
             }
         }
 
-    abstract fun handleClick(pos: Pos, e: InventoryClickEvent)
+    abstract fun handleClick(pos: Pos, e: WindowClickEvent)
 
 }
