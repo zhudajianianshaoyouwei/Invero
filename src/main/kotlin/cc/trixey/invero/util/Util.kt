@@ -2,6 +2,7 @@ package cc.trixey.invero.util
 
 import cc.trixey.invero.bukkit.BukkitViewer
 import cc.trixey.invero.common.Viewer
+import org.bukkit.entity.Player
 
 /**
  * @author Arasple
@@ -9,4 +10,4 @@ import cc.trixey.invero.common.Viewer
  */
 fun Viewer.toBukkitViewer() = this as BukkitViewer
 
-fun Viewer.safeBukkitPlayer() = toBukkitViewer().getSafely()
+fun Viewer.safeBukkitPlayer(): Player? = getInstanceSafe<Player>()

@@ -40,12 +40,16 @@ fun <T : Element> T.getPosition(): Positions? {
     return elemap.locateElement(this)
 }
 
-fun <T : Element> T.set(vararg slots: Int): T {
+fun <T : Element> T.set(vararg slots: Int): T = set(slots.map { panel.scale.toPos(it) }.toSet())
+
+fun <T : Element> T.set(pos: Pos): T = set(setOf(pos))
+
+fun <T : Element> T.set(pos: Set<Pos>): T {
     val panel = panel as ElementalPanel
     val elemap = panel.getElements()
 
     // Wipe previous cache
-    elemap.setElement(this, Positions(slots.map { panel.scale.toPos(it) }.toMutableSet()))
+    elemap.setElement(this, Positions(pos.toMutableSet()))
         ?.let {
             panel.wipe(it)
         }
@@ -54,14 +58,15 @@ fun <T : Element> T.set(vararg slots: Int): T {
 }
 
 fun <T : Element> T.add(vararg slots: Int): T {
+    slots.forEach { add(panel.scale.toPos(it)) }
+    return this
+}
+
+fun <T : Element> T.add(pos: Pos): T {
     val panel = panel as ElementalPanel
     val elemap = panel.getElements()
 
-    slots
-        .map { panel.scale.toPos(it) }
-        .forEach {
-            elemap.addElement(this, it)
-        }
+    elemap.addElement(this, pos)
 
     return this
 }

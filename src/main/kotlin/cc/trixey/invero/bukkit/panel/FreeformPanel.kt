@@ -25,10 +25,15 @@ class FreeformPanel(
         set(value) {
             field = value
             scale.viewport = value
+            rerender()
         }
 
     override fun handleClick(pos: Pos, e: WindowClickEvent) {
-        TODO("Not yet implemented")
+        getElements().findElement(pos)?.let {
+            if (it is Clickable) {
+                it.passClickEvent(e)
+            }
+        }
     }
 
 }

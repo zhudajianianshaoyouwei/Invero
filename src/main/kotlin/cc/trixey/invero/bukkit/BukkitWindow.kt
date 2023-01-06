@@ -1,12 +1,14 @@
 package cc.trixey.invero.bukkit
 
 import cc.trixey.invero.bukkit.api.InveroAPI
+import cc.trixey.invero.bukkit.nms.updateTitle
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Viewer
 import cc.trixey.invero.common.Window
 import cc.trixey.invero.common.WindowType
 import cc.trixey.invero.common.event.*
 import org.bukkit.entity.Player
+import taboolib.common.platform.function.submit
 
 /**
  * @author Arasple
@@ -19,7 +21,9 @@ abstract class BukkitWindow(val type: WindowType, title: String = "Untitled_Inve
     override var title: String = title
         set(value) {
             field = value
-            // TODO Packet-Title-Modify
+            submit(async = true) {
+                updateTitle(value, true)
+            }
         }
 
     override val viewers: MutableSet<Viewer> = mutableSetOf()
@@ -54,19 +58,19 @@ abstract class BukkitWindow(val type: WindowType, title: String = "Untitled_Inve
     }
 
     override fun handleDrag(e: WindowDragEvent) {
-        TODO("Not yet implemented")
+
     }
 
     override fun handleItemsCollect(e: WindowItemsCollectEvent) {
-        TODO("Not yet implemented")
+
     }
 
     override fun handleItemsMove(e: WindowItemsMoveEvent) {
-        TODO("Not yet implemented")
+
     }
 
     override fun handleOpen(e: WindowOpenEvent) {
-        TODO("Not yet implemented")
+
     }
 
     override fun handleClose(e: WindowCloseEvent) {
@@ -76,14 +80,12 @@ abstract class BukkitWindow(val type: WindowType, title: String = "Untitled_Inve
     override fun handleClick(e: WindowClickEvent) {
         val clickedSlot = scale.toPos(e.rawSlot)
 
-        panels
-            .sortedByDescending { it.weight }
-            .forEach {
-                if (clickedSlot in it.area) {
-                    it.handleClick(clickedSlot - it.locate, e)
-                    return@forEach
-                }
+        panels.sortedByDescending { it.weight }.forEach {
+            if (clickedSlot in it.area) {
+                it.handleClick(clickedSlot - it.locate, e)
+                return@forEach
             }
+        }
     }
 
 }

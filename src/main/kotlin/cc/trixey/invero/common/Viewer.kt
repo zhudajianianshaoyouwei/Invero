@@ -14,6 +14,6 @@ interface Viewer {
 
     fun <T> getInstance(): T
 
-    fun <T> getInstanceSafe() = if (isAvailable()) getInstance() else null
+    fun <T> getInstanceSafe(): T? = if (isAvailable()) getInstance() else null
 
 }

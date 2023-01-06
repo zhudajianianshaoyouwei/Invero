@@ -20,10 +20,9 @@ class PagedStandardPanel(
         set(value) {
             if (value <= 0) error("Page index can not be a negative number")
             else if (pageIndex > pagedElements.indices.last) error("Page index is out of bounds ${pagedElements.indices}")
-
-            wipe()
-            render()
             field = value
+
+            rerender()
         }
 
     private val pagedElements: LinkedList<Elements> = LinkedList<Elements>()

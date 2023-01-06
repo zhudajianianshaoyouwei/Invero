@@ -6,10 +6,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
 import taboolib.platform.BukkitPlugin
-import taboolib.platform.util.ItemBuilder
-import taboolib.platform.util.buildItem
-import taboolib.platform.util.isAir
-import taboolib.platform.util.modifyMeta
+import taboolib.platform.util.*
 
 /**
  * @author Arasple
@@ -32,3 +29,5 @@ fun randomItem(builder: ItemBuilder.() -> Unit = {}): ItemStack {
         it.amount = it.amount.coerceAtMost(it.maxStackSize)
     }
 }
+
+fun randomMaterial() = Material.values().filter { (it.isItem || it.isBlock) && it.isNotAir() }.random()

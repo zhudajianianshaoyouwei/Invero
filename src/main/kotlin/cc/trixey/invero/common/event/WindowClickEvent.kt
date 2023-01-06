@@ -8,4 +8,6 @@ interface WindowClickEvent : WindowEvent, Cancellable {
 
     val rawSlot: Int
 
+    val clickType: ClickType
+
 }

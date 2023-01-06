@@ -57,6 +57,8 @@ interface Panel : Gridable {
         }
     }
 
+    fun rerender() = wipe().also { render() }
+
     /**
      * Event handler
      */

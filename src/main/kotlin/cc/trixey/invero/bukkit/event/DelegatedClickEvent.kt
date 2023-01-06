@@ -4,6 +4,7 @@ import cc.trixey.invero.bukkit.BukkitViewer
 import cc.trixey.invero.bukkit.BukkitWindowHolder
 import cc.trixey.invero.common.Viewer
 import cc.trixey.invero.common.Window
+import cc.trixey.invero.common.event.ClickType
 import cc.trixey.invero.common.event.EventType
 import cc.trixey.invero.common.event.WindowClickEvent
 import org.bukkit.event.inventory.InventoryClickEvent
@@ -25,6 +26,9 @@ value class DelegatedClickEvent(
         set(value) {
             event.isCancelled = value
         }
+
+    override val clickType: ClickType
+        get() = ClickType.findBukkit(event.click.name)!!
 
     override fun getViewer(): Viewer {
         return BukkitViewer(event.whoClicked.uniqueId)
