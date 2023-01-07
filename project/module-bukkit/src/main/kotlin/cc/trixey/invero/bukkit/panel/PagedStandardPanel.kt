@@ -34,7 +34,7 @@ class PagedStandardPanel(
     override fun handleClick(pos: Pos, e: WindowClickEvent) {
         getElements().findElement(pos)?.let {
             if (it is Clickable) {
-                it.passClickEvent(e)
+                it.passClickEventHandler(e)
             }
         }
     }

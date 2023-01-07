@@ -2,6 +2,7 @@ package cc.trixey.invero.bukkit
 
 import cc.trixey.invero.bukkit.api.InveroAPI
 import cc.trixey.invero.common.*
+import cc.trixey.invero.common.event.WindowClickEvent
 
 /**
  * @author Arasple
@@ -13,6 +14,16 @@ abstract class BukkitPanel(
     override val scale: ScaleInterface,
     override val locate: Pos
 ) : Panel {
+
+    private var handler: (WindowClickEvent, Clickable) -> Unit = { _, _ -> }
+
+    override fun getHandler(): (WindowClickEvent, Clickable) -> Unit {
+        return handler
+    }
+
+    override fun setHandler(handler: (WindowClickEvent, Clickable) -> Unit) {
+        this.handler = handler
+    }
 
     override val window: Window
         get() {

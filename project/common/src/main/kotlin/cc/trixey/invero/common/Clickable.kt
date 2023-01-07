@@ -6,7 +6,7 @@ import cc.trixey.invero.common.event.WindowClickEvent
  * @author Arasple
  * @since 2023/1/5 14:27
  */
-interface Clickable : Element {
+interface Clickable {
 
     fun getHandler(): (WindowClickEvent, Clickable) -> Unit
 
@@ -17,7 +17,7 @@ interface Clickable : Element {
         return this
     }
 
-    fun passClickEvent(e: WindowClickEvent) {
+    fun passClickEventHandler(e: WindowClickEvent) {
         getHandler()(e, this)
     }
 

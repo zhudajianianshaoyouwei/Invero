@@ -15,7 +15,7 @@ val handler by unsafeLazy {
     nmsProxy<NMS>()
 }
 
-fun BukkitWindow.updateTitle(title: String, updateInventory: Boolean) {
+fun BukkitWindow.updateTitle(title: String, updateInventory: Boolean = true) {
     viewers.forEach {
         val player = it.getInstance<Player>()
         val id = handler.getContainerId(player)

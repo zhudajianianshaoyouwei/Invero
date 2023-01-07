@@ -71,4 +71,6 @@ interface Window : PanelContainer, Gridable {
 
     fun hasViewer() = viewers.isNotEmpty()
 
+    fun noViewer() = viewers.isEmpty()
+
 }

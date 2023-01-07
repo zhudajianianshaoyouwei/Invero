@@ -6,7 +6,7 @@ import cc.trixey.invero.common.event.WindowClickEvent
  * @author Arasple
  * @since 2022/12/20 20:43
  */
-interface Panel : Gridable {
+interface Panel : Gridable, Clickable {
 
     /**
      * The parent of this panel
@@ -50,7 +50,6 @@ interface Panel : Gridable {
 
     fun wipe(wiping: Set<Pos>, absolute: Boolean = false) {
         if (parent.isPanel()) return parent.cast<Panel>().wipe(wiping, absolute)
-
         else window.let { window ->
             val slots = wiping.map { it.toSlot(window.scale) }.toSet()
             window.inventory.clear(slots)

@@ -33,7 +33,7 @@ class FreeformStandardPanel(
     override fun handleClick(pos: Pos, e: WindowClickEvent) {
         getElements().findElement(pos + viewport)?.let {
             if (it is Clickable) {
-                it.passClickEvent(e)
+                it.passClickEventHandler(e)
             }
         }
     }
@@ -44,9 +44,6 @@ class FreeformStandardPanel(
 
     override fun shift(x: Int, y: Int) {
         viewport += (x to y)
-
-        // debug title
-        window.title = viewport.toString()
     }
 
 }

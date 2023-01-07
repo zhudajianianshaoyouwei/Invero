@@ -57,7 +57,7 @@ fun showRunningApple(player: Player) = bukkitChestWindow(6, "Running apple") {
 
         var base = 0
         submit(now = false, async = true, 20L, 20L) {
-            if (!hasViewer()) cancel().also {
+            if (noViewer()) cancel().also {
                 println("Cancelled")
             }
 

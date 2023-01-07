@@ -1,9 +1,6 @@
 package cc.trixey.invero.plugin
 
-import cc.trixey.invero.plugin.unit.showBasic
-import cc.trixey.invero.plugin.unit.showDynamicTitle
-import cc.trixey.invero.plugin.unit.showFreeformStandard
-import cc.trixey.invero.plugin.unit.showRunningApple
+import cc.trixey.invero.plugin.unit.*
 import org.bukkit.entity.Player
 import taboolib.common.platform.Plugin
 import taboolib.common.platform.command.CommandBody
@@ -36,6 +33,9 @@ object InveroPlugin : Plugin() {
 
         @CommandBody
         val freeform = construct { showFreeformStandard(this) }
+
+        @CommandBody
+        val tgof = construct { showTheGameOfLife(this) }
 
         private fun construct(block: Player.() -> Unit): SimpleCommandBody {
             return subCommand {

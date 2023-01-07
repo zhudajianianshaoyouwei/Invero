@@ -8,6 +8,11 @@ interface FreeformPanel : Panel {
 
     val viewport: Pos
 
+    fun toAbsolutePosition(slot: Int): Pos {
+        return scale.toPos(slot) + viewport
+
+    }
+
     fun reset()
 
     fun shift(x: Int = 0, y: Int = 0)

@@ -45,6 +45,18 @@ fun <T : Element> T.getPosition(): Positions? {
     return elemap.locateElement(this)
 }
 
+fun <T : Element> T.ruin(): Boolean {
+    val panel = panel as ElementalPanel
+    val elemap = panel.getElements()
+
+    elemap.locateElement(this)?.let {
+        panel.wipe(it.values)
+        elemap.removeElement(this)
+        return true
+    }
+    return false
+}
+
 fun <T : Element> T.set(vararg slots: Int): T = set(slots.map { panel.scale.toPos(it) }.toSet())
 
 fun <T : Element> T.set(pos: Pos): T = set(setOf(pos))

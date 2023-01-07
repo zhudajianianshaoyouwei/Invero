@@ -83,6 +83,7 @@ abstract class BukkitWindow(val type: WindowType, title: String = "Untitled_Inve
         panels.sortedByDescending { it.weight }.forEach {
             if (clickedSlot in it.area) {
                 it.handleClick(clickedSlot - it.locate, e)
+                it.passClickEventHandler(e)
                 return@forEach
             }
         }
