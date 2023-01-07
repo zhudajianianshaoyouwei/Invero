@@ -1,26 +1,24 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.7.20"
-    id("io.izzel.taboolib") version "1.51"
+    java
+    id("org.jetbrains.kotlin.jvm") version "1.8.0" apply false
+    id("com.github.johnrengelman.shadow") version "7.1.2" apply false
 }
 
-group = "cc.trixey.invero"
-version = "1.0-SNAPSHOT"
+subprojects {
+    apply(plugin = "com.github.johnrengelman.shadow")
+    apply(plugin = "org.jetbrains.kotlin.jvm")
 
-taboolib {
-    version = "6.0.10-38"
-    install("common")
-    install("common-5")
-    install("module-nms")
-    install("platform-bukkit")
+    repositories {
+        mavenCentral()
+        maven("https://repo.tabooproject.org/repository/releases")
+        maven("http://ptms.ink:8081/repository/releases") { isAllowInsecureProtocol = true }
+    }
+
+    dependencies { compileOnly(kotlin("stdlib")) }
+
 }
 
-dependencies {
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    compileOnly("ink.ptms:nms-all:1.0.0")
-    compileOnly("ink.ptms.core:v11903:11903-minimize:mapped")
-    compileOnly("ink.ptms.core:v11903:11903-minimize:universal")
-}
-
-repositories {
-    mavenCentral()
+@Suppress("DEPRECATION")
+gradle.buildFinished {
+    buildDir.deleteRecursively()
 }

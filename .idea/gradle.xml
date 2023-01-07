@@ -9,6 +9,11 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/plugin" />
+            <option value="$PROJECT_DIR$/project" />
+            <option value="$PROJECT_DIR$/project/common" />
+            <option value="$PROJECT_DIR$/project/module-bukkit" />
+            <option value="$PROJECT_DIR$/project/module-util" />
           </set>
         </option>
       </GradleProjectSettings>
