@@ -1,6 +1,7 @@
 package cc.trixey.invero.common
 
 import cc.trixey.invero.common.event.*
+import cc.trixey.invero.common.panel.PanelContainer
 
 /**
  * @author Arasple

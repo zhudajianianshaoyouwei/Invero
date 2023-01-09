@@ -3,6 +3,7 @@ package cc.trixey.invero.bukkit.element
 import cc.trixey.invero.bukkit.ProxyBukkitInventory
 import cc.trixey.invero.common.*
 import cc.trixey.invero.common.event.WindowClickEvent
+import cc.trixey.invero.common.panel.ElementalPanel
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.submitAsync
@@ -16,10 +17,15 @@ import java.util.function.Supplier
  */
 abstract class ItemElement(
     override val panel: Panel,
-    internal var value: ItemStack = ItemStack(Material.STONE)
+    value: ItemStack = ItemStack(Material.STONE)
 ) : Supplier<ItemStack>, Element, Clickable {
 
     private var handler: (WindowClickEvent, Clickable) -> Unit = { _, _ -> }
+    internal var value: ItemStack = value
+        set(value) {
+            field = value
+            safePush()
+        }
 
     override fun getHandler(): (WindowClickEvent, Clickable) -> Unit {
         return handler
@@ -41,17 +47,22 @@ abstract class ItemElement(
         submitAsync { value = supplier.get() }
     }
 
+    override fun postRender(block: (Pos) -> Unit) {
+        if (!panel.isElementValid(this)) return
+
+        val elements = (panel as ElementalPanel).getElements()
+        val positions = elements.locateElement(this)?.values ?: setOf()
+
+        positions.forEach(block)
+    }
+
     override fun push() {
-        if (panel is ElementalPanel) {
-            val window = panel.window
-            val elemap = (panel as ElementalPanel).getElements()
-            val positions = elemap.locateElement(this) ?: error("Not found position for this itemElement")
-            // 向外渲染逻辑：定位槽位
-            positions.values.forEach {
-                val slot = it.locatingSlot()
-                if (slot >= 0) {
-                    (window.inventory as ProxyBukkitInventory)[slot] = value
-                }
+        val window = panel.window
+
+        postRender {
+            val slot = it.locatingSlot()
+            if (slot >= 0) {
+                (window.inventory as ProxyBukkitInventory)[slot] = value
             }
         }
     }

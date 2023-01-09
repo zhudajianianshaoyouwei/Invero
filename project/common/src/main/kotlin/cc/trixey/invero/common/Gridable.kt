@@ -6,6 +6,6 @@ package cc.trixey.invero.common
  */
 interface Gridable {
 
-    val scale: ScaleInterface
+    val scale: Scale
 
 }

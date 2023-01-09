@@ -1,5 +1,7 @@
 package cc.trixey.invero.common
 
+import cc.trixey.invero.common.panel.FreeformPanel
+
 /**
  * @author Arasple
  * @since 2022/12/22 20:23
@@ -8,7 +10,15 @@ interface Element {
 
     val panel: Panel
 
+    fun postRender(block: (Pos) -> Unit)
+
     fun push()
+
+    fun safePush() {
+        if (shouldPush()) push()
+    }
+
+    fun shouldPush() = panel.window.hasViewer()
 
     fun Pos.locatingSlot(): Int {
         val layout = panel.scale
@@ -32,7 +42,7 @@ interface Element {
         }
 
         // 返回相对窗口（最高层）的槽位
-        return position.toSlot(forward.scale, current.locate)
+        return position.convertToSlot(forward.scale, current.locate)
     }
 
 }

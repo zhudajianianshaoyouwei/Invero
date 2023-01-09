@@ -1,6 +1,8 @@
 package cc.trixey.invero.common
 
 import cc.trixey.invero.common.event.WindowClickEvent
+import cc.trixey.invero.common.panel.PanelContainer
+import cc.trixey.invero.common.panel.PanelWeight
 
 /**
  * @author Arasple
@@ -36,7 +38,7 @@ interface Panel : Gridable, Clickable {
      * Scale area related to its locate
      */
     val area: Set<Pos>
-        get() = scale.toArea(locate)
+        get() = scale.getArea(locate)
 
     /**
      * Render this panel
@@ -51,10 +53,12 @@ interface Panel : Gridable, Clickable {
     fun wipe(wiping: Set<Pos>, absolute: Boolean = false) {
         if (parent.isPanel()) return parent.cast<Panel>().wipe(wiping, absolute)
         else window.let { window ->
-            val slots = wiping.map { it.toSlot(window.scale) }.toSet()
+            val slots = wiping.map { it.convertToSlot(window.scale) }.toSet()
             window.inventory.clear(slots)
         }
     }
+
+    fun isElementValid(element: Element): Boolean
 
     fun rerender() = wipe().also { render() }
 

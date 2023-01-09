@@ -1,4 +1,4 @@
-package cc.trixey.invero.common
+package cc.trixey.invero.common.panel
 
 /**
  * @author Arasple

@@ -18,7 +18,7 @@ abstract class BukkitWindow(val type: WindowType, title: String = "Untitled_Inve
 
     abstract override val inventory: BukkitInventory
 
-    override var title: String = title
+    override var title = title
         set(value) {
             field = value
             submit(async = true) {
@@ -26,11 +26,11 @@ abstract class BukkitWindow(val type: WindowType, title: String = "Untitled_Inve
             }
         }
 
-    override val viewers: MutableSet<Viewer> = mutableSetOf()
+    override val viewers = mutableSetOf<Viewer>()
 
-    override val panels: ArrayList<Panel> = arrayListOf()
+    override val panels = arrayListOf<Panel>()
 
-    override val size: Int = type.entireWindowSize
+    override val size = type.entireWindowSize
 
     fun open(player: Player) = open(BukkitViewer(player))
 
@@ -78,15 +78,17 @@ abstract class BukkitWindow(val type: WindowType, title: String = "Untitled_Inve
     }
 
     override fun handleClick(e: WindowClickEvent) {
-        val clickedSlot = scale.toPos(e.rawSlot)
+        val clickedSlot = scale.convertToPosition(e.rawSlot)
 
-        panels.sortedByDescending { it.weight }.forEach {
-            if (clickedSlot in it.area) {
-                it.handleClick(clickedSlot - it.locate, e)
-                it.passClickEventHandler(e)
-                return@forEach
+        panels
+            .sortedByDescending { it.weight }
+            .forEach {
+                if (clickedSlot in it.area) {
+                    it.handleClick(clickedSlot - it.locate, e)
+                    it.passClickEventHandler(e)
+                    return@forEach
+                }
             }
-        }
     }
 
 }

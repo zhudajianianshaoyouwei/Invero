@@ -35,4 +35,8 @@ value class Elements(private val value: HashMap<Element, Positions> = hashMapOf(
         return removable
     }
 
+    fun hasElement(element: Element): Boolean {
+        return value.containsKey(element)
+    }
+
 }

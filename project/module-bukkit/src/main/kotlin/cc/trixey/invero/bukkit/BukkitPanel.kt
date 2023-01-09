@@ -3,6 +3,8 @@ package cc.trixey.invero.bukkit
 import cc.trixey.invero.bukkit.api.InveroAPI
 import cc.trixey.invero.common.*
 import cc.trixey.invero.common.event.WindowClickEvent
+import cc.trixey.invero.common.panel.PanelContainer
+import cc.trixey.invero.common.panel.PanelWeight
 
 /**
  * @author Arasple
@@ -11,7 +13,7 @@ import cc.trixey.invero.common.event.WindowClickEvent
 abstract class BukkitPanel(
     override val parent: PanelContainer,
     override val weight: PanelWeight,
-    override val scale: ScaleInterface,
+    override val scale: Scale,
     override val locate: Pos
 ) : Panel {
 

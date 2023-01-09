@@ -1,4 +1,8 @@
-package cc.trixey.invero.common
+package cc.trixey.invero.common.panel
+
+import cc.trixey.invero.common.Gridable
+import cc.trixey.invero.common.Panel
+import cc.trixey.invero.common.Window
 
 /**
  * @author Arasple

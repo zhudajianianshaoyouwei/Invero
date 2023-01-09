@@ -21,14 +21,14 @@ value class Pos(val value: Pair<Int, Int>) {
 
     constructor(x: Int, y: Int) : this(x to y)
 
-    constructor(slot: Int, scale: ScaleInterface) : this(scale.toPosition(slot))
+    constructor(slot: Int, scale: Scale) : this(scale.convertToPosition(slot).value)
 
-    fun toSlot(scale: ScaleInterface, index: Pos = Pos(0, 0)): Int {
-        return scale.toSlot(x, y, index)
+    fun convertToSlot(scale: Scale, index: Pos = Pos(0, 0)): Int {
+        return scale.convertToSlot(x, y, index)
     }
 
-    fun advance(previous: ScaleInterface, destination: ScaleInterface): Pos {
-        return Pos(destination.toPosition(previous.toSlot(x, y)))
+    fun advance(previous: Scale, destination: Scale): Pos {
+        return destination.convertToPosition(previous.convertToSlot(x, y))
     }
 
     operator fun minus(pos: Pos): Pos {

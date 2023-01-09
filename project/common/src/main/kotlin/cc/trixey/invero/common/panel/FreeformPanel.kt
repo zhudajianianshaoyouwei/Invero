@@ -1,4 +1,7 @@
-package cc.trixey.invero.common
+package cc.trixey.invero.common.panel
+
+import cc.trixey.invero.common.Panel
+import cc.trixey.invero.common.Pos
 
 /**
  * @author Arasple
@@ -9,29 +12,29 @@ interface FreeformPanel : Panel {
     val viewport: Pos
 
     fun toAbsolutePosition(slot: Int): Pos {
-        return scale.toPos(slot) + viewport
+        return scale.convertToPosition(slot) + viewport
 
     }
 
-    fun reset()
+    fun resetViewport()
 
     fun shift(x: Int = 0, y: Int = 0)
 
-    fun left() = shift(-1)
+    fun shiftLeft() = shift(-1)
 
-    fun right() = shift(1)
+    fun shiftRight() = shift(1)
 
-    fun up() = shift(y = -1)
+    fun shiftUp() = shift(y = -1)
 
-    fun down() = shift(y = 1)
+    fun shiftDown() = shift(y = 1)
 
-    fun upLeft() = shift(-1, -1)
+    fun shiftUpLeft() = shift(-1, -1)
 
-    fun upRight() = shift(1, -1)
+    fun shiftUpRight() = shift(1, -1)
 
-    fun downLeft() = shift(-1, 1)
+    fun shiftDownLeft() = shift(-1, 1)
 
-    fun downRight() = shift(1, 1)
+    fun shiftDownRight() = shift(1, 1)
 
     override fun wipe(wiping: Set<Pos>, absolute: Boolean) {
         run {

@@ -35,10 +35,7 @@ fun showFreeformStandard(player: Player) = bukkitChestWindow(6, "FreeformPanel S
         val runningApple = item(startX to startY, Material.APPLE) {
             modify { name = "Running_Apple" }
 
-            onClick {
-                modify { amount = ++appleCount }
-                push()
-            }
+            onClick { modify { amount = ++appleCount } }
         }
 
         submit(now = false, async = true, 20L, 20L) {
@@ -47,7 +44,6 @@ fun showFreeformStandard(player: Player) = bukkitChestWindow(6, "FreeformPanel S
             }
 
             runningApple.set(Pos((startX + count) to (startY + count)))
-            runningApple.push()
 
             if (count >= 4 && !reversing) reversing = true
             if (reversing && count <= 0) reversing = false
@@ -60,39 +56,39 @@ fun showFreeformStandard(player: Player) = bukkitChestWindow(6, "FreeformPanel S
     nav(3 to 3, 3 to 6) {
         item(Material.GRAY_STAINED_GLASS_PANE) {
             modify { name = "↖" }
-            onClick { firstFreeform().upLeft() }
+            onClick { firstFreeform().shiftUpLeft() }
         }
         item(Material.BLUE_STAINED_GLASS_PANE) {
             modify { name = "↑" }
-            onClick { firstFreeform().up() }
+            onClick { firstFreeform().shiftUp() }
         }
         item(Material.GRAY_STAINED_GLASS_PANE) {
             modify { name = "↗" }
-            onClick { firstFreeform().upRight() }
+            onClick { firstFreeform().shiftUpRight() }
         }
         item(Material.RED_STAINED_GLASS_PANE) {
             modify { name = "←" }
-            onClick { firstFreeform().left() }
+            onClick { firstFreeform().shiftLeft() }
         }
         item(Material.BLACK_STAINED_GLASS_PANE) {
             modify { name = "RESET" }
-            onClick { firstFreeform().reset() }
+            onClick { firstFreeform().resetViewport() }
         }
         item(Material.GREEN_STAINED_GLASS_PANE) {
             modify { name = "→" }
-            onClick { firstFreeform().right() }
+            onClick { firstFreeform().shiftRight() }
         }
         item(Material.GRAY_STAINED_GLASS_PANE) {
             modify { name = "↙" }
-            onClick { firstFreeform().downLeft() }
+            onClick { firstFreeform().shiftDownLeft() }
         }
         item(Material.ORANGE_STAINED_GLASS_PANE) {
             modify { name = "↓" }
-            onClick { firstFreeform().down() }
+            onClick { firstFreeform().shiftDown() }
         }
         item(Material.ORANGE_STAINED_GLASS_PANE) {
             modify { name = "↘" }
-            onClick { firstFreeform().downRight() }
+            onClick { firstFreeform().shiftDownRight() }
         }
     }
 

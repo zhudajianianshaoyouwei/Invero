@@ -2,9 +2,9 @@ package cc.trixey.invero.bukkit.api.dsl
 
 import cc.trixey.invero.bukkit.element.SimpleItem
 import cc.trixey.invero.common.Element
-import cc.trixey.invero.common.ElementalPanel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Positions
+import cc.trixey.invero.common.panel.ElementalPanel
 import org.bukkit.Material
 
 /**
@@ -15,7 +15,7 @@ inline fun ElementalPanel.item(
     slot: Int,
     material: Material,
     block: SimpleItem.() -> Unit = {}
-) = item(scale.toPosition(slot), material, block)
+) = item(scale.convertToPosition(slot).value, material, block)
 
 inline fun ElementalPanel.item(
     pos: Pair<Int, Int>,
@@ -57,25 +57,28 @@ fun <T : Element> T.ruin(): Boolean {
     return false
 }
 
-fun <T : Element> T.set(vararg slots: Int): T = set(slots.map { panel.scale.toPos(it) }.toSet())
+fun <T : Element> T.set(vararg slots: Int): T = set(slots.map { panel.scale.convertToPosition(it) }.toSet())
 
 fun <T : Element> T.set(pos: Pos): T = set(setOf(pos))
 
 fun <T : Element> T.set(pos: Set<Pos>): T {
     val panel = panel as ElementalPanel
-    val elemap = panel.getElements()
+    val elements = panel.getElements()
 
     // Wipe previous cache
-    elemap.setElement(this, Positions(pos))
+    elements.setElement(this, Positions(pos))
         ?.let {
             panel.wipe(it)
         }
+
+    // Auto-push
+    safePush()
 
     return this
 }
 
 fun <T : Element> T.add(vararg slots: Int): T {
-    slots.forEach { add(panel.scale.toPos(it)) }
+    slots.forEach { add(panel.scale.convertToPosition(it)) }
     return this
 }
 

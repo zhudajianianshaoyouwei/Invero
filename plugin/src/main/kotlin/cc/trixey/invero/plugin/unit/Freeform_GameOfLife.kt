@@ -3,7 +3,7 @@ package cc.trixey.invero.plugin.unit
 import cc.trixey.invero.bukkit.api.dsl.*
 import cc.trixey.invero.bukkit.element.SimpleItem
 import cc.trixey.invero.bukkit.nms.updateTitle
-import cc.trixey.invero.common.PanelWeight
+import cc.trixey.invero.common.panel.PanelWeight
 import cc.trixey.invero.common.Pos
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -32,9 +32,7 @@ fun showTheGameOfLife(player: Player) = bukkitChestWindow(6, formattedTitle()) {
     // 每个周期刷新
     fun refresh() {
         updateTitle(formattedTitle())
-//        cell.modify { amount = cells.size.coerceAtMost(64) }
         cell.set(cells)
-        cell.push()
     }
 
     // 周期任务
@@ -101,39 +99,39 @@ fun showTheGameOfLife(player: Player) = bukkitChestWindow(6, formattedTitle()) {
     nav(3 to 3, 3 to 6) {
         item(Material.GRAY_STAINED_GLASS_PANE) {
             modify { name = "↖" }
-            onClick { firstFreeform().upLeft() }
+            onClick { firstFreeform().shiftUpLeft() }
         }
         item(Material.BLUE_STAINED_GLASS_PANE) {
             modify { name = "↑" }
-            onClick { firstFreeform().up() }
+            onClick { firstFreeform().shiftUp() }
         }
         item(Material.GRAY_STAINED_GLASS_PANE) {
             modify { name = "↗" }
-            onClick { firstFreeform().upRight() }
+            onClick { firstFreeform().shiftUpRight() }
         }
         item(Material.RED_STAINED_GLASS_PANE) {
             modify { name = "←" }
-            onClick { firstFreeform().left() }
+            onClick { firstFreeform().shiftLeft() }
         }
         item(Material.BLACK_STAINED_GLASS_PANE) {
             modify { name = "RESET" }
-            onClick { firstFreeform().reset() }
+            onClick { firstFreeform().resetViewport() }
         }
         item(Material.GREEN_STAINED_GLASS_PANE) {
             modify { name = "→" }
-            onClick { firstFreeform().right() }
+            onClick { firstFreeform().shiftRight() }
         }
         item(Material.GRAY_STAINED_GLASS_PANE) {
             modify { name = "↙" }
-            onClick { firstFreeform().downLeft() }
+            onClick { firstFreeform().shiftDownLeft() }
         }
         item(Material.ORANGE_STAINED_GLASS_PANE) {
             modify { name = "↓" }
-            onClick { firstFreeform().down() }
+            onClick { firstFreeform().shiftDown() }
         }
         item(Material.ORANGE_STAINED_GLASS_PANE) {
             modify { name = "↘" }
-            onClick { firstFreeform().downRight() }
+            onClick { firstFreeform().shiftDownRight() }
         }
     }
 

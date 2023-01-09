@@ -3,6 +3,9 @@ package cc.trixey.invero.bukkit.panel
 import cc.trixey.invero.bukkit.BukkitPanel
 import cc.trixey.invero.common.*
 import cc.trixey.invero.common.event.WindowClickEvent
+import cc.trixey.invero.common.panel.ElementalPanel
+import cc.trixey.invero.common.panel.PanelContainer
+import cc.trixey.invero.common.panel.PanelWeight
 
 /**
  * @author Arasple

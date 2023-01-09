@@ -1,8 +1,8 @@
 package cc.trixey.invero.bukkit.api.dsl
 
 import cc.trixey.invero.bukkit.panel.StandardPanel
-import cc.trixey.invero.common.PanelContainer
-import cc.trixey.invero.common.PanelWeight
+import cc.trixey.invero.common.panel.PanelContainer
+import cc.trixey.invero.common.panel.PanelWeight
 
 /**
  * @author Arasple

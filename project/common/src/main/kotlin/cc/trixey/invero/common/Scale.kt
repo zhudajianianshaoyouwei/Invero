@@ -5,29 +5,40 @@ package cc.trixey.invero.common
  * @since 2023/1/4 22:41
  */
 @JvmInline
-value class Scale(private val value: Pair<Int, Int>) : ScaleInterface {
+value class Scale(val raw: Pair<Int, Int>) {
 
-    override val width: Int
-        get() = value.first
+    val width: Int
+        get() = raw.first
 
-    override val height: Int
-        get() = value.second
+    val height: Int
+        get() = raw.second
 
-    override fun isOutOfBounds(x: Int, y: Int, index: Pos): Boolean {
+    fun isOutOfBounds(x: Int, y: Int, index: Pos = Pos.NIL): Boolean {
         val (rX, rY) = x + index.x to y + index.y
 
         return rX < 0 || rY < 0 || rX >= width || rY >= height
     }
 
-    override fun toSlot(x: Int, y: Int, index: Pos): Int {
+    fun convertToSlot(x: Int, y: Int, index: Pos = Pos.NIL): Int {
         return (y + index.y) * width + (x + index.x)
     }
 
-    override fun toPosition(slot: Int): Pair<Int, Int> {
+    fun convertToPosition(slot: Int): Pos {
         val x = slot % width
         val y = (slot - x) / width
 
-        return x to y
+        return Pos(x to y)
+    }
+
+    fun getArea(index: Pos = Pos.NIL): Set<Pos> {
+        val pos = mutableSetOf<Pos>()
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                pos += Pos(index.x + x to index.y + y)
+            }
+        }
+
+        return pos
     }
 
 }
