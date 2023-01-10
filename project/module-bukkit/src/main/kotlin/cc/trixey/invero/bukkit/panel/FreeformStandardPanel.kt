@@ -12,6 +12,9 @@ import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.panel.FreeformStandardPanel
+ *
  * @author Arasple
  * @since 2022/12/29 13:48
  *

@@ -6,6 +6,9 @@ import org.bukkit.event.inventory.*
 import taboolib.common.platform.event.SubscribeEvent
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.BukkitListener
+ *
  * @author Arasple
  * @since 2023/1/5 14:11
  */

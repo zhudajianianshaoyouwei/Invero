@@ -3,6 +3,9 @@ package cc.trixey.invero.bukkit
 import cc.trixey.invero.common.WindowType
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.PacketWindow
+ *
  * @author Arasple
  * @since 2023/1/5 21:28
  */

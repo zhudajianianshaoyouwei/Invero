@@ -1,6 +1,9 @@
 package cc.trixey.invero.common
 
 /**
+ * Invero
+ * cc.trixey.invero.common.WindowType
+ *
  * @author Arasple
  * @since 2022/10/20
  *

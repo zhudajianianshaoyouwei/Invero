@@ -10,6 +10,9 @@ import org.bukkit.entity.Player
 import taboolib.common.platform.function.submitAsync
 
 /**
+ * Invero
+ * cc.trixey.invero.plugin.unit.Freeform_GameOfLife
+ *
  * @author Arasple
  * @since 2023/1/7 13:30
  */

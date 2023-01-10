@@ -4,6 +4,9 @@ import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 
 /**
+ * Invero
+ * cc.trixey.invero.common.panel.FreeformPanel
+ *
  * @author Arasple
  * @since 2023/1/6 14:57
  */

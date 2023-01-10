@@ -3,6 +3,9 @@ package cc.trixey.invero.common.panel
 import cc.trixey.invero.common.Panel
 
 /**
+ * Invero
+ * cc.trixey.invero.common.panel.PagedPanel
+ *
  * @author Arasple
  * @since 2023/1/5 23:11
  */

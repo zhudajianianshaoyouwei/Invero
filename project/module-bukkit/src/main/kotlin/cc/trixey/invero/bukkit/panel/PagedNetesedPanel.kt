@@ -11,6 +11,9 @@ import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.panel.PagedNetesedPanel
+ *
  * @author Arasple
  * @since 2023/1/9 16:04
  */

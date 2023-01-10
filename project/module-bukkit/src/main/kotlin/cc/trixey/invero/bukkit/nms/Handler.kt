@@ -8,6 +8,9 @@ import taboolib.module.nms.nmsProxy
 import taboolib.module.nms.sendPacketBlocking
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.nms.Handler
+ *
  * @author Arasple
  * @since 2022/10/20
  */

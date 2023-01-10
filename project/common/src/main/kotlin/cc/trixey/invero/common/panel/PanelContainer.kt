@@ -5,6 +5,9 @@ import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Window
 
 /**
+ * Invero
+ * cc.trixey.invero.common.panel.PanelContainer
+ *
  * @author Arasple
  * @since 2022/12/22 14:50
  */

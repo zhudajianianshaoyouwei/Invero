@@ -6,6 +6,9 @@ import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 
 /**
+ * Invero
+ * cc.trixey.invero.common.panel.ElementalPanel
+ *
  * @author Arasple
  * @since 2022/12/30 12:39
  */

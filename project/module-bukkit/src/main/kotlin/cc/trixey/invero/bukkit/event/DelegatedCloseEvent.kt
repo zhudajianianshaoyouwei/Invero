@@ -9,6 +9,9 @@ import cc.trixey.invero.common.event.WindowCloseEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.event.DelegatedCloseEvent
+ *
  * @author Arasple
  * @since 2023/1/6 11:53
  */

@@ -5,6 +5,9 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.nms.NMS
+ *
  * @author Arasple
  * @since 2022/10/20
  */

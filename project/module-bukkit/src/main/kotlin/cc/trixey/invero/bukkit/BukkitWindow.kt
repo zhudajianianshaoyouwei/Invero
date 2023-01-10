@@ -11,6 +11,9 @@ import org.bukkit.entity.Player
 import taboolib.common.platform.function.submit
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.BukkitWindow
+ *
  * @author Arasple
  * @since 2022/12/29 12:54
  */

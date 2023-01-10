@@ -1,6 +1,9 @@
 package cc.trixey.invero.common
 
 /**
+ * Invero
+ * cc.trixey.invero.common.ProxyInventory
+ *
  * @author Arasple
  * @since 2022/12/30 12:56
  */

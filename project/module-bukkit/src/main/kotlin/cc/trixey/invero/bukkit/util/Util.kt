@@ -5,6 +5,9 @@ import cc.trixey.invero.common.Viewer
 import org.bukkit.entity.Player
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.util.Util
+ *
  * @author Arasple
  * @since 2022/12/30 13:02
  */

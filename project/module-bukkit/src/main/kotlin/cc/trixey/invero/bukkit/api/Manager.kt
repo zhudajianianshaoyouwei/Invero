@@ -4,6 +4,9 @@ import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Window
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.api.Manager
+ *
  * @author Arasple
  * @since 2023/1/5 21:15
  */

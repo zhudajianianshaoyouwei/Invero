@@ -1,6 +1,9 @@
 package cc.trixey.invero.common.event
 
 /**
+ * Invero
+ * cc.trixey.invero.common.event.EventType
+ *
  * @author Arasple
  * @since 2023/1/5 13:59
  */

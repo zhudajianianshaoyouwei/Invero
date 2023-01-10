@@ -3,6 +3,9 @@ package cc.trixey.invero.common
 import cc.trixey.invero.common.event.WindowClickEvent
 
 /**
+ * Invero
+ * cc.trixey.invero.common.Clickable
+ *
  * @author Arasple
  * @since 2023/1/5 14:27
  */

@@ -1,6 +1,9 @@
 package cc.trixey.invero.common
 
 /**
+ * Invero
+ * cc.trixey.invero.common.Elements
+ *
  * @author Arasple
  * @since 2022/12/29 13:51
  */

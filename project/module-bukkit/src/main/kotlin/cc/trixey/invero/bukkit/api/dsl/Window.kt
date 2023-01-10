@@ -3,6 +3,9 @@ package cc.trixey.invero.bukkit.api.dsl
 import cc.trixey.invero.bukkit.window.BukkitChestWindow
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.api.dsl.Window
+ *
  * @author Arasple
  * @since 2023/1/5 13:29
  */

@@ -6,6 +6,9 @@ import cc.trixey.invero.common.event.EventType
 import cc.trixey.invero.common.event.WindowEvent
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.event.PacketWindowEvent
+ *
  * @author Arasple
  * @since 2023/1/6 11:38
  */

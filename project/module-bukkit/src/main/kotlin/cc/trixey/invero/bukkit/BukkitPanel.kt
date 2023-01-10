@@ -7,6 +7,9 @@ import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.BukkitPanel
+ *
  * @author Arasple
  * @since 2022/12/22 20:50
  */

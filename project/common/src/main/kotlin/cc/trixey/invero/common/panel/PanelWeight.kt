@@ -1,6 +1,9 @@
 package cc.trixey.invero.common.panel
 
 /**
+ * Invero
+ * cc.trixey.invero.common.panel.PanelWeight
+ *
  * @author Arasple
  * @since 2022/12/22 14:52
  */

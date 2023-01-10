@@ -15,6 +15,9 @@ import taboolib.module.nms.MinecraftVersion.majorLegacy
 import taboolib.module.nms.sendPacketBlocking
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.nms.NMSImpl
+ *
  * @author Arasple
  * @since 2022/10/20
  */

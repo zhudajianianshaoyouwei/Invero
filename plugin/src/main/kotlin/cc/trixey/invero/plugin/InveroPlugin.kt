@@ -10,6 +10,9 @@ import taboolib.common.platform.command.subCommand
 import taboolib.common.platform.function.info
 
 /**
+ * Invero
+ * cc.trixey.invero.plugin.InveroPlugin
+ *
  * @author Arasple
  * @since 2022/12/20 20:42
  */

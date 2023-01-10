@@ -6,6 +6,9 @@ import taboolib.module.nms.PacketReceiveEvent
 
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.PacketListener
+ *
  * @author Arasple
  * @since 2022/10/20
  */

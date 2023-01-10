@@ -13,6 +13,9 @@ import taboolib.platform.util.buildItem
 import java.util.function.Supplier
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.element.ItemElement
+ *
  * @author Arasple
  * @since 2022/12/29 22:38
  */

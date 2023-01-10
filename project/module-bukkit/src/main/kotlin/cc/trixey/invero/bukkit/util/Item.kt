@@ -9,6 +9,9 @@ import taboolib.platform.BukkitPlugin
 import taboolib.platform.util.*
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.util.Item
+ *
  * @author Arasple
  * @since 2023/1/5 14:35
  */

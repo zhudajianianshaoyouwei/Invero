@@ -9,6 +9,9 @@ import cc.trixey.invero.common.event.WindowOpenEvent
 import org.bukkit.event.inventory.InventoryOpenEvent
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.event.DelegatedOpenEvent
+ *
  * @author Arasple
  * @since 2023/1/6 11:53
  */

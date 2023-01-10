@@ -6,6 +6,9 @@ import taboolib.common.platform.function.getProxyPlayer
 import java.util.*
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.BukkitViewer
+ *
  * @author Arasple
  * @since 2022/12/29 13:11
  */

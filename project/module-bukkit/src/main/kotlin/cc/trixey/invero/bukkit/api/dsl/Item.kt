@@ -8,6 +8,9 @@ import cc.trixey.invero.common.panel.ElementalPanel
 import org.bukkit.Material
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.api.dsl.Item
+ *
  * @author Arasple
  * @since 2023/1/5 13:29
  */

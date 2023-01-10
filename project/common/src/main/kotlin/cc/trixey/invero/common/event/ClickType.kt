@@ -3,6 +3,9 @@ package cc.trixey.invero.common.event
 import cc.trixey.invero.common.event.ClickType.Mode.*
 
 /**
+ * Invero
+ * cc.trixey.invero.common.event.ClickType
+ *
  * @author Arasple
  * @since 2022/10/21
  *

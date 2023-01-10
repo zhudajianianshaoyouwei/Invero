@@ -6,6 +6,9 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.ProxyBukkitInventory
+ *
  * @author Arasple
  * @since 2022/12/30 13:11
  */

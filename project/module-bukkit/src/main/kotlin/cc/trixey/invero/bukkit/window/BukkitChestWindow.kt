@@ -8,6 +8,9 @@ import cc.trixey.invero.common.WindowType
 import org.bukkit.Bukkit
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.window.BukkitChestWindow
+ *
  * @author Arasple
  * @since 2022/12/29 12:51
  */

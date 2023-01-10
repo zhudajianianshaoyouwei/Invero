@@ -5,6 +5,9 @@ import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 
 /**
+ * Invero
+ * cc.trixey.invero.common.Panel
+ *
  * @author Arasple
  * @since 2022/12/20 20:43
  */

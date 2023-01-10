@@ -9,6 +9,9 @@ import cc.trixey.invero.common.event.WindowItemsCollectEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.event.DelegatedItemsCollectEvent
+ *
  * @author Arasple
  * @since 2023/1/6 12:16
  */

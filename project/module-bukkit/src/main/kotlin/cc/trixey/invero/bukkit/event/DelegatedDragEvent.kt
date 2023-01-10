@@ -9,6 +9,9 @@ import cc.trixey.invero.common.event.WindowDragEvent
 import org.bukkit.event.inventory.InventoryDragEvent
 
 /**
+ * Invero
+ * cc.trixey.invero.bukkit.event.DelegatedDragEvent
+ *
  * @author Arasple
  * @since 2023/1/6 11:53
  */
