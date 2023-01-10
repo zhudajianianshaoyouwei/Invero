@@ -38,7 +38,6 @@ interface Panel : Gridable, Clickable {
      * Scale area related to its locate
      */
     val area: Set<Pos>
-        get() = scale.getArea(locate)
 
     /**
      * Render this panel
@@ -48,12 +47,19 @@ interface Panel : Gridable, Clickable {
     /**
      * Wipe this panel
      */
-    fun wipe() = wipe(area, true)
+    fun wipe() = wipe(area)
 
-    fun wipe(wiping: Set<Pos>, absolute: Boolean = false) {
-        if (parent.isPanel()) return parent.cast<Panel>().wipe(wiping, absolute)
-        else window.let { window ->
-            val slots = wiping.map { it.convertToSlot(window.scale) }.toSet()
+    fun wipe(wiping: Collection<Pos>) {
+        if (parent.isPanel()) {
+            val parentScale = parent.scale
+            val parentLocate = (parent as Panel).locate
+
+            wiping
+                .map { it.convertToParent(scale, parentScale, parentLocate) }
+                .let { return parent.cast<Panel>().wipe(it) }
+        }
+        window.let { window ->
+            val slots = wiping.map { it.convertToSlot(window.scale) }
             window.inventory.clear(slots)
         }
     }

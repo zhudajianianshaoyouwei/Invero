@@ -12,13 +12,14 @@ import cc.trixey.invero.common.panel.PanelWeight
  * @author Arasple
  * @since 2022/12/22 20:28
  */
-inline fun PanelContainer.standardPanel(
+inline fun PanelContainer.standard(
     scale: Pair<Int, Int> = this.scale.raw,
     locate: Pair<Int, Int> = firstAvailablePositionForPanel(),
     weight: PanelWeight = PanelWeight.NORMAL,
     block: StandardPanel.() -> Unit
-) {
-    this += StandardPanel(this, weight, Scale(scale), Pos(locate)).also(block)
+) = StandardPanel(this, weight, Scale(scale), Pos(locate)).also {
+    block(it)
+    this += it
 }
 
 inline fun PanelContainer.pagedNetesed(
@@ -26,8 +27,9 @@ inline fun PanelContainer.pagedNetesed(
     locate: Pair<Int, Int> = firstAvailablePositionForPanel(),
     weight: PanelWeight = PanelWeight.NORMAL,
     block: PagedNetesedPanel.() -> Unit
-) {
-    this += PagedNetesedPanel(this, weight, Scale(scale), Pos(locate)).also(block)
+) = PagedNetesedPanel(this, weight, Scale(scale), Pos(locate)).also {
+    block(it)
+    this += it
 }
 
 inline fun PanelContainer.freeformPanel(
@@ -35,6 +37,7 @@ inline fun PanelContainer.freeformPanel(
     locate: Pair<Int, Int> = firstAvailablePositionForPanel(),
     weight: PanelWeight = PanelWeight.NORMAL,
     block: FreeformStandardPanel.() -> Unit
-) {
-    this += FreeformStandardPanel(this, weight, Scale(scale), Pos(locate)).also(block)
+) = FreeformStandardPanel(this, weight, Scale(scale), Pos(locate)).also {
+    block(it)
+    this += it
 }

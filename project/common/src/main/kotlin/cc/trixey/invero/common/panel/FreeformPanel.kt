@@ -12,8 +12,7 @@ interface FreeformPanel : Panel {
     val viewport: Pos
 
     fun toAbsolutePosition(slot: Int): Pos {
-        return scale.convertToPosition(slot) + viewport
-
+        return viewport + scale.convertToPosition(slot)
     }
 
     fun resetViewport()
@@ -36,16 +35,14 @@ interface FreeformPanel : Panel {
 
     fun shiftDownRight() = shift(1, 1)
 
-    override fun wipe(wiping: Set<Pos>, absolute: Boolean) {
-        run {
-            if (!absolute) wiping
-                .filterNot { scale.isOutOfBounds(it.x, it.y, -viewport) }
-                .map { it - viewport }
-                .toSet()
-            else wiping
-        }.let {
-            super.wipe(it, absolute)
-        }
-    }
+    val absoluteArea: List<Pos>
+        get() = scale.getArea(locate).map { it - viewport }
+
+    override fun wipe() = wipe(absoluteArea)
+
+    override fun wipe(wiping: Collection<Pos>) = wiping
+        .map { it + viewport }
+        .filterNot { scale.isOutOfBounds(it.x, it.y) }
+        .let { super.wipe(it) }
 
 }

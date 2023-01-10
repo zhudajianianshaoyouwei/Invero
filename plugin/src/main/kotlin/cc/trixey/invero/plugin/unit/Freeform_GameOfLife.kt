@@ -3,8 +3,8 @@ package cc.trixey.invero.plugin.unit
 import cc.trixey.invero.bukkit.api.dsl.*
 import cc.trixey.invero.bukkit.element.SimpleItem
 import cc.trixey.invero.bukkit.nms.updateTitle
-import cc.trixey.invero.common.panel.PanelWeight
 import cc.trixey.invero.common.Pos
+import cc.trixey.invero.common.panel.PanelWeight
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submitAsync
@@ -45,23 +45,19 @@ fun showTheGameOfLife(player: Player) = bukkitChestWindow(6, formattedTitle()) {
 
         if (state) {
 
-            val death = cells
-                .mapNotNull {
-                    val nearbyAlive = it.nearbyAlive()
+            val death = cells.mapNotNull {
+                val nearbyAlive = it.nearbyAlive()
 
-                    if (nearbyAlive < 2 || nearbyAlive > 3) it
-                    else null
-                }
+                if (nearbyAlive < 2 || nearbyAlive > 3) it
+                else null
+            }
 
-            val birth = cells
-                .flatMap { it.nearBy() }
-                .filter { it !in cells }
-                .mapNotNull {
-                    val nearbyAlive = it.nearbyAlive()
+            val birth = cells.flatMap { it.nearBy() }.filter { it !in cells }.mapNotNull {
+                val nearbyAlive = it.nearbyAlive()
 
-                    if (nearbyAlive == 3) it
-                    else null
-                }
+                if (nearbyAlive == 3) it
+                else null
+            }
 
             cells -= death.toSet()
             cells += birth
@@ -85,7 +81,7 @@ fun showTheGameOfLife(player: Player) = bukkitChestWindow(6, formattedTitle()) {
         }
     }
 
-    standardPanel(9 to 1, 0 to 7, PanelWeight.BACKGROUND) {
+    standard(9 to 1, 0 to 7, PanelWeight.BACKGROUND) {
         item(1, Material.REDSTONE_TORCH) {
             modify { name = "SWITCH" }
             onClick {
@@ -96,53 +92,23 @@ fun showTheGameOfLife(player: Player) = bukkitChestWindow(6, formattedTitle()) {
         }
     }
 
-    nav(3 to 3, 3 to 6) {
-        item(Material.GRAY_STAINED_GLASS_PANE) {
-            modify { name = "↖" }
-            onClick { firstFreeform().shiftUpLeft() }
-        }
-        item(Material.BLUE_STAINED_GLASS_PANE) {
-            modify { name = "↑" }
-            onClick { firstFreeform().shiftUp() }
-        }
-        item(Material.GRAY_STAINED_GLASS_PANE) {
-            modify { name = "↗" }
-            onClick { firstFreeform().shiftUpRight() }
-        }
-        item(Material.RED_STAINED_GLASS_PANE) {
-            modify { name = "←" }
-            onClick { firstFreeform().shiftLeft() }
-        }
-        item(Material.BLACK_STAINED_GLASS_PANE) {
-            modify { name = "RESET" }
-            onClick { firstFreeform().resetViewport() }
-        }
-        item(Material.GREEN_STAINED_GLASS_PANE) {
-            modify { name = "→" }
-            onClick { firstFreeform().shiftRight() }
-        }
-        item(Material.GRAY_STAINED_GLASS_PANE) {
-            modify { name = "↙" }
-            onClick { firstFreeform().shiftDownLeft() }
-        }
-        item(Material.ORANGE_STAINED_GLASS_PANE) {
-            modify { name = "↓" }
-            onClick { firstFreeform().shiftDown() }
-        }
-        item(Material.ORANGE_STAINED_GLASS_PANE) {
-            modify { name = "↘" }
-            onClick { firstFreeform().shiftDownRight() }
-        }
-    }
+    freeformNavigator(3 to 3, 3 to 6)
 
     open(player)
 }
 
 private fun Pos.nearbyAlive() = nearBy().count { cells.contains(it) }
 
-private fun Pos.nearBy() =
-    setOf(Pos(x + 1, y), Pos(x + 1, y + 1), Pos(x + 1, y - 1), Pos(x - 1, y), Pos(x - 1, y + 1), Pos(x - 1, y - 1), Pos(x, y + 1), Pos(x, y - 1))
-
+private fun Pos.nearBy() = setOf(
+    Pos(x + 1, y),
+    Pos(x + 1, y + 1),
+    Pos(x + 1, y - 1),
+    Pos(x - 1, y),
+    Pos(x - 1, y + 1),
+    Pos(x - 1, y - 1),
+    Pos(x, y + 1),
+    Pos(x, y - 1)
+)
 
 private fun formattedTitle() = "(State: $state) Gen#${generation} / Cells: ${cells.size}"
 

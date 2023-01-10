@@ -1,7 +1,10 @@
 package cc.trixey.invero.bukkit.panel
 
 import cc.trixey.invero.bukkit.BukkitPanel
-import cc.trixey.invero.common.*
+import cc.trixey.invero.common.Clickable
+import cc.trixey.invero.common.Elements
+import cc.trixey.invero.common.Pos
+import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.event.WindowClickEvent
 import cc.trixey.invero.common.panel.ElementalPanel
 import cc.trixey.invero.common.panel.FreeformPanel

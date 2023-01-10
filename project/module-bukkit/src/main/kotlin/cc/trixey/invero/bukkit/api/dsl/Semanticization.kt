@@ -13,4 +13,4 @@ inline fun PanelContainer.nav(
     locate: Pair<Int, Int> = firstAvailablePositionForPanel(),
     weight: PanelWeight = PanelWeight.NORMAL,
     block: StandardPanel.() -> Unit
-) = standardPanel(scale, locate, weight, block)
+) = standard(scale, locate, weight, block)

@@ -15,20 +15,21 @@ fun showBasic(player: Player) = bukkitChestWindow(6, "Hello InveroPlugin") {
 
     var count = 1
 
-    standardPanel(3 to 3, 0 to 0) {
-        // amount auto-add on click
+    standard(3 to 3) {
+
         item(0, Material.APPLE) {
             modify { name = "Hello Apple" }
             onClick { modify { amount = ++count } }
-        }.add(1)
-        // movable DIAMOND
-        buildItem(Material.DIAMOND).fillup().onClick { isCancelled = false }
+        }
+
+        buildItem(Material.DIAMOND).fillup()
+
     }
 
     pagedNetesed(3 to 7) {
 
         for (i in 0..10) {
-            standardPanel {
+            standard {
                 buildItem(randomMaterial()).fillup().onClick {
                     player.sendMessage("Page $i")
                 }
@@ -55,7 +56,7 @@ fun showRunningApple(player: Player) = bukkitChestWindow(6, "Running apple") {
 
     var count = 1
 
-    standardPanel(9 to 6 + 4) {
+    standard(9 to 6 + 4) {
 
         val apple = item(0, Material.APPLE) {
             modify { name = "Running_Apple" }
@@ -80,7 +81,7 @@ fun showRunningApple(player: Player) = bukkitChestWindow(6, "Running apple") {
 
 fun showDynamicTitle(player: Player) = bukkitChestWindow(3, "_") {
 
-    standardPanel(9 to 3) {
+    standard(9 to 3) {
         getUnoccupiedPositions().let { posSet ->
             posSet.forEach { pos ->
                 buildItem(randomMaterial()) {

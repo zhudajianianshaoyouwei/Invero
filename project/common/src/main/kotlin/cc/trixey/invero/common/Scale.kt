@@ -23,6 +23,10 @@ value class Scale(val raw: Pair<Int, Int>) {
         return (y + index.y) * width + (x + index.x)
     }
 
+    fun convertToSlot(pos: Pos, index: Pos = Pos.NIL): Int {
+        return convertToSlot(pos.x, pos.y, index)
+    }
+
     fun convertToPosition(slot: Int): Pos {
         val x = slot % width
         val y = (slot - x) / width

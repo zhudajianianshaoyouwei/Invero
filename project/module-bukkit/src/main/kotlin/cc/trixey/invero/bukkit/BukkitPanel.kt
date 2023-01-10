@@ -27,16 +27,21 @@ abstract class BukkitPanel(
         this.handler = handler
     }
 
-    override val window: Window
-        get() {
-            return InveroAPI.manager.findWindow(this) ?: let {
-                var p = parent
-                while (p.isPanel()) {
-                    p = p.cast<Panel>().parent
-                }
+    override val area: Set<Pos> by lazy {
+        scale.getArea(locate)
+    }
 
-                p as Window
+    override val window: Window by lazy {
+
+        InveroAPI.manager.findWindow(this) ?: let {
+            var p = parent
+            while (p.isPanel()) {
+                p = p.cast<Panel>().parent
             }
+
+            p as Window
         }
+
+    }
 
 }

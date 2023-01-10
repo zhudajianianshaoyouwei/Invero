@@ -4,6 +4,7 @@ import cc.trixey.invero.bukkit.panel.FreeformStandardPanel
 import cc.trixey.invero.bukkit.panel.PagedNetesedPanel
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.panel.ElementalPanel
+import cc.trixey.invero.common.panel.PagedPanel
 import cc.trixey.invero.common.panel.PanelContainer
 
 /**
@@ -11,7 +12,11 @@ import cc.trixey.invero.common.panel.PanelContainer
  * @since 2023/1/5 13:29
  */
 fun PanelContainer.firstAvailablePositionForPanel(): Pair<Int, Int> {
-    return (scale.getArea() - panels.flatMap { it.area }.toSet()).minByOrNull { it.y }?.value ?: (0 to 0)
+    // pagedNetesedPanel
+    if (this is PagedPanel) return 0 to 0
+
+    val available = scale.getArea() - panels.flatMap { it.area }.toSet()
+    return available.minBy { it.y }.value
 }
 
 fun ElementalPanel.firstAvailablePositionForElement(): Pair<Int, Int> {

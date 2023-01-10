@@ -3,6 +3,7 @@ package cc.trixey.invero.plugin.unit
 import cc.trixey.invero.bukkit.api.dsl.*
 import cc.trixey.invero.bukkit.util.randomMaterial
 import cc.trixey.invero.common.Pos
+import cc.trixey.invero.common.panel.PanelContainer
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submit
@@ -53,44 +54,48 @@ fun showFreeformStandard(player: Player) = bukkitChestWindow(6, "FreeformPanel S
         }
     }
 
-    nav(3 to 3, 3 to 6) {
-        item(Material.GRAY_STAINED_GLASS_PANE) {
+    freeformNavigator(3 to 3, 3 to 6)
+
+    open(player)
+}
+
+fun PanelContainer.freeformNavigator(scale: Pair<Int, Int>, locate: Pair<Int, Int>) {
+    nav(scale, locate) {
+        item(org.bukkit.Material.GRAY_STAINED_GLASS_PANE) {
             modify { name = "↖" }
             onClick { firstFreeform().shiftUpLeft() }
         }
-        item(Material.BLUE_STAINED_GLASS_PANE) {
+        item(org.bukkit.Material.BLUE_STAINED_GLASS_PANE) {
             modify { name = "↑" }
             onClick { firstFreeform().shiftUp() }
         }
-        item(Material.GRAY_STAINED_GLASS_PANE) {
+        item(org.bukkit.Material.GRAY_STAINED_GLASS_PANE) {
             modify { name = "↗" }
             onClick { firstFreeform().shiftUpRight() }
         }
-        item(Material.RED_STAINED_GLASS_PANE) {
+        item(org.bukkit.Material.RED_STAINED_GLASS_PANE) {
             modify { name = "←" }
             onClick { firstFreeform().shiftLeft() }
         }
-        item(Material.BLACK_STAINED_GLASS_PANE) {
+        item(org.bukkit.Material.BLACK_STAINED_GLASS_PANE) {
             modify { name = "RESET" }
             onClick { firstFreeform().resetViewport() }
         }
-        item(Material.GREEN_STAINED_GLASS_PANE) {
+        item(org.bukkit.Material.GREEN_STAINED_GLASS_PANE) {
             modify { name = "→" }
             onClick { firstFreeform().shiftRight() }
         }
-        item(Material.GRAY_STAINED_GLASS_PANE) {
+        item(org.bukkit.Material.GRAY_STAINED_GLASS_PANE) {
             modify { name = "↙" }
             onClick { firstFreeform().shiftDownLeft() }
         }
-        item(Material.ORANGE_STAINED_GLASS_PANE) {
+        item(org.bukkit.Material.ORANGE_STAINED_GLASS_PANE) {
             modify { name = "↓" }
             onClick { firstFreeform().shiftDown() }
         }
-        item(Material.ORANGE_STAINED_GLASS_PANE) {
+        item(org.bukkit.Material.ORANGE_STAINED_GLASS_PANE) {
             modify { name = "↘" }
             onClick { firstFreeform().shiftDownRight() }
         }
     }
-
-    open(player)
 }

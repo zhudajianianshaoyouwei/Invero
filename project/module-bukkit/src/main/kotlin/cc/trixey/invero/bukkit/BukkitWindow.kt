@@ -35,9 +35,12 @@ abstract class BukkitWindow(val type: WindowType, title: String = "Untitled_Inve
     fun open(player: Player) = open(BukkitViewer(player))
 
     override fun render() {
-        panels.sortedBy { it.weight }.forEach {
-            it.render()
-        }
+        panels
+            .sortedBy { it.weight }
+            .forEach {
+                println("[WINDOW RENDER PANEL] ${it.javaClass.simpleName} (${it.scale}) at ${it.locate}")
+                it.render()
+            }
     }
 
     override fun open(viewer: Viewer) {

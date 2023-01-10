@@ -4,6 +4,7 @@ import cc.trixey.invero.bukkit.ProxyBukkitInventory
 import cc.trixey.invero.common.*
 import cc.trixey.invero.common.event.WindowClickEvent
 import cc.trixey.invero.common.panel.ElementalPanel
+import cc.trixey.invero.common.util.locatingAbsoluteSlot
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.submitAsync
@@ -21,11 +22,13 @@ abstract class ItemElement(
 ) : Supplier<ItemStack>, Element, Clickable {
 
     private var handler: (WindowClickEvent, Clickable) -> Unit = { _, _ -> }
+
     internal var value: ItemStack = value
         set(value) {
             field = value
             safePush()
         }
+
 
     override fun getHandler(): (WindowClickEvent, Clickable) -> Unit {
         return handler
@@ -60,7 +63,7 @@ abstract class ItemElement(
         val window = panel.window
 
         postRender {
-            val slot = it.locatingSlot()
+            val slot = locatingAbsoluteSlot(it, panel)
             if (slot >= 0) {
                 (window.inventory as ProxyBukkitInventory)[slot] = value
             }

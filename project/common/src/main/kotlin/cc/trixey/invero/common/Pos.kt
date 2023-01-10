@@ -27,8 +27,8 @@ value class Pos(val value: Pair<Int, Int>) {
         return scale.convertToSlot(x, y, index)
     }
 
-    fun advance(previous: Scale, destination: Scale): Pos {
-        return destination.convertToPosition(previous.convertToSlot(x, y))
+    fun convertToParent(current: Scale, parent: Scale, parentLocate: Pos = NIL): Pos {
+        return parentLocate + parent.convertToPosition(current.convertToSlot(x, y))
     }
 
     operator fun minus(pos: Pos): Pos {
@@ -45,6 +45,10 @@ value class Pos(val value: Pair<Int, Int>) {
 
     operator fun unaryMinus(): Pos {
         return Pos(-x, -y)
+    }
+
+    override fun toString(): String {
+        return "($x,$y)"
     }
 
     companion object {

@@ -13,19 +13,21 @@ interface PagedPanel : Panel {
     var pageIndex: Int
 
     fun nextPage(value: Int = 1) {
-        (pageIndex + value).assert { switchPage(it) }
+        (pageIndex + value).assertSwitch()
     }
 
     fun previousPage(value: Int = 1) {
-        (pageIndex - value).assert { switchPage(it) }
+        (pageIndex - value).assertSwitch()
     }
 
     fun switchPage(index: Int) {
         pageIndex = index
     }
 
-    fun Int.assert(block: (Int) -> Unit) {
-        if (this >= 0 && this <= maxPageIndex) block(this)
+    fun Int.assertSwitch() {
+        if (this in 0..maxPageIndex) {
+            switchPage(this)
+        }
     }
 
 }

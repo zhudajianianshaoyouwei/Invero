@@ -28,11 +28,11 @@ open class PagedNetesedPanel(
 
     override var pageIndex: Int = 0
         set(value) {
-            if (value <= 0) error("Page index can not be a negative number")
+            if (value < 0) error("Page index can not be a negative number")
             else if (pageIndex > panels.indices.last) error("Page index is out of bounds ${panels.indices}")
             field = value
 
-            rerender()
+            render()
         }
 
     private val currentPanel: Panel

@@ -58,7 +58,7 @@ class BukkitInventory(
         container.clear()
     }
 
-    override fun clear(slots: Set<Int>) {
+    override fun clear(slots: Collection<Int>) {
         slots.forEach { set(it, null) }
     }
 

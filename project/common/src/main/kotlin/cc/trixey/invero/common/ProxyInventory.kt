@@ -18,6 +18,6 @@ interface ProxyInventory {
 
     fun clear()
 
-    fun clear(slots: Set<Int>)
+    fun clear(slots: Collection<Int>)
 
 }
