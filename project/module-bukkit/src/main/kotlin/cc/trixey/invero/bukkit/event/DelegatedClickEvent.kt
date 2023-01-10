@@ -21,6 +21,9 @@ value class DelegatedClickEvent(
     override val event: InventoryClickEvent
 ) : WindowClickEvent, DelegatedInventoryEvent {
 
+    override val clicker: BukkitViewer
+        get() = BukkitViewer(event.whoClicked.uniqueId)
+
     override val rawSlot: Int
         get() = event.rawSlot
 

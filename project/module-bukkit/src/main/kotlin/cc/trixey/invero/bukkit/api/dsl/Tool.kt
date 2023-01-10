@@ -4,6 +4,7 @@ import cc.trixey.invero.bukkit.panel.FreeformStandardPanel
 import cc.trixey.invero.bukkit.panel.PagedNetesedPanel
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.panel.ElementalPanel
+import cc.trixey.invero.common.panel.FreeformPanel
 import cc.trixey.invero.common.panel.PagedPanel
 import cc.trixey.invero.common.panel.PanelContainer
 
@@ -22,6 +23,10 @@ fun PanelContainer.firstAvailablePositionForPanel(): Pair<Int, Int> {
     return available.minBy { it.y }.value
 }
 
+fun PanelContainer.inheritParentScale(): Pair<Int, Int> {
+    return scale.raw
+}
+
 fun ElementalPanel.firstAvailablePositionForElement(): Pair<Int, Int> {
     return getUnoccupiedPositions().minByOrNull { it.y * 9 + it.x }!!.value
 }
@@ -30,6 +35,8 @@ inline fun <reified T : Panel> PanelContainer.findSubPanel(): T? {
     return panels.filterIsInstance<T>().firstOrNull()
 }
 
-fun PanelContainer.firstFreeform(): FreeformStandardPanel = findSubPanel()!!
+fun PanelContainer.firstFreeform(): FreeformPanel = findSubPanel()!!
+
+fun PanelContainer.firstFreeformStandard(): FreeformStandardPanel = findSubPanel()!!
 
 fun PanelContainer.firstPagedNetesed(): PagedNetesedPanel = findSubPanel()!!

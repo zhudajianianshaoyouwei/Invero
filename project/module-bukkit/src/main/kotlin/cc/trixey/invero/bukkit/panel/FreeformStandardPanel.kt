@@ -24,7 +24,7 @@ import cc.trixey.invero.common.panel.PanelWeight
 class FreeformStandardPanel(
     parent: PanelContainer,
     weight: PanelWeight,
-    override val scale: Scale,
+    scale: Scale,
     locate: Pos
 ) : BukkitPanel(parent, weight, scale, locate), ElementalPanel, FreeformPanel {
 

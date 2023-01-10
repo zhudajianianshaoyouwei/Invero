@@ -35,10 +35,13 @@ object InveroPlugin : Plugin() {
         val basic_dynamicTitle = construct { showDynamicTitle(this) }
 
         @CommandBody
-        val freeform = construct { showFreeformStandard(this) }
+        val freeform_standard = construct { showFreeformStandard(this) }
 
         @CommandBody
-        val tgof = construct { showTheGameOfLife(this) }
+        val freeform_gameoflife = construct { showTheGameOfLife(this) }
+
+        @CommandBody
+        val freeform_netesed = construct { showFreeformNetesed(this) }
 
         private fun construct(block: Player.() -> Unit): SimpleCommandBody {
             return subCommand {

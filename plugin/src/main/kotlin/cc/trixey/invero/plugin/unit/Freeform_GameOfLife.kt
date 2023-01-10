@@ -27,7 +27,7 @@ fun showTheGameOfLife(player: Player) = bukkitChestWindow(6, formattedTitle()) {
 
     // 细胞物品
     val cell: SimpleItem by lazy {
-        firstFreeform().buildItem(Material.SLIME_BALL) {
+        firstFreeformStandard().buildItem(Material.SLIME_BALL) {
             modify { name = "§aCELL" }
         }
     }
@@ -95,7 +95,7 @@ fun showTheGameOfLife(player: Player) = bukkitChestWindow(6, formattedTitle()) {
         }
     }
 
-    freeformNavigator(3 to 3, 3 to 6)
+    freeformNavigator()
 
     open(player)
 }

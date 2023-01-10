@@ -57,13 +57,13 @@ fun showFreeformStandard(player: Player) = bukkitChestWindow(6, "FreeformPanel S
         }
     }
 
-    freeformNavigator(3 to 3, 3 to 6)
+    freeformNavigator()
 
     open(player)
 }
 
-fun PanelContainer.freeformNavigator(scale: Pair<Int, Int>, locate: Pair<Int, Int>) {
-    nav(scale, locate) {
+fun PanelContainer.freeformNavigator(locate: Pair<Int, Int> = 3 to 6) {
+    nav(3 to 3, locate) {
         item(org.bukkit.Material.GRAY_STAINED_GLASS_PANE) {
             modify { name = "↖" }
             onClick { firstFreeform().shiftUpLeft() }
