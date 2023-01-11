@@ -103,10 +103,8 @@ class ScrollStandardPanel(
         val tailSize = tail.size.coerceAtMost(visibleColumsSize)
         val max = colums.size - tailSize
 
-        return if (direction.isVertical)
-            pos(0, index.coerceIn(0..max))
-        else
-            pos(index.coerceIn(0..max), 0)
+        return if (direction.isVertical) pos(0, index.coerceIn(0..max))
+        else pos(index.coerceIn(0..max), 0)
     }
 
 }

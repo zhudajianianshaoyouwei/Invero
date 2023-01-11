@@ -28,6 +28,8 @@ value class Elements(private val value: HashMap<Element, Positions> = hashMapOf(
 
     fun removeElement(element: Element) = value.remove(element)
 
+    fun removeElement(pos: Pos) = findElement(pos)?.let { removeElement(it) }
+
     fun addElement(element: Element, pos: Pos) {
         value.computeIfAbsent(element) { Positions() } += pos
     }
