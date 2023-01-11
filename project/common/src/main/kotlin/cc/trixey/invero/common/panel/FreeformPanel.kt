@@ -9,6 +9,8 @@ import cc.trixey.invero.common.Pos
  *
  * @author Arasple
  * @since 2023/1/6 14:57
+ *
+ * Inspired by Apple's Freeform app
  */
 interface FreeformPanel : Panel {
 
@@ -45,11 +47,6 @@ interface FreeformPanel : Panel {
 
     override fun wipe() = wipe(viewArea)
 
-    /*
-    FreeformPanel.wipe(args: Set<Pos>)
-
-    args = absolute position
-     */
     override fun wipe(wiping: Collection<Pos>) = wiping
         .map { it - viewport }
         .filterNot { scale.isOutOfBounds(it.x, it.y) }

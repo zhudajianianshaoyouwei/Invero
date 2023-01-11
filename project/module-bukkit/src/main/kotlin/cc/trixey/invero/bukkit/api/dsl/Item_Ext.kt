@@ -15,13 +15,13 @@ import org.bukkit.Material
  * @since 2023/1/11 21:12
  */
 inline fun ElementalPanel.pageItem(
-    panel: PagedPanel,
+    target: PagedPanel,
     amount: Int = +1,
     slot: Int,
     material: Material,
     block: ControlPageItem.() -> Unit = {}
 ) {
-    ControlPageItem(panel, amount).apply {
+    ControlPageItem(this, target, amount).apply {
         build(material)
         block(this)
 
@@ -30,13 +30,13 @@ inline fun ElementalPanel.pageItem(
 }
 
 inline fun ElementalPanel.scrollItem(
-    panel: ScrollPanel,
+    target: ScrollPanel,
     amount: Int = +1,
     slot: Int,
     material: Material,
     block: ControlScrollItem.() -> Unit = {}
 ) {
-    ControlScrollItem(panel, amount).apply {
+    ControlScrollItem(this, target, amount).apply {
         build(material)
         block(this)
 
