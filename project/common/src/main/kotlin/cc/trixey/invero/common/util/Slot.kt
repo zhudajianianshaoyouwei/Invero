@@ -21,10 +21,10 @@ fun locatingAbsoluteSlot(position: Pos, panel: Panel): Int {
 
     return if (parent.isWindow()) {
         pos.convertToSlot(parent.scale, panel.locate)
-    } else if (parent is FreeformPanel) {
+    } else if (parent.isFreeform()) {
         pos += panel.locate
 
-        locatingAbsoluteSlot(pos, parent)
+        locatingAbsoluteSlot(pos, parent as Panel)
     } else {
         parent as Panel
 

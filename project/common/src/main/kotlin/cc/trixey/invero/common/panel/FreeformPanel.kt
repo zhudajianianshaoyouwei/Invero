@@ -38,13 +38,18 @@ interface FreeformPanel : Panel {
 
     fun shiftDownRight() = shift(1, 1)
 
-    val absoluteArea: List<Pos>
-        get() = scale.getArea(locate).map { it - viewport }
+    val viewArea: List<Pos>
+        get() = scale.getArea(locate).map { it + viewport }
 
-    override fun wipe() = wipe(absoluteArea)
+    override fun wipe() = wipe(viewArea)
 
+    /*
+    FreeformPanel.wipe(args: Set<Pos>)
+
+    args = absolute position
+     */
     override fun wipe(wiping: Collection<Pos>) = wiping
-        .map { it + viewport }
+        .map { it - viewport }
         .filterNot { scale.isOutOfBounds(it.x, it.y) }
         .let { super.wipe(it) }
 

@@ -21,6 +21,8 @@ interface PanelContainer : Gridable {
 
     fun isElementalPanel() = this is ElementalPanel
 
+    fun isFreeform() = this is FreeformPanel
+
     @Suppress("UNCHECKED_CAST")
     fun <T> cast() = this as T
 
@@ -36,4 +38,8 @@ interface PanelContainer : Gridable {
         return panel in panels
     }
 
+}
+
+inline fun <reified T:Panel> PanelContainer.isXPanel(): Boolean {
+    return this is T
 }

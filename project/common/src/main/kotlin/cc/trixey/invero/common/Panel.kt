@@ -54,11 +54,14 @@ interface Panel : Gridable, Clickable {
 
     fun wipe(wiping: Collection<Pos>) {
         if (parent.isPanel()) {
-            val parentScale = parent.scale
-            val parentLocate = (parent as Panel).locate
+            if (parent.isFreeform()) {
+                wiping
+                    .map { it + locate }
+                    .let { return parent.cast<Panel>().wipe(it) }
+            }
 
             wiping
-                .map { it.convertToParent(scale, parentScale, parentLocate) }
+                .map { it.convertToParent(scale, parent.scale, locate) }
                 .let { return parent.cast<Panel>().wipe(it) }
         }
         window.let { window ->
