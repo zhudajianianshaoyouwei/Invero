@@ -43,18 +43,18 @@ inline fun ElementalPanel.buildItem(
 
 fun <T : Element> T.getPosition(): Positions? {
     val panel = panel as ElementalPanel
-    val elemap = panel.getElements()
+    val elements = panel.getElements()
 
-    return elemap.locateElement(this)
+    return elements.locateElement(this)
 }
 
 fun <T : Element> T.ruin(): Boolean {
     val panel = panel as ElementalPanel
-    val elemap = panel.getElements()
+    val elements = panel.getElements()
 
-    elemap.locateElement(this)?.let {
+    elements.locateElement(this)?.let {
         panel.wipe(it.values)
-        elemap.removeElement(this)
+        elements.removeElement(this)
         return true
     }
     return false
@@ -87,19 +87,22 @@ fun <T : Element> T.add(vararg slots: Int): T {
 
 fun <T : Element> T.add(pos: Pos): T {
     val panel = panel as ElementalPanel
-    val elemap = panel.getElements()
+    val elements = panel.getElements()
 
-    elemap.addElement(this, pos)
+    elements.addElement(this, pos)
 
     return this
 }
 
 fun <T : Element> T.fillup(): T {
     val panel = panel as ElementalPanel
-    val elemap = panel.getElements()
+    val elements = panel.getElements()
 
-    panel.getUnoccupiedPositions()
-        .forEach { elemap.addElement(this, it) }
+    panel
+        .getUnoccupiedPositions()
+        .forEach {
+            elements.addElement(this, it)
+        }
 
     return this
 }

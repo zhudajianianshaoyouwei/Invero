@@ -30,8 +30,8 @@ value class Pos(val value: Pair<Int, Int>) {
         return scale.convertToSlot(x, y, index)
     }
 
-    fun convertToParent(current: Scale, parent: Scale, parentLocate: Pos = NIL): Pos {
-        return parentLocate + parent.convertToPosition(current.convertToSlot(x, y))
+    fun convertToParent(current: Scale, parent: Scale, currentLocate: Pos = NIL): Pos {
+        return currentLocate + parent.convertToPosition(current.convertToSlot(x, y))
     }
 
     operator fun minus(pos: Pos): Pos {
