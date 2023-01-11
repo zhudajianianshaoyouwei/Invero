@@ -29,11 +29,14 @@ class PanelGroup(
 
     override fun isElementValid(element: Element) = panels.any { it.isElementValid(element) }
 
-    override fun handleClick(pos: Pos, e: WindowClickEvent) = panels.forEach {
-        val clicked = pos - it.locate
-        if (clicked in it.area) {
-            it.handleClick(clicked, e)
-            return@forEach
+    override fun handleClick(pos: Pos, e: WindowClickEvent) {
+        val clicked = pos - locate
+
+        panels.forEach {
+            if (clicked in it.area) {
+                it.handleClick(pos - it.locate, e)
+                return@forEach
+            }
         }
     }
 

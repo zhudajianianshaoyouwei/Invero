@@ -31,12 +31,23 @@ fun showBasic(player: Player) = bukkitChestWindow(6, "Hello InveroPlugin") {
 
     pagedNetesed(3 to 7) {
 
-        for (i in 0..10) {
-            standard {
-                buildItem(randomMaterial()).fillup().onClick {
-                    player.sendMessage("Page $i")
+        repeat(10) { page ->
+
+            group {
+
+                standard(3 to 6) {
+                    buildItem(randomMaterial()).fillup().onClick {
+                        player.sendMessage("Page $page")
+                    }
                 }
+                standard(3 to 1) {
+                    buildItem(randomMaterial()).fillup().onClick {
+                        player.sendMessage("BAR")
+                    }
+                }
+
             }
+
         }
 
     }

@@ -48,4 +48,8 @@ value class Scale(val raw: Pair<Int, Int>) {
         return pos
     }
 
+    override fun toString(): String {
+        return "[$width x $height]"
+    }
+
 }

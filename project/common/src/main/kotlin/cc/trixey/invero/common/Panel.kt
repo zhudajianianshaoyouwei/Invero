@@ -60,10 +60,14 @@ interface Panel : Gridable, Clickable {
                     .let { return parent.cast<Panel>().wipe(it) }
             }
 
+            val parentScale = parent.scale
+            val parentLocate = (parent as Panel).locate
+
             wiping
-                .map { it.convertToParent(scale, parent.scale, locate) }
+                .map { it.convertToParent(scale, parentScale, parentLocate) }
                 .let { return parent.cast<Panel>().wipe(it) }
         }
+
         window.let { window ->
             val slots = wiping.map { it.convertToSlot(window.scale) }
             window.inventory.clear(slots)
