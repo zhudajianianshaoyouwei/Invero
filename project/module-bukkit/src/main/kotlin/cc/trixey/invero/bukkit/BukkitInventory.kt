@@ -1,6 +1,7 @@
 package cc.trixey.invero.bukkit
 
 import cc.trixey.invero.bukkit.util.safeBukkitPlayer
+import cc.trixey.invero.common.StorageMode
 import cc.trixey.invero.common.Viewer
 import cc.trixey.invero.common.Window
 import org.bukkit.inventory.Inventory
@@ -17,8 +18,10 @@ import org.bukkit.inventory.PlayerInventory
 class BukkitInventory(
     private val window: Window,
     val container: Inventory,
-    var emptyPlayerInventory: Boolean = true
 ) : ProxyBukkitInventory {
+
+    private val storageMode: StorageMode
+        get() = window.storageMode
 
     private val playerItems = mutableMapOf<Viewer, PlayerItems>()
 
@@ -32,18 +35,24 @@ class BukkitInventory(
             it.updateInventory()
 
             playerItems.remove(viewer)?.let {
-                getPlayerInventory(viewer).apply {
-                    storageContents = it.storage
+                if (storageMode.shouldRestore) {
+                    getPlayerInventory(viewer).apply {
+                        storageContents = it.storage
+                    }
                 }
             }
         }
     }
 
     override fun open(viewer: Viewer) {
-        getPlayerInventory(viewer).apply {
-            playerItems[viewer] = PlayerItems(storageContents)
-            if (emptyPlayerInventory) clear()
+        if (storageMode.shouldBackup) {
+            getPlayerInventory(viewer).apply {
+                playerItems[viewer] = PlayerItems(storageContents)
+
+                if (storageMode.shouldClean) clear()
+            }
         }
+
         viewer.safeBukkitPlayer()?.openInventory(container)
     }
 

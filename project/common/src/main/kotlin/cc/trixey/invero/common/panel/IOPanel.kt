@@ -1,5 +1,7 @@
 package cc.trixey.invero.common.panel
 
+import cc.trixey.invero.common.ProxyInventory
+
 /**
  * Invero
  * cc.trixey.invero.common.panel.IOPanel
@@ -9,4 +11,9 @@ package cc.trixey.invero.common.panel
  *
  * Support Input/Output ItemStack
  */
-interface IOPanel : ElementalPanel
+interface IOPanel : ElementalPanel {
+
+    val inventory: ProxyInventory
+        get() = window.inventory
+
+}

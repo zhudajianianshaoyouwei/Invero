@@ -38,6 +38,11 @@ interface Window : PanelContainer, Gridable {
     val inventory: ProxyInventory
 
     /**
+     * Using player inventory mode
+     */
+    val storageMode: StorageMode
+
+    /**
      * Open this window for a viewer
      */
     fun open(viewer: Viewer)

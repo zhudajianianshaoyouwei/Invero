@@ -52,6 +52,9 @@ object InveroPlugin : Plugin() {
         @CommandBody
         val generator_scroll = construct { showGeneratorScroll(this) }
 
+        @CommandBody
+        val IO_storage = construct { showIOStoragePanel(this) }
+
         private fun construct(block: Player.(String) -> Unit): SimpleCommandBody {
             return subCommand {
                 execute { sender, _, s ->

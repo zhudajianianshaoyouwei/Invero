@@ -1,5 +1,6 @@
 package cc.trixey.invero.bukkit.panel
 
+import cc.trixey.invero.bukkit.ProxyBukkitInventory
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.event.WindowClickEvent
@@ -21,8 +22,17 @@ class IOStoragePanel(
     locate: Pos
 ) : StandardPanel(parent, weight, scale, locate), IOPanel {
 
+    override val inventory: ProxyBukkitInventory
+        get() = window.inventory as ProxyBukkitInventory
+
     override fun handleClick(pos: Pos, e: WindowClickEvent): Boolean {
-        return super.handleClick(pos, e)
+        if (!super.handleClick(pos, e)) {
+            println("Clicked at $pos")
+            e.isCancelled = false
+
+            return true
+        }
+        return false
     }
 
 }

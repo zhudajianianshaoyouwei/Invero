@@ -2,10 +2,7 @@ package cc.trixey.invero.bukkit
 
 import cc.trixey.invero.bukkit.api.InveroAPI
 import cc.trixey.invero.bukkit.nms.updateTitle
-import cc.trixey.invero.common.Panel
-import cc.trixey.invero.common.Viewer
-import cc.trixey.invero.common.Window
-import cc.trixey.invero.common.WindowType
+import cc.trixey.invero.common.*
 import cc.trixey.invero.common.event.*
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submit
@@ -17,7 +14,11 @@ import taboolib.common.platform.function.submit
  * @author Arasple
  * @since 2022/12/29 12:54
  */
-abstract class BukkitWindow(val type: WindowType, title: String = "Untitled_Invero_Window") : Window {
+abstract class BukkitWindow(
+    val type: WindowType,
+    override val storageMode: StorageMode = StorageMode(overridePlayerInventory = true, alwaysClean = true),
+    title: String = "Untitled_Invero_Window"
+) : Window {
 
     abstract override val inventory: BukkitInventory
 
@@ -79,6 +80,7 @@ abstract class BukkitWindow(val type: WindowType, title: String = "Untitled_Inve
             .forEach {
                 if (clickedSlot in it.area) {
                     it.handleClick(clickedSlot - it.locate, e)
+                    (it as BukkitPanel).runHandler(e)
                     return
                 }
             }

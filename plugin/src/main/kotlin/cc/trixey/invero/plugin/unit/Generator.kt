@@ -1,8 +1,8 @@
 package cc.trixey.invero.plugin.unit
 
 import cc.trixey.invero.bukkit.api.dsl.*
-import cc.trixey.invero.bukkit.nms.updateTitle
 import cc.trixey.invero.bukkit.util.randomMaterial
+import cc.trixey.invero.bukkit.nms.updateTitle
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player

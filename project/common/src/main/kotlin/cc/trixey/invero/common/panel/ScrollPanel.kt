@@ -1,6 +1,5 @@
 package cc.trixey.invero.common.panel
 
-import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.scroll.ScrollDirection
 import cc.trixey.invero.common.scroll.ScrollTail
 
@@ -11,7 +10,7 @@ import cc.trixey.invero.common.scroll.ScrollTail
  * @author Arasple
  * @since 2023/1/7 21:28
  */
-interface ScrollPanel : Panel {
+interface ScrollPanel : FreeformPanel {
 
     val direction: ScrollDirection
 
@@ -23,5 +22,6 @@ interface ScrollPanel : Panel {
     val columCapacity: Int
         get() = if (direction.isVertical) scale.width else scale.height
 
+    fun scroll(amount: Int) = shift(amount, amount)
 
 }
