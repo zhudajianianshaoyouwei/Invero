@@ -20,22 +20,19 @@ value class DelegatedDragEvent(
     override val event: InventoryDragEvent
 ) : WindowDragEvent, DelegatedInventoryEvent {
 
+    override val viewer: Viewer
+        get() = BukkitViewer(event.whoClicked.uniqueId)
+
+    override val window: Window
+        get() = (event.inventory.holder as BukkitWindowHolder).window
+
+    override val type: EventType
+        get() = EventType.ITEMS_DRAG
+
     override var isCancelled: Boolean
         get() = event.isCancelled
         set(value) {
             event.isCancelled = value
         }
-
-    override fun getViewer(): Viewer {
-        return BukkitViewer(event.whoClicked.uniqueId)
-    }
-
-    override fun getWindow(): Window {
-        return (event.inventory.holder as BukkitWindowHolder).window
-    }
-
-    override fun getType(): EventType {
-        return EventType.ITEMS_DRAG
-    }
-
+    
 }

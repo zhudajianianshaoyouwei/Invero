@@ -16,9 +16,6 @@ object BukkitListener {
 
     @SubscribeEvent
     fun e(e: InventoryClickEvent) = e.delegatedEvent {
-        // def cancel
-        e.isCancelled = true
-
         when (e.action) {
             InventoryAction.MOVE_TO_OTHER_INVENTORY -> handleItemsMove(DelegatedItemsMoveEvent(e))
             InventoryAction.COLLECT_TO_CURSOR -> handleItemsCollect(DelegatedItemsCollectEvent(e))

@@ -53,8 +53,8 @@ fun showBasic(player: Player) = bukkitChestWindow(6, "Hello InveroPlugin") {
     }
 
     nav(3 to 1) {
-        pageItem(firstPaged(), +1, 0, Material.CYAN_STAINED_GLASS_PANE) { modify { name = "Preivous page" } }
-        pageItem(firstPaged(), -1, 2, Material.LIME_STAINED_GLASS_PANE) { modify { name = "Next page" } }
+        pageController(firstPagedPanel(), -1, 0, Material.CYAN_STAINED_GLASS_PANE) { modify { name = "Preivous page" } }
+        pageController(firstPagedPanel(), +1, 2, Material.LIME_STAINED_GLASS_PANE) { modify { name = "Next page" } }
     }
 
 
@@ -85,8 +85,8 @@ fun showRunningItem(player: Player) = bukkitChestWindow(6, "Running Paged Item")
     }
 
     nav(9 to 1, at(x = 0)) {
-        pageItem(firstPaged(), +1, 0, Material.CYAN_STAINED_GLASS_PANE) { modify { name = "Preivous page" } }
-        pageItem(firstPaged(), -1, 8, Material.LIME_STAINED_GLASS_PANE) { modify { name = "Next page" } }
+        pageController(firstPagedPanel(), -1, 0, Material.CYAN_STAINED_GLASS_PANE) { modify { name = "Preivous page" } }
+        pageController(firstPagedPanel(), +1, 8, Material.LIME_STAINED_GLASS_PANE) { modify { name = "Next page" } }
         item(Material.GRAY_STAINED_GLASS_PANE).fillup()
     }
 

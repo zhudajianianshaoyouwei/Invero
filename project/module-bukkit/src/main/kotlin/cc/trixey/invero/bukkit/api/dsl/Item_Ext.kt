@@ -14,7 +14,7 @@ import org.bukkit.Material
  * @author Arasple
  * @since 2023/1/11 21:12
  */
-inline fun ElementalPanel.pageItem(
+inline fun ElementalPanel.pageController(
     target: PagedPanel,
     amount: Int = +1,
     slot: Int,
@@ -29,7 +29,7 @@ inline fun ElementalPanel.pageItem(
     }
 }
 
-inline fun ElementalPanel.scrollItem(
+inline fun ElementalPanel.scrollController(
     target: ScrollPanel,
     amount: Int = +1,
     slot: Int,

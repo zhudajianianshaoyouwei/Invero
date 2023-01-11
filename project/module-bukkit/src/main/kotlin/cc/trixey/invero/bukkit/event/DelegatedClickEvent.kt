@@ -21,8 +21,14 @@ value class DelegatedClickEvent(
     override val event: InventoryClickEvent
 ) : WindowClickEvent, DelegatedInventoryEvent {
 
-    override val clicker: BukkitViewer
+    override val viewer: Viewer
         get() = BukkitViewer(event.whoClicked.uniqueId)
+
+    override val window: Window
+        get() = (event.whoClicked.openInventory.topInventory.holder as BukkitWindowHolder).window
+
+    override val type: EventType
+        get() = EventType.CLICK
 
     override val rawSlot: Int
         get() = event.rawSlot
@@ -36,16 +42,5 @@ value class DelegatedClickEvent(
     override val clickType: ClickType
         get() = ClickType.findBukkit(event.click.name)!!
 
-    override fun getViewer(): Viewer {
-        return BukkitViewer(event.whoClicked.uniqueId)
-    }
-
-    override fun getWindow(): Window {
-        return (event.clickedInventory!!.holder as BukkitWindowHolder).window
-    }
-
-    override fun getType(): EventType {
-        return EventType.CLICK
-    }
 
 }

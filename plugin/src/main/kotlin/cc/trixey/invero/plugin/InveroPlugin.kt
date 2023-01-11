@@ -47,6 +47,9 @@ object InveroPlugin : Plugin() {
         val scroll = construct { showScrollStandard(this) }
 
         @CommandBody
+        val scroll_2 = construct { showScroll2(this) }
+
+        @CommandBody
         val generator_paged = construct { showGeneratorPaged(this) }
 
         @CommandBody

@@ -1,8 +1,8 @@
 package cc.trixey.invero.plugin.unit
 
 import cc.trixey.invero.bukkit.api.dsl.*
-import cc.trixey.invero.bukkit.util.randomMaterial
 import cc.trixey.invero.bukkit.nms.updateTitle
+import cc.trixey.invero.bukkit.util.randomMaterial
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -45,14 +45,8 @@ fun showGeneratorPaged(player: Player, filter: String? = null) = bukkitChestWind
 
         }
 
-        item(0, Material.CYAN_STAINED_GLASS_PANE) {
-            modify { name = "Preivous page" }
-            onClick { previousPage() }
-        }
-        item(8, Material.LIME_STAINED_GLASS_PANE) {
-            modify { name = "Next page" }
-            onClick { nextPage() }
-        }
+        pageController(this, -1, 0, Material.CYAN_STAINED_GLASS_PANE) { modify { name = "Preivous page" } }
+        pageController(this, +1, 8, Material.LIME_STAINED_GLASS_PANE) { modify { name = "Next page" } }
 
     }
 

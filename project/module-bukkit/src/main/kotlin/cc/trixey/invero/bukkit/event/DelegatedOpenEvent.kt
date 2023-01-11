@@ -20,16 +20,13 @@ value class DelegatedOpenEvent(
     override val event: InventoryOpenEvent
 ) : WindowOpenEvent, DelegatedInventoryEvent {
 
-    override fun getViewer(): Viewer {
-        return BukkitViewer(event.player.uniqueId)
-    }
+    override val viewer: Viewer
+        get() = BukkitViewer(event.player.uniqueId)
 
-    override fun getWindow(): Window {
-        return (event.inventory.holder as BukkitWindowHolder).window
-    }
+    override val window: Window
+        get() = (event.inventory.holder as BukkitWindowHolder).window
 
-    override fun getType(): EventType {
-        return EventType.INVENTORY_OPEN
-    }
+    override val type: EventType
+        get() = EventType.INVENTORY_OPEN
 
 }

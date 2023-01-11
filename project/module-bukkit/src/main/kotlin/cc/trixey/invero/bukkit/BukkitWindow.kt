@@ -69,12 +69,24 @@ abstract class BukkitWindow(
     }
 
     override fun handleClose(e: WindowCloseEvent) {
-        close(e.getViewer())
+        close(e.viewer)
     }
 
     override fun handleClick(e: WindowClickEvent) {
-        val clickedSlot = scale.convertToPosition(e.rawSlot)
+        // def cancel
+        e.isCancelled = true
 
+        val window = e.window as BukkitWindow
+        val rawSlot = e.rawSlot
+
+        if (rawSlot > window.type.slotsContainer.last) {
+            if (!window.storageMode.overridePlayerInventory) {
+                e.isCancelled = false
+                return
+            }
+        }
+
+        val clickedSlot = scale.convertToPosition(rawSlot)
         panels
             .sortedByDescending { it.weight }
             .forEach {
