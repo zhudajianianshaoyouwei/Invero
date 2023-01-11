@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack
  * @author Arasple
  * @since 2022/12/29 22:37
  */
-class SimpleItem(panel: Panel) : ItemElement(panel) {
+open class SimpleItem(panel: Panel) : ItemElement(panel) {
 
     override fun get(viewer: Viewer): ItemStack {
         return value

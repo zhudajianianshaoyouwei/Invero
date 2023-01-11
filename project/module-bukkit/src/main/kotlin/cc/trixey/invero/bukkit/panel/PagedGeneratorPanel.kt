@@ -5,7 +5,6 @@ import cc.trixey.invero.common.Element
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.event.WindowClickEvent
-import cc.trixey.invero.common.panel.GeneratorPanel
 import cc.trixey.invero.common.panel.PagedPanel
 import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
@@ -22,7 +21,7 @@ class PagedGeneratorPanel(
     weight: PanelWeight,
     scale: Scale,
     locate: Pos
-) : BukkitPanel(parent, weight, scale, locate), PagedPanel, GeneratorPanel {
+) : BukkitPanel(parent, weight, scale, locate), PagedPanel {
 
     override val maxPageIndex: Int
         get() = TODO("Not yet implemented")

@@ -39,7 +39,3 @@ interface PanelContainer : Gridable {
     }
 
 }
-
-inline fun <reified T:Panel> PanelContainer.isXPanel(): Boolean {
-    return this is T
-}

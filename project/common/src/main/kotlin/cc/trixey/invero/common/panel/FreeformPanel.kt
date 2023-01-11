@@ -18,7 +18,9 @@ interface FreeformPanel : Panel {
         return viewport + scale.convertToPosition(slot)
     }
 
-    fun resetViewport()
+    fun resetViewport() = setViewport(0, 0)
+
+    fun setViewport(x: Int = 0, y: Int = 0)
 
     fun shift(x: Int = 0, y: Int = 0)
 

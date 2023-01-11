@@ -5,6 +5,8 @@ import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
+import cc.trixey.invero.common.scroll.ScrollDirection
+import cc.trixey.invero.common.scroll.ScrollTail
 
 /**
  * Invero
@@ -33,16 +35,6 @@ inline fun PanelContainer.pagedNetesed(
     this += it
 }
 
-inline fun PanelContainer.group(
-    scale: Pair<Int, Int> = inheritParentScale(),
-    locate: Pair<Int, Int> = firstAvailablePositionForPanel(),
-    weight: PanelWeight = PanelWeight.NORMAL,
-    block: PanelGroup.() -> Unit
-) = PanelGroup(this, weight, Scale(scale), Pos(locate)).also {
-    block(it)
-    this += it
-}
-
 inline fun PanelContainer.freeformPanel(
     scale: Pair<Int, Int> = inheritParentScale(),
     locate: Pair<Int, Int> = firstAvailablePositionForPanel(),
@@ -59,6 +51,28 @@ inline fun PanelContainer.freeformNetesed(
     weight: PanelWeight = PanelWeight.NORMAL,
     block: FreeformNetesedPanel.() -> Unit
 ) = FreeformNetesedPanel(this, weight, Scale(scale), Pos(locate)).also {
+    block(it)
+    this += it
+}
+
+inline fun PanelContainer.group(
+    scale: Pair<Int, Int> = inheritParentScale(),
+    locate: Pair<Int, Int> = firstAvailablePositionForPanel(),
+    weight: PanelWeight = PanelWeight.NORMAL,
+    block: PanelGroup.() -> Unit
+) = PanelGroup(this, weight, Scale(scale), Pos(locate)).also {
+    block(it)
+    this += it
+}
+
+inline fun PanelContainer.scroll(
+    scale: Pair<Int, Int> = inheritParentScale(),
+    locate: Pair<Int, Int> = firstAvailablePositionForPanel(),
+    direction: ScrollDirection = ScrollDirection.VERTICAL,
+    tail: Int = scale.second,
+    weight: PanelWeight = PanelWeight.NORMAL,
+    block: ScrollStandardPanel.() -> Unit
+) = ScrollStandardPanel(this, weight, Scale(scale), Pos(locate), direction, ScrollTail(tail)).also {
     block(it)
     this += it
 }

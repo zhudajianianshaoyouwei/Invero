@@ -56,7 +56,7 @@ abstract class ItemElement(
     override fun postRender(block: (Pos) -> Unit) {
         if (!panel.isElementValid(this)) return
 
-        val elements = (panel as ElementalPanel).getElements()
+        val elements = (panel as ElementalPanel).elements
         val positions = elements.locateElement(this)?.values ?: setOf()
 
         positions.forEach(block)

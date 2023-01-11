@@ -1,6 +1,6 @@
 # Invero
 
-GUI framework based on independent slots implementations
+Versatile GUIs framework based on Minecraft containers
 
 https://user-images.githubusercontent.com/35389235/210974601-22d94b34-f1b9-4ed2-bedf-467b24940acc.mp4
 

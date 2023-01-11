@@ -14,18 +14,18 @@ import cc.trixey.invero.common.Pos
  */
 interface ElementalPanel : Panel {
 
-    fun getElements(): Elements
+    val elements: Elements
 
     fun getUnoccupiedPositions(): Set<Pos> {
-        return scale.getArea() - getElements().occupiedPositions()
+        return scale.getArea() - elements.occupiedPositions()
     }
 
     override fun render() {
-        getElements().forEach { push() }
+        elements.forEach { push() }
     }
 
     override fun isElementValid(element: Element): Boolean {
-        return getElements().hasElement(element)
+        return elements.hasElement(element)
     }
 
 }

@@ -43,6 +43,9 @@ object InveroPlugin : Plugin() {
         @CommandBody
         val freeform_netesed = construct { showFreeformNetesed(this) }
 
+        @CommandBody
+        val scroll = construct { showScrollStandard(this) }
+
         private fun construct(block: Player.() -> Unit): SimpleCommandBody {
             return subCommand {
                 execute { sender, _, _ ->
