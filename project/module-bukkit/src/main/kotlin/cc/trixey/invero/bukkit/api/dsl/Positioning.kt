@@ -7,4 +7,4 @@ package cc.trixey.invero.bukkit.api.dsl
  * @author Arasple
  * @since 2023/1/10 22:08
  */
-fun at(x: Int, y: Int = 0) = x to y
+fun at(x: Int = 0, y: Int = 0) = x to y

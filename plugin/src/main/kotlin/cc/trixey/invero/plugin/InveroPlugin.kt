@@ -29,7 +29,7 @@ object InveroPlugin : Plugin() {
         val basic = construct { showBasic(this) }
 
         @CommandBody
-        val basic_dynamicItem = construct { showRunningApple(this) }
+        val basic_dynamicItem = construct { showRunningItem(this) }
 
         @CommandBody
         val basic_dynamicTitle = construct { showDynamicTitle(this) }

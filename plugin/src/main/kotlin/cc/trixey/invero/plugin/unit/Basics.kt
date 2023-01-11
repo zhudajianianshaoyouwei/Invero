@@ -55,30 +55,41 @@ fun showBasic(player: Player) = bukkitChestWindow(6, "Hello InveroPlugin") {
 
 }.open(player)
 
-fun showRunningApple(player: Player) = bukkitChestWindow(6, "Running apple") {
+fun showRunningItem(player: Player) = bukkitChestWindow(6, "Running Paged Item") {
 
-    var count = 1
+    var itemAmount = 1
 
-    standard(9 to 6 + 4) {
+    pagedNetesed(9 to 6 + 3, at(y = 1)) {
+        repeat(5) { currentPage ->
+            standard(9 to 6 + 4) {
+                val material = if (currentPage == 0) Material.APPLE else randomMaterial()
+                val apple = buildItem(material) {
+                    modify { name = "Running_Item" }
+                    onClick { modify { amount = ++itemAmount } }
+                }
 
-        val apple = item(0, Material.APPLE) {
-            modify { name = "Running_Apple" }
-
-            onClick { modify { amount = ++count } }
-        }.add(1)
-
-        var base = 0
-        submit(now = false, async = true, 20L, 20L) {
-            if (noViewer()) cancel().also {
-                println("Cancelled")
+                var position = 0
+                submit(now = false, async = true, 20L, 20L) {
+                    if (noViewer()) cancel()
+                    if (pageIndex == currentPage) {
+                        apple.set(position, position + 1, position++ + 2)
+                    }
+                }
             }
-
-            apple.set(base, base + 1, base + 2)
-
-            base++
         }
     }
 
+    nav(9 to 1, at(x = 0)) {
+        item(0, Material.CYAN_STAINED_GLASS_PANE) {
+            modify { name = "Preivous page" }
+            onClick { firstPagedNetesed().previousPage() }
+        }
+        item(8, Material.LIME_STAINED_GLASS_PANE) {
+            modify { name = "Next page" }
+            onClick { firstPagedNetesed().nextPage() }
+        }
+        item(Material.GRAY_STAINED_GLASS_PANE).fillup()
+    }
 
 }.open(player)
 
@@ -100,7 +111,7 @@ fun showDynamicTitle(player: Player) = bukkitChestWindow(3, "_") {
     open(player)
 }.also {
 
-    val dynamicTitles by lazy {
+    val dynamicTitles = run {
         var current = "_"
         val titles = mutableListOf<String>()
 
