@@ -7,16 +7,21 @@ package cc.trixey.invero.common.scroll
  * @author Arasple
  * @since 2023/1/11 13:35
  */
-enum class ScrollDirection {
+@JvmInline
+value class ScrollDirection private constructor(private val vertical: Boolean) {
 
-    VERTICAL,
+    companion object {
 
-    HORIZONTAL;
+        val VERTICAL = ScrollDirection(true)
+
+        val HORIZONTAL = ScrollDirection(false)
+
+    }
 
     val isVertical: Boolean
-        get() = this == VERTICAL
+        get() = vertical
 
     val isHorizontal: Boolean
-        get() = this == HORIZONTAL
+        get() = !isVertical
 
 }

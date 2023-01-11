@@ -7,6 +7,14 @@ plugins {
 taboolib {
     install("common", "module-nms", "platform-bukkit")
 
+    description {
+        name = rootProject.name
+
+        contributors {
+            name("Arasple")
+        }
+    }
+
     classifier = null
     version = taboolibVersion
 }

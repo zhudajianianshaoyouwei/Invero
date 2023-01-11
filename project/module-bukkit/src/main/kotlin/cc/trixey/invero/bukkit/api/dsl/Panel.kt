@@ -96,3 +96,23 @@ inline fun <T> PanelContainer.generatorScroll(
     block(it)
     this += it
 }
+
+inline fun PanelContainer.storageIOPanel(
+    scale: Pair<Int, Int> = inheritParentScale(),
+    locate: Pair<Int, Int> = firstAvailablePositionForPanel(),
+    weight: PanelWeight = PanelWeight.NORMAL,
+    block: IOStoragePanel.() -> Unit
+) = IOStoragePanel(this, weight, Scale(scale), Pos(locate)).also {
+    block(it)
+    this += it
+}
+
+inline fun PanelContainer.craftingIOPanel(
+    scale: Pair<Int, Int> = inheritParentScale(),
+    locate: Pair<Int, Int> = firstAvailablePositionForPanel(),
+    weight: PanelWeight = PanelWeight.NORMAL,
+    block: IOCraftingPanel.() -> Unit
+) = IOCraftingPanel(this, weight, Scale(scale), Pos(locate)).also {
+    block(it)
+    this += it
+}

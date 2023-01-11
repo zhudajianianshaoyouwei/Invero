@@ -2,8 +2,8 @@ package cc.trixey.invero.bukkit.panel
 
 import cc.trixey.invero.bukkit.BukkitPanel
 import cc.trixey.invero.bukkit.api.dsl.set
-import cc.trixey.invero.bukkit.element.ItemElement
-import cc.trixey.invero.common.Clickable
+import cc.trixey.invero.bukkit.element.Clickable
+import cc.trixey.invero.bukkit.element.item.BaseItem
 import cc.trixey.invero.common.Elements
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
@@ -25,15 +25,15 @@ class PagedGeneratorPanel<T>(
     weight: PanelWeight,
     scale: Scale,
     locate: Pos
-) : BukkitPanel(parent, weight, scale, locate), PagedPanel, GeneratorPanel<T, ItemElement> {
+) : BukkitPanel(parent, weight, scale, locate), PagedPanel, GeneratorPanel<T, BaseItem<*>> {
 
     override var sourceElements: List<T> = listOf()
 
     override val outputElements by lazy {
-        ArrayList(arrayOfNulls<ItemElement?>(sourceElements.size).toList())
+        ArrayList(arrayOfNulls<BaseItem<*>?>(sourceElements.size).toList())
     }
 
-    override var generator: (T) -> ItemElement? = { null }
+    override var generator: (T) -> BaseItem<*>? = { null }
 
     override val generatorPool: Set<Pos> by lazy {
         scale.getArea() - elements.occupiedPositions()
@@ -75,12 +75,14 @@ class PagedGeneratorPanel<T>(
         }
     }
 
-    override fun handleClick(pos: Pos, e: WindowClickEvent) {
+    override fun handleClick(pos: Pos, e: WindowClickEvent): Boolean {
         elements.findElement(pos)?.let {
-            if (it is Clickable) {
-                it.passClickEventHandler(e)
+            if (it is Clickable<*>) {
+                it.runHandler(e)
+                return true
             }
         }
+        return false
     }
 
 }

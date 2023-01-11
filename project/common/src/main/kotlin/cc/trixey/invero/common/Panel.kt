@@ -11,7 +11,7 @@ import cc.trixey.invero.common.panel.PanelWeight
  * @author Arasple
  * @since 2022/12/20 20:43
  */
-interface Panel : Gridable, Clickable {
+interface Panel : Gridable {
 
     /**
      * The parent of this panel
@@ -52,19 +52,19 @@ interface Panel : Gridable, Clickable {
      */
     fun wipe() = wipe(area)
 
+    /**
+     * Wipe items at specific positions
+     */
     fun wipe(wiping: Collection<Pos>) {
         if (parent.isPanel()) {
             if (parent.isFreeform()) {
-                wiping
-                    .map { it + locate }
-                    .let { return parent.cast<Panel>().wipe(it) }
+                wiping.map { it + locate }.let { return parent.cast<Panel>().wipe(it) }
             }
 
             val parentScale = parent.scale
             val parentLocate = (parent as Panel).locate
 
-            wiping
-                .map { it.convertToParent(scale, parentScale, parentLocate) }
+            wiping.map { it.convertToParent(scale, parentScale, parentLocate) }
                 .let { return parent.cast<Panel>().wipe(it) }
         }
 
@@ -74,10 +74,16 @@ interface Panel : Gridable, Clickable {
         }
     }
 
+    /**
+     * Check where an element is still valid/available in this panel
+     */
     fun isElementValid(element: Element): Boolean
 
+    /**
+     * Wipe and render
+     */
     fun rerender() = wipe().also { render() }
 
-    fun handleClick(pos: Pos, e: WindowClickEvent)
+    fun handleClick(pos: Pos, e: WindowClickEvent): Boolean
 
 }

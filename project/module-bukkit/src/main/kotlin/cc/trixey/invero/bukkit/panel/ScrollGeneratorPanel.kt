@@ -1,6 +1,6 @@
 package cc.trixey.invero.bukkit.panel
 
-import cc.trixey.invero.bukkit.element.ItemElement
+import cc.trixey.invero.bukkit.element.item.BaseItem
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.panel.GeneratorPanel
@@ -19,15 +19,15 @@ class ScrollGeneratorPanel<T>(
     weight: PanelWeight,
     scale: Scale,
     locate: Pos
-) : ScrollStandardPanel(parent, weight, scale, locate), GeneratorPanel<T, ItemElement> {
+) : ScrollStandardPanel(parent, weight, scale, locate), GeneratorPanel<T, BaseItem<*>> {
 
     override var sourceElements: List<T> = listOf()
 
     override val outputElements by lazy {
-        ArrayList(arrayOfNulls<ItemElement?>(sourceElements.size).toList())
+        ArrayList(arrayOfNulls<BaseItem<*>?>(sourceElements.size).toList())
     }
 
-    override var generator: (T) -> ItemElement? = { null }
+    override var generator: (T) -> BaseItem<*>? = { null }
 
     override val generatorPool: Set<Pos> by lazy {
         scale.getArea() - elements.occupiedPositions()

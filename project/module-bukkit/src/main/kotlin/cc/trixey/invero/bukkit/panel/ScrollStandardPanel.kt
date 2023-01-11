@@ -2,7 +2,7 @@ package cc.trixey.invero.bukkit.panel
 
 import cc.trixey.invero.bukkit.api.dsl.pos
 import cc.trixey.invero.bukkit.api.dsl.ruin
-import cc.trixey.invero.bukkit.element.ItemElement
+import cc.trixey.invero.bukkit.element.item.BaseItem
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.panel.ElementalPanel
@@ -34,15 +34,7 @@ open class ScrollStandardPanel(
     override val tail: ScrollTail = ScrollTail(scale.height),
 ) : FreeformStandardPanel(parent, weight, scale, locate), ScrollPanel, ElementalPanel {
 
-    class ColumItems(elements: Array<ItemElement?>) : ScrollColum<ItemElement>(elements)
-
-     val visibleColumsSize: Int by lazy {
-        if (direction.isVertical) scale.height else scale.width
-    }
-
-     val columCapacity: Int by lazy {
-        if (direction.isVertical) scale.width else scale.height
-    }
+    class ColumItems(elements: Array<BaseItem<*>?>) : ScrollColum<BaseItem<*>>(elements)
 
     private val colums = mutableListOf<ColumItems>()
 
@@ -54,7 +46,7 @@ open class ScrollStandardPanel(
             rerender()
         }
 
-    fun insertColum(block: (index: Int) -> ItemElement?) {
+    fun insertColum(block: (index: Int) -> BaseItem<*>?) {
         colums += ColumItems((0 until columCapacity).map(block).toTypedArray())
         columsUpdated = false
     }

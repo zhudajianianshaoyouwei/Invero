@@ -2,7 +2,7 @@ package cc.trixey.invero.bukkit.panel
 
 import cc.trixey.invero.bukkit.BukkitPanel
 import cc.trixey.invero.bukkit.api.dsl.pos
-import cc.trixey.invero.common.Clickable
+import cc.trixey.invero.bukkit.element.Clickable
 import cc.trixey.invero.common.Elements
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
@@ -37,12 +37,14 @@ open class FreeformStandardPanel(
             rerender()
         }
 
-    override fun handleClick(pos: Pos, e: WindowClickEvent) {
+    override fun handleClick(pos: Pos, e: WindowClickEvent): Boolean {
         elements.findElement(pos + viewport)?.let {
-            if (it is Clickable) {
-                it.passClickEventHandler(e)
+            if (it is Clickable<*>) {
+                it.runHandler(e)
+                return true
             }
         }
+        return false
     }
 
     override fun setViewport(x: Int, y: Int) {

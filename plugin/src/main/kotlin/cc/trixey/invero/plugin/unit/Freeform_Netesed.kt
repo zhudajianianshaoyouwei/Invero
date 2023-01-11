@@ -60,14 +60,8 @@ fun showFreeformNetesed(player: Player) = bukkitChestWindow(6, "FreeformNetesed"
         }
 
         nav(9 to 1, at(8, 0)) {
-            item(0, Material.CYAN_STAINED_GLASS_PANE) {
-                modify { name = "Preivous page" }
-                onClick { firstPagedNetesed().previousPage() }
-            }
-            item(8, Material.LIME_STAINED_GLASS_PANE) {
-                modify { name = "Next page" }
-                onClick { firstPagedNetesed().nextPage() }
-            }
+            pageItem(firstPaged(), +1, 0, Material.CYAN_STAINED_GLASS_PANE) { modify { name = "Preivous page" } }
+            pageItem(firstPaged(), -1, 8, Material.LIME_STAINED_GLASS_PANE) { modify { name = "Next page" } }
             item(Material.GRAY_STAINED_GLASS_PANE).fillup()
         }
 

@@ -35,6 +35,10 @@ class FreeformNetesedPanel(
         viewport = pos(x, y)
     }
 
+    override fun wipe(wiping: Collection<Pos>) {
+        super<BukkitPanel>.wipe(wiping)
+    }
+
     override fun shift(x: Int, y: Int) {
         viewport += (x to y)
     }
@@ -45,13 +49,13 @@ class FreeformNetesedPanel(
 
     override fun isElementValid(element: Element) = panels.any { it.isElementValid(element) }
 
-    override fun handleClick(pos: Pos, e: WindowClickEvent) = panels.forEach {
+    override fun handleClick(pos: Pos, e: WindowClickEvent) = panels.any {
         val clicked = pos + viewport
 
         if (clicked in it.area) {
             it.handleClick(clicked - it.locate, e)
-            return@forEach
-        }
+            true
+        } else false
     }
 
 }

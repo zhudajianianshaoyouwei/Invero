@@ -1,7 +1,10 @@
 package cc.trixey.invero.bukkit
 
 import cc.trixey.invero.bukkit.api.InveroAPI
-import cc.trixey.invero.common.*
+import cc.trixey.invero.bukkit.element.Clickable
+import cc.trixey.invero.common.Panel
+import cc.trixey.invero.common.Pos
+import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.event.WindowClickEvent
 import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
@@ -18,33 +21,24 @@ abstract class BukkitPanel(
     override val weight: PanelWeight,
     override val scale: Scale,
     override val locate: Pos
-) : Panel {
+) : Panel, Clickable<BukkitPanel> {
 
-    private var handler: (WindowClickEvent, Clickable) -> Unit = { _, _ -> }
+    private val handlers = mutableSetOf<(WindowClickEvent, BukkitPanel) -> Unit>()
 
-    override fun getHandler(): (WindowClickEvent, Clickable) -> Unit {
-        return handler
+    override fun addHandler(handler: (WindowClickEvent, BukkitPanel) -> Unit) {
+        this.handlers += handler
     }
 
-    override fun setHandler(handler: (WindowClickEvent, Clickable) -> Unit) {
-        this.handler = handler
+    override fun runHandler(event: WindowClickEvent) {
+        this.handlers.forEach { it(event, getInstance()) }
     }
 
-    override val area: Set<Pos> by lazy {
-        scale.getArea(locate)
-    }
+    override val area by lazy { scale.getArea(locate) }
 
-    override val window: Window by lazy {
+    override val window by lazy { InveroAPI.manager.findWindow(this) ?: parent.top() }
 
-        InveroAPI.manager.findWindow(this) ?: let {
-            var p = parent
-            while (p.isPanel()) {
-                p = p.cast<Panel>().parent
-            }
-
-            p as Window
-        }
-
+    override fun getInstance(): BukkitPanel {
+        return this
     }
 
 }

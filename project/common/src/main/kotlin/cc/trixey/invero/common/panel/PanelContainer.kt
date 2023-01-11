@@ -23,6 +23,14 @@ interface PanelContainer : Gridable {
 
     fun isFreeform() = this is FreeformPanel
 
+    fun top(): Window {
+        var current = this
+        while (current.isPanel()) {
+            current = current.cast<Panel>().parent
+        }
+        return current as Window
+    }
+
     @Suppress("UNCHECKED_CAST")
     fun <T> cast() = this as T
 

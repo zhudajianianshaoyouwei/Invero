@@ -63,18 +63,6 @@ abstract class BukkitWindow(val type: WindowType, title: String = "Untitled_Inve
         }
     }
 
-    override fun handleDrag(e: WindowDragEvent) {
-
-    }
-
-    override fun handleItemsCollect(e: WindowItemsCollectEvent) {
-
-    }
-
-    override fun handleItemsMove(e: WindowItemsMoveEvent) {
-
-    }
-
     override fun handleOpen(e: WindowOpenEvent) {
 
     }
@@ -91,10 +79,21 @@ abstract class BukkitWindow(val type: WindowType, title: String = "Untitled_Inve
             .forEach {
                 if (clickedSlot in it.area) {
                     it.handleClick(clickedSlot - it.locate, e)
-                    it.passClickEventHandler(e)
-                    return@forEach
+                    return
                 }
             }
+    }
+
+    override fun handleDrag(e: WindowDragEvent) {
+
+    }
+
+    override fun handleItemsCollect(e: WindowItemsCollectEvent) {
+
+    }
+
+    override fun handleItemsMove(e: WindowItemsMoveEvent) {
+
     }
 
 }

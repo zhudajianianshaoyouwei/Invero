@@ -1,6 +1,6 @@
 package cc.trixey.invero.bukkit.api.dsl
 
-import cc.trixey.invero.bukkit.element.SimpleItem
+import cc.trixey.invero.bukkit.element.item.SimpleItem
 import cc.trixey.invero.common.Element
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Positions

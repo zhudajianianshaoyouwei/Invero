@@ -1,7 +1,6 @@
 package cc.trixey.invero.bukkit.api.dsl
 
 import cc.trixey.invero.bukkit.panel.FreeformStandardPanel
-import cc.trixey.invero.bukkit.panel.PagedNetesedPanel
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.panel.ElementalPanel
 import cc.trixey.invero.common.panel.FreeformPanel
@@ -39,4 +38,4 @@ fun PanelContainer.firstFreeform(): FreeformPanel = findSubPanel()!!
 
 fun PanelContainer.firstFreeformStandard(): FreeformStandardPanel = findSubPanel()!!
 
-fun PanelContainer.firstPagedNetesed(): PagedNetesedPanel = findSubPanel()!!
+fun PanelContainer.firstPaged(): PagedPanel = findSubPanel()!!
