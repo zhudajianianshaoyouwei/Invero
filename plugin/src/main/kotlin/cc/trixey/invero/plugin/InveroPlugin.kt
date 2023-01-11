@@ -49,11 +49,14 @@ object InveroPlugin : Plugin() {
         @CommandBody
         val generator_paged = construct { showGeneratorPaged(this) }
 
+        @CommandBody
+        val generator_scroll = construct { showGeneratorScroll(this) }
+
         private fun construct(block: Player.(String) -> Unit): SimpleCommandBody {
             return subCommand {
                 execute { sender, _, s ->
                     println(s)
-                    block(sender,s)
+                    block(sender, s)
                 }
             }
         }

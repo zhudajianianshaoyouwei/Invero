@@ -1,6 +1,7 @@
 package cc.trixey.invero.bukkit.panel
 
 import cc.trixey.invero.bukkit.api.dsl.pos
+import cc.trixey.invero.bukkit.api.dsl.ruin
 import cc.trixey.invero.bukkit.element.ItemElement
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
@@ -24,7 +25,7 @@ import cc.trixey.invero.common.scroll.ScrollTail
  *
  * 元素的位置是动态规定的，insertColum 函数内调用 buildItem 即可，不建议对元素的位置有任何操作
  */
-class ScrollStandardPanel(
+open class ScrollStandardPanel(
     parent: PanelContainer,
     weight: PanelWeight,
     scale: Scale,
@@ -35,11 +36,11 @@ class ScrollStandardPanel(
 
     class ColumItems(elements: Array<ItemElement?>) : ScrollColum<ItemElement>(elements)
 
-    private val visibleColumsSize: Int by lazy {
+     val visibleColumsSize: Int by lazy {
         if (direction.isVertical) scale.height else scale.width
     }
 
-    private val columCapacity: Int by lazy {
+     val columCapacity: Int by lazy {
         if (direction.isVertical) scale.width else scale.height
     }
 
@@ -55,6 +56,14 @@ class ScrollStandardPanel(
 
     fun insertColum(block: (index: Int) -> ItemElement?) {
         colums += ColumItems((0 until columCapacity).map(block).toTypedArray())
+        columsUpdated = false
+    }
+
+    fun resetColums() {
+        colums.removeAll { columItems ->
+            columItems.elements.forEach { it?.ruin() }
+            true
+        }
         columsUpdated = false
     }
 

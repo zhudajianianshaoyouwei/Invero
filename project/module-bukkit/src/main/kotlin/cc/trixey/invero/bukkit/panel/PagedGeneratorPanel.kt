@@ -27,6 +27,18 @@ class PagedGeneratorPanel<T>(
     locate: Pos
 ) : BukkitPanel(parent, weight, scale, locate), PagedPanel, GeneratorPanel<T, ItemElement> {
 
+    override var sourceElements: List<T> = listOf()
+
+    override val outputElements by lazy {
+        ArrayList(arrayOfNulls<ItemElement?>(sourceElements.size).toList())
+    }
+
+    override var generator: (T) -> ItemElement? = { null }
+
+    override val generatorPool: Set<Pos> by lazy {
+        scale.getArea() - elements.occupiedPositions()
+    }
+
     override var pageIndex: Int = 0
         set(value) {
             if (value < 0) error("Page index can not be a negative number")
@@ -42,38 +54,13 @@ class PagedGeneratorPanel<T>(
 
     override val elements = Elements()
 
-    override val generatorPool: Set<Pos> by lazy {
-        scale.getArea() - elements.occupiedPositions()
-    }
-
-    override var sourceElements: List<T> = listOf()
-
-    override val outputElements by lazy {
-        ArrayList(arrayOfNulls<ItemElement?>(sourceElements.size).toList())
-    }
-
-    override var generator: (T) -> ItemElement? = { null }
-
-    fun generatorElements(block: () -> List<T>) {
-        sourceElements = block()
-    }
-
-    fun onGenerate(block: (T) -> ItemElement?) {
-        generator = block
-    }
-
     override fun render() {
         val fromIndex = pageIndex * generatorPool.size
         val toIndex = (fromIndex + generatorPool.size).coerceAtMost(sourceElements.lastIndex)
         maxPageIndex = sourceElements.size / generatorPool.size
 
         if (sourceElements.size > fromIndex) {
-            val apply = (fromIndex..toIndex).map { index ->
-                if (outputElements[index] == null) {
-                    outputElements[index] = generator(sourceElements[index])
-                }
-                outputElements[index]
-            }
+            val apply = (fromIndex..toIndex).map { getOutput(it) }
 
             elements.apply {
                 generatorPool.forEachIndexed { index, pos ->

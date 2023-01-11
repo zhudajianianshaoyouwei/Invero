@@ -1,9 +1,6 @@
 package cc.trixey.invero.plugin.unit
 
-import cc.trixey.invero.bukkit.api.dsl.buildItem
-import cc.trixey.invero.bukkit.api.dsl.bukkitChestWindow
-import cc.trixey.invero.bukkit.api.dsl.generatorPaged
-import cc.trixey.invero.bukkit.api.dsl.item
+import cc.trixey.invero.bukkit.api.dsl.*
 import cc.trixey.invero.bukkit.nms.updateTitle
 import cc.trixey.invero.bukkit.util.randomMaterial
 import org.bukkit.Material
@@ -58,6 +55,38 @@ fun showGeneratorPaged(player: Player, filter: String? = null) = bukkitChestWind
         }
 
     }
+
+    open(player)
+
+}
+
+fun showGeneratorScroll(player: Player, filter: String? = null) = bukkitChestWindow(6, "Generator_Paged") {
+
+    generatorScroll<Sound>(9 to 6) {
+
+        generatorElements {
+            Sound
+                .values()
+                .sortedBy { it.name }
+                .filter { filter == null || it.name.contains(filter.uppercase()) }
+        }
+
+        onGenerate { sound ->
+
+            buildItem(randomMaterial()) {
+                modify {
+                    name = sound.name
+                }
+                onClick {
+                    player.sendMessage(sound.name)
+                }
+            }
+
+        }
+
+    }
+
+    freeformNavigator()
 
     open(player)
 

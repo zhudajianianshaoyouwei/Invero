@@ -86,3 +86,13 @@ inline fun <T> PanelContainer.generatorPaged(
     block(it)
     this += it
 }
+
+inline fun <T> PanelContainer.generatorScroll(
+    scale: Pair<Int, Int> = inheritParentScale(),
+    locate: Pair<Int, Int> = firstAvailablePositionForPanel(),
+    weight: PanelWeight = PanelWeight.NORMAL,
+    block: ScrollGeneratorPanel<T>.() -> Unit
+) = ScrollGeneratorPanel<T>(this, weight, Scale(scale), Pos(locate)).also {
+    block(it)
+    this += it
+}

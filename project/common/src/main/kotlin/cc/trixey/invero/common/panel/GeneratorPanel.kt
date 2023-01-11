@@ -19,4 +19,19 @@ interface GeneratorPanel<T, R> : ElementalPanel {
 
     val generatorPool: Set<Pos>
 
+    fun getOutput(index: Int): R? {
+        if (outputElements[index] == null) {
+            outputElements[index] = generator(sourceElements[index])
+        }
+        return outputElements[index]
+    }
+
+    fun generatorElements(block: () -> List<T>) {
+        sourceElements = block()
+    }
+
+    fun onGenerate(block: (T) -> R?) {
+        generator = block
+    }
+
 }
