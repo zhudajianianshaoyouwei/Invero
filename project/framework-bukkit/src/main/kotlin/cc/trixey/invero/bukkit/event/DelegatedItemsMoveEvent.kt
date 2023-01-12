@@ -24,7 +24,7 @@ value class DelegatedItemsMoveEvent(
         get() = BukkitViewer(event.whoClicked.uniqueId)
 
     override val window: Window
-        get() = (event.clickedInventory!!.holder as BukkitWindowHolder).window
+        get() = (event.whoClicked.openInventory.topInventory.holder as BukkitWindowHolder).window
 
     override val type: EventType
         get() = EventType.ITEMS_MOVE

@@ -6,6 +6,8 @@ import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.event.WindowClickEvent
+import cc.trixey.invero.common.event.WindowDragEvent
+import cc.trixey.invero.common.event.WindowItemsMoveEvent
 import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 
@@ -35,6 +37,30 @@ class PanelGroup(
         panels.forEach {
             if (clicked in it.area) {
                 it.handleClick(pos - it.locate, e)
+                return true
+            }
+        }
+        return false
+    }
+
+    override fun handleDrag(positions: List<Pos>, e: WindowDragEvent): Boolean {
+        val affected = positions.map { it - locate }
+
+        panels
+            .find { panel -> affected.all { it in panel.area } }
+            ?.let {
+                return it.handleDrag(affected, e)
+            }
+
+        return false
+    }
+
+    override fun handleItemsMove(pos: Pos, e: WindowItemsMoveEvent): Boolean {
+        val clicked = pos - locate
+
+        panels.forEach {
+            if (clicked in it.area) {
+                it.handleItemsMove(pos - it.locate, e)
                 return true
             }
         }

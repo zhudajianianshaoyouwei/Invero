@@ -6,6 +6,7 @@ import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.event.WindowClickEvent
+import cc.trixey.invero.common.event.WindowDragEvent
 import cc.trixey.invero.common.panel.PagedPanel
 import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
@@ -46,6 +47,8 @@ open class PagedNetesedPanel(
     override fun render() = currentPanel.rerender()
 
     override fun handleClick(pos: Pos, e: WindowClickEvent) = currentPanel.handleClick(pos, e)
+
+    override fun handleDrag(positions: List<Pos>, e: WindowDragEvent) = currentPanel.handleDrag(positions, e)
 
     override fun isElementValid(element: Element) = currentPanel.isElementValid(element)
 

@@ -14,7 +14,7 @@ import org.bukkit.entity.Player
  * @author Arasple
  * @since 2023/1/11 16:16
  */
-fun showGeneratorPaged(player: Player, filter: String? = null) = bukkitChestWindow(6, "Generator_Paged") {
+fun showGeneratorPaged(player: Player, filter: String? = null) = bukkitChestWindow(6, "Generator_Paged (filtered: $filter)") {
 
     generatorPaged<Sound>(9 to 6) {
 

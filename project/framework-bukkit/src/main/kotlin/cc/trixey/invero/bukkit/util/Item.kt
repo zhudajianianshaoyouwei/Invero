@@ -33,4 +33,6 @@ fun randomItem(builder: ItemBuilder.() -> Unit = {}): ItemStack {
     }
 }
 
-fun randomMaterial() = Material.values().filter { (it.isItem || it.isBlock) && it.isNotAir() }.random()
+fun randomMaterial(): Material {
+    return Material.values().filter { (it.isItem || it.isBlock) && it.isNotAir() }.random()
+}

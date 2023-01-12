@@ -51,7 +51,7 @@ value class Pos(val value: Pair<Int, Int>) : Comparable<Pos> {
     }
 
     override fun compareTo(other: Pos): Int {
-        return x + y * 9 - other.x + other.y * 9
+        return (x + y * 9) - (other.x + other.y * 9)
     }
 
     override fun toString(): String {

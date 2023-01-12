@@ -50,7 +50,7 @@ object InveroPlugin : Plugin() {
         val scroll_2 = construct { showScroll2(this) }
 
         @CommandBody
-        val generator_paged = construct { showGeneratorPaged(this) }
+        val generator_paged = construct { showGeneratorPaged(this, it) }
 
         @CommandBody
         val generator_scroll = construct { showGeneratorScroll(this) }
@@ -58,11 +58,10 @@ object InveroPlugin : Plugin() {
         @CommandBody
         val IO_storage = construct { showIOStoragePanel(this) }
 
-        private fun construct(block: Player.(String) -> Unit): SimpleCommandBody {
+        private fun construct(block: Player.(String?) -> Unit): SimpleCommandBody {
             return subCommand {
-                execute { sender, _, s ->
-                    println(s)
-                    block(sender, s)
+                execute { sender, _, args ->
+                    block(sender, args.split(" ").getOrNull(1))
                 }
             }
         }

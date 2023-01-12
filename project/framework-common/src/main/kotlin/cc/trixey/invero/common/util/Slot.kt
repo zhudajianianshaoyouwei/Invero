@@ -7,6 +7,8 @@ import cc.trixey.invero.common.panel.FreeformPanel
 /**
  * 将一个归属于 Panel 的 Pos 递归到最高层 Window 的真实 Slot
  */
+fun Panel.locatingAbsoluteSlot(position: Pos) = locatingAbsoluteSlot(position, this)
+
 fun locatingAbsoluteSlot(position: Pos, panel: Panel): Int {
     val parent = panel.parent
     var pos = position

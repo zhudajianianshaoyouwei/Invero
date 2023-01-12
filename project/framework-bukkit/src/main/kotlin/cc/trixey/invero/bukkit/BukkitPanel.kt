@@ -7,6 +7,7 @@ import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.event.WindowClickEvent
 import cc.trixey.invero.common.event.WindowDragEvent
+import cc.trixey.invero.common.event.WindowItemsMoveEvent
 import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 
@@ -43,6 +44,10 @@ abstract class BukkitPanel(
     }
 
     override fun handleDrag(positions: List<Pos>, e: WindowDragEvent): Boolean {
+        return true
+    }
+
+    override fun handleItemsMove(pos: Pos, e: WindowItemsMoveEvent): Boolean {
         return true
     }
 

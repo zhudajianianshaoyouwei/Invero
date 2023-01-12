@@ -2,9 +2,9 @@ package cc.trixey.invero.bukkit
 
 import cc.trixey.invero.bukkit.api.InveroAPI
 import cc.trixey.invero.bukkit.event.DelegatedDragEvent
-import cc.trixey.invero.bukkit.event.DelegatedItemsCollectEvent
 import cc.trixey.invero.bukkit.event.DelegatedItemsMoveEvent
 import cc.trixey.invero.bukkit.nms.updateTitle
+import cc.trixey.invero.bukkit.panel.IOStoragePanel
 import cc.trixey.invero.common.*
 import cc.trixey.invero.common.event.*
 import org.bukkit.entity.Player
@@ -44,10 +44,7 @@ abstract class BukkitWindow(
     override fun render() {
         panels
             .sortedBy { it.weight }
-            .forEach {
-                println("[WINDOW RENDER PANEL] ${it.javaClass.simpleName} (${it.scale}) at ${it.locate}")
-                it.render()
-            }
+            .forEach { it.render() }
     }
 
     override fun open(viewer: Viewer) {
@@ -81,6 +78,7 @@ abstract class BukkitWindow(
         val window = e.window as BukkitWindow
         val rawSlot = e.rawSlot
 
+        // click player inventory
         if (rawSlot > window.type.slotsContainer.last) {
             if (!window.storageMode.overridePlayerInventory) {
                 e.isCancelled = false
@@ -89,6 +87,7 @@ abstract class BukkitWindow(
         }
 
         val clickedSlot = scale.convertToPosition(rawSlot)
+
         panels
             .sortedByDescending { it.weight }
             .forEach {
@@ -118,34 +117,48 @@ abstract class BukkitWindow(
         }
     }
 
-    override fun handleItemsCollect(e: WindowItemsCollectEvent) {
-        val event = (e as DelegatedItemsCollectEvent).event
-
-        println("================================> WindowItemsCollectEvent")
-        println("      action: " + event.action)
-        println("       click: " + event.click)
-        println(" currentItem: " + event.currentItem)
-        println("      cursor: " + event.cursor)
-        println("hotbarButton: " + event.hotbarButton)
-        println("     rawSlot: " + event.rawSlot)
-        println("        slot: " + event.slot)
-        println("    slotType: " + event.slotType)
-    }
-
     override fun handleItemsMove(e: WindowItemsMoveEvent) {
         e.isCancelled = true
 
         val event = (e as DelegatedItemsMoveEvent).event
+        val window = e.window as BukkitWindow
+        val rawSlot = event.rawSlot
 
-        println("================================> WindowItemsMoveEvent")
-        println("      action: " + event.action)
-        println("       click: " + event.click)
-        println(" currentItem: " + event.currentItem)
-        println("      cursor: " + event.cursor)
-        println("hotbarButton: " + event.hotbarButton)
-        println("     rawSlot: " + event.rawSlot)
-        println("        slot: " + event.slot)
-        println("    slotType: " + event.slotType)
+        // playerInventory -> IO Panel
+        if (rawSlot > window.type.slotsContainer.last) {
+            if (window.storageMode.overridePlayerInventory) return
+            val insertItem = event.currentItem?.clone() ?: return
+
+            getPanelsRecursively()
+                .filterIsInstance<IOStoragePanel>()
+                .sortedBy { it.locate }
+                .sortedByDescending { it.weight }
+                .forEach {
+                    val previous = insertItem.amount
+                    val result = it.stackItemStack(insertItem.clone())
+                    insertItem.amount = result
+
+                    if (previous != result) it.renderStorage()
+                    if (result <= 0) return@forEach
+                }
+
+            event.currentItem?.amount = insertItem.amount
+        }
+        // IO Panel -> playerInventory
+        else if (!window.storageMode.overridePlayerInventory) {
+            val clickedSlot = scale.convertToPosition(rawSlot)
+
+            panels
+                .sortedBy { it.locate }
+                .sortedByDescending { it.weight }
+                .find { scale.convertToPosition(event.rawSlot) in it.area }
+                ?.handleItemsMove(clickedSlot, e)
+        }
+    }
+
+    // TODO 懒得做了
+    override fun handleItemsCollect(e: WindowItemsCollectEvent) {
+        e.isCancelled = true
     }
 
 }
