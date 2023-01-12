@@ -65,12 +65,12 @@ interface Panel : Gridable {
             }
 
             wiping
-                .map { it.convertToParent(scale, parent.scale) }
+                .map { it.convertToParent(locate) }
                 .let { return parent.cast<Panel>().wipe(it) }
         }
 
         window.let { window ->
-            val slots = wiping.map { it.convertToSlot(window.scale) }
+            val slots = wiping.map { it.convertToParent(locate).convertToSlot(window.scale) }
             window.inventory.clear(slots)
         }
     }

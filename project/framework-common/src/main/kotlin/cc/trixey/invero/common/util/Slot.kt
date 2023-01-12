@@ -28,7 +28,7 @@ fun locatingAbsoluteSlot(position: Pos, panel: Panel): Int {
     } else {
         parent as Panel
 
-        val parentPos = pos.convertToParent(panel.scale, parent.scale, panel.locate)
+        val parentPos = pos.convertToParent(panel.locate)
         locatingAbsoluteSlot(parentPos, parent)
     }
 }

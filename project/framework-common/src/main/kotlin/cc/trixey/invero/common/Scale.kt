@@ -16,6 +16,9 @@ value class Scale(val raw: Pair<Int, Int>) {
     val height: Int
         get() = raw.second
 
+    val size: Int
+        get() = width * height
+
     fun isOutOfBounds(x: Int, y: Int, index: Pos = Pos.NIL): Boolean {
         val (rX, rY) = x + index.x to y + index.y
 

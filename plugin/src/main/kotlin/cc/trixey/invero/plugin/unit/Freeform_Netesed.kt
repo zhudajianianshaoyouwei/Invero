@@ -41,7 +41,7 @@ fun showFreeformNetesed(player: Player) = bukkitChestWindow(6, "FreeformNetesed"
 
         pagedNetesed(9 to 6, at(8, 1)) {
             repeat(5) { currentPage ->
-                standard(9 to 6 + 4) {
+                standard {
                     val material = if (currentPage == 0) Material.APPLE else randomMaterial()
                     val apple = buildItem(material) {
                         modify { name = "Running_Item" }

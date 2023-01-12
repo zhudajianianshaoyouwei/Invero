@@ -4,6 +4,7 @@ import cc.trixey.invero.bukkit.api.dsl.bukkitChestWindow
 import cc.trixey.invero.bukkit.api.dsl.item
 import cc.trixey.invero.bukkit.api.dsl.set
 import cc.trixey.invero.bukkit.api.dsl.storageIOPanel
+import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.StorageMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -17,8 +18,14 @@ import org.bukkit.entity.Player
  */
 fun showIOStoragePanel(player: Player) = bukkitChestWindow(6, "IO_Storage", StorageMode(false)) {
 
-    storageIOPanel(9 to 6) {
-        item(Material.APPLE).set(0, 1, 2, 3, 4, 5, 6, 7, 8)
+    storageIOPanel(5 to 5, 0 to 0) {
+        val border = area
+            .filter { it.x == 0 || it.y == 0 || it.x == 4 || it.y == 4 }
+
+        println(border)
+
+        item(Material.CYAN_STAINED_GLASS_PANE).set(border)
+        item(Material.APPLE) { modify { name = "Persist Icon Element" } }.set(Pos(1, 1))
     }
 
     open(player)
