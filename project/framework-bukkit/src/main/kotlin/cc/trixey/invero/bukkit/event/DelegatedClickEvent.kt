@@ -33,7 +33,7 @@ value class DelegatedClickEvent(
     override val rawSlot: Int
         get() = event.rawSlot
 
-    override var isCancelled: Boolean
+    override var clickCancelled: Boolean
         get() = event.isCancelled
         set(value) {
             event.isCancelled = value
@@ -41,6 +41,5 @@ value class DelegatedClickEvent(
 
     override val clickType: ClickType
         get() = ClickType.findBukkit(event.click.name)!!
-
 
 }

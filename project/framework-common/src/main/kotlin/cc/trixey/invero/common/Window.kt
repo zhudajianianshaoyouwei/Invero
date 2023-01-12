@@ -72,10 +72,15 @@ interface Window : PanelContainer, Gridable {
 
     fun handleClose(e: WindowCloseEvent)
 
-    fun <T> forViewers(block: (it: T) -> Unit) = viewers
+    fun <T> forViewersInstance(block: (it: T) -> Unit) = viewers
+        .filter { it.isAvailable() }
+        .forEach { block(it.getInstance()) }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Viewer> forViewers(block: (it: T) -> Unit) = viewers
         .filter { it.isAvailable() }
         .forEach {
-            block(it.getInstance())
+            block(it as T)
         }
 
     fun hasViewer() = viewers.isNotEmpty()

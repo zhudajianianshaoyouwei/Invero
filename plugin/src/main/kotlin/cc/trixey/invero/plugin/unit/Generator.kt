@@ -14,13 +14,13 @@ import org.bukkit.entity.Player
  * @author Arasple
  * @since 2023/1/11 16:16
  */
-fun showGeneratorPaged(player: Player, filter: String? = null) = bukkitChestWindow(6, "Generator_Paged (filtered: $filter)") {
+fun showGeneratorPaged(player: Player, filter: String? = null) = packetChestWindow(6, "Generator_Paged (filtered: $filter)") {
 
     generatorPaged<Sound>(9 to 6) {
 
         onPageChange { _, toPage ->
             updateTitle("Generator_Paged ($toPage / $maxPageIndex)")
-            forViewers<Player> {
+            forViewersInstance<Player> {
                 it.playSound(it.location, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f)
             }
         }
@@ -54,7 +54,7 @@ fun showGeneratorPaged(player: Player, filter: String? = null) = bukkitChestWind
 
 }
 
-fun showGeneratorScroll(player: Player, filter: String? = null) = bukkitChestWindow(6, "Generator_Paged") {
+fun showGeneratorScroll(player: Player, filter: String? = null) = packetChestWindow(6, "Generator_Paged") {
 
     generatorScroll<Sound>(9 to 6) {
 

@@ -14,10 +14,16 @@ interface Manager<T : Window> {
 
     val registeredWindows: MutableSet<T>
 
-    fun register(window: T)
+    fun register(window: T) {
+        registeredWindows += window
+    }
 
-    fun unregister(window: T)
+    fun unregister(window: T) {
+        registeredWindows -= window
+    }
 
-    fun findWindow(panel: Panel): T?
+    fun findWindow(panel: Panel): T? {
+        return registeredWindows.find { panel in it.getPanelsRecursively() }
+    }
 
 }

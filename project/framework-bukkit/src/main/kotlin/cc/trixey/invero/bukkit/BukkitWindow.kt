@@ -23,14 +23,12 @@ abstract class BukkitWindow(
     title: String = "Untitled_Invero_Window"
 ) : Window {
 
-    abstract override val inventory: BukkitInventory
+    abstract override val inventory: ProxyBukkitInventory
 
     override var title = title
         set(value) {
             field = value
-            submit(async = true) {
-                updateTitle(value, true)
-            }
+            submit { updateTitle(value, true) }
         }
 
     override val viewers = mutableSetOf<Viewer>()
@@ -49,7 +47,7 @@ abstract class BukkitWindow(
 
     override fun open(viewer: Viewer) {
         if (viewers.add(viewer)) {
-            if (viewers.size == 1) InveroAPI.manager.register(this)
+            if (viewers.size == 1) InveroAPI.bukkitManager.register(this)
             inventory.open(viewer)
             render()
         } else {
@@ -60,20 +58,16 @@ abstract class BukkitWindow(
     override fun close(viewer: Viewer) {
         if (viewers.remove(viewer)) inventory.close(viewer)
         if (viewers.isEmpty()) {
-            InveroAPI.manager.unregister(this)
+            InveroAPI.bukkitManager.unregister(this)
         }
     }
 
-    override fun handleOpen(e: WindowOpenEvent) {
+    override fun handleOpen(e: WindowOpenEvent) {}
 
-    }
-
-    override fun handleClose(e: WindowCloseEvent) {
-        close(e.viewer)
-    }
+    override fun handleClose(e: WindowCloseEvent) {}
 
     override fun handleClick(e: WindowClickEvent) {
-        e.isCancelled = true
+        e.clickCancelled = true
 
         val window = e.window as BukkitWindow
         val rawSlot = e.rawSlot
@@ -81,7 +75,7 @@ abstract class BukkitWindow(
         // click player inventory
         if (rawSlot > window.type.slotsContainer.last) {
             if (!window.storageMode.overridePlayerInventory) {
-                e.isCancelled = false
+                e.clickCancelled = false
                 return
             }
         }

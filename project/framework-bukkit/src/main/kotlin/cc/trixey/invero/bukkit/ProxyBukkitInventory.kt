@@ -1,6 +1,7 @@
 package cc.trixey.invero.bukkit
 
 import cc.trixey.invero.common.ProxyInventory
+import cc.trixey.invero.common.StorageMode
 import cc.trixey.invero.common.Viewer
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
@@ -13,6 +14,9 @@ import org.bukkit.inventory.PlayerInventory
  * @since 2022/12/30 13:11
  */
 interface ProxyBukkitInventory : ProxyInventory {
+
+    val storageMode: StorageMode
+        get() = window.storageMode
 
     fun getPlayerInventory(viewer: Viewer): PlayerInventory
 

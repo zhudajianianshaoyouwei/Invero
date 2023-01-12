@@ -1,5 +1,10 @@
 package cc.trixey.invero.bukkit.api
 
+import cc.trixey.invero.bukkit.BukkitViewer
+import cc.trixey.invero.bukkit.api.manager.ManagerBukkitWindow
+import cc.trixey.invero.common.Panel
+import cc.trixey.invero.common.Window
+
 /**
  * Invero
  * cc.trixey.invero.bukkit.api.InveroAPI
@@ -9,6 +14,14 @@ package cc.trixey.invero.bukkit.api
  */
 object InveroAPI {
 
-    val manager = InveroManager()
+    val bukkitManager = ManagerBukkitWindow()
+
+    fun findWindow(panel: Panel): Window? {
+        return bukkitManager.findWindow(panel)
+    }
+
+    fun findWindow(viewer: BukkitViewer): Window? {
+        return bukkitManager.registeredWindows.find { viewer in it.viewers }
+    }
 
 }

@@ -8,15 +8,18 @@ import cc.trixey.invero.common.event.WindowClickEvent
 
 /**
  * Invero
- * cc.trixey.invero.bukkit.event.PacketClickEvent
+ * cc.trixey.invero.bukkit.event.PacketWindowClickEvent
  *
  * @author Arasple
  * @since 2023/1/6 11:45
  */
-class PacketClickEvent(
+class PacketWindowClickEvent(
     viewer: BukkitViewer,
     window: Window,
-    override var isCancelled: Boolean,
     override val rawSlot: Int,
     override val clickType: ClickType,
-) : PacketWindowEvent(viewer, window, EventType.CLICK), WindowClickEvent
+) : PacketWindowEvent(viewer, window, EventType.CLICK), WindowClickEvent {
+
+    override var clickCancelled: Boolean = true
+
+}

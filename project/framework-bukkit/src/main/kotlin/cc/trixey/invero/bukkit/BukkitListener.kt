@@ -1,8 +1,12 @@
 package cc.trixey.invero.bukkit
 
+import cc.trixey.invero.bukkit.api.InveroAPI
 import cc.trixey.invero.bukkit.event.*
-import cc.trixey.invero.common.Window
+import org.bukkit.entity.Player
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.*
+import org.bukkit.event.player.PlayerChangedWorldEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import taboolib.common.platform.event.SubscribeEvent
 
 /**
@@ -14,6 +18,23 @@ import taboolib.common.platform.event.SubscribeEvent
  */
 object BukkitListener {
 
+    /*
+    Player safety
+     */
+
+    @SubscribeEvent
+    fun e(e: PlayerDeathEvent) = e.entity.windowClosure()
+
+    @SubscribeEvent
+    fun e(e: PlayerChangedWorldEvent) = e.player.windowClosure()
+
+    @SubscribeEvent
+    fun e(e: PlayerQuitEvent) = e.player.windowClosure()
+
+    /*
+    Bukkit.InventoryEvent
+     */
+
     @SubscribeEvent
     fun e(e: InventoryClickEvent) = e.delegatedEvent {
         when (e.action) {
@@ -23,7 +44,6 @@ object BukkitListener {
         }
     }
 
-
     @SubscribeEvent
     fun e(e: InventoryDragEvent) = e.delegatedEvent { handleDrag(DelegatedDragEvent(e)) }
 
@@ -31,12 +51,39 @@ object BukkitListener {
     fun e(e: InventoryOpenEvent) = e.delegatedEvent { handleOpen(DelegatedOpenEvent(e)) }
 
     @SubscribeEvent
-    fun e(e: InventoryCloseEvent) = e.delegatedEvent { handleClose(DelegatedCloseEvent(e)) }
+    fun e(e: InventoryCloseEvent) = e.delegatedEvent {
+        close(viewer = BukkitViewer(e.player.uniqueId))
+        handleClose(DelegatedCloseEvent(e))
+    }
 
-    private fun InventoryEvent.delegatedEvent(block: Window.() -> Unit) = inventory.holder.let {
+    /*
+    PacketWindow.Events
+     */
+
+    @SubscribeEvent
+    fun e(e: PacketWindowOpenEvent) = e.delegatedEvent { handleOpen(e) }
+
+    @SubscribeEvent
+    fun e(e: PacketWindowCloseEvent) = e.delegatedEvent { handleClose(e) }
+
+    @SubscribeEvent
+    fun e(e: PacketWindowClickEvent) = e.delegatedEvent { handleClick(e) }
+
+    /*
+    Private function helper
+     */
+
+    private fun InventoryEvent.delegatedEvent(block: BukkitWindow.() -> Unit) = inventory.holder.let {
         if (it is BukkitWindowHolder) {
             it.window.block()
         }
+    }
+
+    private fun PacketWindowEvent.delegatedEvent(block: PacketWindow.() -> Unit) = block(window as PacketWindow)
+
+    private fun Player.windowClosure() {
+        val viewer = BukkitViewer(this)
+        InveroAPI.findWindow(viewer)?.close(viewer)
     }
 
 }

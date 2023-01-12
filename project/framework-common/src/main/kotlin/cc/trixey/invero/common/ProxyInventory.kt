@@ -9,7 +9,7 @@ package cc.trixey.invero.common
  */
 interface ProxyInventory {
 
-    fun getWindow(): Window
+    val window: Window
 
     fun open(viewer: Viewer)
 

@@ -1,6 +1,7 @@
 package cc.trixey.invero.bukkit.api.dsl
 
 import cc.trixey.invero.bukkit.window.BukkitChestWindow
+import cc.trixey.invero.bukkit.window.PacketChestWindow
 import cc.trixey.invero.common.StorageMode
 
 /**
@@ -17,4 +18,13 @@ inline fun bukkitChestWindow(
     block: BukkitChestWindow.() -> Unit
 ): BukkitChestWindow {
     return BukkitChestWindow(rows, title, storageMode).also(block)
+}
+
+inline fun packetChestWindow(
+    rows: Int,
+    title: String,
+    storageMode: StorageMode = StorageMode(),
+    block: PacketChestWindow.() -> Unit
+): PacketChestWindow {
+    return PacketChestWindow(rows, title, storageMode).also(block)
 }

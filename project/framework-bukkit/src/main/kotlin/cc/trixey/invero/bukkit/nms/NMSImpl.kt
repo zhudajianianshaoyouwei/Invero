@@ -118,6 +118,7 @@ class NMSImpl : NMS {
         player as CraftPlayer
 
         return if (isUniversal) {
+            // 这里 NMS 翻译遇到些问题
 //            Caused by: java.lang.NoSuchFieldError: containerMenu
 //            player as org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
 //            player.handle.containerMenu.containerId

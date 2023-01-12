@@ -14,7 +14,7 @@ import taboolib.common.platform.function.submit
  * @author Arasple
  * @since 2022/12/29 13:08
  */
-fun showBasic(player: Player) = bukkitChestWindow(6, "Hello InveroPlugin") {
+fun showBasic(player: Player) = packetChestWindow(6, "Hello InveroPlugin") {
 
     var count = 1
 
@@ -25,7 +25,6 @@ fun showBasic(player: Player) = bukkitChestWindow(6, "Hello InveroPlugin") {
         }
 
         buildItem(Material.DIAMOND).fillup()
-
     }
 
     pagedNetesed(3 to 7) {
@@ -59,13 +58,13 @@ fun showBasic(player: Player) = bukkitChestWindow(6, "Hello InveroPlugin") {
 
 }.open(player)
 
-fun showRunningItem(player: Player) = bukkitChestWindow(6, "Running Paged Item") {
+fun showRunningItem(player: Player) = packetChestWindow(6, "Running Paged Item") {
 
     var itemAmount = 1
 
-    pagedNetesed(9 to 6 + 3, at(y = 1)) {
+    pagedNetesed(9 to 10 - 1, at(y = 1)) {
         repeat(5) { currentPage ->
-            standard(9 to 6 + 4) {
+            standard {
                 val material = if (currentPage == 0) Material.APPLE else randomMaterial()
                 val apple = buildItem(material) {
                     modify { name = "Running_Item" }
@@ -91,7 +90,7 @@ fun showRunningItem(player: Player) = bukkitChestWindow(6, "Running Paged Item")
 
 }.open(player)
 
-fun showDynamicTitle(player: Player) = bukkitChestWindow(3, "_") {
+fun showDynamicTitle(player: Player) = packetChestWindow(3, "_") {
 
     standard(9 to 3) {
         getUnoccupiedPositions().let { posSet ->

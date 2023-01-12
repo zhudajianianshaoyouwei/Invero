@@ -29,8 +29,8 @@ class ScrollGeneratorPanel<T>(
 
     override var generator: (T) -> BaseItem<*>? = { null }
 
-    override val generatorPool: Set<Pos> by lazy {
-        scale.getArea() - elements.occupiedPositions()
+    override val generatorPool: List<Pos> by lazy {
+        (scale.getArea() - elements.occupiedPositions()).sorted()
     }
 
     private var initialized: Boolean = false

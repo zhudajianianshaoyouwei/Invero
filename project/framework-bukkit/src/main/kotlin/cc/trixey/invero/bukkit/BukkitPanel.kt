@@ -21,11 +21,13 @@ import cc.trixey.invero.common.panel.PanelWeight
 abstract class BukkitPanel(
     override val parent: PanelContainer,
     override val weight: PanelWeight,
-    override val scale: Scale,
+    scale: Scale,
     override val locate: Pos
 ) : Panel, Clickable<BukkitPanel> {
 
     private val handlers = mutableSetOf<(WindowClickEvent, BukkitPanel) -> Any>()
+
+    override val scale: Scale by lazy { scale.coerceIn(parent.scale) }
 
     override fun addHandler(handler: (WindowClickEvent, BukkitPanel) -> Any) {
         handlers += handler
@@ -37,7 +39,7 @@ abstract class BukkitPanel(
 
     override val area by lazy { scale.getArea(locate) }
 
-    override val window by lazy { InveroAPI.manager.findWindow(this) ?: parent.getTopWindow() }
+    override val window by lazy { InveroAPI.findWindow(this) ?: parent.getTopWindow() }
 
     override fun getInstance(): BukkitPanel {
         return this

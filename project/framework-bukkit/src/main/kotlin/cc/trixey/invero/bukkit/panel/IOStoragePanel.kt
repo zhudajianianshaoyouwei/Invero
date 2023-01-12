@@ -118,7 +118,7 @@ open class IOStoragePanel(
                 swapHotItem()
             }
             // cancel event
-            e.isCancelled = false
+            e.clickCancelled = false
             return true
         }
         return false

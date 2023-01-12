@@ -51,6 +51,11 @@ value class Scale(val raw: Pair<Int, Int>) {
         return pos
     }
 
+    fun coerceIn(scale: Scale): Scale {
+        return if (width <= scale.width && height <= scale.height) this
+        else Scale(width.coerceAtMost(scale.width) to height.coerceAtMost(scale.height))
+    }
+
     override fun toString(): String {
         return "[$width x $height]"
     }

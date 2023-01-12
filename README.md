@@ -5,7 +5,7 @@ Versatile GUIs framework based on Minecraft containers
 ### Usage
 
 ```kotlin
-bukkitChestWindow(rows = 6, "Loop Scroll (horizontally)") {
+packetChestWindow(rows = 6, "Loop Scroll (horizontally)") {
 
     scroll(9 to 5, direction = ScrollDirection.HORIZONTAL, tail = -1) {
 

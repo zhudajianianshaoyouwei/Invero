@@ -23,7 +23,7 @@ private val cells = mutableSetOf<Pos>()
 private var state: Boolean = false
 private var generation = 0
 
-fun showTheGameOfLife(player: Player) = bukkitChestWindow(6, formattedTitle()) {
+fun showTheGameOfLife(player: Player) = packetChestWindow(6, formattedTitle()) {
 
     // 细胞物品
     val cell: SimpleItem by lazy {
