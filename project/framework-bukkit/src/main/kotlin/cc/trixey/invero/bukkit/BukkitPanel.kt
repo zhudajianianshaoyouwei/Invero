@@ -6,6 +6,7 @@ import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.event.WindowClickEvent
+import cc.trixey.invero.common.event.WindowDragEvent
 import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 
@@ -23,22 +24,26 @@ abstract class BukkitPanel(
     override val locate: Pos
 ) : Panel, Clickable<BukkitPanel> {
 
-    private val handlers = mutableSetOf<(WindowClickEvent, BukkitPanel) -> Unit>()
+    private val handlers = mutableSetOf<(WindowClickEvent, BukkitPanel) -> Any>()
 
-    override fun addHandler(handler: (WindowClickEvent, BukkitPanel) -> Unit) {
+    override fun addHandler(handler: (WindowClickEvent, BukkitPanel) -> Any) {
         handlers += handler
     }
 
-    override fun runHandler(event: WindowClickEvent) {
-        handlers.forEach { it(event, getInstance()) }
+    override fun runHandler(event: WindowClickEvent): Boolean {
+        return handlers.none { it(event, getInstance()) == false }
     }
 
     override val area by lazy { scale.getArea(locate) }
 
-    override val window by lazy { InveroAPI.manager.findWindow(this) ?: parent.top() }
+    override val window by lazy { InveroAPI.manager.findWindow(this) ?: parent.getTopWindow() }
 
     override fun getInstance(): BukkitPanel {
         return this
+    }
+
+    override fun handleDrag(positions: List<Pos>, e: WindowDragEvent): Boolean {
+        return true
     }
 
 }

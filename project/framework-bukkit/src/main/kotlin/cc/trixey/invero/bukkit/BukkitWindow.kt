@@ -1,6 +1,9 @@
 package cc.trixey.invero.bukkit
 
 import cc.trixey.invero.bukkit.api.InveroAPI
+import cc.trixey.invero.bukkit.event.DelegatedDragEvent
+import cc.trixey.invero.bukkit.event.DelegatedItemsCollectEvent
+import cc.trixey.invero.bukkit.event.DelegatedItemsMoveEvent
 import cc.trixey.invero.bukkit.nms.updateTitle
 import cc.trixey.invero.common.*
 import cc.trixey.invero.common.event.*
@@ -73,13 +76,11 @@ abstract class BukkitWindow(
     }
 
     override fun handleClick(e: WindowClickEvent) {
-        // def cancel
         e.isCancelled = true
 
         val window = e.window as BukkitWindow
         val rawSlot = e.rawSlot
 
-        // storageMode
         if (rawSlot > window.type.slotsContainer.last) {
             if (!window.storageMode.overridePlayerInventory) {
                 e.isCancelled = false
@@ -92,23 +93,59 @@ abstract class BukkitWindow(
             .sortedByDescending { it.weight }
             .forEach {
                 if (clickedSlot in it.area) {
-                    it.handleClick(clickedSlot - it.locate, e)
-                    (it as BukkitPanel).runHandler(e)
+                    if ((it as BukkitPanel).runHandler(e)) {
+                        it.handleClick(clickedSlot - it.locate, e)
+                    }
                     return
                 }
             }
     }
 
     override fun handleDrag(e: WindowDragEvent) {
+        e.isCancelled = true
 
+        val event = (e as DelegatedDragEvent).event
+        val handler = panels
+            .sortedBy { it.locate }
+            .sortedByDescending { it.weight }
+            .find {
+                event.rawSlots.all { slot -> scale.convertToPosition(slot) in it.area }
+            }
+
+        if (handler != null) {
+            val affected = event.rawSlots.map { scale.convertToPosition(it) }
+            handler.handleDrag(affected, e)
+        }
     }
 
     override fun handleItemsCollect(e: WindowItemsCollectEvent) {
+        val event = (e as DelegatedItemsCollectEvent).event
 
+        println("================================> WindowItemsCollectEvent")
+        println("      action: " + event.action)
+        println("       click: " + event.click)
+        println(" currentItem: " + event.currentItem)
+        println("      cursor: " + event.cursor)
+        println("hotbarButton: " + event.hotbarButton)
+        println("     rawSlot: " + event.rawSlot)
+        println("        slot: " + event.slot)
+        println("    slotType: " + event.slotType)
     }
 
     override fun handleItemsMove(e: WindowItemsMoveEvent) {
+        e.isCancelled = true
 
+        val event = (e as DelegatedItemsMoveEvent).event
+
+        println("================================> WindowItemsMoveEvent")
+        println("      action: " + event.action)
+        println("       click: " + event.click)
+        println(" currentItem: " + event.currentItem)
+        println("      cursor: " + event.cursor)
+        println("hotbarButton: " + event.hotbarButton)
+        println("     rawSlot: " + event.rawSlot)
+        println("        slot: " + event.slot)
+        println("    slotType: " + event.slotType)
     }
 
 }

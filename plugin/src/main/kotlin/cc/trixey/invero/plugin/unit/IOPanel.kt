@@ -16,17 +16,16 @@ import org.bukkit.entity.Player
  * @author Arasple
  * @since 2023/1/11 17:50
  */
-fun showIOStoragePanel(player: Player) = bukkitChestWindow(6, "IO_Storage", StorageMode(false)) {
+private val persistWindow = bukkitChestWindow(6, "IO_Storage", StorageMode(false)) {
 
     storageIOPanel(5 to 5, 0 to 0) {
         val border = area
             .filter { it.x == 0 || it.y == 0 || it.x == 4 || it.y == 4 }
 
-        println(border)
-
         item(Material.CYAN_STAINED_GLASS_PANE).set(border)
         item(Material.APPLE) { modify { name = "Persist Icon Element" } }.set(Pos(1, 1))
     }
 
-    open(player)
 }
+
+fun showIOStoragePanel(player: Player) = persistWindow.open(player)

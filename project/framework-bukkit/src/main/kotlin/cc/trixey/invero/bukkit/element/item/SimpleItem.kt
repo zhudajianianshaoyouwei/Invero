@@ -1,5 +1,6 @@
 package cc.trixey.invero.bukkit.element.item
 
+import cc.trixey.invero.bukkit.util.distinguish
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Viewer
 import cc.trixey.invero.common.event.WindowClickEvent
@@ -23,11 +24,11 @@ open class SimpleItem(panel: Panel, value: ItemStack = ItemStack(Material.STONE)
 
     override var value: ItemStack = value
         set(value) {
-            field = value
+            field = value.distinguish()
             safePush()
         }
 
-    override val handlers = mutableSetOf<(WindowClickEvent, SimpleItem) -> Unit>()
+    override val handlers = mutableSetOf<(WindowClickEvent, SimpleItem) -> Any>()
 
     override fun get(viewer: Viewer): ItemStack {
         return get()

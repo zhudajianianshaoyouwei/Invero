@@ -17,9 +17,9 @@ import taboolib.platform.util.*
  */
 private val namespacedKey = NamespacedKey(BukkitPlugin.getInstance(), "invero_slot")
 
-fun ItemStack?.distinguish(slot: Int): ItemStack? {
-    return this?.modifyMeta<ItemMeta> {
-        persistentDataContainer.set(namespacedKey, PersistentDataType.BYTE, slot.toByte())
+fun ItemStack.distinguish(mark: Byte = (Byte.MIN_VALUE..Byte.MAX_VALUE).random().toByte()): ItemStack {
+    return modifyMeta<ItemMeta> {
+        persistentDataContainer.set(namespacedKey, PersistentDataType.BYTE, mark)
     }
 }
 

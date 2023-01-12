@@ -18,4 +18,4 @@ class IOCraftingPanel(
     weight: PanelWeight,
     scale: Scale,
     locate: Pos
-) : StandardPanel(parent, weight, scale, locate), IOPanel
+) : IOStoragePanel(parent, weight, scale, locate), IOPanel

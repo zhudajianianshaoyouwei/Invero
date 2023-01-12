@@ -26,7 +26,7 @@ abstract class BaseItem<T : Element>(override val panel: Panel) : Supplier<ItemS
 
     abstract var value: ItemStack
 
-    abstract val handlers: MutableSet<(WindowClickEvent, T) -> Unit>
+    abstract val handlers: MutableSet<(WindowClickEvent, T) -> Any>
 
     abstract fun get(viewer: Viewer): ItemStack
 
@@ -38,12 +38,12 @@ abstract class BaseItem<T : Element>(override val panel: Panel) : Supplier<ItemS
 
     abstract fun buildFuture(completable: CompletableFuture<ItemStack>, timeout: Long = 200L)
 
-    override fun addHandler(handler: (WindowClickEvent, T) -> Unit) {
-        this.handlers += handler
+    override fun addHandler(handler: (WindowClickEvent, T) -> Any) {
+        handlers += handler
     }
 
-    override fun runHandler(event: WindowClickEvent) {
-        this.handlers.forEach { it(event, getInstance()) }
+    override fun runHandler(event: WindowClickEvent): Boolean {
+        return handlers.none { it(event, getInstance()) == false }
     }
 
     override fun get(): ItemStack {

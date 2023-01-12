@@ -14,7 +14,7 @@ package cc.trixey.invero.common
  * 真实的 Slot 值只有最高层（Window）需要利用
  */
 @JvmInline
-value class Pos(val value: Pair<Int, Int>) {
+value class Pos(val value: Pair<Int, Int>) : Comparable<Pos> {
 
     val x: Int
         get() = value.first
@@ -48,6 +48,10 @@ value class Pos(val value: Pair<Int, Int>) {
 
     operator fun unaryMinus(): Pos {
         return Pos(-x, -y)
+    }
+
+    override fun compareTo(other: Pos): Int {
+        return x + y * 9 - other.x + other.y * 9
     }
 
     override fun toString(): String {

@@ -11,12 +11,12 @@ import cc.trixey.invero.common.event.WindowClickEvent
  */
 interface Clickable<T> {
 
-    fun runHandler(event: WindowClickEvent)
+    fun runHandler(event: WindowClickEvent): Boolean
 
-    fun addHandler(handler: (WindowClickEvent, clicked: T) -> Unit)
+    fun addHandler(handler: (WindowClickEvent, clicked: T) -> Any)
 
-    fun onClick(event: WindowClickEvent.(clicked: T) -> Unit): T {
-        addHandler(event)
+    fun onClick(handler: WindowClickEvent.(clicked: T) -> Any): T {
+        addHandler(handler)
         return getInstance()
     }
 

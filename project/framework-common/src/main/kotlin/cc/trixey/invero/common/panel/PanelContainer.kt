@@ -1,8 +1,11 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package cc.trixey.invero.common.panel
 
 import cc.trixey.invero.common.Gridable
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Window
+import java.io.File
 
 /**
  * Invero
@@ -15,22 +18,6 @@ interface PanelContainer : Gridable {
 
     val panels: ArrayList<Panel>
 
-    fun isWindow() = this is Window
-
-    fun isPanel() = this is Panel
-
-    fun isElementalPanel() = this is ElementalPanel
-
-    fun isFreeform() = this is FreeformPanel
-
-    fun top(): Window {
-        return if (this is Window) this
-        else (this as Panel).parent.top()
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    fun <T> cast() = this as T
-
     operator fun plusAssign(panel: Panel) {
         panels += panel
     }
@@ -41,6 +28,43 @@ interface PanelContainer : Gridable {
 
     operator fun contains(panel: Panel): Boolean {
         return panel in panels
+    }
+
+    fun <T : Gridable> cast(): T {
+        return this as T
+    }
+
+    fun getPanelsRecursively(): List<Panel> {
+        val result = mutableListOf<Panel>()
+
+        panels.forEach {
+            result += it
+            if (it is PanelContainer) result += it.getPanelsRecursively()
+        }
+
+        return result
+    }
+
+    fun getTopWindow(): Window {
+        File("").deleteRecursively()
+        return if (this is Window) this
+        else (this as Panel).parent.getTopWindow()
+    }
+
+    fun isWindow(): Boolean {
+        return this is Window
+    }
+
+    fun isPanel(): Boolean {
+        return this is Panel
+    }
+
+    fun isElementalPanel(): Boolean {
+        return this is ElementalPanel
+    }
+
+    fun isFreeform(): Boolean {
+        return this is FreeformPanel
     }
 
 }

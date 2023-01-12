@@ -1,5 +1,6 @@
 package cc.trixey.invero.common.panel
 
+import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.ProxyInventory
 
 /**
@@ -13,7 +14,16 @@ import cc.trixey.invero.common.ProxyInventory
  */
 interface IOPanel : ElementalPanel {
 
+    val positionsInsertable: List<Pos>
+
+    val positionsRetrievable: List<Pos>
+        get() = positionsInsertable
+
+    val positionsLocked: List<Pos>
+
     val inventory: ProxyInventory
         get() = window.inventory
+
+    fun renderStorage()
 
 }

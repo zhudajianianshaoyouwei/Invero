@@ -2,13 +2,16 @@ package cc.trixey.invero.bukkit.panel
 
 import cc.trixey.invero.bukkit.ProxyBukkitInventory
 import cc.trixey.invero.bukkit.event.DelegatedClickEvent
+import cc.trixey.invero.bukkit.event.DelegatedDragEvent
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.event.WindowClickEvent
+import cc.trixey.invero.common.event.WindowDragEvent
 import cc.trixey.invero.common.panel.ElementalPanel
 import cc.trixey.invero.common.panel.IOPanel
 import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
+import cc.trixey.invero.common.util.locatingAbsoluteSlot
 import org.bukkit.inventory.ItemStack
 
 /**
@@ -18,7 +21,7 @@ import org.bukkit.inventory.ItemStack
  * @author Arasple
  * @since 2023/1/11 17:47
  */
-class IOStoragePanel(
+open class IOStoragePanel(
     parent: PanelContainer,
     weight: PanelWeight,
     scale: Scale,
@@ -30,33 +33,58 @@ class IOStoragePanel(
 
     private val storage = arrayOfNulls<ItemStack?>(scale.size)
 
-    private val occupiedSlots by lazy {
-        elements.occupiedPositions().map { it.convertToSlot(scale) }.toSet()
+    override val positionsInsertable: List<Pos> by lazy { (area - positionsLocked.toSet()).sorted() }
+
+    override val positionsLocked: List<Pos> by lazy { elements.occupiedPositions().sorted() }
+
+    override fun renderStorage() {
+        positionsInsertable.forEachIndexed { index, pos ->
+            val slot = locatingAbsoluteSlot(pos, this)
+            if (slot >= 0) {
+                inventory[slot] = storage[index]
+            }
+        }
     }
 
-    private val availableSlots by lazy {
-        (0 until scale.size).toList() - occupiedSlots
+    private fun insertItemStack(pos: Pos, itemStack: ItemStack) {
+        val storageIndex = positionsInsertable.indexOf(pos)
+        val slot = locatingAbsoluteSlot(pos, this)
+
+        if (slot >= 0 && storageIndex >= 0) {
+            storage[storageIndex] = itemStack
+        } else {
+            error("insertItemStack: $pos / $itemStack // $slot")
+        }
     }
 
     override fun render() {
         super<ElementalPanel>.render()
-
-        availableSlots.forEach {
-            inventory[it] = storage[it]
-        }
+        renderStorage()
     }
 
     override fun handleClick(pos: Pos, e: WindowClickEvent): Boolean {
         val event = (e as DelegatedClickEvent).event
-        val storageIndex = pos.convertToSlot(scale)
+        val storageIndex = positionsInsertable.indexOf(pos)
 
         if (!super.handleClick(pos, e)) {
-            println("Clicked at $pos")
-            storage[storageIndex] = event.currentItem
+            storage[storageIndex] = event.cursor?.clone()
+
             e.isCancelled = false
             return true
         }
         return false
+    }
+
+    override fun handleDrag(positions: List<Pos>, e: WindowDragEvent): Boolean {
+        val event = (e as DelegatedDragEvent).event
+
+        event.newItems.entries.forEachIndexed { index, entry ->
+            val itemStack = entry.value
+            insertItemStack(positions[index], itemStack)
+        }
+
+        e.isCancelled = false
+        return true
     }
 
 }

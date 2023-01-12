@@ -1,6 +1,7 @@
 package cc.trixey.invero.common
 
 import cc.trixey.invero.common.event.WindowClickEvent
+import cc.trixey.invero.common.event.WindowDragEvent
 import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 
@@ -86,5 +87,7 @@ interface Panel : Gridable {
     fun rerender() = wipe().also { render() }
 
     fun handleClick(pos: Pos, e: WindowClickEvent): Boolean
+
+    fun handleDrag(positions: List<Pos>, e: WindowDragEvent): Boolean
 
 }
