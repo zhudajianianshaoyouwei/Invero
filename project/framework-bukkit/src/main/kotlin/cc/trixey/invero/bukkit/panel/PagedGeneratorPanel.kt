@@ -35,8 +35,8 @@ class PagedGeneratorPanel<T>(
 
     override var generator: (T) -> BaseItem<*>? = { null }
 
-    override val generatorPool: Set<Pos> by lazy {
-        scale.getArea() - elements.occupiedPositions()
+    override val generatorPool: List<Pos> by lazy {
+        (scale.getArea() - elements.occupiedPositions()).sorted()
     }
 
     override var pageIndex: Int = 0

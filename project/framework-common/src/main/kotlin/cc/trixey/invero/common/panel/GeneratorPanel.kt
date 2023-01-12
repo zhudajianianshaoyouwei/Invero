@@ -17,7 +17,7 @@ interface GeneratorPanel<T, R> : ElementalPanel {
 
     var generator: (T) -> R?
 
-    val generatorPool: Set<Pos>
+    val generatorPool: List<Pos>
 
     fun getOutput(index: Int): R? {
         if (outputElements[index] == null) {
