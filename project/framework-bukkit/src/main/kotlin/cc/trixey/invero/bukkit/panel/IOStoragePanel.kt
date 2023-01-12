@@ -40,7 +40,9 @@ open class IOStoragePanel(
     override val inventory: ProxyBukkitInventory
         get() = window.inventory as ProxyBukkitInventory
 
-    private val storage = arrayOfNulls<ItemStack?>(scale.size)
+    protected val storage = arrayOfNulls<ItemStack?>(scale.size)
+
+    private var storageCallback: Array<ItemStack?>.() -> Unit = { }
 
     override val insertable: List<Pos> by lazy { (area - locked.toSet()).sorted() }
 
@@ -55,14 +57,18 @@ open class IOStoragePanel(
         }
     }
 
-    fun insertItemStack(pos: Pos, itemStack: ItemStack) {
+    open fun insertItemStack(pos: Pos, itemStack: ItemStack): Boolean {
         val storageIndex = insertable.indexOf(pos)
         val slot = locatingAbsoluteSlot(pos)
 
-        if (slot >= 0 && storageIndex >= 0) storage[storageIndex] = itemStack
+        if (slot >= 0 && storageIndex >= 0) {
+            storage[storageIndex] = itemStack
+            return true
+        }
+        return false
     }
 
-    fun stackItemStack(itemStack: ItemStack): Int {
+    open fun stackItemStack(itemStack: ItemStack): Int {
         var amount = itemStack.amount
 
         storage.forEachIndexed { _, stored ->

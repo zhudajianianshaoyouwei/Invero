@@ -16,6 +16,7 @@ interface IOPanel : ElementalPanel {
 
     val insertable: List<Pos>
 
+    // TODO
     val retrievable: List<Pos>
         get() = insertable
 
