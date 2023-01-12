@@ -79,6 +79,7 @@ abstract class BukkitWindow(
         val window = e.window as BukkitWindow
         val rawSlot = e.rawSlot
 
+        // storageMode
         if (rawSlot > window.type.slotsContainer.last) {
             if (!window.storageMode.overridePlayerInventory) {
                 e.isCancelled = false

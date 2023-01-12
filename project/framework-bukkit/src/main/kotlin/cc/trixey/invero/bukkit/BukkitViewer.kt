@@ -15,14 +15,14 @@ import java.util.*
 @JvmInline
 value class BukkitViewer(override val uuid: UUID) : Viewer {
 
-    fun getSafely() = getProxyPlayer(uuid)?.cast<Player>()
+    fun getSafe() = getProxyPlayer(uuid)?.cast<Player>()
 
-    fun get() = getSafely()!!
+    fun get() = getSafe()!!
 
     constructor(player: Player) : this(player.uniqueId)
 
     override fun isAvailable(): Boolean {
-        return getSafely() != null
+        return getSafe() != null
     }
 
     override fun <T> getInstance(): T {

@@ -1,7 +1,6 @@
 package cc.trixey.invero.bukkit.panel
 
 import cc.trixey.invero.bukkit.BukkitPanel
-import cc.trixey.invero.bukkit.api.dsl.pos
 import cc.trixey.invero.common.Element
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
@@ -30,18 +29,6 @@ class FreeformNetesedPanel(
             field = value
             rerender()
         }
-
-    override fun setViewport(x: Int, y: Int) {
-        viewport = pos(x, y)
-    }
-
-    override fun wipe(wiping: Collection<Pos>) {
-        super<BukkitPanel>.wipe(wiping)
-    }
-
-    override fun shift(x: Int, y: Int) {
-        viewport += (x to y)
-    }
 
     override val panels = arrayListOf<Panel>()
 

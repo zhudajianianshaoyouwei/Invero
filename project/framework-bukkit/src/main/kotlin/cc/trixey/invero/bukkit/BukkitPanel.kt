@@ -26,11 +26,11 @@ abstract class BukkitPanel(
     private val handlers = mutableSetOf<(WindowClickEvent, BukkitPanel) -> Unit>()
 
     override fun addHandler(handler: (WindowClickEvent, BukkitPanel) -> Unit) {
-        this.handlers += handler
+        handlers += handler
     }
 
     override fun runHandler(event: WindowClickEvent) {
-        this.handlers.forEach { it(event, getInstance()) }
+        handlers.forEach { it(event, getInstance()) }
     }
 
     override val area by lazy { scale.getArea(locate) }

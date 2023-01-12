@@ -14,7 +14,7 @@ import cc.trixey.invero.common.Pos
  */
 interface FreeformPanel : Panel {
 
-    val viewport: Pos
+    var viewport: Pos
 
     fun toAbsolutePosition(slot: Int): Pos {
         return viewport + scale.convertToPosition(slot)
@@ -22,9 +22,13 @@ interface FreeformPanel : Panel {
 
     fun resetViewport() = setViewport(0, 0)
 
-    fun setViewport(x: Int = 0, y: Int = 0)
+    fun setViewport(x: Int = 0, y: Int = 0) {
+        viewport = Pos(x, y)
+    }
 
-    fun shift(x: Int = 0, y: Int = 0)
+    fun shift(x: Int = 0, y: Int = 0) {
+        viewport += (x to y)
+    }
 
     fun shiftLeft() = shift(-1)
 
@@ -47,6 +51,9 @@ interface FreeformPanel : Panel {
 
     override fun wipe() = wipe(viewArea)
 
+    /*
+    args = absolute positions on Freeform
+     */
     override fun wipe(wiping: Collection<Pos>) = wiping
         .map { it - viewport }
         .filterNot { scale.isOutOfBounds(it.x, it.y) }

@@ -47,12 +47,4 @@ open class FreeformStandardPanel(
         return false
     }
 
-    override fun setViewport(x: Int, y: Int) {
-        viewport = pos(x, y)
-    }
-
-    override fun shift(x: Int, y: Int) {
-        viewport += (x to y)
-    }
-
 }
