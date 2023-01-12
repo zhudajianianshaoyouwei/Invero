@@ -22,9 +22,7 @@ fun showScroll2(player: Player) = bukkitChestWindow(6, "Loop Scroll (horizontall
             val columTexture = randomMaterial()
 
             insertColum {
-                buildItem(columTexture) {
-                    modify { name = "#$it" }
-                }
+                buildItem(columTexture) { modify { name = "#$it" } }
             }
         }
 
@@ -52,15 +50,7 @@ fun showScrollStandard(player: Player) = bukkitChestWindow(6, "Scroll_Standard")
         for (colum in 0 until 20) {
             val mat = randomMaterial()
 
-            insertColum {
-                buildItem(mat) {
-                    modify { name = "ItemIndex # $it" }
-                }.also { it ->
-                    it.onClick {
-                        player.sendMessage("$$$ $it")
-                    }
-                }
-            }
+            insertColum { buildItem(mat) }
         }
     }
 

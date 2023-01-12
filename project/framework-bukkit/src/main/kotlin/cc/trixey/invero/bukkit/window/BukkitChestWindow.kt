@@ -21,9 +21,9 @@ class BukkitChestWindow(
     storageMode: StorageMode
 ) : BukkitWindow(WindowType.ofRows(rows.coerceAtMost(6)), storageMode, title) {
 
-    override val scale: Scale = Scale(9 to rows + if (storageMode.overridePlayerInventory) 4 else 0)
+    override val scale = Scale(9 to rows + if (storageMode.overridePlayerInventory) 4 else 0)
 
-    override val inventory: BukkitInventory = BukkitInventory(
+    override val inventory = BukkitInventory(
         this,
         Bukkit.createInventory(
             BukkitWindowHolder(this), type.containerSize, title

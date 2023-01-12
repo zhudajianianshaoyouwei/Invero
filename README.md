@@ -11,7 +11,7 @@ bukkitChestWindow(rows = 6, "Loop Scroll (horizontally)") {
 
         repeat(10) {
             val columTexture = randomMaterial()
-            
+
             insertColum { buildItem(columTexture) }
         }
 
@@ -32,6 +32,7 @@ bukkitChestWindow(rows = 6, "Loop Scroll (horizontally)") {
 
 }
 ```
+
 ![scroll](https://user-images.githubusercontent.com/35389235/211839566-1718ffa8-4190-4532-8c39-352ec6629417.gif)
 
 ### Preview

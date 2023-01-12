@@ -24,7 +24,7 @@ open class StandardPanel(
     locate: Pos
 ) : BukkitPanel(parent, weight, scale, locate), ElementalPanel {
 
-    override val elements: Elements = Elements()
+    override val elements = Elements()
 
     override fun handleClick(pos: Pos, e: WindowClickEvent): Boolean {
         elements.findElement(pos)?.let {

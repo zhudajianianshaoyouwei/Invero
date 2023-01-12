@@ -1,7 +1,7 @@
 val taboolibVersion: String by project
 
 dependencies {
-    compileOnly(project(":project:common"))
+    compileOnly(project(":project:framework-common"))
 
     compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
 

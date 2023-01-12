@@ -19,7 +19,6 @@ fun showBasic(player: Player) = bukkitChestWindow(6, "Hello InveroPlugin") {
     var count = 1
 
     standard(3 to 3) {
-
         item(0, Material.APPLE) {
             modify { name = "Hello Apple" }
             onClick { modify { amount = ++count } }

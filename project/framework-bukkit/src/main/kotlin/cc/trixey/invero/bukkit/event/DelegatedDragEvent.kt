@@ -34,5 +34,5 @@ value class DelegatedDragEvent(
         set(value) {
             event.isCancelled = value
         }
-    
+
 }

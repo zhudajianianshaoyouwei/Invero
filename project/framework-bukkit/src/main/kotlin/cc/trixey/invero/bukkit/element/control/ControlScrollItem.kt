@@ -11,7 +11,8 @@ import cc.trixey.invero.common.panel.ScrollPanel
  * @author Arasple
  * @since 2023/1/11 21:19
  */
-class ControlScrollItem(panel: Panel, private val target: ScrollPanel, private val amount: Int = +1) : SimpleItem(panel) {
+class ControlScrollItem(panel: Panel, private val target: ScrollPanel, private val amount: Int = +1) :
+    SimpleItem(panel) {
 
     init {
         addHandler { _, _ -> target.scroll(amount) }

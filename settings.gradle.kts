@@ -1,5 +1,5 @@
 rootProject.name = "Invero"
 
 include("plugin")
-include("project:common")
-include("project:module-bukkit")
+include("project:framework-common")
+include("project:framework-bukkit")

@@ -60,19 +60,17 @@ fun <T : Element> T.ruin(): Boolean {
     return false
 }
 
-fun <T : Element> T.set(vararg slots: Int): T = set(slots.map { panel.scale.convertToPosition(it) }.toSet())
+fun <T : Element> T.set(vararg slots: Int): T =
+    set(slots.map { panel.scale.convertToPosition(it) })
 
 fun <T : Element> T.set(pos: Pos): T = set(setOf(pos))
 
-fun <T : Element> T.set(pos: Set<Pos>): T {
+fun <T : Element> T.set(pos: Collection<Pos>): T {
     val panel = panel as ElementalPanel
     val elements = panel.elements
 
     // Wipe previous cache
-    elements.setElement(this, Positions(pos))
-        ?.let {
-            panel.wipe(it)
-        }
+    elements.setElement(this, Positions(pos))?.let { panel.wipe(it) }
 
     // Auto-push
     safePush()
