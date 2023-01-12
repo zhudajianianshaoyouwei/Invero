@@ -1,3 +1,5 @@
+gradle.buildFinished { buildDir.deleteRecursively() }
+
 subprojects {
     gradle.buildFinished { buildDir.deleteRecursively() }
 }
