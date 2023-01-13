@@ -18,7 +18,7 @@ interface Window : PanelContainer, Gridable {
      * Support for mutiple viewers is only for audience usage.
      * For standard user-specific GUI, you are expected to create individual windows
      */
-    val viewers: Set<Viewer>
+    val viewers: List<Viewer>
 
     /**
      * Title of this window

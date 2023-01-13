@@ -31,11 +31,15 @@ abstract class BukkitWindow(
             submit { updateTitle(value, true) }
         }
 
-    override val viewers = mutableSetOf<Viewer>()
+    override val viewers = arrayListOf<Viewer>()
 
     override val panels = arrayListOf<Panel>()
 
     override val size = type.entireWindowSize
+
+    fun priorityViewer(): BukkitViewer? {
+        return viewers.firstOrNull() as BukkitViewer?
+    }
 
     fun open(player: Player) = open(BukkitViewer(player))
 

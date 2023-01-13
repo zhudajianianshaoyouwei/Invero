@@ -5,7 +5,9 @@ plugins {
 }
 
 taboolib {
-    install("common", "module-nms", "platform-bukkit")
+    install("common")
+    install("module-nms")
+    install("platform-bukkit")
 
     description {
         name = rootProject.name

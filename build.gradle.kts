@@ -19,7 +19,9 @@ subprojects {
         compileOnly(kotlin("stdlib"))
     }
 
-    if (parent != rootProject) createPublishing()
+    if (parent != rootProject && name.startsWith("framework")) {
+        createPublishing()
+    }
 }
 
 fun Project.createPublishing() = publishing {
@@ -46,4 +48,6 @@ fun Project.createPublishing() = publishing {
     }
 }
 
-gradle.buildFinished { buildDir.deleteRecursively() }
+gradle.buildFinished {
+    buildDir.deleteRecursively()
+}
