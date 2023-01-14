@@ -1,18 +1,18 @@
-package cc.trixey.invero.core.action
+package cc.trixey.invero.core.impl.action
 
-import cc.trixey.invero.core.Context
+import cc.trixey.invero.core.menu.MenuContext
 import java.util.concurrent.CompletableFuture
 
 /**
  * Invero
- * cc.trixey.invero.core.action.ActionBreak
+ * cc.trixey.invero.core.impl.action.ActionBreak
  *
  * @author Arasple
  * @since 2023/1/14 12:54
  */
-class ActionBreak : Action {
+class ActionBreak : MAction() {
 
-    override fun run(context: Context): CompletableFuture<Boolean> {
+    override fun run(context: MenuContext): CompletableFuture<Boolean> {
         return COMPLETABLE_FALSE
     }
 

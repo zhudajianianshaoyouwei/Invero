@@ -18,7 +18,7 @@ import taboolib.common.platform.function.submit
  * @since 2022/12/29 12:54
  */
 abstract class BukkitWindow(
-    val type: WindowType,
+    val type: ContainerType,
     override val storageMode: StorageMode = StorageMode(overridePlayerInventory = true, alwaysClean = true),
     title: String = "Untitled_Invero_Window"
 ) : Window {

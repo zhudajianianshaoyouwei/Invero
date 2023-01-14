@@ -9,7 +9,7 @@ package cc.trixey.invero.common
  *
  * 窗口使用的容器类型
  */
-enum class WindowType(val vanillaId: String, val serialId: Int, slotsContainer: IntRange) {
+enum class ContainerType(val vanillaId: String, val serialId: Int, slotsContainer: IntRange) {
 
     /**
      * A 1-row inventory, not used by the notchian server.
@@ -187,7 +187,7 @@ enum class WindowType(val vanillaId: String, val serialId: Int, slotsContainer: 
 
     companion object {
 
-        fun ofRows(rows: Int): WindowType {
+        fun ofRows(rows: Int): ContainerType {
             return when (rows) {
                 1 -> GENERIC_9X1
                 2 -> GENERIC_9X2
@@ -199,7 +199,7 @@ enum class WindowType(val vanillaId: String, val serialId: Int, slotsContainer: 
             }
         }
 
-        fun fromBukkitType(type: String): WindowType {
+        fun fromBukkitType(type: String): ContainerType {
             return when (type) {
                 "ENDER_CHEST", "BARREL" -> GENERIC_9X3
                 "DISPENSER", "DROPPER" -> GENERIC_3X3

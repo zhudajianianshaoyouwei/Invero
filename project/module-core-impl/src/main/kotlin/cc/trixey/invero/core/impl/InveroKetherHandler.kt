@@ -16,7 +16,6 @@ import taboolib.module.kether.KetherShell
 object InveroKetherHandler {
 
     private val namespace = listOf("invero")
-
     fun invoke(source: String, player: Player?, vars: Map<String, Any>) = KetherShell.eval(
         source,
         sender = if (player != null) adaptPlayer(player) else console(),

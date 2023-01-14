@@ -4,7 +4,7 @@ import cc.trixey.invero.bukkit.PacketInventory
 import cc.trixey.invero.bukkit.PacketWindow
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.StorageMode
-import cc.trixey.invero.common.WindowType
+import cc.trixey.invero.common.ContainerType
 
 /**
  * Invero
@@ -17,7 +17,7 @@ class PacketChestWindow(
     rows: Int,
     title: String,
     storageMode: StorageMode
-) : PacketWindow(WindowType.ofRows(rows.coerceAtMost(6)), storageMode, title) {
+) : PacketWindow(ContainerType.ofRows(rows.coerceAtMost(6)), storageMode, title) {
 
     override val scale = Scale(9 to rows + if (storageMode.overridePlayerInventory) 4 else 0)
 

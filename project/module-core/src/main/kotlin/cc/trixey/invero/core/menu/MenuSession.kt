@@ -8,13 +8,28 @@ import cc.trixey.invero.common.Window
  * cc.trixey.invero.core.menu.MenuSession
  *
  * @author Arasple
- * @since 2023/1/14 14:13
+ * @since 2023/1/14 16:50
  */
-class MenuSession(
-    val viewer: BukkitViewer,
-    val context: MenuContext,
-    var menu: Menu? = null,
-    var viewingWindow: Window? = null
-) {
+interface MenuSession {
+
+    /**
+     * 玩家
+     */
+    val viewer: BukkitViewer
+
+    /**
+     * 会话上下文
+     */
+    val context: MenuContext
+
+    /**
+     * 菜单
+     */
+    val menu: Menu?
+
+    /**
+     * 正在查看的 Window
+     */
+    val viewingWindow: Window?
 
 }

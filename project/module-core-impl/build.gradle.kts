@@ -3,6 +3,7 @@ val taboolibVersion: String by project
 dependencies {
     compileOnly(project(":project:framework-common"))
     compileOnly(project(":project:framework-bukkit"))
+    compileOnly(project(":project:module-core"))
 
     compileOnly("ink.ptms.core:v11903:11903:universal")
 

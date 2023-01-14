@@ -2,9 +2,10 @@ package cc.trixey.invero.bukkit
 
 import cc.trixey.invero.bukkit.api.InveroAPI
 import cc.trixey.invero.bukkit.event.PacketWindowOpenEvent
+import cc.trixey.invero.bukkit.nms.updateTitle
+import cc.trixey.invero.common.ContainerType
 import cc.trixey.invero.common.StorageMode
 import cc.trixey.invero.common.Viewer
-import cc.trixey.invero.common.WindowType
 import cc.trixey.invero.common.event.WindowDragEvent
 import cc.trixey.invero.common.event.WindowItemsCollectEvent
 import cc.trixey.invero.common.event.WindowItemsMoveEvent
@@ -18,10 +19,19 @@ import taboolib.common.platform.function.submit
  * @since 2023/1/12 15:43
  */
 abstract class PacketWindow(
-    type: WindowType,
+    type: ContainerType,
     storageMode: StorageMode,
     title: String = "Untitled_Invero_Window"
 ) : BukkitWindow(type, storageMode, title) {
+
+    override var title = title
+        set(value) {
+            field = value
+            submit {
+                updateTitle(value)
+                forViewers<BukkitViewer> { inventory.updateWindowItems(it) }
+            }
+        }
 
     companion object {
 

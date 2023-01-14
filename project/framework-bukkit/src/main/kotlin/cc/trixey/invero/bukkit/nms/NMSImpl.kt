@@ -1,6 +1,6 @@
 package cc.trixey.invero.bukkit.nms
 
-import cc.trixey.invero.common.WindowType
+import cc.trixey.invero.common.ContainerType
 import net.minecraft.server.v1_16_R3.*
 import net.minecraft.world.inventory.Containers
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer
@@ -25,7 +25,7 @@ class NMSImpl : NMS {
 
     private val itemAir = null.asNMSCopy()
 
-    override fun sendWindowOpen(player: Player, containerId: Int, type: WindowType, title: String) {
+    override fun sendWindowOpen(player: Player, containerId: Int, type: ContainerType, title: String) {
         val instance = PacketPlayOutOpenWindow::class.java.unsafeInstance()
 
         when {

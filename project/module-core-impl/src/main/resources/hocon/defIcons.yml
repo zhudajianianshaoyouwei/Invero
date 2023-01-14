@@ -17,7 +17,7 @@ standardItem:
   frames_:
     slots:
       period: 20
-      type: loop
+      mmode: loop
   sub:
     - condition: what the fuck
       relocate: 40

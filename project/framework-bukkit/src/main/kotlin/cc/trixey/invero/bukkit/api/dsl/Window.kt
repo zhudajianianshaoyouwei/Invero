@@ -15,7 +15,7 @@ inline fun bukkitChestWindow(
     rows: Int,
     title: String,
     storageMode: StorageMode = StorageMode(),
-    block: BukkitChestWindow.() -> Unit
+    block: BukkitChestWindow.() -> Unit = {}
 ): BukkitChestWindow {
     return BukkitChestWindow(rows, title, storageMode).also(block)
 }
@@ -24,7 +24,7 @@ inline fun packetChestWindow(
     rows: Int,
     title: String,
     storageMode: StorageMode = StorageMode(),
-    block: PacketChestWindow.() -> Unit
+    block: PacketChestWindow.() -> Unit = {}
 ): PacketChestWindow {
     return PacketChestWindow(rows, title, storageMode).also(block)
 }

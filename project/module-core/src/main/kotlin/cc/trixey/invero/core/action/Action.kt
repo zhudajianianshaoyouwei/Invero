@@ -10,8 +10,8 @@ import java.util.concurrent.CompletableFuture
  * @author Arasple
  * @since 2023/1/14 12:18
  */
-interface Action {
+interface Action<T:Context> {
 
-    fun run(context: Context): CompletableFuture<Boolean>
+    fun run(context: T): CompletableFuture<Boolean>
 
 }

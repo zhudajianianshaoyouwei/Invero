@@ -5,7 +5,7 @@ import cc.trixey.invero.bukkit.BukkitWindow
 import cc.trixey.invero.bukkit.BukkitWindowHolder
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.StorageMode
-import cc.trixey.invero.common.WindowType
+import cc.trixey.invero.common.ContainerType
 import org.bukkit.Bukkit
 
 /**
@@ -19,7 +19,7 @@ class BukkitChestWindow(
     rows: Int,
     title: String,
     storageMode: StorageMode
-) : BukkitWindow(WindowType.ofRows(rows.coerceAtMost(6)), storageMode, title) {
+) : BukkitWindow(ContainerType.ofRows(rows.coerceAtMost(6)), storageMode, title) {
 
     override val scale = Scale(9 to rows + if (storageMode.overridePlayerInventory) 4 else 0)
 
