@@ -1,0 +1,24 @@
+textures:
+  - texture:
+      head: value
+  - texture:
+      source: SOURCE
+      value: value
+  - texture: 'key:value'
+
+standardItem:
+  texture: cyan stained glass panel
+  name: {{player name}}
+  lore:
+    - 'line 1'
+    - 'line 2'
+    - 'line 3'
+  frames: 20
+  frames_:
+    slots:
+      period: 20
+      type: loop
+  sub:
+    - condition: what the fuck
+      relocate: 40
+      material: auto-inheirt
