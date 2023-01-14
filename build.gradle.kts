@@ -28,8 +28,8 @@ fun Project.createPublishing() = publishing {
     repositories {
         maven(property("taboolibRepo").toString()) {
             credentials {
-                username = property("taboolibUsername").toString()
-                password = property("taboolibPassword").toString()
+                username = project.findProperty("taboolibUsername").toString()
+                password = project.findProperty("taboolibPassword").toString()
             }
             authentication { create<BasicAuthentication>("basic") }
         }
