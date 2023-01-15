@@ -7,26 +7,21 @@ package cc.trixey.invero.core.animation
  * @author Arasple
  * @since 2023/1/13 12:29
  */
-@JvmInline
-value class CycleMode(val mode: Int = 0) {
+enum class CycleMode {
+
+    LOOP,
+
+    REVERSABLE,
+
+    RANDOM;
 
     val isLoop: Boolean
-        get() = mode == 0
+        get() = this == LOOP
 
     val isReversable: Boolean
-        get() = mode < 0
+        get() = this == REVERSABLE
 
     val isRandom: Boolean
-        get() = mode > 0
-
-    companion object {
-
-        val LOOP = CycleMode(0)
-
-        val REVERSABLE = CycleMode(-1)
-
-        val RANDOM = CycleMode(1)
-
-    }
+        get() = this == RANDOM
 
 }

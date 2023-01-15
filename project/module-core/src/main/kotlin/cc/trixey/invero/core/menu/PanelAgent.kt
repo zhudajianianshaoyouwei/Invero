@@ -3,8 +3,6 @@ package cc.trixey.invero.core.menu
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
-import cc.trixey.invero.common.Window
-import cc.trixey.invero.core.icon.Icon
 
 /**
  * Invero
@@ -19,10 +17,8 @@ interface PanelAgent<T : Panel> {
 
     val layout: Layout
 
-    val icons: List<Icon>
-
     val locate: Pos?
 
-    fun apply(session: MenuSession)
+    fun apply(session: MenuSession): T
 
 }

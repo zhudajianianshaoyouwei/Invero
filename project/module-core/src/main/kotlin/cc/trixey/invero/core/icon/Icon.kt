@@ -1,5 +1,13 @@
 package cc.trixey.invero.core.icon
 
+import cc.trixey.invero.common.Pos
+import cc.trixey.invero.common.panel.ElementalPanel
+import cc.trixey.invero.core.action.Condition
+import cc.trixey.invero.core.item.IconUpdatable
+import cc.trixey.invero.core.item.MenuElement
+import cc.trixey.invero.core.menu.MenuSession
+import cc.trixey.invero.core.menu.PanelAgent
+
 /**
  * Invero
  * cc.trixey.invero.core.icon.Icon
@@ -10,9 +18,9 @@ package cc.trixey.invero.core.icon
 interface Icon {
 
     /**
-     * 显示的物品结构体
+     * 条件
      */
-    val display: IconDisplay
+    val condition: Condition?
 
     /**
      * 交互处理器
@@ -25,18 +33,33 @@ interface Icon {
     val updateInterval: Int
 
     /**
+     * 主动翻译物品的相关变量的类型
+     */
+    val updateProperties: Set<IconUpdatable>
+
+    /**
      * 主动重定向有效子图标的周期
      */
     val relocateInterval: Int
 
     /**
-     * 父级图标，可为空
+     * 定位
+     */
+    val slots: Set<Pos>?
+
+    /**
+     * 子图标
+     */
+    val subIcons: List<Icon>?
+
+    /**
+     * 父级图标
      */
     val parent: Icon?
 
     /**
-     * 子集图标，可为空
+     * 创建
      */
-    val children: List<Icon>?
+    fun create(session: MenuSession, panelAgent: PanelAgent<*>, panel: ElementalPanel): MenuElement
 
 }

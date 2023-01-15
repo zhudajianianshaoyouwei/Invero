@@ -200,7 +200,7 @@ enum class ContainerType(val vanillaId: String, val serialId: Int, slotsContaine
         }
 
         fun fromBukkitType(type: String): ContainerType {
-            return when (type) {
+            return when (type.uppercase()) {
                 "ENDER_CHEST", "BARREL" -> GENERIC_9X3
                 "DISPENSER", "DROPPER" -> GENERIC_3X3
                 "ANVIL" -> ANVIL

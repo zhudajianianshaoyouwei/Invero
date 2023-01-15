@@ -1,7 +1,7 @@
 package cc.trixey.invero.core.action
 
 import cc.trixey.invero.core.Context
-import cc.trixey.invero.core.util.safeBoolean
+import cc.trixey.invero.core.util.castBoolean
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture
 interface Condition : Expression {
 
     fun eval(context: Context): CompletableFuture<Boolean> {
-        return invoke(context).thenApply { it.safeBoolean() }
+        return invoke(context).thenApply { it.castBoolean() }
     }
 
 }

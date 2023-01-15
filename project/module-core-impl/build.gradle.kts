@@ -5,7 +5,7 @@ dependencies {
     compileOnly(project(":project:framework-bukkit"))
     compileOnly(project(":project:module-core"))
 
-    compileOnly("ink.ptms.core:v11903:11903:universal")
+    compileOnly("ink.ptms.core:v11903:11903-minimize:universal")
 
     compileOnly("io.izzel.taboolib:common:$taboolibVersion")
     compileOnly("io.izzel.taboolib:platform-bukkit:$taboolibVersion")

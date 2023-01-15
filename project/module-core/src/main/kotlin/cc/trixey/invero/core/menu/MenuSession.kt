@@ -2,6 +2,7 @@ package cc.trixey.invero.core.menu
 
 import cc.trixey.invero.bukkit.BukkitViewer
 import cc.trixey.invero.common.Window
+import taboolib.common.platform.service.PlatformExecutor
 
 /**
  * Invero
@@ -31,5 +32,29 @@ interface MenuSession {
      * 正在查看的 Window
      */
     val viewingWindow: Window?
+
+    /**
+     * 替换变量
+     */
+    fun parse(input: String): String
+
+    fun parse(input: List<String>): List<String> = input.map { parse(it) }
+
+    fun launch(
+        now: Boolean = false,
+        async: Boolean = false,
+        delay: Long = 0,
+        period: Long = 0,
+        comment: String? = null,
+        executor: (task: PlatformExecutor.PlatformTask) -> Unit,
+    )
+
+    fun launchAsync(
+        now: Boolean = false,
+        delay: Long = 0,
+        period: Long = 0,
+        comment: String? = null,
+        executor: (task: PlatformExecutor.PlatformTask) -> Unit,
+    ) = launch(now, true, delay, period, comment, executor)
 
 }
