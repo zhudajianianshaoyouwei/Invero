@@ -35,7 +35,7 @@ abstract class PacketWindow(
 
     companion object {
 
-        const val CONTAINER_ID = 119
+        const val PACKET_WINDOW_ID = 1_00 + 1
 
     }
 

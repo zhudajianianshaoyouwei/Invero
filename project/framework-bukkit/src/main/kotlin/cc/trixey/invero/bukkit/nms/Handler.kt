@@ -22,7 +22,7 @@ val handler by unsafeLazy {
 fun BukkitWindow.updateTitle(title: String, updateInventory: Boolean = true) {
     viewers.forEach {
         val player = it.getInstance<Player>()
-        val id = if (this is PacketWindow) PacketWindow.CONTAINER_ID else handler.getContainerId(player)
+        val id = if (this is PacketWindow) PacketWindow.PACKET_WINDOW_ID else handler.getContainerId(player)
         handler.sendWindowOpen(player, id, type, title)
 
         if (updateInventory) player.updateInventory()

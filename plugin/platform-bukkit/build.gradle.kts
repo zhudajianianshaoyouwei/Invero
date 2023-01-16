@@ -8,6 +8,7 @@ taboolib {
     install("common")
     install("common-5")
     install("module-nms")
+    install("module-kether")
     install("module-configuration")
     install("platform-bukkit")
 
@@ -18,6 +19,9 @@ taboolib {
             name("Arasple")
         }
     }
+
+    relocate("kotlinx.serialization", "kotlinx_1_4_1.serialization")
+    relocate("kotlinx.coroutines", "kotlinx_1_6_4.coroutines")
 
     classifier = null
     version = taboolibVersion

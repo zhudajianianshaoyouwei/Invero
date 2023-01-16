@@ -1,7 +1,6 @@
 package cc.trixey.invero.core.action
 
-import cc.trixey.invero.core.session.MenuContext
-import cc.trixey.invero.core.session.Session
+import cc.trixey.invero.Session
 import java.util.concurrent.CompletableFuture
 
 /**

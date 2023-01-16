@@ -9,7 +9,6 @@ import org.bukkit.entity.Player
 import taboolib.common.platform.command.CommandBody
 import taboolib.common.platform.command.CommandHeader
 import taboolib.common.platform.command.subCommand
-import taboolib.common.platform.function.submit
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Type
 import taboolib.platform.util.bukkitPlugin
@@ -48,23 +47,28 @@ object InveroDev {
     }
 
     @CommandBody
-    val tryme = subCommand {
+    val main = subCommand {
         execute<Player> { player, _, _ ->
             Configuration.loadFromString("")
 
-            val conf = File(bukkitPlugin.dataFolder, "workspace/tryme.conf").let { HoconLoader.loadFromFile(it) }
-            val menu = conf.toMenu()
+            val conf = File(bukkitPlugin.dataFolder, "workspace/main.conf").let { HoconLoader.loadFromFile(it) }
+            kotlin.runCatching {
+                val menu = conf.toMenu()
 
-            println(
-                """
+                println(
+                    """
                     Loaded Menu ---------------------------------->
                     ${menu.toJson()}
                     < ----------------------------------
                 """.trimIndent()
-            )
+                )
 
-            submit(delay = 20L){
                 menu.open(player)
+            }.onFailure { throwable ->
+                println("§c" + throwable.localizedMessage)
+                throwable.stackTrace.forEach {
+                    println("§8$it")
+                }
             }
         }
 

@@ -1,5 +1,6 @@
 package cc.trixey.invero.core.icon
 
+import cc.trixey.invero.Session
 import cc.trixey.invero.bukkit.api.dsl.set
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.core.AgentIcon
@@ -9,18 +10,14 @@ import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.animation.Cyclic
 import cc.trixey.invero.core.animation.toCyclic
 import cc.trixey.invero.core.item.Texture
-import cc.trixey.invero.core.panel.PanelStandard
-import cc.trixey.invero.core.session.Session
-import cc.trixey.invero.core.util.flatRelease
+import cc.trixey.invero.core.util.debug
 import cc.trixey.invero.serialize.ListScoping
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonNames
-import org.bukkit.inventory.meta.ItemMeta
 import taboolib.common5.cbool
-import taboolib.platform.util.modifyMeta
 
 /**
  * Invero
@@ -32,26 +29,33 @@ import taboolib.platform.util.modifyMeta
 @Serializable
 @OptIn(ExperimentalSerializationApi::class)
 class Icon(
+    // icon id
+    @JsonNames("key")
     override val id: String? = null,
+    // icon properties
     @JsonNames("require", "requirement", "rule")
     val condition: KetherCondition? = null,
-    @SerialName("frame-properties") @JsonNames("frames-properties")
-    val framesProperties: FramesProperties? = null,
-    @JsonNames("frame", "animation")
-    val frames: List<Frame>? = null,
     @SerialName("update")
     val updatePeriod: Long = -1,
     @SerialName("relocate") @JsonNames("relocate", "refresh")
     val relocatePeriod: Long = -1,
-    @Serializable
-    val texture: Texture,
+    // animation support
+    @JsonNames("frames-properties", "frames-prop")
+    val framesProperties: Frame.Properties? = null,
+    @JsonNames("frame", "animation")
+    val frames: List<Frame>? = null,
+    // default frame
+    @Serializable @JsonNames("material", "mat")
+    val texture: Texture? = null,
     val name: String? = null,
     @Serializable(with = ListScoping::class)
+    @JsonNames("lores")
     val lore: List<String>? = null,
-    @Serializable
+    @Serializable @JsonNames("amt")
     val amount: Int? = null,
-    @Serializable(with = ListScoping::class)
+    @Serializable(with = ListScoping::class) @JsonNames("slots", "pos", "position", "positions")
     val slot: List<Slot>? = null,
+    // parent, sub icons
     @Transient
     var parent: AgentIcon? = null,
     @Serializable(with = ListScoping::class) @SerialName("sub")
@@ -61,26 +65,41 @@ class Icon(
     @Transient
     private val defaultFrame = Frame(null, texture, name, lore, amount, slot)
 
+
     init {
         subIcons?.forEach { it.parent = this }
+
+        require(arrayOf(texture, frames).any { it != null }) {
+            "Valid texture(material) for this icon is required"
+        }
     }
 
-    override fun invoke(session: Session, agentPanel: AgentPanel, panel: Panel): IconElement {
-        val element = IconElement(panel)
+    override fun invoke(session: Session, agent: AgentPanel, panel: Panel): IconElement {
 
-        // 渲染默认物品
-        defaultFrame.render(session, agentPanel, element)
+        // 创建 IconElement 对象并且渲染默认帧
+        val element = IconElement(session, panel)
+        defaultFrame.render(session, agent, element)
+
+        // 应用 Layout 定义的槽位
+        getValidId(agent)
+            ?.let { key -> agent.layout?.search(key) }
+            ?.let { element.set(it) }
+
+        // 部署多帧图标
+        element.onFrameChange { it.render(session, agent, element) }
         element.framesDefaultDelay = framesProperties?.defaultDelay
         element.framesCyclic = getCyclicFrames()
 
         // 周期任务 :: 翻译物品帧的相关变量
         if (updatePeriod > 0) {
+            debug("UPDATE TASK: $updatePeriod")
             session.launchAsync(delay = 20L, period = updatePeriod) {
-                element.currentFrame?.render(session, agentPanel, element)
+                element.currentFrame?.translateUpdate(session, element, defaultFrame)
             }
         }
+
         // 周期任务 :: 重定向子图标
-        if (relocatePeriod > 0 && !subIcons.isNullOrEmpty()) {
+        if (relocatePeriod > 0 && !subIcons.isNullOrEmpty())
             session.launchAsync(delay = 20L, period = relocatePeriod) {
                 val previousIndex = element.subIconIndex
                 val relocatedIndex = subIcons
@@ -96,34 +115,8 @@ class Icon(
                     element.framesDefaultDelay = subIcon.framesProperties?.defaultDelay
                 }
             }
-        }
+
         return element
-    }
-
-    fun Frame.render(session: Session, agentPanel: AgentPanel, element: IconElement, generateTexture: Boolean = true) {
-        val item = if (texture != null && generateTexture) texture.generateItem(session).get() else element.value
-
-        item.modifyMeta<ItemMeta> {
-            if (name != null) setDisplayName(session.parse(name))
-            if (this@render.lore != null) lore?.let {
-                it.clear()
-                it += session.parse(this@render.lore)
-            }
-        }
-
-        if (amount != null) item.amount = amount
-        if (slot != null) element.set(slot.flatRelease(agentPanel.scale))
-        // else if element has no slots,
-        //
-        val defPos = getId(agentPanel)?.let { agentPanel.layout?.search(it) }
-
-        element.value = item
-    }
-
-    fun getId(agentPanel: AgentPanel) = when {
-        id != null -> id
-        agentPanel is PanelStandard -> agentPanel.icons.entries.find { it.value == this@Icon }?.key
-        else -> null
     }
 
     fun getProperIcon(element: IconElement): Icon {

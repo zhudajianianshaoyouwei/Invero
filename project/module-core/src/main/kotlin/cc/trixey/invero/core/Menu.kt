@@ -4,6 +4,7 @@ import cc.trixey.invero.bukkit.BukkitViewer
 import cc.trixey.invero.bukkit.api.dsl.bukkitChestWindow
 import cc.trixey.invero.bukkit.api.dsl.packetChestWindow
 import cc.trixey.invero.common.Viewer
+import cc.trixey.invero.core.util.debug
 import cc.trixey.invero.core.util.getSession
 import cc.trixey.invero.serialize.ListScoping
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -44,8 +45,11 @@ class Menu(
             packetChestWindow(settings.containerType.rows, settings.title.getDefault(), settings.options.storageMode)
         }
 
+        window.onClose { _, it -> this@Menu.close(it) }
+
         session.menu = this
         session.viewingWindow = window
+        settings.title.invoke(session)
 
         panels.forEach { it.invoke(session) }
 
@@ -59,6 +63,13 @@ class Menu(
         session.menu = this
         session.viewingWindow?.close(viewer)
         session.viewingWindow = null
+
+        debug(
+            """
+                Menu closed.
+                Session ${session.taskManager}
+            """.trimIndent()
+        )
     }
 
     private fun requireBukkitWindow(): Boolean {

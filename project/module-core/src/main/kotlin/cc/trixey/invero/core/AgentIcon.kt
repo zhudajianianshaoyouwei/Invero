@@ -1,8 +1,8 @@
 package cc.trixey.invero.core
 
+import cc.trixey.invero.Session
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.core.icon.IconElement
-import cc.trixey.invero.core.session.Session
 import cc.trixey.invero.serialize.SelectorAgentIcon
 import kotlinx.serialization.Serializable
 
@@ -18,6 +18,6 @@ abstract class AgentIcon {
 
     abstract val id: String?
 
-    abstract fun invoke(session: Session, agentPanel: AgentPanel, panel: Panel): IconElement
+    abstract fun invoke(session: Session, agent: AgentPanel, panel: Panel): IconElement
 
 }

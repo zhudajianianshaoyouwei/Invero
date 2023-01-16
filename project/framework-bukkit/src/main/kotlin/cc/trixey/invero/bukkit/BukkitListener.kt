@@ -83,7 +83,10 @@ object BukkitListener {
 
     private fun Player.windowClosure() {
         val viewer = BukkitViewer(this)
-        InveroAPI.findWindow(viewer)?.close(viewer)
+        InveroAPI.findWindow(viewer)?.let { window ->
+            window.close(viewer)
+            if (window is PacketWindow) PacketWindowCloseEvent(viewer, window).call()
+        }
     }
 
 }

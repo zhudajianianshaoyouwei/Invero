@@ -3,9 +3,13 @@
  *
  * from https://github.com/okkero/Skedule/
  */
-
 @file:RuntimeDependencies(
-    RuntimeDependency("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    RuntimeDependency(
+        "!org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4",
+        test = "!kotlinx.coroutines.GlobalScope",
+        relocate = ["!kotlin.", "!kotlin@kotlin_version_escape@.", "!kotlinx.", "!kotlinx_1_6_4."],
+        transitive = false
+    )
 )
 @file:Isolated
 

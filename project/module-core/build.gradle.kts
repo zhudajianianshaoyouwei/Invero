@@ -10,6 +10,10 @@ dependencies {
 
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
+    compileOnly("net.kyori:adventure-api:4.12.0")
+    compileOnly("net.kyori:adventure-text-minimessage:4.12.0")
+    compileOnly("net.kyori:adventure-text-serializer-legacy:4.12.0")
+
     compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly("ink.ptms.core:v11903:11903-minimize:universal")
 

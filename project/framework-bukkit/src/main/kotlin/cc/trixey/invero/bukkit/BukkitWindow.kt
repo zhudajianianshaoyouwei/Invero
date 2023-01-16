@@ -37,6 +37,18 @@ abstract class BukkitWindow(
 
     override val size = type.entireWindowSize
 
+    var closeCallback: BukkitWindow.(viewer: Viewer) -> Unit = { _ -> }
+
+    var openCallback: BukkitWindow.(viewer: Viewer) -> Unit = { _ -> }
+
+    fun onClose(callback: (window: BukkitWindow, viewer: Viewer) -> Unit) {
+        closeCallback = callback
+    }
+
+    fun onOpen(callback: (window: BukkitWindow, viewer: Viewer) -> Unit) {
+        openCallback = callback
+    }
+
     fun priorityViewer(): BukkitViewer? {
         return viewers.firstOrNull() as BukkitViewer?
     }
@@ -66,9 +78,13 @@ abstract class BukkitWindow(
         }
     }
 
-    override fun handleOpen(e: WindowOpenEvent) {}
+    override fun handleOpen(e: WindowOpenEvent) {
+        openCallback(e.viewer)
+    }
 
-    override fun handleClose(e: WindowCloseEvent) {}
+    override fun handleClose(e: WindowCloseEvent) {
+        closeCallback(e.viewer)
+    }
 
     override fun handleClick(e: WindowClickEvent) {
         e.clickCancelled = true

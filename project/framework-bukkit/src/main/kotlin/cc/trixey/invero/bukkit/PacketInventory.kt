@@ -1,6 +1,6 @@
 package cc.trixey.invero.bukkit
 
-import cc.trixey.invero.bukkit.PacketWindow.Companion.CONTAINER_ID
+import cc.trixey.invero.bukkit.PacketWindow.Companion.PACKET_WINDOW_ID
 import cc.trixey.invero.bukkit.nms.handler
 import cc.trixey.invero.bukkit.util.safeBukkitPlayer
 import cc.trixey.invero.common.Viewer
@@ -20,11 +20,11 @@ class PacketInventory(override val window: PacketWindow) : ProxyBukkitInventory 
     private val windowItems = arrayOfNulls<ItemStack?>(window.type.entireWindowSize)
 
     fun updateWindowItems(viewer: Viewer) {
-        handler.sendWindowItems(viewer.getInstance(), CONTAINER_ID, windowItems.toList())
+        handler.sendWindowItems(viewer.getInstance(), PACKET_WINDOW_ID, windowItems.toList())
     }
 
     fun updateWindowSlot(viewer: Viewer, slot: Int) {
-        handler.sendWindowSetSlot(viewer.getInstance(), CONTAINER_ID, slot, windowItems[slot])
+        handler.sendWindowSetSlot(viewer.getInstance(), PACKET_WINDOW_ID, slot, windowItems[slot])
     }
 
     override fun get(slot: Int): ItemStack? {
@@ -45,7 +45,7 @@ class PacketInventory(override val window: PacketWindow) : ProxyBukkitInventory 
             }
         }
 
-        handler.sendWindowOpen(viewer.getInstance(), CONTAINER_ID, window.type, window.title)
+        handler.sendWindowOpen(viewer.getInstance(), PACKET_WINDOW_ID, window.type, window.title)
     }
 
     override fun close(viewer: Viewer, updateInventory: Boolean) {
@@ -58,7 +58,7 @@ class PacketInventory(override val window: PacketWindow) : ProxyBukkitInventory 
         }
 
         if (updateInventory) {
-            handler.sendWindowClose(viewer.getInstance(), CONTAINER_ID)
+            handler.sendWindowClose(viewer.getInstance(), PACKET_WINDOW_ID)
             viewer.safeBukkitPlayer()?.updateInventory()
         }
     }

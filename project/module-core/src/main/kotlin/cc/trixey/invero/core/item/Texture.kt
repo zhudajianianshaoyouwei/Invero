@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.core.session.Session
+import cc.trixey.invero.Session
 import cc.trixey.invero.serialize.SelectorTexture
 import kotlinx.serialization.Serializable
 import org.bukkit.inventory.ItemStack
@@ -20,6 +20,8 @@ abstract class Texture {
     abstract val raw: String
 
     abstract fun generateItem(session: Session): CompletableFuture<ItemStack>
+
+    abstract fun isStatic(): Boolean
 
     companion object {
 

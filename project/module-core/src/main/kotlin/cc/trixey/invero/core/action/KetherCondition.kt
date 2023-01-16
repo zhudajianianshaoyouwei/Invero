@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.action
 
-import cc.trixey.invero.core.session.Session
+import cc.trixey.invero.Session
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.serialize.SerializerKetherCondition
 import kotlinx.serialization.Serializable
@@ -20,7 +20,7 @@ value class KetherCondition(val script: String) : Condition {
     override fun invoke(session: Session): CompletableFuture<Any?> {
         val player = session.viewer.get()
 
-        return KetherHandler.invoke(script, player, session.context.getVariables())
+        return KetherHandler.invoke(script, player, session.generateVariables())
     }
 
 }

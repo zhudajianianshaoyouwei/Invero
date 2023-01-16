@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.core.session.Session
+import cc.trixey.invero.Session
 import cc.trixey.invero.core.util.MATERIAL_ID
 import cc.trixey.invero.core.util.containsAnyPlaceholder
 import kotlinx.serialization.*
@@ -35,6 +35,10 @@ class TextureMaterial(override val raw: String) : Texture() {
         else generate(session.parse(raw)) ?: DEFAULT_TEXTURE
 
         complete(texture)
+    }
+
+    override fun isStatic(): Boolean {
+        return lazyMaterial != null
     }
 
     private fun generate(material: String): ItemStack? {

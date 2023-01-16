@@ -1,6 +1,6 @@
 package cc.trixey.invero.bukkit
 
-import cc.trixey.invero.bukkit.PacketWindow.Companion.CONTAINER_ID
+import cc.trixey.invero.bukkit.PacketWindow.Companion.PACKET_WINDOW_ID
 import cc.trixey.invero.bukkit.api.InveroAPI
 import cc.trixey.invero.bukkit.event.PacketWindowClickEvent
 import cc.trixey.invero.bukkit.event.PacketWindowCloseEvent
@@ -33,7 +33,7 @@ object PacketListener {
         when (packet.name) {
             "PacketPlayInCloseWindow" -> {
                 val id = packet.read<Int>(FIELD_CONTAINER_ID) ?: return
-                if (id == CONTAINER_ID) {
+                if (id == PACKET_WINDOW_ID) {
                     val window = viewer.viewingPacketWindow() ?: return
 
                     PacketWindowCloseEvent(viewer, window).call()
@@ -44,7 +44,7 @@ object PacketListener {
             }
 
             "PacketPlayInWindowClick" -> {
-                packet.read<Int>(FILEDS_WINDOW_CLICK[0]).let { if (it != CONTAINER_ID) return }
+                packet.read<Int>(FILEDS_WINDOW_CLICK[0]).let { if (it != PACKET_WINDOW_ID) return }
                 val window = viewer.viewingPacketWindow() ?: return
                 val rawSlot = packet.read<Int>(FILEDS_WINDOW_CLICK[1]) ?: return
                 val button = packet.read<Int>(FILEDS_WINDOW_CLICK[2]) ?: return

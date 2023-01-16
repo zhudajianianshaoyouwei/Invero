@@ -8,7 +8,7 @@ import cc.trixey.invero.common.Scale
 import cc.trixey.invero.core.AgentIcon
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Layout
-import cc.trixey.invero.core.session.Session
+import cc.trixey.invero.Session
 import cc.trixey.invero.serialize.SerializerLayout
 import cc.trixey.invero.serialize.SerializerPos
 import cc.trixey.invero.serialize.SerializerScale

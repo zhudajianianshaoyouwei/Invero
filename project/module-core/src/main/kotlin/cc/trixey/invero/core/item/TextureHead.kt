@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.core.session.Session
+import cc.trixey.invero.Session
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bukkit.inventory.ItemStack
@@ -18,6 +18,10 @@ class TextureHead(@SerialName("head") override val raw: String) : Texture() {
 
     override fun generateItem(session: Session): CompletableFuture<ItemStack> {
         TODO("Not yet implemented")
+    }
+
+    override fun isStatic(): Boolean {
+        return false
     }
 
 }

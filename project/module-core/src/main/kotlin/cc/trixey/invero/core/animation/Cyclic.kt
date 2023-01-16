@@ -2,12 +2,12 @@ package cc.trixey.invero.core.animation
 
 /**
  * TrMenu
- * cc.trixey.invero.core.animation.CycleString
+ * cc.trixey.invero.core.animation.CyclicString
  *
  * @author Arasple
  * @since 2023/1/13 12:26
  */
-class Cyclic<T>(private val value: Array<T>, override var mode: CycleMode = CycleMode.LOOP) : Cycle<T> {
+class Cyclic<T>(internal val value: Array<T>, override var mode: CycleMode = CycleMode.LOOP) : Cycle<T> {
 
     var index: Int = 0
 

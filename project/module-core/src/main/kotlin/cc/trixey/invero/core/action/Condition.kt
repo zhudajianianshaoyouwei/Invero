@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.action
 
-import cc.trixey.invero.core.session.Session
+import cc.trixey.invero.Session
 import taboolib.common5.cbool
 import java.util.concurrent.CompletableFuture
 

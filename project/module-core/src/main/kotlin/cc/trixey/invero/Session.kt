@@ -1,42 +1,52 @@
-package cc.trixey.invero.core.session
+package cc.trixey.invero
 
 import cc.trixey.invero.bukkit.BukkitViewer
 import cc.trixey.invero.common.Window
 import cc.trixey.invero.core.Menu
+import cc.trixey.invero.core.TaskManager
+import cc.trixey.invero.core.util.KetherHandler
+import cc.trixey.invero.core.util.parseMiniMessage
+import cc.trixey.invero.core.util.translateAmpersandColor
 import taboolib.common.platform.function.submit
 import taboolib.common.platform.service.PlatformExecutor
+import taboolib.platform.compat.replacePlaceholder
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Invero
- * cc.trixey.invero.core.session.Session
+ * cc.trixey.invero.Session
  *
  * @author Arasple
  * @since 2023/1/15 22:40
  */
-class Session(
-    val viewer: BukkitViewer,
-    val context: MenuContext = MenuContext(),
-    var menu: Menu? = null,
+class Session(val viewer: BukkitViewer) {
+
+    var menu: Menu? = null
+
     var viewingWindow: Window? = null
-) {
 
-    private val menuTasks = mutableMapOf<String, MenuTask>()
+    val taskManager: TaskManager = TaskManager()
 
-    fun getMenuTask(): MenuTask {
-        return menuTasks[menu!!.name]!!
+    val variables: ConcurrentHashMap<String, String> = ConcurrentHashMap()
+
+    fun generateVariables(): Map<String, String> {
+        return variables
     }
 
     fun taskClosure() {
-        getMenuTask().tasks.removeIf {
-            it.cancel()
-            true
-        }
+        taskManager.unregisterAll()
     }
 
     fun parse(input: String): String {
-        return input
+        val player = viewer.get()
+
+        return if (input.isBlank()) input
+        else KetherHandler
+            .parseInline(input, player, generateVariables())
+            .parseMiniMessage()
+            .translateAmpersandColor()
+            .replacePlaceholder(player)
     }
 
     fun parse(input: List<String>): List<String> {
@@ -51,7 +61,7 @@ class Session(
         comment: String? = null,
         executor: (task: PlatformExecutor.PlatformTask) -> Unit,
     ) {
-        submit(now, async, delay, period, comment, executor).also { getMenuTask() += it }
+        submit(now, async, delay, period, comment, executor).also { taskManager += it }
     }
 
     fun launchAsync(

@@ -84,7 +84,7 @@ object PatchIncluder {
      * PATCH 只处理同级单文件名的情况，任何存在路径的语句我们不会接管
      */
     private fun String.shouldIgnore(): Boolean {
-        return startsWith("http") || sumOf { if (it == '/' || it == '\\') 1L else 0L } > 3 || contains(":")
+        return startsWith("http") || sumOf { if (it == '/' || it == '\\') 1L else 0L } > 2 || contains(":")
     }
 
 }

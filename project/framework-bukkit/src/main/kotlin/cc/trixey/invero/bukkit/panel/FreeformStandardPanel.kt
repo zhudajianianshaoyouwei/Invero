@@ -1,7 +1,6 @@
 package cc.trixey.invero.bukkit.panel
 
 import cc.trixey.invero.bukkit.BukkitPanel
-import cc.trixey.invero.bukkit.api.dsl.pos
 import cc.trixey.invero.bukkit.element.Clickable
 import cc.trixey.invero.common.Elements
 import cc.trixey.invero.common.Pos
