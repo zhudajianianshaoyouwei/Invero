@@ -6,6 +6,7 @@ plugins {
 
 taboolib {
     install("common")
+    install("common-5")
     install("module-nms")
     install("module-configuration")
     install("platform-bukkit")

@@ -1,8 +1,10 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.core.menu.MenuSession
-import org.bukkit.Material
+import cc.trixey.invero.core.session.Session
+import cc.trixey.invero.serialize.SelectorTexture
+import kotlinx.serialization.Serializable
 import org.bukkit.inventory.ItemStack
+import taboolib.library.xseries.XMaterial
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -10,17 +12,20 @@ import java.util.concurrent.CompletableFuture
  * cc.trixey.invero.core.item.Texture
  *
  * @author Arasple
- * @since 2023/1/14 14:13
+ * @since 2023/1/16 10:29
  */
-interface Texture {
+@Serializable(with = SelectorTexture::class)
+abstract class Texture {
 
-    val value: String
+    abstract val raw: String
 
-    fun generateItem(session: MenuSession): CompletableFuture<ItemStack>
+    abstract fun generateItem(session: Session): CompletableFuture<ItemStack>
 
     companion object {
 
-        val DEFAULT_TEXTURE = ItemStack(Material.STONE)
+        val DEFAULT_TEXTURE by lazy {
+            XMaterial.STONE.parseItem()
+        }
 
     }
 

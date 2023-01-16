@@ -1,16 +1,10 @@
 package cc.trixey.invero.plugin.demo
 
-import cc.trixey.invero.core.serialize.hocon.PatchIncluder
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import taboolib.common.platform.command.CommandBody
 import taboolib.common.platform.command.CommandHeader
 import taboolib.common.platform.command.SimpleCommandBody
 import taboolib.common.platform.command.subCommand
-import taboolib.module.configuration.Configuration
-import taboolib.module.configuration.Type
-import taboolib.platform.util.bukkitPlugin
-import java.io.File
 
 /**
  * Invero
@@ -21,28 +15,6 @@ import java.io.File
  */
 @CommandHeader(name = "idemo")
 object UnitCommand {
-
-    @CommandBody
-    val printHocon = subCommand {
-        execute<CommandSender> { _, _, _ ->
-
-            File(bukkitPlugin.dataFolder, "workspace")
-                .listFiles()
-                ?.filter { it.extension == "conf" }
-                ?.map { file ->
-                    val patched = PatchIncluder.patchHoconFile(file)
-                    val config = Configuration.loadFromString(patched, Type.HOCON)
-                    config.file = file
-                    config
-                }
-                ?.forEach {
-                    println("------------------------")
-                    println(it.saveToString())
-                }
-
-        }
-
-    }
 
     @CommandBody
     val basic = construct { showBasic(this) }

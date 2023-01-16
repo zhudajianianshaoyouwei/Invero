@@ -31,7 +31,7 @@ fun BukkitWindow.updateTitle(title: String, updateInventory: Boolean = true) {
 
 fun PacketWindow.updateTitle(title: String) = updateTitle(title, false)
 
-fun Player.senddCancelCoursor() {
+fun Player.sendCancelCoursor() {
     handler.sendWindowSetSlot(this, -1, -1, null, 1)
 }
 

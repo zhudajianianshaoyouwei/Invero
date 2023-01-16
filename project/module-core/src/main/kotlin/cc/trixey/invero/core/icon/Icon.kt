@@ -1,65 +1,138 @@
 package cc.trixey.invero.core.icon
 
-import cc.trixey.invero.common.Pos
-import cc.trixey.invero.common.panel.ElementalPanel
-import cc.trixey.invero.core.action.Condition
-import cc.trixey.invero.core.item.IconUpdatable
-import cc.trixey.invero.core.item.MenuElement
-import cc.trixey.invero.core.menu.MenuSession
-import cc.trixey.invero.core.menu.PanelAgent
+import cc.trixey.invero.bukkit.api.dsl.set
+import cc.trixey.invero.common.Panel
+import cc.trixey.invero.core.AgentIcon
+import cc.trixey.invero.core.AgentPanel
+import cc.trixey.invero.core.action.KetherCondition
+import cc.trixey.invero.core.animation.CycleMode
+import cc.trixey.invero.core.animation.Cyclic
+import cc.trixey.invero.core.animation.toCyclic
+import cc.trixey.invero.core.item.Texture
+import cc.trixey.invero.core.panel.PanelStandard
+import cc.trixey.invero.core.session.Session
+import cc.trixey.invero.core.util.flatRelease
+import cc.trixey.invero.serialize.ListScoping
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import kotlinx.serialization.json.JsonNames
+import org.bukkit.inventory.meta.ItemMeta
+import taboolib.common5.cbool
+import taboolib.platform.util.modifyMeta
 
 /**
  * Invero
  * cc.trixey.invero.core.icon.Icon
  *
  * @author Arasple
- * @since 2023/1/14 14:02
+ * @since 2023/1/16 10:28
  */
-interface Icon {
+@Serializable
+@OptIn(ExperimentalSerializationApi::class)
+class Icon(
+    override val id: String? = null,
+    @JsonNames("require", "requirement", "rule")
+    val condition: KetherCondition? = null,
+    @SerialName("frame-properties") @JsonNames("frames-properties")
+    val framesProperties: FramesProperties? = null,
+    @JsonNames("frame", "animation")
+    val frames: List<Frame>? = null,
+    @SerialName("update")
+    val updatePeriod: Long = -1,
+    @SerialName("relocate") @JsonNames("relocate", "refresh")
+    val relocatePeriod: Long = -1,
+    @Serializable
+    val texture: Texture,
+    val name: String? = null,
+    @Serializable(with = ListScoping::class)
+    val lore: List<String>? = null,
+    @Serializable
+    val amount: Int? = null,
+    @Serializable(with = ListScoping::class)
+    val slot: List<Slot>? = null,
+    @Transient
+    var parent: AgentIcon? = null,
+    @Serializable(with = ListScoping::class) @SerialName("sub")
+    val subIcons: List<Icon>? = null,
+) : AgentIcon() {
 
-    /**
-     * 条件
-     */
-    val condition: Condition?
+    @Transient
+    private val defaultFrame = Frame(null, texture, name, lore, amount, slot)
 
-    /**
-     * 交互处理器
-     */
-    val handler: IconHandler
+    init {
+        subIcons?.forEach { it.parent = this }
+    }
 
-    /**
-     * 主动翻译物品的相关变量的周期
-     */
-    val updateInterval: Int
+    override fun invoke(session: Session, agentPanel: AgentPanel, panel: Panel): IconElement {
+        val element = IconElement(panel)
 
-    /**
-     * 主动翻译物品的相关变量的类型
-     */
-    val updateProperties: Set<IconUpdatable>
+        // 渲染默认物品
+        defaultFrame.render(session, agentPanel, element)
+        element.framesDefaultDelay = framesProperties?.defaultDelay
+        element.framesCyclic = getCyclicFrames()
 
-    /**
-     * 主动重定向有效子图标的周期
-     */
-    val relocateInterval: Int
+        // 周期任务 :: 翻译物品帧的相关变量
+        if (updatePeriod > 0) {
+            session.launchAsync(delay = 20L, period = updatePeriod) {
+                element.currentFrame?.render(session, agentPanel, element)
+            }
+        }
+        // 周期任务 :: 重定向子图标
+        if (relocatePeriod > 0 && !subIcons.isNullOrEmpty()) {
+            session.launchAsync(delay = 20L, period = relocatePeriod) {
+                val previousIndex = element.subIconIndex
+                val relocatedIndex = subIcons
+                    .indexOfFirst { it.condition?.eval(session)?.getNow(false).cbool }
 
-    /**
-     * 定位
-     */
-    val slots: Set<Pos>?
+                if (previousIndex > 0 && relocatedIndex < 0) {
+                    element.framesDefaultDelay = framesProperties?.defaultDelay
+                    element.framesCyclic = getCyclicFrames()
+                } else if (previousIndex != relocatedIndex) {
+                    val subIcon = subIcons[relocatedIndex]
+                    element.subIconIndex = relocatedIndex
+                    element.framesCyclic = subIcon.getCyclicFrames()
+                    element.framesDefaultDelay = subIcon.framesProperties?.defaultDelay
+                }
+            }
+        }
+        return element
+    }
 
-    /**
-     * 子图标
-     */
-    val subIcons: List<Icon>?
+    fun Frame.render(session: Session, agentPanel: AgentPanel, element: IconElement, generateTexture: Boolean = true) {
+        val item = if (texture != null && generateTexture) texture.generateItem(session).get() else element.value
 
-    /**
-     * 父级图标
-     */
-    val parent: Icon?
+        item.modifyMeta<ItemMeta> {
+            if (name != null) setDisplayName(session.parse(name))
+            if (this@render.lore != null) lore?.let {
+                it.clear()
+                it += session.parse(this@render.lore)
+            }
+        }
 
-    /**
-     * 创建
-     */
-    fun create(session: MenuSession, panelAgent: PanelAgent<*>, panel: ElementalPanel): MenuElement
+        if (amount != null) item.amount = amount
+        if (slot != null) element.set(slot.flatRelease(agentPanel.scale))
+        // else if element has no slots,
+        //
+        val defPos = getId(agentPanel)?.let { agentPanel.layout?.search(it) }
+
+        element.value = item
+    }
+
+    fun getId(agentPanel: AgentPanel) = when {
+        id != null -> id
+        agentPanel is PanelStandard -> agentPanel.icons.entries.find { it.value == this@Icon }?.key
+        else -> null
+    }
+
+    fun getProperIcon(element: IconElement): Icon {
+        return if (element.subIconIndex < 0 || subIcons.isNullOrEmpty()) this
+        else subIcons[element.subIconIndex]
+    }
+
+    fun getCyclicFrames(): Cyclic<Frame>? {
+        return frames?.toCyclic(framesProperties?.frameMode ?: CycleMode.LOOP)
+    }
 
 }

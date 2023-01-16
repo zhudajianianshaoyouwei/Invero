@@ -46,7 +46,6 @@ class PacketInventory(override val window: PacketWindow) : ProxyBukkitInventory 
         }
 
         handler.sendWindowOpen(viewer.getInstance(), CONTAINER_ID, window.type, window.title)
-        updateWindowItems(viewer)
     }
 
     override fun close(viewer: Viewer, updateInventory: Boolean) {

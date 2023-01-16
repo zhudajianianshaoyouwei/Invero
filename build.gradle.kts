@@ -19,6 +19,9 @@ subprojects {
         compileOnly(kotlin("stdlib"))
     }
 
+    if (parent?.name != "plugin") {
+        gradle.buildFinished { buildDir.deleteRecursively() }
+    }
     if (parent != rootProject && name.startsWith("framework")) {
         createPublishing()
     }

@@ -9,13 +9,13 @@ package cc.trixey.invero.core.animation
  */
 interface Cycle<T> {
 
+    val mode: CycleMode
+
     fun get(): T
 
     fun getAndCycle(): T {
         return get().also { cycle() }
     }
-
-    fun getMode(): CycleMode
 
     fun cycle()
 

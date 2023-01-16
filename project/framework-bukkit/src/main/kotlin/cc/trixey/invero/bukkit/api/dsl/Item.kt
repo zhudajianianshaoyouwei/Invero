@@ -65,6 +65,13 @@ fun <T : Element> T.set(vararg slots: Int): T =
 
 fun <T : Element> T.set(pos: Pos): T = set(setOf(pos))
 
+fun <T : Element> T.locate(): Set<Pos>? {
+    val panel = panel as ElementalPanel
+    val elements = panel.elements
+
+    return elements.locateElement(this)?.values
+}
+
 fun <T : Element> T.set(pos: Collection<Pos>): T {
     val panel = panel as ElementalPanel
     val elements = panel.elements

@@ -4,7 +4,7 @@ import cc.trixey.invero.bukkit.PacketWindow.Companion.CONTAINER_ID
 import cc.trixey.invero.bukkit.api.InveroAPI
 import cc.trixey.invero.bukkit.event.PacketWindowClickEvent
 import cc.trixey.invero.bukkit.event.PacketWindowCloseEvent
-import cc.trixey.invero.bukkit.nms.senddCancelCoursor
+import cc.trixey.invero.bukkit.nms.sendCancelCoursor
 import cc.trixey.invero.common.event.ClickType
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.module.nms.MinecraftVersion.isUniversal
@@ -52,7 +52,7 @@ object PacketListener {
                 val type = ClickType.find(mode, button, rawSlot) ?: return
 
                 if (rawSlot >= 0) {
-                    player.senddCancelCoursor()
+                    player.sendCancelCoursor()
                     window.inventory.updateWindowSlot(viewer, rawSlot)
                 }
 
