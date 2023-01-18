@@ -1,7 +1,8 @@
 package cc.trixey.invero.core
 
 import cc.trixey.invero.common.ContainerType
-import cc.trixey.invero.serialize.SerializerInventoryType
+import cc.trixey.invero.core.serialize.InventoryTypeSerializer
+import cc.trixey.invero.core.serialize.MenuTitleSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import org.bukkit.event.inventory.InventoryType
@@ -15,9 +16,10 @@ import org.bukkit.event.inventory.InventoryType
  */
 @Serializable
 class MenuSettings(
+    @Serializable(with = MenuTitleSerializer::class)
     val title: MenuTitle,
-    val rows: Int? = null,
-    @Serializable(with = SerializerInventoryType::class)
+    val rows: Int,
+    @Serializable(with = InventoryTypeSerializer::class)
     val type: InventoryType = InventoryType.CHEST,
     val options: MenuOptions = MenuOptions()
 ) {

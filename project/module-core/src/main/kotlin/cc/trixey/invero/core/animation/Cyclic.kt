@@ -19,6 +19,10 @@ class Cyclic<T>(internal val value: Array<T>, override var mode: CycleMode = Cyc
         return value.size <= 1
     }
 
+    fun isAnimationEnded(): Boolean {
+        return mode == CycleMode.ONE_WAY && index == maxIndex
+    }
+
     override fun get(): T {
         return value[index]
     }

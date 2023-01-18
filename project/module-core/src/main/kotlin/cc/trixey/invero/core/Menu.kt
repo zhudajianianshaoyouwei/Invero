@@ -6,12 +6,10 @@ import cc.trixey.invero.bukkit.api.dsl.packetChestWindow
 import cc.trixey.invero.common.Viewer
 import cc.trixey.invero.core.util.debug
 import cc.trixey.invero.core.util.getSession
-import cc.trixey.invero.serialize.ListScoping
-import kotlinx.serialization.ExperimentalSerializationApi
+import cc.trixey.invero.core.serialize.ListAgentPanelSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.json.JsonNames
 import org.bukkit.entity.Player
 
 /**
@@ -21,15 +19,13 @@ import org.bukkit.entity.Player
  * @author Arasple
  * @since 2023/1/15 17:16
  */
-@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 class Menu(
     @Transient
     var name: String? = null,
     @SerialName("menu")
-    @JsonNames("menu", "settings", "init")
     val settings: MenuSettings,
-    @Serializable(with = ListScoping::class)
+    @Serializable(with = ListAgentPanelSerializer::class)
     val panels: List<AgentPanel>
 ) {
 

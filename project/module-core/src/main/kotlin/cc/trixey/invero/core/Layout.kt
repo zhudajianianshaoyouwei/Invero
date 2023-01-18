@@ -3,6 +3,7 @@ package cc.trixey.invero.core
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Positions
 import cc.trixey.invero.core.util.SPECIAL_GROUP
+import cc.trixey.invero.core.serialize.LayoutSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -13,7 +14,7 @@ import kotlinx.serialization.Transient
  * @author Arasple
  * @since 2023/1/15 22:35
  */
-@Serializable
+@Serializable(with = LayoutSerializer::class)
 class Layout(val raw: List<String>) {
 
     @Transient

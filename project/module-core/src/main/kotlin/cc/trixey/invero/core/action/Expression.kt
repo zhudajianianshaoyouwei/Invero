@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.action
 
-import cc.trixey.invero.Session
+import cc.trixey.invero.core.Context
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -12,6 +12,6 @@ import java.util.concurrent.CompletableFuture
  */
 interface Expression {
 
-    fun invoke(session: Session): CompletableFuture<Any?>
+    fun invoke(context: Context): CompletableFuture<Any?>
 
 }

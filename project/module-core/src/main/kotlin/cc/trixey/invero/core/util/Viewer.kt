@@ -2,7 +2,7 @@ package cc.trixey.invero.core.util
 
 import cc.trixey.invero.bukkit.BukkitViewer
 import cc.trixey.invero.common.Viewer
-import cc.trixey.invero.Session
+import cc.trixey.invero.core.Session
 
 /**
  * Invero

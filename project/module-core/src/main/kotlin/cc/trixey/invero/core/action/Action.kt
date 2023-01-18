@@ -1,6 +1,8 @@
 package cc.trixey.invero.core.action
 
-import cc.trixey.invero.Session
+import cc.trixey.invero.core.Context
+import cc.trixey.invero.core.serialize.SelectorAction
+import kotlinx.serialization.Serializable
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -10,8 +12,9 @@ import java.util.concurrent.CompletableFuture
  * @author Arasple
  * @since 2023/1/14 12:18
  */
-interface Action {
+@Serializable(with = SelectorAction::class)
+abstract class Action {
 
-    fun run(session: Session): CompletableFuture<Boolean>
+    abstract fun run(context: Context): CompletableFuture<Boolean>
 
 }

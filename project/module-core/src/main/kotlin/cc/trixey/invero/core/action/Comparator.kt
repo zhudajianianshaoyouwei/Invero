@@ -1,5 +1,10 @@
 package cc.trixey.invero.core.action
 
+import cc.trixey.invero.core.action.Comparator.Type.*
+import cc.trixey.invero.core.serialize.ComparatorSerializer
+import kotlinx.serialization.Serializable
+import taboolib.common5.cdouble
+
 /**
  * Invero
  * cc.trixey.invero.core.action.Comparor
@@ -7,29 +12,56 @@ package cc.trixey.invero.core.action
  * @author Arasple
  * @since 2023/1/14 12:45
  */
-interface Comparator {
+@Serializable(with = ComparatorSerializer::class)
+class Comparator(val type: Type, val value: String) {
 
-    fun getType(): Type
+    private val numbericValue by lazy {
+        value.cdouble
+    }
 
-    fun getValue(): Any?
+    fun compare(input: String): Boolean {
+        return when (type) {
+            EQUALS -> input.equals(value, true)
+            GREATER -> input.cdouble > numbericValue
+            GREATER_OR_EQUALS -> input.cdouble >= numbericValue
+            SMALLER -> input.cdouble < numbericValue
+            SMALLER_OR_EQUALS -> input.cdouble <= numbericValue
+        }
+    }
 
-    fun matches(input: Any?): Boolean
+    companion object {
 
-    fun isNumberic(): Boolean
+        fun parse(format: String): Comparator {
+            var value = format
+            val type = Type.values().find { it.operators.any { sym -> format.startsWith(sym) } }
+            type?.let {
+                it.operators.forEach { sym -> value = value.removePrefix(sym) }
+                value = value.removePrefix(" ")
+            }
+            return Comparator(type ?: EQUALS, value)
+        }
 
-    fun isString(): Boolean
+    }
 
-    enum class Type {
+    override fun toString(): String {
+        return "${type.operators.first()} $value".also {
 
-        GREATER,
+        }
+    }
 
-        GREATER_OR_EQUALS,
+    enum class Type(val operators: List<String>) {
 
-        SMALLER,
+        GREATER_OR_EQUALS(">=", "≥"),
 
-        SMALLER_OR_EQUALS,
+        GREATER(">"),
 
-        EQUALS
+        SMALLER_OR_EQUALS("<=", "≤"),
+
+        SMALLER("<"),
+
+        EQUALS("=", "==");
+
+        constructor(vararg operators: String) : this(operators.map { it })
 
     }
 

@@ -1,10 +1,9 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.Session
+import cc.trixey.invero.core.Session
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bukkit.inventory.ItemStack
-import java.util.concurrent.CompletableFuture
 
 /**
  * Invero
@@ -16,7 +15,7 @@ import java.util.concurrent.CompletableFuture
 @Serializable
 class TextureHead(@SerialName("head") override val raw: String) : Texture() {
 
-    override fun generateItem(session: Session): CompletableFuture<ItemStack> {
+    override fun generateItem(session: Session, delayedItem: (ItemStack) -> Unit): ItemStack {
         TODO("Not yet implemented")
     }
 

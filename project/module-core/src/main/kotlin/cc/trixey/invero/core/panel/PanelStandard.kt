@@ -8,10 +8,9 @@ import cc.trixey.invero.common.Scale
 import cc.trixey.invero.core.AgentIcon
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Layout
-import cc.trixey.invero.Session
-import cc.trixey.invero.serialize.SerializerLayout
-import cc.trixey.invero.serialize.SerializerPos
-import cc.trixey.invero.serialize.SerializerScale
+import cc.trixey.invero.core.Session
+import cc.trixey.invero.core.serialize.PosSerializer
+import cc.trixey.invero.core.serialize.ScaleSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -25,17 +24,16 @@ import kotlinx.serialization.json.JsonNames
  * @author Arasple
  * @since 2023/1/15 22:44
  */
-@OptIn(ExperimentalSerializationApi::class)
+@ExperimentalSerializationApi
 @Serializable
 class PanelStandard(
-    @Serializable(with = SerializerScale::class)
+    @Serializable(with = ScaleSerializer::class)
     @SerialName("scale")
-    private val _scale: Scale? = null,
-    @Serializable(with = SerializerLayout::class)
-    override val layout: Layout? = null,
-    @Serializable(with = SerializerPos::class)
-    override val locate: Pos? = null,
-    @JsonNames("icon", "item", "items")
+    private val _scale: Scale?,
+    override val layout: Layout?,
+    @Serializable(with = PosSerializer::class)
+    override val locate: Pos?,
+    @JsonNames("icon")
     val icons: Map<String, AgentIcon>
 ) : AgentPanel() {
 
@@ -44,18 +42,14 @@ class PanelStandard(
         if (_scale == null) {
             require(layout != null) { "Both scale and layout of this panel is null" }
             Scale(layout.getScale())
-        } else {
-            _scale
-        }
+        } else _scale
     }
 
     override fun invoke(session: Session): StandardPanel {
         val window = session.viewingWindow ?: error("No window apply ge Pi")
 
         return window.standard(scale.raw, locate?.value ?: window.firstAvailablePositionForPanel()) {
-            icons.forEach { (_, icon) ->
-                icon.invoke(session, this@PanelStandard, this@standard)
-            }
+            icons.forEach { (_, icon) -> icon.invoke(session, this@PanelStandard, this@standard) }
         }
     }
 

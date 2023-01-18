@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.animation
 
-import cc.trixey.invero.serialize.SerializerCycleMode
+import cc.trixey.invero.core.serialize.CycleModeSerializer
 import kotlinx.serialization.Serializable
 
 /**
@@ -10,7 +10,7 @@ import kotlinx.serialization.Serializable
  * @author Arasple
  * @since 2023/1/13 12:29
  */
-@Serializable(with = SerializerCycleMode::class)
+@Serializable(with = CycleModeSerializer::class)
 enum class CycleMode {
 
     ONE_WAY,

@@ -12,6 +12,10 @@ import taboolib.common5.cint
  *
  * @author Arasple
  * @since 2023/1/16 10:49
+ *
+ * RANGE: 1~10; 2..15
+ * SLOT: 1;2;3;4;5
+ * POS: 0x2;0x3;0x4
  */
 @Serializable
 class Slot(private val raw: String) {
@@ -19,30 +23,25 @@ class Slot(private val raw: String) {
     @Transient
     private val uncalculatedSlots = mutableSetOf<Int>()
 
-    // 1~10 or 1-10 ->> Slots: 1,2,3,4,5,6,7,8,9,10
-    // 1;2;3 ->> Slots: 1,2,3
-    // 0x2;0x3 ->> Slots (x=0,y=2), (x=0,y=3)
-
-    private val locations by lazy {
-        raw.split(";").mapNotNull { str ->
-            // range in slot
-            if ('~' in str || '-' in str || ".." in str) {
-                val (from, to) = str.split("~", "-", "..")
-                uncalculatedSlots += (from.toInt() to to.toInt()).toList().filter { it >= 0 }
-            } else if ('x' in str) {
-                val (x, y) = str.split('x')
-                return@mapNotNull Pos(x.toInt() to y.toInt())
-            } else {
-                (str.toIntOrNull() ?: -1).let { slot ->
-                    if (slot >= 0) uncalculatedSlots += slot
-                }
+    @Transient
+    private val locations = raw.split(";").mapNotNull { str ->
+        if ('~' in str || '-' in str || ".." in str) {
+            val (from, to) = str.split("~", "-", "..")
+            uncalculatedSlots += (from.toInt() to to.toInt()).toList().filter { it >= 0 }
+        } else if ('x' in str) {
+            val (x, y) = str.split('x')
+            return@mapNotNull Pos(x.toInt() to y.toInt())
+        } else {
+            (str.toIntOrNull() ?: -1).let { slot ->
+                if (slot >= 0) uncalculatedSlots += slot
             }
-
-            return@mapNotNull null
         }
+        return@mapNotNull null
     }
 
-    fun release(scale: Scale) = uncalculatedSlots.map { scale.convertToPosition(it) } + locations
+    fun release(scale: Scale): List<Pos> {
+        return uncalculatedSlots.map { scale.convertToPosition(it) } + locations
+    }
 
     override fun toString(): String {
         return raw
@@ -60,14 +59,12 @@ class Slot(private val raw: String) {
             }
         }
 
-        override fun deserialize(decoder: Decoder): Slot {
-            return try {
-                decoder.decodeStructure(descriptor) {
-                    Slot(decodeIntElement(descriptor, decodeElementIndex(descriptor)).toString())
-                }
-            } catch (e: Throwable) {
-                Slot(decoder.decodeString())
+        override fun deserialize(decoder: Decoder) = try {
+            decoder.decodeStructure(descriptor) {
+                Slot(decodeIntElement(descriptor, decodeElementIndex(descriptor)).toString())
             }
+        } catch (e: Throwable) {
+            Slot(decoder.decodeString())
         }
 
     }

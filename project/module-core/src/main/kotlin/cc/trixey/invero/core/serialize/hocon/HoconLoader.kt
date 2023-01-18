@@ -1,4 +1,4 @@
-package cc.trixey.invero.serialize.hocon
+package cc.trixey.invero.core.serialize.hocon
 
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Type

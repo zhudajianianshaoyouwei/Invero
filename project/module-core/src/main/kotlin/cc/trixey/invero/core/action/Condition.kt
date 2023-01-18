@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.action
 
-import cc.trixey.invero.Session
+import cc.trixey.invero.core.Context
 import taboolib.common5.cbool
 import java.util.concurrent.CompletableFuture
 
@@ -13,8 +13,12 @@ import java.util.concurrent.CompletableFuture
  */
 interface Condition : Expression {
 
-    fun eval(session: Session): CompletableFuture<Boolean> {
-        return invoke(session).thenApply { it.cbool }
+    fun evalInstant(context: Context, valueIfAbsent: Boolean = false): Boolean {
+        return eval(context).getNow(valueIfAbsent)
+    }
+
+    fun eval(context: Context): CompletableFuture<Boolean> {
+        return invoke(context).thenApply { it.cbool }
     }
 
 }

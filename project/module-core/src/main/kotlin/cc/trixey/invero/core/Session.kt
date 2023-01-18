@@ -1,9 +1,7 @@
-package cc.trixey.invero
+package cc.trixey.invero.core
 
 import cc.trixey.invero.bukkit.BukkitViewer
 import cc.trixey.invero.common.Window
-import cc.trixey.invero.core.Menu
-import cc.trixey.invero.core.TaskManager
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.parseMiniMessage
 import cc.trixey.invero.core.util.translateAmpersandColor
@@ -15,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Invero
- * cc.trixey.invero.Session
+ * cc.trixey.invero.core.Session
  *
  * @author Arasple
  * @since 2023/1/15 22:40

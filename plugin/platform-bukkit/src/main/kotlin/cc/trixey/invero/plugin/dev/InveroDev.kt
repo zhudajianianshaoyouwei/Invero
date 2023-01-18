@@ -1,15 +1,16 @@
 package cc.trixey.invero.plugin.dev
 
+import cc.trixey.invero.core.Menu
+import cc.trixey.invero.core.util.debug
+import cc.trixey.invero.core.util.listRecursively
 import cc.trixey.invero.serialize.hocon.HoconLoader
-import cc.trixey.invero.serialize.hocon.PatchIncluder
-import cc.trixey.invero.serialize.toJson
 import cc.trixey.invero.serialize.toMenu
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import taboolib.common.LifeCycle
+import taboolib.common.platform.Awake
 import taboolib.common.platform.command.CommandBody
 import taboolib.common.platform.command.CommandHeader
 import taboolib.common.platform.command.subCommand
-import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Type
 import taboolib.platform.util.bukkitPlugin
 import java.io.File
@@ -24,54 +25,47 @@ import java.io.File
 @CommandHeader(name = "invero")
 object InveroDev {
 
+    val menus = mutableListOf<Menu>()
+
+    @Awake(LifeCycle.ACTIVE)
+    fun invoke() = reload()
+
     @CommandBody
-    val printHocon = subCommand {
-        execute<CommandSender> { _, _, _ ->
-
-            File(bukkitPlugin.dataFolder, "workspace")
-                .listFiles()
-                ?.filter { it.extension == "conf" }
-                ?.map { file ->
-                    val patched = PatchIncluder.patchHoconFile(file)
-                    val config = Configuration.loadFromString(patched, Type.HOCON)
-                    config.file = file
-                    config
-                }
-                ?.forEach {
-                    println("------------------------")
-                    println(it.saveToString())
-                }
-
-        }
-
+    val reload = subCommand {
+        execute<Player> { _, _, _ -> reload() }
     }
 
     @CommandBody
-    val main = subCommand {
-        execute<Player> { player, _, _ ->
-            Configuration.loadFromString("")
+    val open = subCommand {
+        execute<Player> { player, context, argument ->
+            val menuId = context["id"]
+            println(argument)
 
-            val conf = File(bukkitPlugin.dataFolder, "workspace/main.conf").let { HoconLoader.loadFromFile(it) }
-            kotlin.runCatching {
-                val menu = conf.toMenu()
+            menus
+                .find { it.name == menuId }
+                ?.open(player)
+        }
+    }
 
-                println(
-                    """
-                    Loaded Menu ---------------------------------->
-                    ${menu.toJson()}
-                    < ----------------------------------
-                """.trimIndent()
-                )
+    private fun reload() {
+        menus.clear()
+        val confs = File(bukkitPlugin.dataFolder, "workspace")
+            .listRecursively()
+            .filter { it.extension == "conf" }
+            .map { HoconLoader.loadFromFile(it, destinationType = Type.JSON) }
+            .filter { "menu" in it.getKeys(false) }
 
-                menu.open(player)
-            }.onFailure { throwable ->
-                println("§c" + throwable.localizedMessage)
-                throwable.stackTrace.forEach {
-                    println("§8$it")
-                }
+        confs.forEach { hocon ->
+            debug("Loading ${hocon.name}")
+            try {
+                menus += hocon.toMenu().also { it.name = hocon.name }
+            } catch (e: Throwable) {
+                println("§c" + e.localizedMessage)
+                e.stackTrace.filter { "invero" in it.toString() }.forEach { println("§8$it") }
             }
         }
 
+        debug("Loaded ${menus.size} menus")
     }
 
 }

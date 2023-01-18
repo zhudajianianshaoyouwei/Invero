@@ -1,9 +1,8 @@
 package cc.trixey.invero.core
 
-import cc.trixey.invero.Session
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.core.icon.IconElement
-import cc.trixey.invero.serialize.SelectorAgentIcon
+import cc.trixey.invero.core.serialize.SelectorAgentIcon
 import kotlinx.serialization.Serializable
 
 /**

@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.Session
+import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.util.MATERIAL_ID
 import cc.trixey.invero.core.util.containsAnyPlaceholder
 import kotlinx.serialization.*
@@ -8,7 +8,6 @@ import kotlinx.serialization.encoding.*
 import org.bukkit.inventory.ItemStack
 import taboolib.common.util.Strings
 import taboolib.library.xseries.XMaterial
-import java.util.concurrent.CompletableFuture
 import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
 
@@ -30,11 +29,9 @@ class TextureMaterial(override val raw: String) : Texture() {
         else generate(raw) ?: DEFAULT_TEXTURE
     }
 
-    override fun generateItem(session: Session) = CompletableFuture<ItemStack>().apply {
-        val texture = if (!containsPlaceholder) lazyMaterial!!
+    override fun generateItem(session: Session, delayedItem: (ItemStack) -> Unit): ItemStack {
+        return if (!containsPlaceholder) lazyMaterial!!
         else generate(session.parse(raw)) ?: DEFAULT_TEXTURE
-
-        complete(texture)
     }
 
     override fun isStatic(): Boolean {
