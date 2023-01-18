@@ -1,10 +1,10 @@
 package cc.trixey.invero.plugin.dev
 
 import cc.trixey.invero.core.Menu
+import cc.trixey.invero.core.serialize.hocon.HoconLoader
+import cc.trixey.invero.core.toMenu
 import cc.trixey.invero.core.util.debug
 import cc.trixey.invero.core.util.listRecursively
-import cc.trixey.invero.serialize.hocon.HoconLoader
-import cc.trixey.invero.serialize.toMenu
 import org.bukkit.entity.Player
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
