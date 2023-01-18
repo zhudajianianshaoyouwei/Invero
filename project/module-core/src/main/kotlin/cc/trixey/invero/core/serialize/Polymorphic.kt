@@ -31,6 +31,7 @@ internal object SelectorAction : JsonContentPolymorphicSerializer<Action>(Action
             when {
                 "if" in primaryKeys -> StructureActionTertiary.serializer()
                 "when" in primaryKeys -> StructureActionWhen.serializer()
+                "kether" in primaryKeys -> StructureActionKether.serializer()
                 else -> error("unregonized action [$primaryKeys]")
             }
         }

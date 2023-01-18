@@ -20,11 +20,12 @@ class NetesedAction(val actions: List<Action>) : Action() {
     override fun run(context: Context): CompletableFuture<Boolean> {
         val future = CompletableFuture<Boolean>()
         submit(async = !isPrimaryThread) {
-            actions.forEachIndexed { index, action ->
+            for (index in actions.indices) {
+                val action = actions[index]
                 val result = action.run(context).get()
                 if (!result) {
                     future.complete(false)
-                    return@forEachIndexed
+                    break
                 } else if (index == actions.lastIndex) {
                     future.complete(true)
                 }

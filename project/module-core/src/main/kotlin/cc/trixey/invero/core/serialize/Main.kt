@@ -50,6 +50,7 @@ private val module = SerializersModule {
         subclass(ActionKether::class)
         subclass(StructureActionTertiary::class)
         subclass(StructureActionWhen::class)
+        subclass(StructureActionKether::class)
         subclass(NetesedAction::class)
     }
 

@@ -28,11 +28,12 @@ class ActionKether(val script: String) : Action() {
         } else {
             val future = CompletableFuture<Boolean>()
             submit(async = !isPrimaryThread) {
-                scripts.forEachIndexed { index, script ->
+                for (index in scripts.indices) {
+                    val script = scripts[index]
                     val result = KetherHandler.invoke(script, player, context.variables).thenApply { it.bool }.get()
                     if (!result) {
                         future.complete(false)
-                        return@forEachIndexed
+                        break
                     } else if (index == scripts.lastIndex) {
                         future.complete(true)
                     }

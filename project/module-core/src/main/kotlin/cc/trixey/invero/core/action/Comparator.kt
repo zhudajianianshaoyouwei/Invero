@@ -21,7 +21,10 @@ class Comparator(val type: Type, val value: String) {
 
     fun compare(input: String): Boolean {
         return when (type) {
-            EQUALS -> input.equals(value, true)
+            EQUALS -> input == value
+            EQUALS_IGNORECASE -> input.equals(value, true)
+            CONTAINS -> value.contains(input)
+            CONTAINS_IGNORECASE -> value.contains(input, true)
             GREATER -> input.cdouble > numbericValue
             GREATER_OR_EQUALS -> input.cdouble >= numbericValue
             SMALLER -> input.cdouble < numbericValue
@@ -59,7 +62,13 @@ class Comparator(val type: Type, val value: String) {
 
         SMALLER("<"),
 
-        EQUALS("=", "==");
+        EQUALS("=", "=="),
+
+        EQUALS_IGNORECASE("~=", "~=="),
+
+        CONTAINS_IGNORECASE("~~"),
+
+        CONTAINS("~");
 
         constructor(vararg operators: String) : this(operators.map { it })
 
