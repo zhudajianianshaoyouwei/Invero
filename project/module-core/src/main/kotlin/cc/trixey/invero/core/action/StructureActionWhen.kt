@@ -28,7 +28,7 @@ class StructureActionWhen(
             }
         }
 
-        return@thenCompose StructureActionBreak.COMPLETABLE_FALSE
+        return@thenCompose CompletableFuture<Boolean>().also { it.complete(false) }
     }
 
 }

@@ -25,7 +25,7 @@ import kotlinx.serialization.serializer
 import org.bukkit.event.inventory.InventoryType
 
 /**
- * Invero_Core
+ * Invero
  * cc.trixey.invero.serialize.Serializers
  *
  * @author Arasple

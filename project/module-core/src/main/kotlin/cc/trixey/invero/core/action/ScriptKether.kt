@@ -1,8 +1,8 @@
 package cc.trixey.invero.core.action
 
 import cc.trixey.invero.core.Context
-import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.serialize.ScriptKetherSerializer
+import cc.trixey.invero.core.util.KetherHandler
 import kotlinx.serialization.Serializable
 import java.util.concurrent.CompletableFuture
 
@@ -20,6 +20,7 @@ value class ScriptKether(val script: String) : Condition {
     override fun invoke(context: Context): CompletableFuture<Any?> {
         val player = context.player
 
+        // TODO Context compatible with kether
         return KetherHandler.invoke(script, player, context.variables)
     }
 

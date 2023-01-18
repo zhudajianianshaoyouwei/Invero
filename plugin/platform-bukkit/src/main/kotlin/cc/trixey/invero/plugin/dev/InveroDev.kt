@@ -2,9 +2,12 @@ package cc.trixey.invero.plugin.dev
 
 import cc.trixey.invero.core.Menu
 import cc.trixey.invero.core.serialize.hocon.HoconLoader
-import cc.trixey.invero.core.toMenu
+import cc.trixey.invero.core.serialize.toJson
+import cc.trixey.invero.core.serialize.toMenu
 import cc.trixey.invero.core.util.debug
 import cc.trixey.invero.core.util.listRecursively
+import cc.trixey.invero.core.util.printCatching
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
@@ -32,18 +35,26 @@ object InveroDev {
 
     @CommandBody
     val reload = subCommand {
-        execute<Player> { _, _, _ -> reload() }
+        execute<CommandSender> { _, _, _ -> reload() }
     }
 
     @CommandBody
     val open = subCommand {
-        execute<Player> { player, context, argument ->
-            val menuId = context["id"]
-            println(argument)
-
+        execute<Player> { player, _, argument ->
+            val menuId = argument.split(" ").getOrNull(1)
             menus
                 .find { it.name == menuId }
                 ?.open(player)
+        }
+    }
+
+    @CommandBody
+    val print = subCommand {
+        execute<CommandSender> { _, _, argument ->
+            val menuId = argument.split(" ").getOrNull(1)
+            menus
+                .find { it.name == menuId }
+                ?.toJson()?.let { println(it) }
         }
     }
 
@@ -57,11 +68,8 @@ object InveroDev {
 
         confs.forEach { hocon ->
             debug("Loading ${hocon.name}")
-            try {
+            printCatching {
                 menus += hocon.toMenu().also { it.name = hocon.name }
-            } catch (e: Throwable) {
-                println("§c" + e.localizedMessage)
-                e.stackTrace.filter { "invero" in it.toString() }.forEach { println("§8$it") }
             }
         }
 

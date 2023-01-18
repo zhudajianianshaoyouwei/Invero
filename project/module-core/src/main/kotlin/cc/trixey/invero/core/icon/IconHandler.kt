@@ -6,7 +6,7 @@ import cc.trixey.invero.core.serialize.IconHandlerSerializer
 import kotlinx.serialization.Serializable
 
 /**
- * Invero_Core
+ * Invero
  * cc.trixey.invero.core.icon.IconHandler
  *
  * @author Arasple

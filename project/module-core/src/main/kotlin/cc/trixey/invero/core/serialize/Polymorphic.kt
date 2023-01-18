@@ -12,7 +12,7 @@ import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.json.*
 
 /**
- * Invero_Core
+ * Invero
  * cc.trixey.invero.serialize.Polymorphic
  *
  * @author Arasple

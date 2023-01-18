@@ -15,15 +15,6 @@ import java.io.File
  * @author Arasple
  * @since 2023/1/16 12:52
  */
-fun isDebugEnable(): Boolean {
-    return File(bukkitPlugin.dataFolder, "dev").exists()
-}
-
-fun debug(message: String) {
-    if (isDebugEnable())
-        println("§c[Invero] §7${message.replace('&', '§')}")
-}
-
 fun List<Slot>.flatRelease(scale: Scale): List<Pos> {
     return flatMap { it.release(scale) }
 }

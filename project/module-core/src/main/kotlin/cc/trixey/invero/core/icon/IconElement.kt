@@ -9,6 +9,7 @@ import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.animation.Cyclic
 import cc.trixey.invero.core.util.context
+import cc.trixey.invero.core.util.letCatching
 
 /**
  * Invero
@@ -21,6 +22,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
 
     /*
     本图标元素的任务状态
+    配合 Kether 动作实现暂停周期的功能
      */
     val taskStatus = arrayOf(
         // 翻译物品变量 (Update)
@@ -40,7 +42,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
     var iconIndex: Int = -1
 
     /*
-    当前的有效主物品帧
+    当前的有效的物品帧
      */
     var frame: Frame? = null
         set(value) {
@@ -109,9 +111,9 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
 
         // 交互逻辑
         onClick { _ ->
-            getIconHandler()?.let {
-                it.all?.run(context())
-                it.response[clickType]?.run(context())
+            getIconHandler()?.letCatching {
+                it.all?.run(context())?.get()
+                it.response[clickType]?.run(context())?.get()
             }
             true
         }
@@ -120,7 +122,6 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
     private var frameTask: CoroutineTask? = null
 
     fun submitFrameTask() {
-        if (taskStatus[2]) return
         if (frameTask != null) frameTask?.cancel()
 
         frameTask = launchAsync {
@@ -138,7 +139,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
     }
 
     fun getIconHandler(): IconHandler? {
-        return if (iconIndex > 0) icon.subIcons!![iconIndex].handler else icon.handler
+        return if (iconIndex > 0) icon.subIcons!![iconIndex].handler ?: icon.handler else icon.handler
     }
 
 }

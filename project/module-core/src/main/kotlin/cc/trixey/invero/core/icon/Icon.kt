@@ -53,6 +53,7 @@ class Icon(
     @Serializable(with = ListIconSerializer::class) @SerialName("sub")
     val subIcons: List<Icon>?,
     @SerialName("action")
+    @JsonNames("actions", "handler", "click")
     @Serializable(with = IconHandlerSerializer::class)
     val handler: IconHandler?
 ) : AgentIcon() {

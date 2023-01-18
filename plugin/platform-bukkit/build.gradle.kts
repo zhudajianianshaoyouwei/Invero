@@ -10,6 +10,7 @@ taboolib {
     install("module-nms")
     install("module-kether")
     install("module-configuration")
+    install("module-chat")
     install("platform-bukkit")
 
     description {
@@ -17,6 +18,10 @@ taboolib {
 
         contributors {
             name("Arasple")
+        }
+
+        dependencies {
+            name("PlaceholderAPI")
         }
     }
 

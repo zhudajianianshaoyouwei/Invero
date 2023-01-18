@@ -1,5 +1,6 @@
 package cc.trixey.invero.core.serialize.hocon
 
+import taboolib.library.reflex.Reflex.Companion.setProperty
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Type
 import java.io.File
@@ -23,6 +24,7 @@ object HoconLoader {
             val content = PatchIncluder.patchHoconFile(file)
             val config = Configuration.loadFromString(content, type)
             config.file = file
+            config.setProperty("name", file.nameWithoutExtension)
 
             config
         }.also { if (destinationType != Type.HOCON) it.changeType(destinationType) }

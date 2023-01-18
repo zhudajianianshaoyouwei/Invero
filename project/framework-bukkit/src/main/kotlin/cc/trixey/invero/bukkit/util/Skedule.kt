@@ -24,6 +24,7 @@ import org.bukkit.scheduler.BukkitTask
 import taboolib.common.Isolated
 import taboolib.common.env.RuntimeDependencies
 import taboolib.common.env.RuntimeDependency
+import taboolib.common.platform.function.isPrimaryThread
 import taboolib.platform.BukkitPlugin
 import kotlin.coroutines.*
 
@@ -75,7 +76,7 @@ fun launchAsync(co: suspend BukkitSchedulerController.() -> Unit): CoroutineTask
     return launch(true, co)
 }
 
-fun launch(async: Boolean = false, co: suspend BukkitSchedulerController.() -> Unit): CoroutineTask {
+fun launch(async: Boolean = !isPrimaryThread, co: suspend BukkitSchedulerController.() -> Unit): CoroutineTask {
     val controller = BukkitSchedulerController(scheduler)
     val block: suspend BukkitSchedulerController.() -> Unit = {
         try {

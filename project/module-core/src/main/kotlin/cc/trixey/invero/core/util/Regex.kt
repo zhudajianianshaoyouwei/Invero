@@ -16,3 +16,16 @@ val SPECIAL_GROUP = "`(.+?)`".toPattern()
 fun String.containsAnyPlaceholder(): Boolean {
     return contains(PLACEHOLDER_ANY)
 }
+
+inline val Any?.bool: Boolean
+    get() = this.bool()
+
+fun Any?.bool(preference: Boolean = true, ignoreCases: Boolean = false): Boolean {
+    return if (this is Boolean) this
+    else toString().let { raw ->
+        val it = if (ignoreCases) raw.lowercase() else raw
+
+        if (preference) it != "false" && it != "no"
+        else it == "true" || it == "yes"
+    }
+}

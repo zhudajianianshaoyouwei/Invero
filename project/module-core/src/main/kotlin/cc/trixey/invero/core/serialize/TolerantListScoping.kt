@@ -11,7 +11,7 @@ import kotlinx.serialization.json.JsonTransformingSerializer
 import kotlinx.serialization.json.jsonArray
 
 /**
- * Invero_Core
+ * Invero
  * cc.trixey.invero.serialize.TolerantListScoping
  *
  * @author Arasple
