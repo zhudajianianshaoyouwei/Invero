@@ -49,6 +49,8 @@ internal object SelectorTexture : JsonContentPolymorphicSerializer<Texture>(Text
                 else -> error("Unregonized texture format: $element")
             }
         } else {
+            // head:{{player name}}  SUPPORT
+            require(element is JsonPrimitive)
             TextureMaterial.serializer()
         }
     }

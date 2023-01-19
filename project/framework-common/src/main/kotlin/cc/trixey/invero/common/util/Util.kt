@@ -21,10 +21,8 @@ fun locatingAbsoluteSlot(position: Pos, panel: Panel): Int {
     val parent = panel.parent
     var pos = position
 
-    if (panel is FreeformPanel) {
-        pos -= panel.viewport
-        if (panel.scale.isOutOfBounds(pos.x, pos.y)) return -1
-    }
+    if (panel is FreeformPanel) pos -= panel.viewport
+    if (panel.scale.isOutOfBounds(pos.x, pos.y)) return -1
 
     return if (parent.isWindow()) {
         pos.convertToSlot(parent.scale, panel.locate)

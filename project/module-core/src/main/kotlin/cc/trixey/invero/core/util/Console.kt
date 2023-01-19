@@ -1,5 +1,8 @@
 package cc.trixey.invero.core.util
 
+import org.bukkit.command.CommandSender
+import taboolib.common.platform.function.console
+import taboolib.platform.util.asLangText
 import taboolib.platform.util.bukkitPlugin
 import java.io.File
 
@@ -27,12 +30,15 @@ inline fun <R> printCatching(block: () -> R): Result<R> {
     return try {
         Result.success(block())
     } catch (e: Throwable) {
-        println("§c[Invero] AN ERROR OCCURED")
-        println("§c" + e.localizedMessage)
-        e.stackTrace
-            .filter { "taboolib" in it.toString() || "invero" in it.toString() }
-            .forEach { println("§8${it.toString().split("//").getOrNull(1)}") }
-
+        e.prettyPrint()
         Result.failure(e)
     }
+}
+
+fun Throwable.prettyPrint() {
+    println(console().cast<CommandSender>().asLangText("throwable-print"))
+    println("§c$localizedMessage")
+    stackTrace
+        .filter { "taboolib" in it.toString() || "invero" in it.toString() }
+        .forEach { println(" §8${it.toString().split("//").getOrNull(1)}") }
 }

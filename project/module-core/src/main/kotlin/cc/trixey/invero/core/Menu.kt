@@ -1,15 +1,19 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package cc.trixey.invero.core
 
 import cc.trixey.invero.bukkit.BukkitViewer
 import cc.trixey.invero.bukkit.api.dsl.bukkitChestWindow
 import cc.trixey.invero.bukkit.api.dsl.packetChestWindow
 import cc.trixey.invero.common.Viewer
+import cc.trixey.invero.core.serialize.ListAgentPanelSerializer
 import cc.trixey.invero.core.util.debug
 import cc.trixey.invero.core.util.getSession
-import cc.trixey.invero.core.serialize.ListAgentPanelSerializer
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlinx.serialization.json.JsonNames
 import org.bukkit.entity.Player
 
 /**
@@ -26,11 +30,16 @@ class Menu(
     @SerialName("menu")
     val settings: MenuSettings,
     @Serializable(with = ListAgentPanelSerializer::class)
+    @JsonNames("panel", "pane", "panes")
     val panels: List<AgentPanel>
 ) {
 
     fun open(player: Player) {
         return open(BukkitViewer(player))
+    }
+
+    fun close(player: Player) {
+        return close(BukkitViewer(player))
     }
 
     fun open(viewer: Viewer) {
@@ -56,7 +65,7 @@ class Menu(
         val session = viewer.getSession()
 
         session.taskClosure()
-        session.menu = this
+        session.menu = null
         session.viewingWindow?.close(viewer)
         session.viewingWindow = null
 

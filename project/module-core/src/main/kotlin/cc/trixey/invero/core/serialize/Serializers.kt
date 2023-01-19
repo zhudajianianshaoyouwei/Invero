@@ -1,6 +1,5 @@
 @file:OptIn(ExperimentalSerializationApi::class)
 
-
 package cc.trixey.invero.core.serialize
 
 import cc.trixey.invero.common.Pos
@@ -93,7 +92,14 @@ internal object LayoutSerializer : KSerializer<Layout> {
 
     override val descriptor = SerialDescriptor("Layout", listSerializer.descriptor)
 
-    override fun deserialize(decoder: Decoder) = Layout(decoder.decodeSerializableValue(listSerializer))
+    override fun deserialize(decoder: Decoder) = try {
+        decoder as JsonDecoder
+        decoder
+            .decodeSerializableValue(listSerializer)
+            .let { Layout(it) }
+    } catch (e: Throwable) {
+        Layout(decoder.decodeString().split("\n"))
+    }
 
     override fun serialize(encoder: Encoder, value: Layout) = encoder.encodeSerializableValue(listSerializer, value.raw)
 

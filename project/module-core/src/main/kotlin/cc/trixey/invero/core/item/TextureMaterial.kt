@@ -24,7 +24,8 @@ class TextureMaterial(override val raw: String) : Texture() {
     @Transient
     val containsPlaceholder = raw.containsAnyPlaceholder()
 
-    val lazyMaterial by lazy {
+    @Transient
+    val lazyMaterial = run {
         if (containsPlaceholder) null
         else generate(raw) ?: DEFAULT_TEXTURE
     }
@@ -52,8 +53,8 @@ class TextureMaterial(override val raw: String) : Texture() {
         // 1.13+
         val cleanForm = material
             .uppercase()
+            .replace(" +".toRegex(), "_")
             .replace('-', '_')
-            .replace(" ", "")
 
         return XMaterial.matchXMaterial(cleanForm).getOrElse {
             XMaterial.values().maxByOrNull { Strings.similarDegree(it.name, cleanForm) }

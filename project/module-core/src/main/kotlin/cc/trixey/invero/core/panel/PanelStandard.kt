@@ -33,7 +33,7 @@ class PanelStandard(
     override val layout: Layout?,
     @Serializable(with = PosSerializer::class)
     override val locate: Pos?,
-    @JsonNames("icon")
+    @JsonNames("icon", "item", "items")
     val icons: Map<String, AgentIcon>
 ) : AgentPanel() {
 

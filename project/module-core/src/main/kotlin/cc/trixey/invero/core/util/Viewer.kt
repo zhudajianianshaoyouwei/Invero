@@ -3,6 +3,7 @@ package cc.trixey.invero.core.util
 import cc.trixey.invero.bukkit.BukkitViewer
 import cc.trixey.invero.common.Viewer
 import cc.trixey.invero.core.Session
+import org.bukkit.entity.Player
 
 /**
  * Invero
@@ -13,4 +14,8 @@ import cc.trixey.invero.core.Session
  */
 fun Viewer.getSession(): Session {
     return Session.get(this as BukkitViewer)
+}
+
+fun Player.getSession(): Session {
+    return Session.get(BukkitViewer(this))
 }

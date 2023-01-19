@@ -27,9 +27,9 @@ class Slot(private val raw: String) {
     private val locations = raw.split(";").mapNotNull { str ->
         if ('~' in str || '-' in str || ".." in str) {
             val (from, to) = str.split("~", "-", "..")
-            uncalculatedSlots += (from.toInt() to to.toInt()).toList().filter { it >= 0 }
-        } else if ('x' in str) {
-            val (x, y) = str.split('x')
+            uncalculatedSlots += (from.toInt()..to.toInt()).toList().filter { it >= 0 }
+        } else if ('x' in str || ',' in str) {
+            val (x, y) = str.split('x', ',')
             return@mapNotNull Pos(x.toInt() to y.toInt())
         } else {
             (str.toIntOrNull() ?: -1).let { slot ->

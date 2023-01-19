@@ -40,6 +40,7 @@ import taboolib.module.configuration.Type
  * @since 2023/1/17 22:50
  */
 
+@OptIn(ExperimentalSerializationApi::class)
 private val module = SerializersModule {
 
     polymorphic(AgentPanel::class) {
@@ -63,11 +64,11 @@ private val json = Json {
     explicitNulls = false
 }
 
-fun Configuration.toMenu(): Menu {
+fun Configuration.deserializeToMenu(name: String? = null): Menu {
     changeType(Type.JSON)
-    return json.decodeFromString(saveToString())
+    return json.decodeFromString<Menu>(saveToString()).also { if (name != null && it.name == null) it.name = name }
 }
 
-fun Menu.toJson(): String {
+fun Menu.serializeToJson(): String {
     return json.encodeToString(value = this)
 }

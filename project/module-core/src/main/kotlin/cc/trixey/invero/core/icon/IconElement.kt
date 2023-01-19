@@ -73,7 +73,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
 
     fun invoke() {
         // 默认帧相关
-        defaultFrame.render(session, agent, this)
+        frame = defaultFrame
         icon.getValidId(agent)
             ?.let { key -> agent.layout?.search(key) }
             ?.let { this@IconElement.set(it) }

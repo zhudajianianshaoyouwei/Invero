@@ -10,6 +10,7 @@ taboolib {
     install("module-nms")
     install("module-kether")
     install("module-configuration")
+    install("module-lang")
     install("module-chat")
     install("platform-bukkit")
 

@@ -1,10 +1,14 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package cc.trixey.invero.core.icon
 
 import cc.trixey.invero.bukkit.api.dsl.set
 import cc.trixey.invero.core.AgentPanel
+import cc.trixey.invero.core.InveroSettings
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.panel.PanelStandard
 import cc.trixey.invero.core.util.*
+import kotlinx.serialization.ExperimentalSerializationApi
 
 /**
  * Invero
@@ -25,7 +29,6 @@ fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
         }
         ?: element.value.also { generated = false }
 
-
     item.apply {
         if (generated) {
             if (name == null && original.hasName()) postName(original.getName()!!)
@@ -33,7 +36,7 @@ fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
             if (frame.amount == null && original.amount != 1) postAmount(original.amount)
         }
         if (name != null) postName(session.parse(name))
-        if (!lore.isNullOrEmpty()) postLore(session.parse(lore).addDefaultLineColor())
+        if (!lore.isNullOrEmpty()) postLore(session.parse(lore).defaultColored())
     }
 
     if (amount != null) item.amount = amount
@@ -52,7 +55,7 @@ fun Frame.translateUpdate(session: Session, element: IconElement, defaultFrame: 
         val basedName = name ?: defaultFrame.name
         val basedLore = lore ?: defaultFrame.lore
         if (basedName != null) postName(session.parse(basedName))
-        if (!basedLore.isNullOrEmpty()) postLore(session.parse(basedLore))
+        if (!basedLore.isNullOrEmpty()) postLore(session.parse(basedLore).defaultColored())
 
     }
 
@@ -65,7 +68,11 @@ fun Icon.getValidId(agentPanel: AgentPanel) = when {
     else -> null
 }
 
-fun List<String>.addDefaultLineColor(prefix: String = "§7") = map {
-    if (!it.isPrefixColored() && it.isNotBlank()) "$prefix$it"
+fun List<String>.defaultColored() = map {
+    if (!it.isPrefixColored() && it.isNotBlank()) "${InveroSettings.defaultLoreColor}$it"
     else it
 }
+
+fun String.defaultColored() =
+    if (!isPrefixColored() && isNotBlank()) "${InveroSettings.defaultNameColor}$this"
+    else this
