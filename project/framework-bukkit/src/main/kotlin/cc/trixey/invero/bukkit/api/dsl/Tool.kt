@@ -14,8 +14,9 @@ import cc.trixey.invero.common.panel.*
 fun PanelContainer.firstAvailablePositionForPanel(): Pair<Int, Int> {
     // pagedNetesedPanel
     if (this is PagedPanel) return 0 to 0
-
     val available = scale.getArea() - panels.flatMap { it.area }.toSet()
+
+    if (available.isEmpty()) error("No available position for panel(${this.javaClass.simpleName})")
     return available.minBy { it.y }.value
 }
 

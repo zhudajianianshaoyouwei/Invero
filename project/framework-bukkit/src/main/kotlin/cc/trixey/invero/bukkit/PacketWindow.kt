@@ -6,6 +6,7 @@ import cc.trixey.invero.bukkit.nms.updateTitle
 import cc.trixey.invero.common.ContainerType
 import cc.trixey.invero.common.StorageMode
 import cc.trixey.invero.common.Viewer
+import cc.trixey.invero.common.event.WindowClickEvent
 import cc.trixey.invero.common.event.WindowDragEvent
 import cc.trixey.invero.common.event.WindowItemsCollectEvent
 import cc.trixey.invero.common.event.WindowItemsMoveEvent
@@ -53,6 +54,14 @@ abstract class PacketWindow(
     fun close(viewer: Viewer, updateInventory: Boolean) {
         if (viewers.remove(viewer)) inventory.close(viewer, updateInventory)
         if (viewers.isEmpty()) InveroAPI.bukkitManager.unregister(this)
+    }
+
+    override fun handleClick(e: WindowClickEvent) {
+        super.handleClick(e)
+
+        if (e.clickType.isItemMoveable) {
+            inventory.updateWindowItems(e.viewer)
+        }
     }
 
     override fun handleDrag(e: WindowDragEvent) {

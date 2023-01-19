@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package cc.trixey.invero.core.serialize
 
 import cc.trixey.invero.core.AgentIcon
@@ -7,8 +9,10 @@ import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.item.Texture
 import cc.trixey.invero.core.item.TextureHead
 import cc.trixey.invero.core.item.TextureMaterial
+import cc.trixey.invero.core.panel.PanelPaged
 import cc.trixey.invero.core.panel.PanelStandard
 import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.*
 
 /**
@@ -70,7 +74,7 @@ internal object SelectorAgentPanel : JsonContentPolymorphicSerializer<AgentPanel
 
     override fun selectDeserializer(element: JsonElement) = when {
         // generator -> PanelGeneraotr... etc
-        "layout" in element.jsonObject -> PanelStandard.serializer()
+        "pages" in element.jsonObject -> PanelPaged.serializer()
         else -> PanelStandard.serializer()
     }
 

@@ -32,14 +32,14 @@ open class PagedNetesedPanel(
 
     override var pageIndex: Int = 0
         set(value) {
+            pageChangingCallback(this, field, value)
             if (value < 0) error("Page index can not be a negative number")
             else if (pageIndex > maxPageIndex) error("Page index is out of bounds $maxPageIndex")
-            pageChangeCallback(this, field, value)
             field = value
             render()
         }
 
-    override var pageChangeCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit = { _, _ -> }
+    override var pageChangingCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit = { _, _ -> }
 
     private val currentPanel: Panel
         get() = panels[pageIndex]

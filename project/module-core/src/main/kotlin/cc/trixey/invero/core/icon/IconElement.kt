@@ -83,7 +83,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
         // 周期任务 :: 翻译物品帧的相关变量
         if (icon.updatePeriod > 0) {
             session.launchAsync(delay = 20L, period = icon.updatePeriod) {
-                if (taskStatus[0]) {
+                if (isVisible() && taskStatus[0]) {
                     frame?.translateUpdate(session, this, defaultFrame)
                 }
             }
@@ -92,7 +92,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
         // 周期任务 :: 重定向子图标
         if (icon.relocatePeriod > 0 && !icon.subIcons.isNullOrEmpty()) {
             session.launchAsync(delay = 20L, period = icon.relocatePeriod) {
-                if (taskStatus[1]) {
+                if (isVisible() && taskStatus[1]) {
                     val previousIndex = iconIndex
                     val relocatedIndex = icon.subIcons.indexOfFirst { it.condition?.evalInstant(context()) ?: false }
                     // 子图标 ->> 默认图标
@@ -126,7 +126,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
 
         frameTask = launchAsync {
             loop@ while (true) {
-                if (taskStatus[2]) {
+                if (isVisible() && taskStatus[2]) {
                     val frames = framesCyclic ?: break@loop
                     if (frames.isAnimationEnded()) taskStatus[2] = false
                     else frames.getAndCycle().let {
@@ -140,6 +140,10 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
 
     fun getIconHandler(): IconHandler? {
         return if (iconIndex > 0) icon.subIcons!![iconIndex].handler ?: icon.handler else icon.handler
+    }
+
+    private fun isVisible(): Boolean {
+        return panel.isElementValid(this)
     }
 
 }

@@ -18,7 +18,7 @@ fun showGeneratorPaged(player: Player, filter: String? = null) = packetChestWind
 
     generatorPaged<Sound>(9 to 6) {
 
-        onPageChange { _, toPage ->
+        onPageChanging { _, toPage ->
             updateTitle("Generator_Paged ($toPage / $maxPageIndex)")
             forViewersInstance<Player> {
                 it.playSound(it.location, Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1f)

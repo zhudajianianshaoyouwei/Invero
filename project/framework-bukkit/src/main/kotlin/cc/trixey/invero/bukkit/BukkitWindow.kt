@@ -99,7 +99,6 @@ abstract class BukkitWindow(
                 return
             }
         }
-
         val clickedSlot = scale.convertToPosition(rawSlot)
         panels
             .sortedByDescending { it.weight }

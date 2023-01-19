@@ -3,8 +3,10 @@ package cc.trixey.invero.core.panel
 import cc.trixey.invero.bukkit.api.dsl.firstAvailablePositionForPanel
 import cc.trixey.invero.bukkit.api.dsl.standard
 import cc.trixey.invero.bukkit.panel.StandardPanel
+import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
+import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.core.AgentIcon
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Layout
@@ -45,10 +47,8 @@ class PanelStandard(
         } else _scale
     }
 
-    override fun invoke(session: Session): StandardPanel {
-        val window = session.viewingWindow ?: error("No window apply ge Pi")
-
-        return window.standard(scale.raw, locate?.value ?: window.firstAvailablePositionForPanel()) {
+    override fun invoke(parent: PanelContainer, session: Session): Panel {
+        return parent.standard(scale.raw, locate?.value ?: parent.firstAvailablePositionForPanel()) {
             icons.forEach { (_, icon) -> icon.invoke(session, this@PanelStandard, this@standard) }
         }
     }

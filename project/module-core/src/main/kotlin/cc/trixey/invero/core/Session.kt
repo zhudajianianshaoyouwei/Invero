@@ -1,6 +1,7 @@
 package cc.trixey.invero.core
 
 import cc.trixey.invero.bukkit.BukkitViewer
+import cc.trixey.invero.bukkit.PacketWindow
 import cc.trixey.invero.common.Window
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.parseMiniMessage
@@ -26,10 +27,28 @@ class Session(val viewer: BukkitViewer) {
 
     val taskManager: TaskManager = TaskManager()
 
+    var taskTitleFrame: Boolean = true
+
     val variables: ConcurrentHashMap<String, String> = ConcurrentHashMap()
 
     fun generateVariables(): Map<String, String> {
         return variables
+    }
+
+    fun closeMenu() {
+        menu?.close(viewer.get())
+    }
+
+    fun newMenuEnv() {
+        // 注销任务
+        taskClosure()
+        // 安全关闭 Invero.Window
+        viewingWindow?.let {
+            if (it is PacketWindow) it.close(viewer, false)
+            else it.close(viewer)
+        }
+        viewingWindow = null
+        menu = null
     }
 
     fun taskClosure() {

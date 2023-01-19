@@ -3,6 +3,7 @@ package cc.trixey.invero.core
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
+import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.core.serialize.SelectorAgentPanel
 import kotlinx.serialization.Serializable
 
@@ -22,7 +23,7 @@ abstract class AgentPanel {
 
     abstract val locate: Pos?
 
-    abstract fun invoke(session: Session): Panel
+    abstract fun invoke(parent: PanelContainer, session: Session): Panel
 
     fun requireBukkitWindow(): Boolean {
         return false

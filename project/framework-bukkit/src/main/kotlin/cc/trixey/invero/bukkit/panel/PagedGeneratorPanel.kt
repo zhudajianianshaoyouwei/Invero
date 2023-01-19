@@ -43,12 +43,12 @@ class PagedGeneratorPanel<T>(
         set(value) {
             if (value < 0) error("Page index can not be a negative number")
             else if (pageIndex > maxPageIndex) error("Page index is out of bounds $maxPageIndex")
-            pageChangeCallback(this, field, value)
+            pageChangingCallback(this, field, value)
             field = value
             render()
         }
 
-    override var pageChangeCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit = { _, _ -> }
+    override var pageChangingCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit = { _, _ -> }
 
     override var maxPageIndex: Int = 0
 

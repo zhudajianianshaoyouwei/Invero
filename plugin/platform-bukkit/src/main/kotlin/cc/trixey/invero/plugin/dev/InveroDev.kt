@@ -2,6 +2,7 @@ package cc.trixey.invero.plugin.dev
 
 import cc.trixey.invero.core.InveroManager
 import cc.trixey.invero.core.serialize.serializeToJson
+import cc.trixey.invero.core.util.getSession
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import taboolib.common.LifeCycle
@@ -44,7 +45,19 @@ object InveroDev {
 
     @CommandBody
     val print = subCommand {
-        execute<CommandSender> { _, _, argument ->
+        execute<CommandSender> { sender, _, argument ->
+            if (sender is Player){
+                sender.getSession().apply {
+                    println(
+                        """
+                            ----------------------------
+                            Menu ${menu?.name}
+                            ViewingWindow: ${viewingWindow?.javaClass?.simpleName}
+                        """.trimIndent()
+                    )
+                }
+                return@execute
+            }
             val menuId = argument.split(" ").getOrNull(1) ?: return@execute
             InveroManager.getMenu(menuId)?.let {
                 println(it.serializeToJson())

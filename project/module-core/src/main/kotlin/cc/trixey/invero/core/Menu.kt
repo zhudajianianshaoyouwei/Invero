@@ -3,8 +3,7 @@
 package cc.trixey.invero.core
 
 import cc.trixey.invero.bukkit.BukkitViewer
-import cc.trixey.invero.bukkit.api.dsl.bukkitChestWindow
-import cc.trixey.invero.bukkit.api.dsl.packetChestWindow
+import cc.trixey.invero.bukkit.api.dsl.chestWindow
 import cc.trixey.invero.common.Viewer
 import cc.trixey.invero.core.serialize.ListAgentPanelSerializer
 import cc.trixey.invero.core.util.debug
@@ -15,6 +14,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonNames
 import org.bukkit.entity.Player
+import taboolib.common.platform.function.submitAsync
 
 /**
  * Invero
@@ -44,21 +44,24 @@ class Menu(
 
     fun open(viewer: Viewer) {
         val session = viewer.getSession()
-        val window = if (requireBukkitWindow()) {
-            bukkitChestWindow(settings.containerType.rows, settings.title.getDefault(), settings.options.storageMode)
-        } else {
-            packetChestWindow(settings.containerType.rows, settings.title.getDefault(), settings.options.storageMode)
+
+        if (session.menu != null) session.newMenuEnv()
+
+        submitAsync {
+            val window = chestWindow(
+                !requireBukkitWindow(),
+                settings.containerType.rows,
+                settings.title.getDefault(),
+                settings.options.storageMode
+            )
+
+            window.onClose { _, it -> this@Menu.close(it) }
+            session.menu = this@Menu
+            session.viewingWindow = window
+            panels.forEach { it.invoke(window, session) }
+            window.open(viewer)
+            settings.title.invoke(session)
         }
-
-        window.onClose { _, it -> this@Menu.close(it) }
-
-        session.menu = this
-        session.viewingWindow = window
-        settings.title.invoke(session)
-
-        panels.forEach { it.invoke(session) }
-
-        window.open(viewer)
     }
 
     fun close(viewer: Viewer) {

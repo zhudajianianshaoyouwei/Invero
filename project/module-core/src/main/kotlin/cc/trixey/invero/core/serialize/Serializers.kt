@@ -14,7 +14,6 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.IntArraySerializer
 import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.PairSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.Decoder
@@ -75,7 +74,6 @@ internal object IconHandlerSerializer : JsonTransformingSerializer<IconHandler>(
 internal object ScaleSerializer : KSerializer<Scale> {
 
     private val intArraySerializer = IntArraySerializer()
-
     override val descriptor = SerialDescriptor("Scale", intArraySerializer.descriptor)
 
     override fun deserialize(decoder: Decoder) =
@@ -107,13 +105,14 @@ internal object LayoutSerializer : KSerializer<Layout> {
 
 internal object PosSerializer : KSerializer<Pos> {
 
-    private val pairSerializer = PairSerializer(Int.serializer(), Int.serializer())
+    private val intArraySerializer = IntArraySerializer()
+    override val descriptor = SerialDescriptor("Pos", intArraySerializer.descriptor)
 
-    override val descriptor = SerialDescriptor("Pos", pairSerializer.descriptor)
+    override fun deserialize(decoder: Decoder) =
+        decoder.decodeSerializableValue(intArraySerializer).let { Pos(it[0], it[1]) }
 
-    override fun deserialize(decoder: Decoder) = Pos(decoder.decodeSerializableValue(pairSerializer))
-
-    override fun serialize(encoder: Encoder, value: Pos) = encoder.encodeSerializableValue(pairSerializer, value.value)
+    override fun serialize(encoder: Encoder, value: Pos) =
+        encoder.encodeSerializableValue(intArraySerializer, value.value.let { intArrayOf(it.first, it.second) })
 
 }
 
