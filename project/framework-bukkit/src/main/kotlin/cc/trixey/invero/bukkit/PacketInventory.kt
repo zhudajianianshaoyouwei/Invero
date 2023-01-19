@@ -1,7 +1,8 @@
 package cc.trixey.invero.bukkit
 
-import cc.trixey.invero.bukkit.PacketWindow.Companion.PACKET_WINDOW_ID
 import cc.trixey.invero.bukkit.nms.handler
+import cc.trixey.invero.bukkit.util.countPacketContainerId
+import cc.trixey.invero.bukkit.util.getPacketContainerId
 import cc.trixey.invero.bukkit.util.safeBukkitPlayer
 import cc.trixey.invero.common.Viewer
 import org.bukkit.inventory.ItemStack
@@ -20,11 +21,11 @@ class PacketInventory(override val window: PacketWindow) : ProxyBukkitInventory 
     private val windowItems = arrayOfNulls<ItemStack?>(window.type.entireWindowSize)
 
     fun updateWindowItems(viewer: Viewer) {
-        handler.sendWindowItems(viewer.getInstance(), PACKET_WINDOW_ID, windowItems.toList())
+        handler.sendWindowItems(viewer.getInstance(), viewer.getPacketContainerId(), windowItems.toList())
     }
 
     fun updateWindowSlot(viewer: Viewer, slot: Int) {
-        handler.sendWindowSetSlot(viewer.getInstance(), PACKET_WINDOW_ID, slot, windowItems[slot])
+        handler.sendWindowSetSlot(viewer.getInstance(), viewer.getPacketContainerId(), slot, windowItems[slot])
     }
 
     override fun get(slot: Int): ItemStack? {
@@ -45,10 +46,10 @@ class PacketInventory(override val window: PacketWindow) : ProxyBukkitInventory 
             }
         }
 
-        handler.sendWindowOpen(viewer.getInstance(), PACKET_WINDOW_ID, window.type, window.title)
+        handler.sendWindowOpen(viewer.getInstance(), viewer.countPacketContainerId(), window.type, window.title)
     }
 
-    override fun close(viewer: Viewer, updateInventory: Boolean) {
+    override fun close(viewer: Viewer, closeInventory: Boolean, updateInventory: Boolean) {
         playerItems.remove(viewer)?.let {
             if (storageMode.shouldRestore) {
                 getPlayerInventory(viewer).apply {
@@ -57,10 +58,8 @@ class PacketInventory(override val window: PacketWindow) : ProxyBukkitInventory 
             }
         }
 
-        if (updateInventory) {
-            handler.sendWindowClose(viewer.getInstance(), PACKET_WINDOW_ID)
-            viewer.safeBukkitPlayer()?.updateInventory()
-        }
+        if (closeInventory) handler.sendWindowClose(viewer.getInstance(), viewer.getPacketContainerId())
+        if (updateInventory) viewer.safeBukkitPlayer()?.updateInventory()
     }
 
     override fun closeAll() {

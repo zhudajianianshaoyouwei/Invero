@@ -45,7 +45,10 @@ class Menu(
     fun open(viewer: Viewer) {
         val session = viewer.getSession()
 
-        if (session.menu != null) session.newMenuEnv()
+        if (session.menu != null) {
+            println("prepaing transfer from ${session.menu?.name} to $name")
+            session.prepareTransfer()
+        }
 
         submitAsync {
             val window = chestWindow(
@@ -57,7 +60,7 @@ class Menu(
 
             window.onClose { _, it -> this@Menu.close(it) }
             session.menu = this@Menu
-            session.viewingWindow = window
+            session.window = window
             panels.forEach { it.invoke(window, session) }
             window.open(viewer)
             settings.title.invoke(session)
@@ -67,17 +70,17 @@ class Menu(
     fun close(viewer: Viewer) {
         val session = viewer.getSession()
 
-        session.taskClosure()
-        session.menu = null
-        session.viewingWindow?.close(viewer)
-        session.viewingWindow = null
-
         debug(
             """
-                Menu closed.
-                Session ${session.taskManager}
+                Menu closing.
+                Session\n${session.menu?.name}
             """.trimIndent()
         )
+
+        session.unregisterTasks()
+        session.menu = null
+        session.window?.close(viewer)
+        session.window = null
     }
 
     private fun requireBukkitWindow(): Boolean {

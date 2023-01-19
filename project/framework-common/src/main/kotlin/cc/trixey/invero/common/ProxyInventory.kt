@@ -13,7 +13,7 @@ interface ProxyInventory {
 
     fun open(viewer: Viewer)
 
-    fun close(viewer: Viewer, updateInventory: Boolean = true)
+    fun close(viewer: Viewer, closeInventory: Boolean = true, updateInventory: Boolean = true)
 
     fun closeAll()
 

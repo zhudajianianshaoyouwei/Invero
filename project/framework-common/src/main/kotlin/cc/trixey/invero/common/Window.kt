@@ -50,7 +50,7 @@ interface Window : PanelContainer, Gridable {
     /**
      * Close this window
      */
-    fun close(viewer: Viewer)
+    fun close(viewer: Viewer, closeInventory: Boolean = true, updateInventory: Boolean = true)
 
     /**
      * Render panels

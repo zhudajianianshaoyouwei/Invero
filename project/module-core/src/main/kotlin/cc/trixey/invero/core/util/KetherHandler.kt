@@ -24,11 +24,15 @@ object KetherHandler {
         vars = KetherShell.VariableMap(vars)
     )
 
-    fun parseInline(source: String, player: Player?, vars: Map<String, Any>) = KetherFunction.parse(
-        source,
-        sender = if (player != null) adaptPlayer(player) else console(),
-        namespace = namespace,
-        vars = KetherShell.VariableMap(vars)
-    )
+    fun parseInline(source: String, player: Player?, vars: Map<String, Any>) = kotlin.runCatching {
+        KetherFunction.parse(
+            source,
+            sender = if (player != null) adaptPlayer(player) else console(),
+            namespace = namespace,
+            vars = KetherShell.VariableMap(vars)
+        )
+    }.onFailure {
+        it.prettyPrint()
+    }.getOrElse { "§c{ERROR: $source}" }
 
 }

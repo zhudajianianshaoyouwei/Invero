@@ -6,6 +6,7 @@
 package cc.trixey.invero.core.util
 
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.minimessage.internal.parser.ParsingExceptionImpl
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 
 /**
@@ -20,12 +21,20 @@ private const val SECTION_CHAR: Char = '§'
 private const val AMPERSAND_CHAR = '&'
 
 fun String.parseMiniMessage(): String {
-    val component = MiniMessage.miniMessage().deserialize(this)
+    val component = try {
+        MiniMessage.miniMessage().deserialize(this)
+    } catch (e: ParsingExceptionImpl) {
+        return translateLegacyColor().parseMiniMessage()
+    }
     return LegacyComponentSerializer.legacySection().serialize(component)
 }
 
 fun String.translateAmpersandColor(): String {
     return replace(AMPERSAND_CHAR, SECTION_CHAR)
+}
+
+fun String.translateLegacyColor(): String {
+    return replace(SECTION_CHAR, AMPERSAND_CHAR)
 }
 
 fun String.isPrefixColored(): Boolean {

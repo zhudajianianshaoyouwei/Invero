@@ -20,10 +20,10 @@ class BukkitInventory(
 
     private val playerItems = mutableMapOf<Viewer, PlayerItems>()
 
-    override fun close(viewer: Viewer, updateInventory: Boolean) {
+    override fun close(viewer: Viewer, closeInventory: Boolean, updateInventory: Boolean) {
         viewer.safeBukkitPlayer()?.let {
-            it.closeInventory()
-            it.updateInventory()
+            if (closeInventory) it.closeInventory()
+            if (updateInventory) it.updateInventory()
 
             playerItems.remove(viewer)?.let {
                 if (storageMode.shouldRestore) {

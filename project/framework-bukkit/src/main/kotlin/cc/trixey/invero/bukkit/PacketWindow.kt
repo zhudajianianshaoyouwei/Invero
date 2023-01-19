@@ -1,6 +1,5 @@
 package cc.trixey.invero.bukkit
 
-import cc.trixey.invero.bukkit.api.InveroAPI
 import cc.trixey.invero.bukkit.event.PacketWindowOpenEvent
 import cc.trixey.invero.bukkit.nms.updateTitle
 import cc.trixey.invero.common.ContainerType
@@ -10,7 +9,9 @@ import cc.trixey.invero.common.event.WindowClickEvent
 import cc.trixey.invero.common.event.WindowDragEvent
 import cc.trixey.invero.common.event.WindowItemsCollectEvent
 import cc.trixey.invero.common.event.WindowItemsMoveEvent
+import org.bukkit.entity.Player
 import taboolib.common.platform.function.submit
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Invero
@@ -36,7 +37,6 @@ abstract class PacketWindow(
 
     companion object {
 
-        const val PACKET_WINDOW_ID = 1_00 + 1
 
     }
 
@@ -45,15 +45,6 @@ abstract class PacketWindow(
     override fun open(viewer: Viewer) {
         val event = PacketWindowOpenEvent(viewer as BukkitViewer, this).also { it.call() }
         submit { if (!event.isCancelled) super.open(viewer) }
-    }
-
-    override fun close(viewer: Viewer) {
-        close(viewer, true)
-    }
-
-    fun close(viewer: Viewer, updateInventory: Boolean) {
-        if (viewers.remove(viewer)) inventory.close(viewer, updateInventory)
-        if (viewers.isEmpty()) InveroAPI.bukkitManager.unregister(this)
     }
 
     override fun handleClick(e: WindowClickEvent) {

@@ -5,6 +5,10 @@ import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.panel.FreeformPanel
 import cc.trixey.invero.common.panel.PanelContainer
 
+fun Panel.getSiblings(): List<Panel> {
+    return parent.panels
+}
+
 /**
  * 检测 Window 的一些属性
  */

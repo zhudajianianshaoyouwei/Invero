@@ -5,6 +5,7 @@ import cc.trixey.invero.bukkit.event.DelegatedDragEvent
 import cc.trixey.invero.bukkit.event.DelegatedItemsMoveEvent
 import cc.trixey.invero.bukkit.nms.updateTitle
 import cc.trixey.invero.bukkit.panel.IOStoragePanel
+import cc.trixey.invero.bukkit.util.toBukkitViewer
 import cc.trixey.invero.common.*
 import cc.trixey.invero.common.event.*
 import org.bukkit.entity.Player
@@ -62,6 +63,8 @@ abstract class BukkitWindow(
     }
 
     override fun open(viewer: Viewer) {
+        InveroAPI.findWindow(viewer.toBukkitViewer())?.close(viewer, closeInventory = false, updateInventory = false)
+
         if (viewers.add(viewer)) {
             if (viewers.size == 1) InveroAPI.bukkitManager.register(this)
             inventory.open(viewer)
@@ -71,8 +74,8 @@ abstract class BukkitWindow(
         }
     }
 
-    override fun close(viewer: Viewer) {
-        if (viewers.remove(viewer)) inventory.close(viewer)
+    override fun close(viewer: Viewer, closeInventory: Boolean, updateInventory: Boolean) {
+        if (viewers.remove(viewer)) inventory.close(viewer, closeInventory, updateInventory)
         if (viewers.isEmpty()) {
             InveroAPI.bukkitManager.unregister(this)
         }

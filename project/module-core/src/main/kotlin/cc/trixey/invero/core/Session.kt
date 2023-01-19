@@ -1,7 +1,7 @@
 package cc.trixey.invero.core
 
 import cc.trixey.invero.bukkit.BukkitViewer
-import cc.trixey.invero.bukkit.PacketWindow
+import cc.trixey.invero.bukkit.util.CoroutineTask
 import cc.trixey.invero.common.Window
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.parseMiniMessage
@@ -23,36 +23,41 @@ class Session(val viewer: BukkitViewer) {
 
     var menu: Menu? = null
 
-    var viewingWindow: Window? = null
+    var window: Window? = null
 
-    val taskManager: TaskManager = TaskManager()
+    val variables: ConcurrentHashMap<String, Any> = ConcurrentHashMap()
 
-    var taskTitleFrame: Boolean = true
-
-    val variables: ConcurrentHashMap<String, String> = ConcurrentHashMap()
-
-    fun generateVariables(): Map<String, String> {
-        return variables
-    }
+    private val taskManager: TaskManager = TaskManager()
 
     fun closeMenu() {
         menu?.close(viewer.get())
     }
 
-    fun newMenuEnv() {
+    /**
+     * 准备切换菜单
+     */
+    fun prepareTransfer() {
         // 注销任务
-        taskClosure()
-        // 安全关闭 Invero.Window
-        viewingWindow?.let {
-            if (it is PacketWindow) it.close(viewer, false)
-            else it.close(viewer)
-        }
-        viewingWindow = null
+        unregisterTasks()
+        // 伪关闭 Invero.Window，防止鼠标指针跑偏
+        window?.close(viewer, closeInventory = false, updateInventory = false)
+
+        window = null
         menu = null
     }
 
-    fun taskClosure() {
+    /**
+     * 注销所有菜单任务
+     */
+    fun unregisterTasks() {
         taskManager.unregisterAll()
+    }
+
+    /**
+     * 注册任务
+     */
+    fun registerTask(task: CoroutineTask) {
+        taskManager += task
     }
 
     fun parse(input: String): String {
@@ -60,7 +65,7 @@ class Session(val viewer: BukkitViewer) {
 
         return if (input.isBlank()) input
         else KetherHandler
-            .parseInline(input, player, generateVariables())
+            .parseInline(input, player, variables)
             .parseMiniMessage()
             .translateAmpersandColor()
             .replacePlaceholder(player)

@@ -2,6 +2,7 @@ package cc.trixey.invero.bukkit.nms
 
 import cc.trixey.invero.bukkit.BukkitWindow
 import cc.trixey.invero.bukkit.PacketWindow
+import cc.trixey.invero.bukkit.util.getPacketContainerId
 import org.bukkit.entity.Player
 import taboolib.common.util.unsafeLazy
 import taboolib.library.reflex.Reflex.Companion.setProperty
@@ -22,7 +23,7 @@ val handler by unsafeLazy {
 fun BukkitWindow.updateTitle(title: String, updateInventory: Boolean = true) {
     viewers.forEach {
         val player = it.getInstance<Player>()
-        val id = if (this is PacketWindow) PacketWindow.PACKET_WINDOW_ID else handler.getContainerId(player)
+        val id = if (this is PacketWindow) player.getPacketContainerId() else handler.getContainerId(player)
         handler.sendWindowOpen(player, id, type, title)
 
         if (updateInventory) player.updateInventory()

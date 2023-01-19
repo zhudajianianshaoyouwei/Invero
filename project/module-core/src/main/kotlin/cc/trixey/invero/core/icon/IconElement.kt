@@ -135,7 +135,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
                     }
                 }
             }
-        }.also { session.taskManager += it }
+        }.also { session.registerTask(it) }
     }
 
     fun getIconHandler(): IconHandler? {

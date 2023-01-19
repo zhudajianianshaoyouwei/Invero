@@ -1,6 +1,7 @@
 package cc.trixey.invero.bukkit.util
 
 import cc.trixey.invero.bukkit.BukkitViewer
+import cc.trixey.invero.bukkit.PacketListener
 import cc.trixey.invero.common.Viewer
 import org.bukkit.entity.Player
 

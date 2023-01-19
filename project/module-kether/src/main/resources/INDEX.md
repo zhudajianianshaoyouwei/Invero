@@ -6,16 +6,26 @@
 - menu close
 - menu open [menuId]
 
-> panel operators
+> operators
 
-- panel[index]
-- panel[:index]
+自动寻找符合条件的 Panel
 
-- panel scroll <direction>
-- panel shift by 0x1
-- panel filter set "filter keyword"
-- panel filter
-- panel icons
+- page
+- page next
+- page previous
+- page to <value>
+
+// TODO
+
+- scroll <direction>
+- shift by 0 1
+- filter
+- filter to <content>
+
+> 取定义位置的 Panel 进行前述操作
+
+// at 定位，相对于 Window
+- panel at 0 page next
 
 > icon operators
 
@@ -35,6 +45,7 @@
 ```
 仅在单个菜单会话中有效的临时变量
 ```
+
 `ctx var "key"`
 
 - context variable "key"

@@ -1,10 +1,10 @@
 package cc.trixey.invero.bukkit
 
-import cc.trixey.invero.bukkit.PacketWindow.Companion.PACKET_WINDOW_ID
 import cc.trixey.invero.bukkit.api.InveroAPI
 import cc.trixey.invero.bukkit.event.PacketWindowClickEvent
 import cc.trixey.invero.bukkit.event.PacketWindowCloseEvent
 import cc.trixey.invero.bukkit.nms.sendCancelCoursor
+import cc.trixey.invero.bukkit.util.getPacketContainerId
 import cc.trixey.invero.common.event.ClickType
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.module.nms.MinecraftVersion.isUniversal
@@ -24,6 +24,7 @@ object PacketListener {
         if (isUniversal) arrayOf("containerId", "slotNum", "buttonNum", "clickType", "carriedItem")
         else arrayOf("a", "slot", "button", "shift", "item")
 
+
     @SubscribeEvent
     fun e(e: PacketReceiveEvent) {
         val player = e.player
@@ -33,7 +34,7 @@ object PacketListener {
         when (packet.name) {
             "PacketPlayInCloseWindow" -> {
                 val id = packet.read<Int>(FIELD_CONTAINER_ID) ?: return
-                if (id == PACKET_WINDOW_ID) {
+                if (id == player.getPacketContainerId()) {
                     val window = viewer.viewingPacketWindow() ?: return
 
                     PacketWindowCloseEvent(viewer, window).call()
@@ -44,7 +45,7 @@ object PacketListener {
             }
 
             "PacketPlayInWindowClick" -> {
-                packet.read<Int>(FILEDS_WINDOW_CLICK[0]).let { if (it != PACKET_WINDOW_ID) return }
+                packet.read<Int>(FILEDS_WINDOW_CLICK[0]).let { if (it != player.getPacketContainerId()) return }
                 val window = viewer.viewingPacketWindow() ?: return
                 val rawSlot = packet.read<Int>(FILEDS_WINDOW_CLICK[1]) ?: return
                 val button = packet.read<Int>(FILEDS_WINDOW_CLICK[2]) ?: return

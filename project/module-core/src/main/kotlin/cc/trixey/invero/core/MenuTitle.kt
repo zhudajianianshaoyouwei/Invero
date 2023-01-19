@@ -23,8 +23,8 @@ class MenuTitle(
 
         val cyclic = value.toCyclic(mode ?: CycleMode.LOOP)
         session.launchAsync(delay = period!!, period = period) {
-            if (session.taskTitleFrame) {
-                session.viewingWindow?.title = cyclic.getAndCycle()
+            if (session.variables["title_task_running"] != false) {
+                session.window?.title = cyclic.getAndCycle()
             }
         }
     }
