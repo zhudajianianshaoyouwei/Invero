@@ -1,7 +1,6 @@
 package cc.trixey.invero.core.panel
 
 import cc.trixey.invero.bukkit.PanelContainer
-import cc.trixey.invero.bukkit.api.dsl.firstAvailablePositionForPanel
 import cc.trixey.invero.bukkit.api.dsl.standard
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
@@ -47,7 +46,7 @@ class PanelStandard(
     }
 
     override fun invoke(parent: PanelContainer, session: Session): Panel {
-        return parent.standard(scale.raw, locate?.value ?: parent.firstAvailablePositionForPanel()) {
+        return parent.standard(scale.raw, parent.locate()) {
             icons.forEach { (_, icon) -> icon.invoke(session, this@PanelStandard, this@standard) }
         }
     }

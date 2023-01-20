@@ -22,7 +22,8 @@ open class PagedNetesedPanel(
     parent: PanelContainer,
     weight: PanelWeight,
     scale: Scale,
-    locate: Pos
+    locate: Pos,
+    defaultPage: Int = 0
 ) : BukkitPanel(parent, weight, scale, locate), PagedPanel, PanelContainer {
 
     override val panels = arrayListOf<BukkitPanel>()
@@ -30,7 +31,7 @@ open class PagedNetesedPanel(
     override val maxPageIndex: Int
         get() = panels.lastIndex
 
-    override var pageIndex: Int = 0
+    override var pageIndex: Int = defaultPage
         set(value) {
             pageChangeCallback(this, field, value)
             if (value < 0) error("Page index can not be a negative number")

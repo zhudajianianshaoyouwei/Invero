@@ -39,7 +39,9 @@ fun <T : Panel> ScriptFrame.findPanelAt(indexs: List<Int>): T? {
 }
 
 inline fun <reified T : Panel> ScriptFrame.findNearstPanel(): T? {
-    return variables().get<Panel>("@panel").getOrNull()?.getSiblings()?.filterIsInstance<T>()?.firstOrNull()
+    val siblings = variables().get<Panel>("@panel").getOrNull()?.getSiblings()
+
+    return (siblings ?: session().window?.panels)?.filterIsInstance<T>()?.firstOrNull()
 }
 
 fun ScriptFrame.session(): Session {

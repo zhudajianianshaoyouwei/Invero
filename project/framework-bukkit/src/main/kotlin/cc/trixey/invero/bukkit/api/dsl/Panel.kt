@@ -29,8 +29,9 @@ inline fun PanelContainer.pagedNetesed(
     scale: Pair<Int, Int> = inheritParentScale(),
     locate: Pair<Int, Int> = firstAvailablePositionForPanel(),
     weight: PanelWeight = PanelWeight.NORMAL,
+    defaultPage: Int = 0,
     block: PagedNetesedPanel.() -> Unit
-) = PagedNetesedPanel(this, weight, Scale(scale), Pos(locate)).also {
+) = PagedNetesedPanel(this, weight, Scale(scale), Pos(locate), defaultPage).also {
     block(it)
     this += it
 }

@@ -2,6 +2,8 @@ package cc.trixey.invero.core
 
 import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.animation.toCyclic
+import cc.trixey.invero.core.serialize.ListStringSerializer
+import cc.trixey.invero.core.util.containsAnyPlaceholder
 import kotlinx.serialization.Serializable
 
 /**
@@ -13,13 +15,16 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 class MenuTitle(
+    @Serializable(with = ListStringSerializer::class)
     val value: List<String>,
     val period: Long?,
     val mode: CycleMode?
 ) {
 
     fun invoke(session: Session) {
-        if (isSingle()) return
+        if (isSingle() && !value.single().containsAnyPlaceholder()) {
+            return
+        }
 
         val cyclic = value.toCyclic(mode ?: CycleMode.LOOP)
         session.launchAsync(delay = period!!, period = period) {
@@ -31,6 +36,6 @@ class MenuTitle(
 
     fun isSingle() = value.size <= 1 || period == null || mode == null || period < 0
 
-    fun getDefault() = value.getOrElse(0) { "Untitled" }
+    fun getDefault(session: Session) = value.getOrElse(0) { "Untitled" }.let { session.parse(it) }
 
 }

@@ -1,6 +1,7 @@
 package cc.trixey.invero.core
 
 import cc.trixey.invero.bukkit.PanelContainer
+import cc.trixey.invero.bukkit.api.dsl.firstAvailablePositionForPanel
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
@@ -24,6 +25,10 @@ abstract class AgentPanel {
     abstract val locate: Pos?
 
     abstract fun invoke(parent: PanelContainer, session: Session): Panel
+
+    fun PanelContainer.locate(): Pair<Int, Int> {
+        return locate?.value ?: firstAvailablePositionForPanel()
+    }
 
     fun requireBukkitWindow(): Boolean {
         return false

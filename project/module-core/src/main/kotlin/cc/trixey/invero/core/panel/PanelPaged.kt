@@ -1,12 +1,10 @@
 package cc.trixey.invero.core.panel
 
 import cc.trixey.invero.bukkit.PanelContainer
-import cc.trixey.invero.bukkit.api.dsl.firstAvailablePositionForPanel
 import cc.trixey.invero.bukkit.api.dsl.pagedNetesed
 import cc.trixey.invero.bukkit.panel.PagedNetesedPanel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
-import cc.trixey.invero.common.panel.TypedPanelContainer
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.Session
@@ -28,15 +26,10 @@ import kotlinx.serialization.json.JsonNames
 @ExperimentalSerializationApi
 @Serializable
 class PanelPaged(
-    @Serializable(with = ScaleSerializer::class)
-    override val scale: Scale,
-    @Serializable(with = PosSerializer::class)
-    override val locate: Pos?,
-    @SerialName("default-page")
-    @JsonNames("default", "def-page")
-    val defaultPage: Int = 0,
-    @Serializable(with = ListAgentPanelSerializer::class)
-    val pages: List<AgentPanel>
+    @Serializable(with = ScaleSerializer::class) override val scale: Scale,
+    @Serializable(with = PosSerializer::class) override val locate: Pos?,
+    @SerialName("default-page") @JsonNames("default", "def-page") val defaultPage: Int = 0,
+    @Serializable(with = ListAgentPanelSerializer::class) val pages: List<AgentPanel>
 ) : AgentPanel() {
 
     override val layout: Layout? = null
@@ -46,7 +39,7 @@ class PanelPaged(
     }
 
     override fun invoke(parent: PanelContainer, session: Session): PagedNetesedPanel {
-        return parent.pagedNetesed(scale.raw, locate?.value ?: parent.firstAvailablePositionForPanel()) {
+        return parent.pagedNetesed(scale.raw, parent.locate(), defaultPage = defaultPage) {
             pages.forEach { it.invoke(this, session) }
         }
     }
