@@ -1,5 +1,6 @@
 package cc.trixey.invero.plugin.dev
 
+import cc.trixey.invero.bukkit.InventoryVanilla
 import cc.trixey.invero.bukkit.api.registeredWindows
 import cc.trixey.invero.core.InveroManager
 import cc.trixey.invero.core.serialize.serializeToJson
@@ -94,7 +95,20 @@ object InveroDev {
     @CommandBody
     val debugPrint = subCommand {
         execute<CommandSender> { _, _, _ ->
+            val session = onlinePlayers.first().getSession()
+
+            println(
+//                Tasks: ${session.taskManager.coroutineTasks.size} // ${session.taskManager.platformTasks.size}
+                """
+                        ------------- SESSION
+                        Tasks: ${session.taskManager.values.sumOf { it.coroutineTasks.size + it.platformTasks.size }}
+                        Vars: ${session.variables}
+                    """.trimIndent()
+            )
+
             registeredWindows.values.forEach { window ->
+                val inventory = window.inventory
+
                 println(
                     """
                         --------------- REGISTREED WINDOW: ${window.type}
@@ -103,6 +117,10 @@ object InveroDev {
                         Panels size: ${window.panels.size}
                     """.trimIndent()
                 )
+                if (inventory is InventoryVanilla) {
+                    println("Storage:")
+                    println(inventory.container.storageContents)
+                }
 
                 window.panels.forEach {
                     println(

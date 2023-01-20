@@ -58,7 +58,6 @@ class InventoryPacket(override val window: BukkitWindow) : ProxyBukkitInventory 
 
     fun handleClickEvent(slot: Int, type: ClickType) {
         val pos = window.scale.convertToPosition(slot)
-        println("handle_click_packet_inv $pos .. ${window.panels.size}")
 
         window.panels.sortedByDescending { it.weight }.forEach {
             if (pos in it.area) {

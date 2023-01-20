@@ -45,12 +45,7 @@ abstract class BaseItem<T : Element>(override val panel: Panel) : Supplier<ItemS
     }
 
     protected fun isVisible(): Boolean {
-        val var1 = panel.parent.isPanelValid(panel)
-        val var2 = panel.isElementValid(this)
-
-        println("isVisible: $var1 // $var2")
-
-        return var1 && var2
+        return panel.parent.isPanelValid(panel) && panel.isElementValid(this)
     }
 
     override fun postRender(block: (Pos) -> Unit) {
@@ -64,10 +59,8 @@ abstract class BaseItem<T : Element>(override val panel: Panel) : Supplier<ItemS
 
     override fun push() {
         val window = panel.window as BukkitWindow
-        println("Push_Item___ ")
         postRender {
             val slot = locatingAbsoluteSlot(it, panel)
-            println("Push_Item___ Slot::: $slot ")
             if (slot >= 0) {
                 window.inventory[slot] = value
             }

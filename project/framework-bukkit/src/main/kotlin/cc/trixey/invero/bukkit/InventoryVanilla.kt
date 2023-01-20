@@ -20,7 +20,9 @@ import org.bukkit.inventory.ItemStack
  */
 class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory {
 
-    internal val container = when {
+    private val storage = PlayerStorage(viewer)
+
+    val container = when {
         containerType.isOrdinaryChest -> Bukkit.createInventory(
             Holder(window), containerSize, inventoryTitle
         )
@@ -53,12 +55,15 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     }
 
     override fun open() {
+        storage.beforeOpen(window.storageMode)
         viewer.openInventory(container)
     }
 
     override fun close(doCloseInventory: Boolean, updateInventory: Boolean) {
         if (doCloseInventory && isViewing()) viewer.closeInventory()
         if (updateInventory) viewer.updateInventory()
+
+        storage.afterClose(window.storageMode)
     }
 
     fun handleClick(e: InventoryClickEvent) {
@@ -75,17 +80,15 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         }
         // 转化为 x,y 定位
         val pos = window.scale.convertToPosition(slot)
-        window.panels
-            .sortedByDescending { it.weight }
-            .forEach {
-                if (pos in it.area) {
-                    val converted = ClickType.findBukkit(e.click.name, e.hotbarButton)
-                    if (it.runClickCallbacks(pos, converted, e)) {
-                        it.handleClick(pos - it.locate, converted, e)
-                    }
-                    return
+        window.panels.sortedByDescending { it.weight }.forEach {
+            if (pos in it.area) {
+                val converted = ClickType.findBukkit(e.click.name, e.hotbarButton)
+                if (it.runClickCallbacks(pos, converted, e)) {
+                    it.handleClick(pos - it.locate, converted, e)
                 }
+                return
             }
+        }
     }
 
     fun handleDrag(e: InventoryDragEvent) {

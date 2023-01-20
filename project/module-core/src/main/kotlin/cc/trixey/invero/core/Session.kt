@@ -10,6 +10,7 @@ import org.bukkit.entity.Player
 import taboolib.common.platform.function.submit
 import taboolib.common.platform.service.PlatformExecutor
 import taboolib.platform.compat.replacePlaceholder
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -27,24 +28,28 @@ class Session(val viewer: PlayerViewer) {
 
     val variables: ConcurrentHashMap<String, Any> = ConcurrentHashMap()
 
-    private val taskManager: TaskManager = TaskManager()
+    val taskManager = ConcurrentHashMap<UUID, TaskManager>()
 
     fun closeMenu() {
         menu?.close(viewer)
     }
 
-    /**
-     * 注销所有菜单任务
-     */
-    fun unregisterTasks() {
-        taskManager.unregisterAll()
+    fun getTaskManager(window: BukkitWindow? = null): TaskManager {
+        return taskManager.computeIfAbsent(window?.uniqueId ?: this.window!!.uniqueId) { TaskManager() }
     }
 
-    /**
-     * 注册任务
-     */
+    fun unregisterTasks(window: BukkitWindow) {
+        getTaskManager(window).unregisterAll()
+        taskManager.remove(window.uniqueId)
+    }
+
+    fun unregisterAll() {
+        taskManager.values.forEach { it.unregisterAll() }
+        taskManager.clear()
+    }
+
     fun registerTask(task: CoroutineTask) {
-        taskManager += task
+        getTaskManager() += task
     }
 
     fun parse(input: String, context: Context? = null): String {
@@ -70,7 +75,7 @@ class Session(val viewer: PlayerViewer) {
         comment: String? = null,
         executor: (task: PlatformExecutor.PlatformTask) -> Unit,
     ) {
-        submit(now, async, delay, period, comment, executor).also { taskManager += it }
+        submit(now, async, delay, period, comment, executor).also { getTaskManager() += it }
     }
 
     fun launchAsync(

@@ -43,7 +43,9 @@ class Menu(
     fun open(viewer: PlayerViewer) {
         val session = viewer.getSession()
 
-        if (session.menu != null) session.unregisterTasks()
+        if (session.menu != null) {
+            session.unregisterTasks(session.window!!)
+        }
 
         submit {
             val window = chestWindow(
@@ -52,7 +54,7 @@ class Menu(
                 settings.title.getDefault(),
                 settings.options.storageMode,
                 isVirtualMenu(),
-            ).onClose { close(viewer, false) }
+            ).onClose { session.unregisterTasks(it) }
 
             session.menu = this@Menu
             session.window = window
@@ -62,13 +64,15 @@ class Menu(
         }
     }
 
-    fun close(viewer: PlayerViewer, closeWindow: Boolean = true) {
+    fun close(viewer: PlayerViewer, closeInventory: Boolean = true) {
         val session = viewer.getSession()
-        if (closeWindow) session.window?.close()
+        val window = session.window ?: error("No available window")
 
-        session.unregisterTasks()
+        session.unregisterTasks(window)
         session.menu = null
         session.window = null
+
+        window.close(closeInventory)
     }
 
     private fun isVirtualMenu(): Boolean {

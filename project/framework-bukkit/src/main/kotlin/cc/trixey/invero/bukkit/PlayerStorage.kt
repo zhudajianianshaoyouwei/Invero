@@ -1,0 +1,35 @@
+package cc.trixey.invero.bukkit
+
+import cc.trixey.invero.common.StorageMode
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+
+/**
+ * Invero
+ * cc.trixey.invero.bukkit.PlayerStorage
+ *
+ * @author Arasple
+ * @since 2023/1/20 17:16
+ */
+class PlayerStorage(val player: Player, var storage: Array<ItemStack?> = arrayOfNulls(36)) {
+
+    fun beforeOpen(storageMode: StorageMode) {
+        if (storageMode.shouldBackup) {
+            backup(storageMode.shouldClean)
+        }
+    }
+
+    fun afterClose(storageMode: StorageMode) {
+        if (storageMode.shouldRestore) restore()
+    }
+
+    fun backup(clean: Boolean = false) {
+        storage = player.inventory.storageContents
+        if (clean) for (i in 0..35) player.inventory.storageContents[i] = null
+    }
+
+    fun restore() {
+        player.inventory.storageContents = storage
+    }
+
+}

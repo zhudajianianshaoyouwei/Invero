@@ -4,8 +4,13 @@ import cc.trixey.invero.bukkit.api.findWindow
 import cc.trixey.invero.bukkit.nms.persistContainerId
 import cc.trixey.invero.bukkit.nms.sendCancelCoursor
 import cc.trixey.invero.common.event.ClickType
+import org.bukkit.entity.Player
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.*
+import org.bukkit.event.player.PlayerChangedWorldEvent
+import org.bukkit.event.player.PlayerQuitEvent
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.common.platform.function.submit
 import taboolib.module.nms.MinecraftVersion.isUniversal
 import taboolib.module.nms.PacketReceiveEvent
 
@@ -41,7 +46,7 @@ object Listener {
     @SubscribeEvent
     fun e(e: InventoryCloseEvent) = e.delegatedEvent { handleClose(e) }
 
-    private fun InventoryEvent.delegatedEvent(block: InventoryVanilla.() -> Unit) = inventory.let {
+    private fun InventoryEvent.delegatedEvent(block: InventoryVanilla.() -> Unit) = view.topInventory.let {
         val holder = it.holder
         if (holder is InventoryVanilla.Holder) {
             holder.getProxyInventory().block()
@@ -59,7 +64,7 @@ object Listener {
                 val id = packet.read<Int>(FIELD_CONTAINER_ID) ?: return
                 if (id == persistContainerId) {
                     val window = viewer.viewingWindow() ?: return
-                    window.close(doCloseInventory = false, updateInventory = true)
+                    submit { window.close(doCloseInventory = false, updateInventory = true) }
                 }
             }
 
@@ -72,18 +77,36 @@ object Listener {
                 val type = ClickType.find(mode, button, rawSlot) ?: return
                 val inventory = window.inventory as InventoryPacket
 
-                if (rawSlot >= 0) {
-                    player.sendCancelCoursor()
-                    inventory.update(rawSlot)
-                }
+                submit {
+                    if (rawSlot >= 0) {
+                        player.sendCancelCoursor()
+                        inventory.update(rawSlot)
+                    }
 
-                inventory.handleClickEvent(rawSlot, type)
+                    inventory.handleClickEvent(rawSlot, type)
+                }
             }
         }
     }
 
+    /*
+    ENTITIY_SAFETY
+     */
+    @SubscribeEvent
+    fun e(e: PlayerDeathEvent) = e.entity.windowClosure()
+
+    @SubscribeEvent
+    fun e(e: PlayerChangedWorldEvent) = e.player.windowClosure()
+
+    @SubscribeEvent
+    fun e(e: PlayerQuitEvent) = e.player.windowClosure()
+
     private fun PlayerViewer.viewingWindow(): BukkitWindow? {
         return findWindow(name)?.let { if (it.inventory is InventoryPacket) it else null }
+    }
+
+    private fun Player.windowClosure() {
+        findWindow(name)?.close(doCloseInventory = false, updateInventory = true)
     }
 
 }

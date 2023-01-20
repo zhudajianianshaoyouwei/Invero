@@ -3,11 +3,15 @@ package cc.trixey.invero.bukkit
 import cc.trixey.invero.bukkit.api.findWindow
 import cc.trixey.invero.bukkit.api.register
 import cc.trixey.invero.bukkit.api.unregister
+import cc.trixey.invero.bukkit.nms.handler
+import cc.trixey.invero.bukkit.nms.updateTitle
 import cc.trixey.invero.common.ContainerType
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.StorageMode
 import cc.trixey.invero.common.Window
 import taboolib.common.platform.function.submit
+import taboolib.common.platform.function.submitAsync
+import java.util.*
 
 /**
  * Invero
@@ -19,9 +23,17 @@ import taboolib.common.platform.function.submit
 abstract class BukkitWindow(
     override val viewer: PlayerViewer,
     override val type: ContainerType,
-    override var title: String = "Invero_Untitled",
+    title: String = "Invero_Untitled",
     override val storageMode: StorageMode
 ) : Window, PanelContainer {
+
+    val uniqueId: UUID = UUID.randomUUID()
+
+    override var title: String = title
+        set(value) {
+            field = value
+            submit { updateTitle(value) }
+        }
 
     override val panels = arrayListOf<BukkitPanel>()
 

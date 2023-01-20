@@ -13,11 +13,13 @@ import kotlinx.serialization.encoding.*
  */
 @Serializable
 class MenuOptions(
+    @SerialName("override-player-inventory")
+    val overridePlayerInventory: Boolean = true,
     @SerialName("hide-player-storage")
     val hidePlayerStorage: Boolean = false
 ) {
 
     @Transient
-    val storageMode = StorageMode(overridePlayerInventory = false, hidePlayerStorage)
+    val storageMode = StorageMode(overridePlayerInventory, hidePlayerStorage)
 
 }
