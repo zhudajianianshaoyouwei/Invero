@@ -32,6 +32,7 @@ fun BukkitWindow.updateTitle(title: String, updateInventory: Boolean = true) {
     if (updateInventory) player.updateInventory()
     if (virtual) (inventory as InventoryPacket).update()
 
+    // 补刀
     submitAsync { if (findWindow(viewer.name) == null) handler.sendWindowClose(player, id) }
 }
 

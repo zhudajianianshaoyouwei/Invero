@@ -66,7 +66,7 @@ private fun handlerMenuTitle(it: QuestReader) =
 private fun handlerMenuOpen(reader: QuestReader): ScriptAction<Any?> {
     val input = reader.nextParsedAction()
 
-    return actionFuture { future ->
+    return actionNow {
         newFrame(input).run<Any>().thenApply {
             val id = it.toString()
             val menu = InveroManager.getMenu(id) ?: error("Not found menu with id $id")
@@ -85,7 +85,6 @@ private fun handlerMenuOpen(reader: QuestReader): ScriptAction<Any?> {
                         ?.let { p -> menu.open(p) }
                 }
             }
-            future.complete(id)
-        }
+        }.getNow(null)
     }
 }
