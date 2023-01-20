@@ -5,7 +5,7 @@ package cc.trixey.invero.core
 import cc.trixey.invero.bukkit.PlayerViewer
 import cc.trixey.invero.bukkit.api.dsl.chestWindow
 import cc.trixey.invero.core.serialize.ListAgentPanelSerializer
-import cc.trixey.invero.core.util.getSession
+import cc.trixey.invero.core.util.session
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -41,11 +41,7 @@ class Menu(
     }
 
     fun open(viewer: PlayerViewer) {
-        val session = viewer.getSession()
-
-        if (session.menu != null) {
-            session.unregisterTasks(session.window!!)
-        }
+        val session = viewer.session
 
         submit {
             val window = chestWindow(
@@ -54,25 +50,31 @@ class Menu(
                 settings.title.getDefault(),
                 settings.options.storageMode,
                 isVirtualMenu(),
-            ).onClose { session.unregisterTasks(it) }
+            ).onClose {
+                session.paired = null
+                session.unregisterAll()
+            }
 
-            session.menu = this@Menu
-            session.window = window
-            panels.forEach { it.invoke(window, session) }
+            // 开启 Window
+            // 其本身会检查是否已经打开任何 Window，并自动关闭等效旧菜单的 Window
             window.open()
+            // 设置新的 Menu，Window
+            session.paired = this@Menu to window
+
+            // 部署
+            panels.forEach { it.invoke(window, session) }
             settings.title.invoke(session)
         }
     }
 
-    fun close(viewer: PlayerViewer, closeInventory: Boolean = true) {
-        val session = viewer.getSession()
-        val window = session.window ?: error("No available window")
+    fun close(viewer: PlayerViewer, closeWindow: Boolean = true, closeInventory: Boolean = true) {
+        val session = viewer.session
+        val window = session.window ?: error("Not found window when closing the menu [$name]")
 
-        session.unregisterTasks(window)
-        session.menu = null
-        session.window = null
+        session.paired = null
+        session.unregisterAll()
 
-        window.close(closeInventory)
+        if (closeWindow) window.close(closeInventory)
     }
 
     private fun isVirtualMenu(): Boolean {

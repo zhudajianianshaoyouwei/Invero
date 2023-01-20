@@ -1,6 +1,7 @@
 package cc.trixey.invero.bukkit.api
 
 import cc.trixey.invero.bukkit.BukkitWindow
+import cc.trixey.invero.bukkit.PlayerViewer
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -14,6 +15,10 @@ val registeredWindows = ConcurrentHashMap<String, BukkitWindow>()
 
 fun findWindow(viewer: String): BukkitWindow? {
     return registeredWindows[viewer]
+}
+
+fun PlayerViewer.notViewingWindow(): Boolean {
+    return registeredWindows[name] == null
 }
 
 fun BukkitWindow.register() {

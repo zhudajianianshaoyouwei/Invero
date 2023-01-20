@@ -12,10 +12,8 @@ import org.bukkit.entity.Player
  * @author Arasple
  * @since 2023/1/16 12:12
  */
-fun Viewer.getSession(): Session {
-    return Session.get(this as PlayerViewer)
-}
+inline val Viewer.session: Session
+    get() = Session.get(this as PlayerViewer)
 
-fun Player.getSession(): Session {
-    return Session.get(PlayerViewer(this))
-}
+inline val Player.session: Session
+    get() = Session.get(PlayerViewer(this))

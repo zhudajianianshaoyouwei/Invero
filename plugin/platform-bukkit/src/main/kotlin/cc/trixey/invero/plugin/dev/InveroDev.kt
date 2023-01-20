@@ -5,7 +5,7 @@ import cc.trixey.invero.bukkit.api.registeredWindows
 import cc.trixey.invero.core.InveroManager
 import cc.trixey.invero.core.serialize.serializeToJson
 import cc.trixey.invero.core.util.KetherHandler
-import cc.trixey.invero.core.util.getSession
+import cc.trixey.invero.core.util.session
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import taboolib.common.LifeCycle
@@ -15,6 +15,7 @@ import taboolib.common.platform.command.CommandHeader
 import taboolib.common.platform.command.subCommand
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.submitAsync
+import taboolib.platform.util.isAir
 import taboolib.platform.util.onlinePlayers
 
 /**
@@ -74,7 +75,7 @@ object InveroDev {
     val print = subCommand {
         execute<CommandSender> { sender, _, argument ->
             if (sender is Player) {
-                sender.getSession().apply {
+                sender.session.apply {
                     println(
                         """
                             ----------------------------
@@ -95,14 +96,15 @@ object InveroDev {
     @CommandBody
     val debugPrint = subCommand {
         execute<CommandSender> { _, _, _ ->
-            val session = onlinePlayers.first().getSession()
+            val session = onlinePlayers.first().session
 
             println(
-//                Tasks: ${session.taskManager.coroutineTasks.size} // ${session.taskManager.platformTasks.size}
                 """
                         ------------- SESSION
-                        Tasks: ${session.taskManager.values.sumOf { it.coroutineTasks.size + it.platformTasks.size }}
+                        Tasks: ${session.taskManager.let { it.coroutineTasks.size + it.platformTasks.size }}
                         Vars: ${session.variables}
+                        Menu: ${session.menu?.name}
+                        WINDOW: ${session.window?.javaClass?.simpleName}
                     """.trimIndent()
             )
 
@@ -119,7 +121,8 @@ object InveroDev {
                 )
                 if (inventory is InventoryVanilla) {
                     println("Storage:")
-                    println(inventory.container.storageContents)
+                    println(inventory.container.storageContents.filterNot { it.isAir }
+                        .joinToString(",") { it.type.name })
                 }
 
                 window.panels.forEach {

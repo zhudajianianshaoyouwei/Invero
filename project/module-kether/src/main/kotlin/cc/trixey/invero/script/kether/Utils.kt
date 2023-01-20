@@ -4,7 +4,7 @@ import cc.trixey.invero.bukkit.PanelContainer
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.util.getSiblings
 import cc.trixey.invero.core.Session
-import cc.trixey.invero.core.util.getSession
+import cc.trixey.invero.core.util.session
 import org.bukkit.entity.Player
 import taboolib.module.kether.ScriptFrame
 import taboolib.module.kether.script
@@ -18,17 +18,17 @@ import kotlin.jvm.optionals.getOrNull
  * @since 2023/1/19 17:37
  */
 
-fun ScriptFrame.getPlayer(): Player {
+fun ScriptFrame.player(): Player {
     return script().sender?.castSafely<Player>() ?: error("No player found.")
 }
 
 fun ScriptFrame.getRecursivePanels(): List<Panel> {
-    return getSession().window?.getPanelsRecursively() ?: listOf()
+    return session().window?.getPanelsRecursively() ?: listOf()
 }
 
 fun <T : Panel> ScriptFrame.findPanelAt(indexs: List<Int>): T? {
     val iterator = indexs.iterator()
-    var panel: Any? = getSession().window
+    var panel: Any? = session().window
 
     while (iterator.hasNext() && panel is PanelContainer) {
         val index = iterator.next()
@@ -42,6 +42,6 @@ inline fun <reified T : Panel> ScriptFrame.findNearstPanel(): T? {
     return variables().get<Panel>("@panel").getOrNull()?.getSiblings()?.filterIsInstance<T>()?.firstOrNull()
 }
 
-fun ScriptFrame.getSession(): Session {
-    return getPlayer().getSession()
+fun ScriptFrame.session(): Session {
+    return player().session
 }

@@ -1,5 +1,8 @@
 package cc.trixey.invero.bukkit.util
 
+import taboolib.common.platform.function.isPrimaryThread
+import taboolib.common.platform.function.submit
+
 /**
  * Invero
  * cc.trixey.invero.bukkit.util.Util
@@ -7,6 +10,11 @@ package cc.trixey.invero.bukkit.util
  * @author Arasple
  * @since 2022/12/30 13:02
  */
+inline fun synced(crossinline block: () -> Unit) {
+    if (isPrimaryThread) block()
+    else submit { block() }
+}
+
 fun Boolean.proceed(block: () -> Unit): Boolean {
     if (this) block()
     return this

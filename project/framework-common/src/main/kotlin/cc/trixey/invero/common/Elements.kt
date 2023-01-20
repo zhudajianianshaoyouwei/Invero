@@ -1,5 +1,7 @@
 package cc.trixey.invero.common
 
+import java.util.concurrent.ConcurrentHashMap
+
 /**
  * Invero
  * cc.trixey.invero.common.Elements
@@ -8,7 +10,7 @@ package cc.trixey.invero.common
  * @since 2022/12/29 13:51
  */
 @JvmInline
-value class Elements(private val value: HashMap<Element, Positions> = hashMapOf()) {
+value class Elements(private val value: ConcurrentHashMap<Element, Positions> = ConcurrentHashMap()) {
 
     fun occupiedPositions(): Set<Pos> {
         return value.values.flatMap { it.values }.toSet()

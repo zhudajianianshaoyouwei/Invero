@@ -24,7 +24,7 @@ import taboolib.platform.util.onlinePlayers
 fun parserMenu() = scriptParser {
     when (it.expects("title", "close", "open")) {
         "title" -> handlerMenuTitle(it)
-        "close" -> actionNow { getSession().closeMenu() }
+        "close" -> actionNow { session().menu?.close(player()) }
         "open" -> handlerMenuOpen(it)
         else -> error("Unknown case")
     }
@@ -32,12 +32,12 @@ fun parserMenu() = scriptParser {
 
 private fun handlerMenuTitle(it: QuestReader) =
     when (it.expects("get", "set", "pause", "resume")) {
-        "get" -> actionNow { getSession().window?.title }
+        "get" -> actionNow { session().window?.title }
 
         "set" -> {
             val input = it.nextParsedAction()
             actionFuture { future ->
-                val session = getSession()
+                val session = session()
                 newFrame(input).run<String>().thenApply { title ->
                     session.window?.title = session.parse(title)
                     future.complete(title)
@@ -47,14 +47,14 @@ private fun handlerMenuTitle(it: QuestReader) =
 
         "pause" -> {
             actionNow {
-                getSession().variables["title_task_running"] = false
+                session().variables["title_task_running"] = false
                 false
             }
         }
 
         "resume" -> {
             actionNow {
-                getSession().variables["title_task_running"] = true
+                session().variables["title_task_running"] = true
                 true
             }
         }
@@ -77,7 +77,7 @@ private fun handlerMenuOpen(reader: QuestReader): ScriptAction<Any?> {
             } else null
 
             if (player == null) {
-                menu.open(getPlayer())
+                menu.open(player())
             } else {
                 newFrame(player).run<Any>().thenApply { playerId ->
                     onlinePlayers

@@ -3,15 +3,12 @@ package cc.trixey.invero.bukkit
 import cc.trixey.invero.bukkit.api.findWindow
 import cc.trixey.invero.bukkit.api.register
 import cc.trixey.invero.bukkit.api.unregister
-import cc.trixey.invero.bukkit.nms.handler
 import cc.trixey.invero.bukkit.nms.updateTitle
 import cc.trixey.invero.common.ContainerType
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.StorageMode
 import cc.trixey.invero.common.Window
 import taboolib.common.platform.function.submit
-import taboolib.common.platform.function.submitAsync
-import java.util.*
 
 /**
  * Invero
@@ -26,8 +23,6 @@ abstract class BukkitWindow(
     title: String = "Invero_Untitled",
     override val storageMode: StorageMode
 ) : Window, PanelContainer {
-
-    val uniqueId: UUID = UUID.randomUUID()
 
     override var title: String = title
         set(value) {
@@ -44,6 +39,8 @@ abstract class BukkitWindow(
     private var openCallback: (BukkitWindow) -> Unit = { _ -> }
 
     private var postOpenCallback: (BukkitWindow) -> Boolean = { _ -> true }
+
+    private var postCloseCallback: (BukkitWindow) -> Unit = { _ -> }
 
     abstract override val inventory: ProxyBukkitInventory
 
@@ -62,20 +59,24 @@ abstract class BukkitWindow(
         return this
     }
 
+    fun postClose(block: (BukkitWindow) -> Unit): BukkitWindow {
+        postCloseCallback = block
+        return this
+    }
+
     override fun open() {
         // 如果被取消
         if (!postOpenCallback(this)) return
         // 正在查看一个 Window，则伪关闭
         findWindow(viewer.name)?.close(doCloseInventory = false, updateInventory = false)
         // 开启新容器
-        submit {
-            register()
-            inventory.open()
-            render()
-        }
+        register()
+        inventory.open()
+        render()
     }
 
     override fun close(doCloseInventory: Boolean, updateInventory: Boolean) {
+        postCloseCallback(this)
         unregister()
         inventory.close(doCloseInventory, updateInventory)
         closeCallback(this)

@@ -20,36 +20,20 @@ import java.util.concurrent.ConcurrentHashMap
  * @author Arasple
  * @since 2023/1/15 22:40
  */
-class Session(val viewer: PlayerViewer) {
+class Session(val viewer: PlayerViewer, var paired: Pair<Menu, BukkitWindow>? = null) {
 
-    var menu: Menu? = null
+    val window: BukkitWindow?
+        get() = paired?.second
 
-    var window: BukkitWindow? = null
+    val menu: Menu?
+        get() = paired?.first
 
     val variables: ConcurrentHashMap<String, Any> = ConcurrentHashMap()
 
-    val taskManager = ConcurrentHashMap<UUID, TaskManager>()
-
-    fun closeMenu() {
-        menu?.close(viewer)
-    }
-
-    fun getTaskManager(window: BukkitWindow? = null): TaskManager {
-        return taskManager.computeIfAbsent(window?.uniqueId ?: this.window!!.uniqueId) { TaskManager() }
-    }
-
-    fun unregisterTasks(window: BukkitWindow) {
-        getTaskManager(window).unregisterAll()
-        taskManager.remove(window.uniqueId)
-    }
+    val taskManager = TaskManager()
 
     fun unregisterAll() {
-        taskManager.values.forEach { it.unregisterAll() }
-        taskManager.clear()
-    }
-
-    fun registerTask(task: CoroutineTask) {
-        getTaskManager() += task
+        taskManager.unregisterAll()
     }
 
     fun parse(input: String, context: Context? = null): String {
@@ -75,7 +59,7 @@ class Session(val viewer: PlayerViewer) {
         comment: String? = null,
         executor: (task: PlatformExecutor.PlatformTask) -> Unit,
     ) {
-        submit(now, async, delay, period, comment, executor).also { getTaskManager() += it }
+        submit(now, async, delay, period, comment, executor).also { taskManager += it }
     }
 
     fun launchAsync(

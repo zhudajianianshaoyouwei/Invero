@@ -2,9 +2,9 @@ package cc.trixey.invero.core
 
 import cc.trixey.invero.core.serialize.deserializeToMenu
 import cc.trixey.invero.core.serialize.hocon.PatchedLoader
-import cc.trixey.invero.core.util.getSession
 import cc.trixey.invero.core.util.listRecursively
 import cc.trixey.invero.core.util.prettyPrint
+import cc.trixey.invero.core.util.session
 import org.bukkit.command.CommandSender
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.submitAsync
@@ -42,7 +42,7 @@ object InveroManager {
 
         // 注销旧菜单
         if (menus.isNotEmpty()) {
-            onlinePlayers.forEach { player -> player.getSession().menu?.close(player) }
+            onlinePlayers.forEach { player -> player.session.menu?.close(player) }
             menus.clear()
         }
         // 获取工作空间
@@ -115,9 +115,12 @@ object InveroManager {
                 }.getOrNull()?.let { loaded ->
                     // replace in memory
                     menus[menuId] = loaded
+
+                    println("MenuId: $menuId // ${onlinePlayers.first().session.menu?.name}")
+
                     // auto open
                     onlinePlayers
-                        .filter { it.getSession().menu?.name == menuId }
+                        .filter { it.session.menu?.name == menuId }
                         .also {
                             if (it.isNotEmpty())
                                 console().cast<CommandSender>().sendLang("menu-loader-auto-reload-successed", menuId)

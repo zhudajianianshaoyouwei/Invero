@@ -31,7 +31,7 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     }
 
     override fun clear(slots: Collection<Int>) {
-        container.clear()
+        slots.forEach { set(it, null) }
     }
 
     override fun get(slot: Int): ItemStack? {
@@ -95,12 +95,9 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         // 默认取消
         e.isCancelled = true
         // 寻找 Panel 交接
-        val handler = window.panels
-            .sortedBy { it.locate }
-            .sortedByDescending { it.weight }
-            .find {
-                e.rawSlots.all { slot -> window.scale.convertToPosition(slot) in it.area }
-            }
+        val handler = window.panels.sortedBy { it.locate }.sortedByDescending { it.weight }.find {
+            e.rawSlots.all { slot -> window.scale.convertToPosition(slot) in it.area }
+        }
         // 传递给 Panel 处理
         if (handler != null) {
             val affected = e.rawSlots.map { window.scale.convertToPosition(it) }
@@ -118,11 +115,8 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
             if (window.storageMode.overridePlayerInventory) return
             val insertItem = e.currentItem?.clone() ?: return
 
-            window.getPanelsRecursively()
-                .filterIsInstance<IOStoragePanel>()
-                .sortedBy { it.locate }
-                .sortedByDescending { it.weight }
-                .forEach {
+            window.getPanelsRecursively().filterIsInstance<IOStoragePanel>().sortedBy { it.locate }
+                .sortedByDescending { it.weight }.forEach {
                     val previous = insertItem.amount
                     val result = it.stackItemStack(insertItem.clone())
                     insertItem.amount = result
@@ -137,11 +131,8 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         else if (!window.storageMode.overridePlayerInventory) {
             val clickedSlot = window.scale.convertToPosition(slot)
 
-            window.panels
-                .sortedBy { it.locate }
-                .sortedByDescending { it.weight }
-                .find { window.scale.convertToPosition(e.rawSlot) in it.area }
-                ?.handleItemsMove(clickedSlot, e)
+            window.panels.sortedBy { it.locate }.sortedByDescending { it.weight }
+                .find { window.scale.convertToPosition(e.rawSlot) in it.area }?.handleItemsMove(clickedSlot, e)
         }
     }
 

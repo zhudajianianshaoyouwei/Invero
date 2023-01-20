@@ -5,7 +5,6 @@ import cc.trixey.invero.bukkit.element.item.SimpleItem
 import cc.trixey.invero.bukkit.util.CoroutineTask
 import cc.trixey.invero.bukkit.util.launchAsync
 import cc.trixey.invero.common.Panel
-import cc.trixey.invero.common.Pos
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.Session
@@ -131,7 +130,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
                     }
                 }
             }
-        }.also { session.registerTask(it) }
+        }.also { session.taskManager += it }
     }
 
     /**
