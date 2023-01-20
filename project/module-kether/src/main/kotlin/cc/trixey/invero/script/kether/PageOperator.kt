@@ -9,30 +9,37 @@ import cc.trixey.invero.common.panel.PagedPanel
  * @author Arasple
  * @since 2023/1/19 20:34
  */
-enum class PageOperator {
+enum class PageOperator(val aliases: Set<String> = setOf()) {
 
-    GET,
+    GET(setOf("get", "current")),
 
-    GET_MAX,
+    GET_MAX(setOf("max")),
 
-    MODIFY,
+    MODIFY(setOf("set", "to", "switch")),
 
-    NEXT,
+    NEXT(setOf("next", "add", "increase", "+")),
 
-    PREVIOUS;
+    PREVIOUS(setOf("previous", "sub", "decrease", "-"));
 
     fun isOutput(): Boolean {
         return this == GET || this == GET_MAX
     }
 
-    fun run(panel: PagedPanel, value: Int) {
+    fun invoke(panel: PagedPanel, value: Int) {
         when (this) {
             MODIFY -> panel.pageIndex = value
             NEXT -> panel.nextPage(value)
             PREVIOUS -> panel.previousPage(value)
-            GET -> TODO()
-            GET_MAX -> TODO()
+            GET, GET_MAX -> error("out of case")
         }
+    }
+
+    companion object {
+
+        fun of(name: String): PageOperator {
+            return values().find { it.aliases.any { ali -> ali.equals(name, true) } } ?: GET
+        }
+
     }
 
 }

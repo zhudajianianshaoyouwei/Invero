@@ -13,24 +13,24 @@ import taboolib.common.platform.function.submit
  * @author Arasple
  * @since 2023/1/10 22:05
  */
-fun showFreeformNetesed(player: Player) = packetChestWindow(6, "FreeformNetesed") {
+fun showFreeformNetesed(player: Player) = chestWindow(player, 6, "FreeformNetesed") {
 
     freeformNetesed(9 to 6) {
 
         standard(2 to 2, at(0)) {
-            item(Material.APPLE).fillup().onClick {
+            item(Material.APPLE).fillup().click {
                 player.sendMessage("Panel 1")
             }
         }
 
         standard(5 to 5, at(0, 7)) {
-            item(Material.EMERALD).fillup().onClick {
+            item(Material.EMERALD).fillup().click {
                 player.sendMessage("Panel 2")
             }
         }
 
         standard(5 to 5, at(8, 7)) {
-            item(Material.DIAMOND).fillup().onClick {
+            item(Material.DIAMOND).fillup().click {
                 player.sendMessage("Panel 3")
             }
         }
@@ -45,12 +45,12 @@ fun showFreeformNetesed(player: Player) = packetChestWindow(6, "FreeformNetesed"
                     val material = if (currentPage == 0) Material.APPLE else randomMaterial()
                     val apple = buildItem(material) {
                         modify { name = "Running_Item" }
-                        onClick { modify { amount = ++itemAmount } }
+                        click { modify { amount = ++itemAmount } }
                     }
 
                     var position = 0
                     submit(now = false, async = true, 20L, 20L) {
-                        if (noViewer()) cancel()
+                        if (!isViewing()) cancel()
                         if (pageIndex == currentPage) {
                             apple.set(position, position + 1, position++ + 2)
                         }
@@ -73,6 +73,6 @@ fun showFreeformNetesed(player: Player) = packetChestWindow(6, "FreeformNetesed"
 
     freeformNavigator()
 
-    open(player)
+    open()
 
 }

@@ -5,21 +5,26 @@ package cc.trixey.invero.common
  * cc.trixey.invero.common.ProxyInventory
  *
  * @author Arasple
- * @since 2022/12/30 12:56
+ * @since 2023/1/20 13:12
  */
 interface ProxyInventory {
 
     val window: Window
 
-    fun open(viewer: Viewer)
+    val containerType: ContainerType
+        get() = window.type
 
-    fun close(viewer: Viewer, closeInventory: Boolean = true, updateInventory: Boolean = true)
+    val containerSize: Int
+        get() = containerType.containerSize
 
-    fun closeAll()
+    val inventoryTitle: String
+        get() = window.title
 
-    fun getContainerSize(): Int
+    fun isViewing(): Boolean
 
-    fun clear()
+    fun open()
+
+    fun close(doCloseInventory: Boolean, updateInventory: Boolean)
 
     fun clear(slots: Collection<Int>)
 

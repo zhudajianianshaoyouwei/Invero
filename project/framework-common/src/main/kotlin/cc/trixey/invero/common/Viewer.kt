@@ -1,7 +1,5 @@
 package cc.trixey.invero.common
 
-import java.util.*
-
 /**
  * Invero
  * cc.trixey.invero.common.Viewer
@@ -11,12 +9,15 @@ import java.util.*
  */
 interface Viewer {
 
-    val uuid: UUID
+    val name: String
 
     fun isAvailable(): Boolean
 
-    fun <T> getInstance(): T
+    fun <T> get(): T
 
-    fun <T> getInstanceSafe(): T? = if (isAvailable()) getInstance() else null
+    fun <T : Viewer> cast(): T {
+        @Suppress("UNCHECKED_CAST")
+        return this as T
+    }
 
 }

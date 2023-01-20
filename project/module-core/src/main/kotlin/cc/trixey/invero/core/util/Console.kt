@@ -41,4 +41,6 @@ fun Throwable.prettyPrint() {
     stackTrace
         .filter { "taboolib" in it.toString() || "invero" in it.toString() }
         .forEach { println(" §8${it.toString().split("//").getOrNull(1)}") }
+
+    if (isDebugEnable()) printStackTrace()
 }

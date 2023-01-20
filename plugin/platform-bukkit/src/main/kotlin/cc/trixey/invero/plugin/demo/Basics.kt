@@ -14,14 +14,14 @@ import taboolib.common.platform.function.submit
  * @author Arasple
  * @since 2022/12/29 13:08
  */
-fun showBasic(player: Player) = packetChestWindow(6, "Hello InveroPlugin") {
+fun showBasic(player: Player) = chestWindow(player, 6, "Hello InveroPlugin") {
 
     var count = 1
 
     standard(3 to 3) {
         item(0, Material.APPLE) {
             modify { name = "Hello Apple" }
-            onClick { modify { amount = ++count } }
+            click { modify { amount = ++count } }
         }
 
         buildItem(Material.DIAMOND).fillup()
@@ -34,12 +34,12 @@ fun showBasic(player: Player) = packetChestWindow(6, "Hello InveroPlugin") {
             group {
 
                 standard(3 to 6) {
-                    buildItem(randomMaterial()).fillup().onClick {
+                    buildItem(randomMaterial()).fillup().click {
                         player.sendMessage("Page $page")
                     }
                 }
                 standard(3 to 1) {
-                    buildItem(randomMaterial()).fillup().onClick {
+                    buildItem(randomMaterial()).fillup().click {
                         player.sendMessage("BAR")
                     }
                 }
@@ -54,11 +54,10 @@ fun showBasic(player: Player) = packetChestWindow(6, "Hello InveroPlugin") {
         pageController(firstPagedPanel(), -1, 0, Material.CYAN_STAINED_GLASS_PANE) { modify { name = "Preivous page" } }
         pageController(firstPagedPanel(), +1, 2, Material.LIME_STAINED_GLASS_PANE) { modify { name = "Next page" } }
     }
+    open()
+}
 
-
-}.open(player)
-
-fun showRunningItem(player: Player) = packetChestWindow(6, "Running Paged Item") {
+fun showRunningItem(player: Player) = chestWindow(player, 6, "Running Paged Item") {
 
     var itemAmount = 1
 
@@ -68,12 +67,12 @@ fun showRunningItem(player: Player) = packetChestWindow(6, "Running Paged Item")
                 val material = if (currentPage == 0) Material.APPLE else randomMaterial()
                 val apple = buildItem(material) {
                     modify { name = "Running_Item" }
-                    onClick { modify { amount = ++itemAmount } }
+                    click { modify { amount = ++itemAmount } }
                 }
 
                 var position = 0
                 submit(now = false, async = true, 20L, 20L) {
-                    if (noViewer()) cancel()
+                    if (!isViewing()) cancel()
                     if (pageIndex == currentPage) {
                         apple.set(position, position + 1, position++ + 2)
                     }
@@ -88,16 +87,17 @@ fun showRunningItem(player: Player) = packetChestWindow(6, "Running Paged Item")
         item(Material.GRAY_STAINED_GLASS_PANE).fillup()
     }
 
-}.open(player)
+    open()
+}
 
-fun showDynamicTitle(player: Player) = packetChestWindow(3, "_") {
+fun showDynamicTitle(player: Player) = chestWindow(player, 3, "_") {
 
     standard(9 to 3) {
         getUnoccupiedPositions().let { posSet ->
             posSet.forEach { pos ->
                 buildItem(randomMaterial()) {
-                    onClick {
-                        modify { amount += (if (clickType.isLeftClick) 1 else -1) }
+                    onClick { type, _ ->
+                        modify { amount += (if (type.isLeftClick) 1 else -1) }
                         player.sendMessage(pos.toString())
                     }
                 }.add(pos)
@@ -105,7 +105,8 @@ fun showDynamicTitle(player: Player) = packetChestWindow(3, "_") {
         }
     }
 
-    open(player)
+    open()
+
 }.also {
 
     val dynamicTitles = run {
@@ -123,7 +124,7 @@ fun showDynamicTitle(player: Player) = packetChestWindow(3, "_") {
     launchAsync {
         repeating(3)
 
-        if (!it.hasViewer()) {
+        if (!it.isViewing()) {
             println("# return@launchAsync")
             return@launchAsync
         }

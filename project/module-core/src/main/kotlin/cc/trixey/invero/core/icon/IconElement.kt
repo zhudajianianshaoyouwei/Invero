@@ -5,10 +5,11 @@ import cc.trixey.invero.bukkit.element.item.SimpleItem
 import cc.trixey.invero.bukkit.util.CoroutineTask
 import cc.trixey.invero.bukkit.util.launchAsync
 import cc.trixey.invero.common.Panel
+import cc.trixey.invero.common.Pos
 import cc.trixey.invero.core.AgentPanel
+import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.animation.Cyclic
-import cc.trixey.invero.core.util.context
 import cc.trixey.invero.core.util.letCatching
 
 /**
@@ -20,10 +21,7 @@ import cc.trixey.invero.core.util.letCatching
  */
 open class IconElement(val session: Session, val icon: Icon, val agent: AgentPanel, panel: Panel) : SimpleItem(panel) {
 
-    /*
-    本图标元素的任务状态
-    配合 Kether 动作实现暂停周期的功能
-     */
+    // 任务是否未被暂停
     val taskStatus = arrayOf(
         // 翻译物品变量 (Update)
         true,
@@ -33,37 +31,29 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
         true
     )
 
-    /*
-    图标指向
+    // 针对本图标的上下文
+    val context by lazy {
+        Context(session, panel, this)
+    }
 
-    <0 默认主图标
-    >=0 子图标的数组坐标
-     */
-    var iconIndex: Int = -1
+    // 子图标定位
+    private var iconIndex: Int = -1
 
-    /*
-    当前的有效的物品帧
-     */
-    var frame: Frame? = null
+    // 当前使用的物品帧属性
+    private var frame: Frame? = null
         set(value) {
             value?.render(session, agent, this)
             field = value
         }
 
-    /*
-    当前的有效主物品帧
-     */
-    var framesDefaultDelay: Long = icon.framesProperties?.defaultDelay ?: 20
+    // 多帧物品的默认持续时间
+    private var framesDefaultDelay: Long = icon.framesProperties?.defaultDelay ?: 20
 
-    /*
-    默认的物品帧
-     */
-    val defaultFrame: Frame = icon.defaultFrame!!
+    // 默认物品帧
+    private val defaultFrame: Frame = icon.defaultFrame!!
 
-    /*
-    当前正在进行循环动画的物品帧集合
-     */
-    var framesCyclic: Cyclic<Frame>? = null
+    // 正在循环的集合
+    private var framesCyclic: Cyclic<Frame>? = null
         set(value) {
             field = value
             if (value != null && !value.isSingle()) {
@@ -71,6 +61,12 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
             }
         }
 
+    // 正在播放动画的任务
+    private var frameTask: CoroutineTask? = null
+
+    /**
+     * 部署此图标的相关任务
+     */
     fun invoke() {
         // 默认帧相关
         frame = defaultFrame
@@ -94,7 +90,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
             session.launchAsync(delay = 20L, period = icon.relocatePeriod) {
                 if (isVisible() && taskStatus[1]) {
                     val previousIndex = iconIndex
-                    val relocatedIndex = icon.subIcons.indexOfFirst { it.condition?.evalInstant(context()) ?: false }
+                    val relocatedIndex = icon.subIcons.indexOfFirst { it.condition?.evalInstant(context) ?: false }
                     // 子图标 ->> 默认图标
                     if (previousIndex > 0 && relocatedIndex < 0) {
                         framesDefaultDelay = icon.framesProperties?.defaultDelay ?: 20L
@@ -110,17 +106,17 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
         }
 
         // 交互逻辑
-        onClick { _ ->
+        onClick { clickType, _ ->
             getIconHandler()?.letCatching {
-                it.all?.run(context())?.get()
-                it.response[clickType]?.run(context())?.get()
+                it.all?.run(context)?.get()
+                it.response[clickType]?.run(context)?.get()
             }
-            true
         }
     }
 
-    private var frameTask: CoroutineTask? = null
-
+    /**
+     * 提交动画循环任务
+     */
     fun submitFrameTask() {
         if (frameTask != null) frameTask?.cancel()
 
@@ -138,12 +134,11 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
         }.also { session.registerTask(it) }
     }
 
+    /**
+     * 取得有效的交互处理器
+     */
     fun getIconHandler(): IconHandler? {
         return if (iconIndex > 0) icon.subIcons!![iconIndex].handler ?: icon.handler else icon.handler
-    }
-
-    private fun isVisible(): Boolean {
-        return panel.isElementValid(this)
     }
 
 }

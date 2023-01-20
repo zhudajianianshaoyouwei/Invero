@@ -23,7 +23,7 @@ private val cells = mutableSetOf<Pos>()
 private var state: Boolean = false
 private var generation = 0
 
-fun showTheGameOfLife(player: Player) = packetChestWindow(6, formattedTitle()) {
+fun showTheGameOfLife(player: Player) = chestWindow(player, 6, formattedTitle()) {
 
     // 细胞物品
     val cell: SimpleItem by lazy {
@@ -41,7 +41,7 @@ fun showTheGameOfLife(player: Player) = packetChestWindow(6, formattedTitle()) {
     // 周期任务
     submitAsync(false, 20L, PERIOD) {
 
-        if (noViewer()) {
+        if (!isViewing()) {
             stop(true)
             return@submitAsync cancel()
         }
@@ -76,18 +76,19 @@ fun showTheGameOfLife(player: Player) = packetChestWindow(6, formattedTitle()) {
     }
 
     freeformPanel(9 to 6) {
-        onClick {
+        onClick { pos, _, _ ->
             if (!state) {
-                cells += toAbsolutePosition(rawSlot)
+                cells += pos
                 refresh()
-            }
+                false
+            } else true
         }
     }
 
     standard(9 to 1, 0 to 7, PanelWeight.BACKGROUND) {
         item(1, Material.REDSTONE_TORCH) {
             modify { name = "SWITCH" }
-            onClick {
+            click {
                 state = !state
                 generation = 0
                 refresh()
@@ -97,7 +98,7 @@ fun showTheGameOfLife(player: Player) = packetChestWindow(6, formattedTitle()) {
 
     freeformNavigator()
 
-    open(player)
+    open()
 }
 
 private fun Pos.nearbyAlive() = nearBy().count { cells.contains(it) }

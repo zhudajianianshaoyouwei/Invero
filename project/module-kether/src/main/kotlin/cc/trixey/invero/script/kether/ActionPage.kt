@@ -1,7 +1,6 @@
 package cc.trixey.invero.script.kether
 
 import cc.trixey.invero.common.panel.PagedPanel
-import cc.trixey.invero.script.kether.PageOperator.*
 import taboolib.library.kether.ParsedAction
 import taboolib.module.kether.*
 import java.util.concurrent.CompletableFuture
@@ -13,71 +12,60 @@ import java.util.concurrent.CompletableFuture
  * @author Arasple
  * @since 2023/1/19 20:33
  */
-class ActionPage(
-    val operator: PageOperator,
-    val value: ParsedAction<*>? = null,
-    val indexs: List<Int>? = null
-) : ScriptAction<Int>() {
 
-    override fun run(frame: ScriptFrame): CompletableFuture<Int> {
-        println("Running page action: $this")
-        val located = if (indexs.isNullOrEmpty()) null else frame.findPanelAt<PagedPanel>(indexs)
-        println("A")
-        val panel = located ?: frame.findNearstPanel() ?: return CompletableFuture.completedFuture(-1)
-        println("B")
 
-        // 输出 Page 值
-        if (operator.isOutput()) {
-            println("C")
+/*
+page get
+page max
+page next by [value]
+page previous by [value]
+page set <value>
+ */
+@KetherParser(["page"], namespace = "invero", shared = true)
+fun parser() = parser(null)
 
-            return when (operator) {
-                GET -> panel.pageIndex
-                GET_MAX -> panel.maxPageIndex
-                else -> error("unreachable")
-            }.let { CompletableFuture.completedFuture(it) }
-        }
+fun parser(indexs: List<Int>?) = combinationParser {
+    it.group(symbol()).apply(it) { type ->
+        val operator = PageOperator.of(type)
 
-        // 修改 Page
-        if (value != null) {
-            frame.run(value).int { operator.run(panel, it) }
-        } else {
-            operator.run(panel, 1)
-        }
-
-        return CompletableFuture.completedFuture(panel.pageIndex)
-    }
-
-    companion object {
-
-        /*
-        page
-        page max
-        page next [value]
-        page previous [value]
-        page set <value>
-         */
-
-        @KetherParser(["page"], namespace = "invero", shared = true)
-        fun parser() = parser(null)
-
-        internal fun parser(indexs: List<Int>? = null) = scriptParser {
-            val method = if (it.hasNext()) {
-                when (it.nextToken()) {
-                    "max" -> GET_MAX
-                    "to", "set", "=" -> MODIFY
-                    "previous", "prev", "-" -> PREVIOUS
-                    "next", "+" -> NEXT
-                    else -> GET
-                }
-            } else GET
-
-            val value = if (!method.isOutput() && it.hasNext()) it.nextParsedAction() else null
-
-            ActionPage(method, value, indexs).also {
-                println("Parsed: $it")
+        var value: ParsedAction<*>? = null
+        if (operator == PageOperator.MODIFY) {
+            it.group(action()).apply(it) { info -> value = info }
+        } else if (!operator.isOutput()) {
+            it.group(command("by", "to", then = action()).option().defaultsTo(null)).apply(it) { info ->
+                value = info
             }
         }
 
+        future { run(this, operator, value, indexs) }
+    }
+}
+
+
+private fun run(
+    frame: ScriptFrame,
+    operator: PageOperator,
+    value: ParsedAction<*>?,
+    indexs: List<Int>?
+): CompletableFuture<Any?> {
+    val located = if (indexs.isNullOrEmpty()) null else frame.findPanelAt<PagedPanel>(indexs)
+    val panel = located ?: frame.findNearstPanel() ?: return CompletableFuture.completedFuture(-1)
+
+    // 输出 Page 值
+    if (operator.isOutput()) {
+        return when (operator) {
+            PageOperator.GET -> panel.pageIndex
+            PageOperator.GET_MAX -> panel.maxPageIndex
+            else -> error("unreachable")
+        }.let { CompletableFuture.completedFuture(it) }
     }
 
+    // 修改 Page
+    if (value != null) {
+        frame.run(value).int { operator.invoke(panel, it) }
+    } else {
+        operator.invoke(panel, 1)
+    }
+
+    return CompletableFuture.completedFuture(panel.pageIndex)
 }

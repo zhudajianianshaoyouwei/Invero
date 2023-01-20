@@ -1,6 +1,6 @@
 package cc.trixey.invero.plugin.dev
 
-import cc.trixey.invero.bukkit.api.InveroAPI
+import cc.trixey.invero.bukkit.api.registeredWindows
 import cc.trixey.invero.core.InveroManager
 import cc.trixey.invero.core.serialize.serializeToJson
 import cc.trixey.invero.core.util.KetherHandler
@@ -93,14 +93,24 @@ object InveroDev {
 
     @CommandBody
     val debugPrint = subCommand {
-        execute<CommandSender> { sender, _, argument ->
-            InveroAPI.bukkitManager.registeredWindows.forEach {
+        execute<CommandSender> { _, _, _ ->
+            registeredWindows.values.forEach { window ->
                 println(
                     """
-                        --------------- REGISTREED WINDOW: ${it.type}
-                        Viewers: ${it.viewers.map { it -> it.uuid }}
+                        --------------- REGISTREED WINDOW: ${window.type}
+                        Viewers: ${window.viewer.name}
+                        Inventory hosted by: ${window.inventory.javaClass.simpleName}
+                        Panels size: ${window.panels.size}
                     """.trimIndent()
                 )
+
+                window.panels.forEach {
+                    println(
+                        """
+                            ----- Panel(${it.scale} at ${it.locate})  [--${it.javaClass.simpleName}--]
+                        """.trimIndent()
+                    )
+                }
             }
         }
     }

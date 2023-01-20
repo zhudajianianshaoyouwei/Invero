@@ -1,18 +1,20 @@
 package cc.trixey.invero.bukkit.element.item
 
-import cc.trixey.invero.bukkit.ProxyBukkitInventory
+import cc.trixey.invero.bukkit.BukkitWindow
 import cc.trixey.invero.bukkit.element.Clickable
 import cc.trixey.invero.common.Element
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Viewer
-import cc.trixey.invero.common.event.WindowClickEvent
+import cc.trixey.invero.common.event.ClickType
 import cc.trixey.invero.common.panel.ElementalPanel
 import cc.trixey.invero.common.util.locatingAbsoluteSlot
 import org.bukkit.Material
+import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.ItemStack
 import taboolib.platform.util.ItemBuilder
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.function.Supplier
 
 /**
@@ -26,8 +28,6 @@ abstract class BaseItem<T : Element>(override val panel: Panel) : Supplier<ItemS
 
     abstract var value: ItemStack
 
-    abstract val handlers: MutableSet<(WindowClickEvent, T) -> Any>
-
     abstract fun get(viewer: Viewer): ItemStack
 
     abstract fun modify(builder: ItemBuilder.() -> Unit)
@@ -38,20 +38,23 @@ abstract class BaseItem<T : Element>(override val panel: Panel) : Supplier<ItemS
 
     abstract fun buildFuture(completable: CompletableFuture<ItemStack>, timeout: Long = 200L)
 
-    override fun addHandler(handler: (WindowClickEvent, T) -> Any) {
-        handlers += handler
-    }
-
-    override fun runHandler(event: WindowClickEvent): Boolean {
-        return handlers.none { it(event, getInstance()) == false }
-    }
+    override val clickCallback = CopyOnWriteArrayList<T.(ClickType, InventoryClickEvent?) -> Unit>()
 
     override fun get(): ItemStack {
         return value
     }
 
+    protected fun isVisible(): Boolean {
+        val var1 = panel.parent.isPanelValid(panel)
+        val var2 = panel.isElementValid(this)
+
+        println("isVisible: $var1 // $var2")
+
+        return var1 && var2
+    }
+
     override fun postRender(block: (Pos) -> Unit) {
-        if (!panel.isElementValid(this)) return
+        if (!isVisible()) return
 
         val elements = (panel as ElementalPanel).elements
         val positions = elements.locateElement(this)?.values ?: setOf()
@@ -60,12 +63,13 @@ abstract class BaseItem<T : Element>(override val panel: Panel) : Supplier<ItemS
     }
 
     override fun push() {
-        val window = panel.window
-
+        val window = panel.window as BukkitWindow
+        println("Push_Item___ ")
         postRender {
             val slot = locatingAbsoluteSlot(it, panel)
+            println("Push_Item___ Slot::: $slot ")
             if (slot >= 0) {
-                (window.inventory as ProxyBukkitInventory)[slot] = value
+                window.inventory[slot] = value
             }
         }
     }

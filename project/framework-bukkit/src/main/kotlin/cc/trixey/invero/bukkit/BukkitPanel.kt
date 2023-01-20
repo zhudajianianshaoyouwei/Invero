@@ -1,55 +1,55 @@
 package cc.trixey.invero.bukkit
 
-import cc.trixey.invero.bukkit.api.InveroAPI
-import cc.trixey.invero.bukkit.element.Clickable
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
-import cc.trixey.invero.common.event.WindowClickEvent
-import cc.trixey.invero.common.event.WindowDragEvent
-import cc.trixey.invero.common.event.WindowItemsMoveEvent
-import cc.trixey.invero.common.panel.PanelContainer
+import cc.trixey.invero.common.event.ClickType
 import cc.trixey.invero.common.panel.PanelWeight
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryDragEvent
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * Invero
  * cc.trixey.invero.bukkit.BukkitPanel
  *
  * @author Arasple
- * @since 2022/12/22 20:50
+ * @since 2023/1/20 14:15
  */
 abstract class BukkitPanel(
     override val parent: PanelContainer,
     override val weight: PanelWeight,
     scale: Scale,
     override val locate: Pos
-) : Panel, Clickable<BukkitPanel> {
-
-    private val handlers = mutableSetOf<(WindowClickEvent, BukkitPanel) -> Any>()
+) : Panel {
 
     override val scale: Scale by lazy { scale.coerceIn(parent.scale) }
 
-    override fun addHandler(handler: (WindowClickEvent, BukkitPanel) -> Any) {
-        handlers += handler
-    }
-
-    override fun runHandler(event: WindowClickEvent): Boolean {
-        return handlers.none { it(event, getInstance()) == false }
-    }
-
     override val area by lazy { scale.getArea(locate) }
 
-    override val window by lazy { InveroAPI.findWindow(this) ?: parent.getTopWindow() }
+    override val window by lazy { parent.getTopWindow() }
 
-    override fun getInstance(): BukkitPanel {
+    // return Boolean ->> should continue to handle elemental click or not
+    private val clickCallback = CopyOnWriteArrayList<(Pos, ClickType, InventoryClickEvent?) -> Boolean>()
+
+    fun onClick(handler: (Pos, ClickType, InventoryClickEvent?) -> Boolean): BukkitPanel {
+        clickCallback += handler
         return this
     }
 
-    override fun handleDrag(positions: List<Pos>, e: WindowDragEvent): Boolean {
+    fun runClickCallbacks(pos: Pos, clickType: ClickType, e: InventoryClickEvent?): Boolean {
+        return clickCallback.isEmpty() || clickCallback.all { it(pos, clickType, e) }
+    }
+
+    open fun handleClick(pos: Pos, clickType: ClickType, e: InventoryClickEvent?): Boolean {
         return true
     }
 
-    override fun handleItemsMove(pos: Pos, e: WindowItemsMoveEvent): Boolean {
+    open fun handleDrag(pos: List<Pos>, e: InventoryDragEvent): Boolean {
+        return true
+    }
+
+    open fun handleItemsMove(pos: Pos, e: InventoryClickEvent): Boolean {
         return true
     }
 

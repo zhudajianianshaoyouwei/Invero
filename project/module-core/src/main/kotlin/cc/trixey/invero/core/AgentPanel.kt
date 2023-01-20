@@ -1,9 +1,9 @@
 package cc.trixey.invero.core
 
+import cc.trixey.invero.bukkit.PanelContainer
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
-import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.core.serialize.SelectorAgentPanel
 import kotlinx.serialization.Serializable
 

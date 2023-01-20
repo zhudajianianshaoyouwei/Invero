@@ -15,7 +15,7 @@ class ControlScrollItem(panel: Panel, private val target: ScrollPanel, private v
     SimpleItem(panel) {
 
     init {
-        addHandler { _, _ -> target.scroll(amount) }
+        onClick { _, _ -> target.scroll(amount) }
     }
 
 }

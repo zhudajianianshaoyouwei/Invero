@@ -3,7 +3,7 @@ package cc.trixey.invero.common.util
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.panel.FreeformPanel
-import cc.trixey.invero.common.panel.PanelContainer
+import cc.trixey.invero.common.panel.TypedPanelContainer
 
 fun Panel.getSiblings(): List<Panel> {
     return parent.panels
@@ -12,7 +12,7 @@ fun Panel.getSiblings(): List<Panel> {
 /**
  * 检测 Window 的一些属性
  */
-inline fun <reified P : Panel> PanelContainer.anyInstancePanel(): Boolean {
+inline fun <reified P : Panel> TypedPanelContainer<*>.anyInstancePanel(): Boolean {
     return panels.filterIsInstance<P>().isNotEmpty()
 }
 

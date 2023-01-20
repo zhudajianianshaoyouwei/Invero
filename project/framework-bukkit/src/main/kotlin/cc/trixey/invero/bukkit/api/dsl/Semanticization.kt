@@ -1,7 +1,7 @@
 package cc.trixey.invero.bukkit.api.dsl
 
+import cc.trixey.invero.bukkit.PanelContainer
 import cc.trixey.invero.bukkit.panel.StandardPanel
-import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 
 /**

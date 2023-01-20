@@ -2,6 +2,7 @@ package cc.trixey.invero.core
 
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Window
+import cc.trixey.invero.common.panel.PagedPanel
 import cc.trixey.invero.core.icon.IconElement
 import org.bukkit.entity.Player
 
@@ -32,6 +33,11 @@ class Context(
             if (panel != null) put("@panel", panel)
             if (icon != null) put("@icon", icon)
             if (menu != null) put("@menu", menu!!)
+
+            if (panel is PagedPanel) {
+                put("page", panel.pageIndex)
+                put("page_max", panel.maxPageIndex)
+            }
         }
 
 }

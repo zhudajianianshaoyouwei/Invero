@@ -1,14 +1,12 @@
 package cc.trixey.invero.bukkit
 
-import cc.trixey.invero.bukkit.api.InveroAPI
-import cc.trixey.invero.bukkit.event.DelegatedDragEvent
-import cc.trixey.invero.bukkit.event.DelegatedItemsMoveEvent
-import cc.trixey.invero.bukkit.nms.updateTitle
-import cc.trixey.invero.bukkit.panel.IOStoragePanel
-import cc.trixey.invero.bukkit.util.toBukkitViewer
-import cc.trixey.invero.common.*
-import cc.trixey.invero.common.event.*
-import org.bukkit.entity.Player
+import cc.trixey.invero.bukkit.api.findWindow
+import cc.trixey.invero.bukkit.api.register
+import cc.trixey.invero.bukkit.api.unregister
+import cc.trixey.invero.common.ContainerType
+import cc.trixey.invero.common.Scale
+import cc.trixey.invero.common.StorageMode
+import cc.trixey.invero.common.Window
 import taboolib.common.platform.function.submit
 
 /**
@@ -16,164 +14,71 @@ import taboolib.common.platform.function.submit
  * cc.trixey.invero.bukkit.BukkitWindow
  *
  * @author Arasple
- * @since 2022/12/29 12:54
+ * @since 2023/1/20 12:15
  */
 abstract class BukkitWindow(
-    val type: ContainerType,
-    override val storageMode: StorageMode = StorageMode(overridePlayerInventory = true, alwaysClean = true),
-    title: String = "Untitled_Invero_Window"
-) : Window {
+    override val viewer: PlayerViewer,
+    override val type: ContainerType,
+    override var title: String = "Invero_Untitled",
+    override val storageMode: StorageMode
+) : Window, PanelContainer {
+
+    override val panels = arrayListOf<BukkitPanel>()
+
+    override val scale: Scale by lazy { Scale(9 to 6) }
+
+    private var closeCallback: (BukkitWindow) -> Unit = { _ -> }
+
+    private var openCallback: (BukkitWindow) -> Unit = { _ -> }
+
+    private var postOpenCallback: (BukkitWindow) -> Boolean = { _ -> true }
 
     abstract override val inventory: ProxyBukkitInventory
 
-    override var title = title
-        set(value) {
-            field = value
-            submit { updateTitle(value, true) }
+    fun onClose(block: (BukkitWindow) -> Unit): BukkitWindow {
+        closeCallback = block
+        return this
+    }
+
+    fun onOpen(block: (BukkitWindow) -> Unit): BukkitWindow {
+        openCallback = block
+        return this
+    }
+
+    fun postOpen(block: (BukkitWindow) -> Boolean): BukkitWindow {
+        postOpenCallback = block
+        return this
+    }
+
+    override fun open() {
+        // 如果被取消
+        if (!postOpenCallback(this)) return
+        // 正在查看一个 Window，则伪关闭
+        findWindow(viewer.name)?.close(doCloseInventory = false, updateInventory = false)
+        // 开启新容器
+        submit {
+            register()
+            inventory.open()
+            render()
         }
-
-    override val viewers = arrayListOf<Viewer>()
-
-    override val panels = arrayListOf<Panel>()
-
-    override val size = type.entireWindowSize
-
-    var closeCallback: BukkitWindow.(viewer: Viewer) -> Unit = { _ -> }
-
-    var openCallback: BukkitWindow.(viewer: Viewer) -> Unit = { _ -> }
-
-    fun onClose(callback: (window: BukkitWindow, viewer: Viewer) -> Unit) {
-        closeCallback = callback
     }
 
-    fun onOpen(callback: (window: BukkitWindow, viewer: Viewer) -> Unit) {
-        openCallback = callback
+    override fun close(doCloseInventory: Boolean, updateInventory: Boolean) {
+        unregister()
+        inventory.close(doCloseInventory, updateInventory)
+        closeCallback(this)
     }
-
-    fun priorityViewer(): BukkitViewer? {
-        return viewers.firstOrNull() as BukkitViewer?
-    }
-
-    fun open(player: Player) = open(BukkitViewer(player))
 
     override fun render() {
+        require(panels.all { it.parent == this })
+
         panels
-            .sortedBy { it.weight }
+            .sortedByDescending { it.weight }
             .forEach { it.render() }
     }
 
-    override fun open(viewer: Viewer) {
-        InveroAPI.findWindow(viewer.toBukkitViewer())?.close(viewer, closeInventory = false, updateInventory = false)
-
-        if (viewers.add(viewer)) {
-            if (viewers.size == 1) InveroAPI.bukkitManager.register(this)
-            inventory.open(viewer)
-            render()
-        } else {
-            error("Viewer {$viewer} is already viewing this window")
-        }
-    }
-
-    override fun close(viewer: Viewer, closeInventory: Boolean, updateInventory: Boolean) {
-        if (viewers.remove(viewer)) inventory.close(viewer, closeInventory, updateInventory)
-        if (viewers.isEmpty()) {
-            InveroAPI.bukkitManager.unregister(this)
-        }
-    }
-
-    override fun handleOpen(e: WindowOpenEvent) {
-        openCallback(e.viewer)
-    }
-
-    override fun handleClose(e: WindowCloseEvent) {
-        closeCallback(e.viewer)
-    }
-
-    override fun handleClick(e: WindowClickEvent) {
-        e.clickCancelled = true
-
-        val window = e.window as BukkitWindow
-        val rawSlot = e.rawSlot
-
-        // click player inventory
-        if (rawSlot > window.type.slotsContainer.last) {
-            if (!window.storageMode.overridePlayerInventory) {
-                e.clickCancelled = false
-                return
-            }
-        }
-        val clickedSlot = scale.convertToPosition(rawSlot)
-        panels
-            .sortedByDescending { it.weight }
-            .forEach {
-                if (clickedSlot in it.area) {
-                    if ((it as BukkitPanel).runHandler(e)) {
-                        it.handleClick(clickedSlot - it.locate, e)
-                    }
-                    return
-                }
-            }
-    }
-
-    override fun handleDrag(e: WindowDragEvent) {
-        e.isCancelled = true
-
-        val event = (e as DelegatedDragEvent).event
-        val handler = panels
-            .sortedBy { it.locate }
-            .sortedByDescending { it.weight }
-            .find {
-                event.rawSlots.all { slot -> scale.convertToPosition(slot) in it.area }
-            }
-
-        if (handler != null) {
-            val affected = event.rawSlots.map { scale.convertToPosition(it) }
-            handler.handleDrag(affected, e)
-        }
-    }
-
-    override fun handleItemsMove(e: WindowItemsMoveEvent) {
-        e.isCancelled = true
-
-        val event = (e as DelegatedItemsMoveEvent).event
-        val window = e.window as BukkitWindow
-        val rawSlot = event.rawSlot
-
-        // playerInventory -> IO Panel
-        if (rawSlot > window.type.slotsContainer.last) {
-            if (window.storageMode.overridePlayerInventory) return
-            val insertItem = event.currentItem?.clone() ?: return
-
-            getPanelsRecursively()
-                .filterIsInstance<IOStoragePanel>()
-                .sortedBy { it.locate }
-                .sortedByDescending { it.weight }
-                .forEach {
-                    val previous = insertItem.amount
-                    val result = it.stackItemStack(insertItem.clone())
-                    insertItem.amount = result
-
-                    if (previous != result) it.renderStorage()
-                    if (result <= 0) return@forEach
-                }
-
-            event.currentItem?.amount = insertItem.amount
-        }
-        // IO Panel -> playerInventory
-        else if (!window.storageMode.overridePlayerInventory) {
-            val clickedSlot = scale.convertToPosition(rawSlot)
-
-            panels
-                .sortedBy { it.locate }
-                .sortedByDescending { it.weight }
-                .find { scale.convertToPosition(event.rawSlot) in it.area }
-                ?.handleItemsMove(clickedSlot, e)
-        }
-    }
-
-    // TODO 懒得做了
-    override fun handleItemsCollect(e: WindowItemsCollectEvent) {
-        e.isCancelled = true
+    override fun isViewing(): Boolean {
+        return inventory.isViewing()
     }
 
 }

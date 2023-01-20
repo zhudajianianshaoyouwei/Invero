@@ -1,8 +1,7 @@
 package cc.trixey.invero.bukkit
 
 import cc.trixey.invero.common.ProxyInventory
-import cc.trixey.invero.common.StorageMode
-import cc.trixey.invero.common.Viewer
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.PlayerInventory
 
@@ -11,22 +10,22 @@ import org.bukkit.inventory.PlayerInventory
  * cc.trixey.invero.bukkit.ProxyBukkitInventory
  *
  * @author Arasple
- * @since 2022/12/30 13:11
+ * @since 2023/1/20 13:15
  */
 interface ProxyBukkitInventory : ProxyInventory {
 
-    val storageMode: StorageMode
-        get() = window.storageMode
+    val viewer: Player
+        get() = window.viewer.get()
 
-    fun getPlayerInventory(viewer: Viewer): PlayerInventory
-
-    fun getPlayerInventorySafely(viewer: Viewer): PlayerInventory?
+    fun getPlayerInventory(): PlayerInventory {
+        return viewer.inventory
+    }
 
     operator fun get(slot: Int): ItemStack?
 
     operator fun set(slot: Int, itemStack: ItemStack?)
 
-    fun Int.outflowCorrect() = (this - getContainerSize()).let {
+    fun Int.outflowCorrect() = (this - containerSize).let {
         if (it > 26) it - 27 else it + 9
     }
 

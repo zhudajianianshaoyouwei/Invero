@@ -1,12 +1,11 @@
 package cc.trixey.invero.core.panel
 
+import cc.trixey.invero.bukkit.PanelContainer
 import cc.trixey.invero.bukkit.api.dsl.firstAvailablePositionForPanel
 import cc.trixey.invero.bukkit.api.dsl.standard
-import cc.trixey.invero.bukkit.panel.StandardPanel
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
-import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.core.AgentIcon
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Layout

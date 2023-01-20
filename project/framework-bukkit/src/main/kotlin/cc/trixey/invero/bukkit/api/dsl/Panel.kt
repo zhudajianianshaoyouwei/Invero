@@ -1,9 +1,9 @@
 package cc.trixey.invero.bukkit.api.dsl
 
+import cc.trixey.invero.bukkit.PanelContainer
 import cc.trixey.invero.bukkit.panel.*
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
-import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 import cc.trixey.invero.common.scroll.ScrollDirection
 import cc.trixey.invero.common.scroll.ScrollTail

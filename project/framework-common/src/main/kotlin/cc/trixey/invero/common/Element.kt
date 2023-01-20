@@ -16,9 +16,7 @@ interface Element {
     fun push()
 
     fun safePush() {
-        if (shouldPush()) push()
+        if (panel.window.isViewing()) push()
     }
-
-    fun shouldPush() = panel.window.hasViewer()
 
 }

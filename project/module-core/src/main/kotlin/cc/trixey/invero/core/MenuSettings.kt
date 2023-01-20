@@ -19,6 +19,7 @@ class MenuSettings(
     @Serializable(with = MenuTitleSerializer::class)
     val title: MenuTitle,
     val rows: Int = 6,
+    val packet: Boolean = false,
     @Serializable(with = InventoryTypeSerializer::class)
     val type: InventoryType = InventoryType.CHEST,
     val options: MenuOptions = MenuOptions()

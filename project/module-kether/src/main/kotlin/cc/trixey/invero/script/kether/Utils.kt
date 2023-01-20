@@ -1,13 +1,14 @@
 package cc.trixey.invero.script.kether
 
+import cc.trixey.invero.bukkit.PanelContainer
 import cc.trixey.invero.common.Panel
-import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.util.getSiblings
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.util.getSession
 import org.bukkit.entity.Player
 import taboolib.module.kether.ScriptFrame
 import taboolib.module.kether.script
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Invero
@@ -38,7 +39,7 @@ fun <T : Panel> ScriptFrame.findPanelAt(indexs: List<Int>): T? {
 }
 
 inline fun <reified T : Panel> ScriptFrame.findNearstPanel(): T? {
-    return variables().get<Panel>("@panel").get().getSiblings().filterIsInstance<T>().firstOrNull()
+    return variables().get<Panel>("@panel").getOrNull()?.getSiblings()?.filterIsInstance<T>()?.firstOrNull()
 }
 
 fun ScriptFrame.getSession(): Session {

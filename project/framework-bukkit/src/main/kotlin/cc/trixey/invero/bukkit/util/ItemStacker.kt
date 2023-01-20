@@ -14,21 +14,3 @@ import taboolib.platform.util.isAir
 fun ItemStack.reachedMaxStackSize(): Boolean {
     return amount >= maxStackSize
 }
-
-//fun PlayerInventory.stackItemStack(input: ItemStack) {
-//    storageContents.forEach {
-//        while (it != null && input.amount > 0 && it.isSimilar(input) && !it.reachedMaxStackSize()) {
-//            it.amount++
-//            input.amount--
-//        }
-//    }
-//
-//    val index = storageContents.indexOfFirst { it.isAir }
-//
-//    if (input.amount > 0 && index >= 0) {
-//        storageContents[index] = input.clone()
-//        input.amount = 0
-//    } else {
-//        println("INDEX: $index")
-//    }
-//}

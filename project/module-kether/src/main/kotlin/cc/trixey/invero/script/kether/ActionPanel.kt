@@ -16,10 +16,10 @@ import taboolib.module.kether.scriptParser
  */
 private fun handlePanelOperators(token: String, indexs: List<Int>, reader: QuestReader): QuestAction<*> {
     return when (token) {
-        "page" -> ActionPage.parser().let {
-            println(it.javaClass.simpleName)
-            it.reader.invoke(reader)
-        }
+//        "page" -> ActionPage.parser().let {
+//            println(it.javaClass.simpleName)
+//            it.reader.invoke(reader)
+//        }
 
         else -> TODO()
     }

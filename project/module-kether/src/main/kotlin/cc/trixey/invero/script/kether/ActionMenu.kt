@@ -20,21 +20,20 @@ import taboolib.platform.util.onlinePlayers
 - menu close
 - menu open [menuId] for [player]
  */
-
 @KetherParser(["menu"], namespace = "invero", shared = true)
 fun parserMenu() = scriptParser {
-
     when (it.expects("title", "close", "open")) {
         "title" -> handlerMenuTitle(it)
         "close" -> actionNow { getSession().closeMenu() }
         "open" -> handlerMenuOpen(it)
         else -> error("Unknown case")
     }
-
 }
 
 private fun handlerMenuTitle(it: QuestReader) =
-    when (it.expects("set", "pause", "resume")) {
+    when (it.expects("get", "set", "pause", "resume")) {
+        "get" -> actionNow { getSession().window?.title }
+
         "set" -> {
             val input = it.nextParsedAction()
             actionFuture { future ->
@@ -76,7 +75,7 @@ private fun handlerMenuOpen(reader: QuestReader): ScriptAction<Any?> {
                 reader.nextToken()
                 reader.nextParsedAction()
             } else null
-            
+
             if (player == null) {
                 menu.open(getPlayer())
             } else {

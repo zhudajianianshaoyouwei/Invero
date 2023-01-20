@@ -1,9 +1,9 @@
 package cc.trixey.invero.bukkit.api.dsl
 
-import cc.trixey.invero.bukkit.BukkitWindow
-import cc.trixey.invero.bukkit.window.BukkitChestWindow
-import cc.trixey.invero.bukkit.window.PacketChestWindow
+import cc.trixey.invero.bukkit.PlayerViewer
+import cc.trixey.invero.bukkit.impl.ChestWindow
 import cc.trixey.invero.common.StorageMode
+import org.bukkit.entity.Player
 
 /**
  * Invero
@@ -13,30 +13,21 @@ import cc.trixey.invero.common.StorageMode
  * @since 2023/1/5 13:29
  */
 inline fun chestWindow(
-    packet: Boolean,
+    viewer: PlayerViewer,
     rows: Int,
-    title: String,
+    title: String = "Untitled",
     storageMode: StorageMode = StorageMode(),
-    block: BukkitWindow.() -> Unit = {}
-): BukkitWindow {
-    return if (packet) packetChestWindow(rows, title, storageMode, block)
-    else bukkitChestWindow(rows, title, storageMode, block)
+    virtual: Boolean = true,
+    block: ChestWindow.() -> Unit = {}
+): ChestWindow {
+    return ChestWindow(viewer, rows, title, storageMode, virtual).also(block)
 }
 
-inline fun bukkitChestWindow(
+inline fun chestWindow(
+    viewer: Player,
     rows: Int,
-    title: String,
+    title: String = "Untitled",
     storageMode: StorageMode = StorageMode(),
-    block: BukkitChestWindow.() -> Unit = {}
-): BukkitChestWindow {
-    return BukkitChestWindow(rows, title, storageMode).also(block)
-}
-
-inline fun packetChestWindow(
-    rows: Int,
-    title: String,
-    storageMode: StorageMode = StorageMode(),
-    block: PacketChestWindow.() -> Unit = {}
-): PacketChestWindow {
-    return PacketChestWindow(rows, title, storageMode).also(block)
-}
+    virtual: Boolean = true,
+    block: ChestWindow.() -> Unit = {}
+) = chestWindow(PlayerViewer(viewer), rows, title, storageMode, virtual, block)

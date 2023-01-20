@@ -1,15 +1,14 @@
 package cc.trixey.invero.bukkit.panel
 
 import cc.trixey.invero.bukkit.BukkitPanel
+import cc.trixey.invero.bukkit.PanelContainer
 import cc.trixey.invero.common.Element
-import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
-import cc.trixey.invero.common.event.WindowClickEvent
-import cc.trixey.invero.common.event.WindowDragEvent
-import cc.trixey.invero.common.event.WindowItemsMoveEvent
-import cc.trixey.invero.common.panel.PanelContainer
+import cc.trixey.invero.common.event.ClickType
 import cc.trixey.invero.common.panel.PanelWeight
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryDragEvent
 
 /**
  * Invero
@@ -25,39 +24,35 @@ class PanelGroup(
     locate: Pos
 ) : BukkitPanel(parent, weight, scale, locate), PanelContainer {
 
-    override val panels = arrayListOf<Panel>()
+    override val panels = arrayListOf<BukkitPanel>()
 
     override fun render() = panels.forEach { it.render() }
 
     override fun isElementValid(element: Element) = panels.any { it.isElementValid(element) }
 
-    override fun handleClick(pos: Pos, e: WindowClickEvent): Boolean {
+    override fun handleClick(pos: Pos, clickType: ClickType, e: InventoryClickEvent?): Boolean {
         val clicked = pos - locate
-
         panels.forEach {
             if (clicked in it.area) {
-                it.handleClick(pos - it.locate, e)
+                it.handleClick(pos - it.locate, clickType, e)
                 return true
             }
         }
         return false
     }
 
-    override fun handleDrag(positions: List<Pos>, e: WindowDragEvent): Boolean {
-        val affected = positions.map { it - locate }
-
+    override fun handleDrag(pos: List<Pos>, e: InventoryDragEvent): Boolean {
+        val affected = pos.map { it - locate }
         panels
             .find { panel -> affected.all { it in panel.area } }
             ?.let {
                 return it.handleDrag(affected, e)
             }
-
         return false
     }
 
-    override fun handleItemsMove(pos: Pos, e: WindowItemsMoveEvent): Boolean {
+    override fun handleItemsMove(pos: Pos, e: InventoryClickEvent): Boolean {
         val clicked = pos - locate
-
         panels.forEach {
             if (clicked in it.area) {
                 it.handleItemsMove(pos - it.locate, e)

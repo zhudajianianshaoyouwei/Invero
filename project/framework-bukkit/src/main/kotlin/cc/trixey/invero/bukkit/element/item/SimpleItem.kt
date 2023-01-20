@@ -3,7 +3,6 @@ package cc.trixey.invero.bukkit.element.item
 import cc.trixey.invero.bukkit.util.distinguish
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Viewer
-import cc.trixey.invero.common.event.WindowClickEvent
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.submitAsync
@@ -28,11 +27,7 @@ open class SimpleItem(panel: Panel, value: ItemStack = ItemStack(Material.STONE)
             safePush()
         }
 
-    override val handlers = mutableSetOf<(WindowClickEvent, SimpleItem) -> Any>()
-
-    override fun get(viewer: Viewer): ItemStack {
-        return get()
-    }
+    override fun get(viewer: Viewer) = get()
 
     override fun modify(builder: ItemBuilder.() -> Unit) {
         value = buildItem(value, builder)

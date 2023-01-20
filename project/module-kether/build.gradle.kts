@@ -6,6 +6,7 @@ dependencies {
     compileOnly(project(":project:module-core"))
 
     compileOnly("ink.ptms.core:v11903:11903-minimize:universal")
+    compileOnly("com.mojang:datafixerupper:4.0.26")
 
     compileOnly("io.izzel.taboolib:common:$taboolibVersion")
     compileOnly("io.izzel.taboolib:platform-bukkit:$taboolibVersion")

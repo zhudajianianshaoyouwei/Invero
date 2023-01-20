@@ -1,6 +1,8 @@
 package cc.trixey.invero.bukkit.element
 
-import cc.trixey.invero.common.event.WindowClickEvent
+import cc.trixey.invero.common.event.ClickType
+import org.bukkit.event.inventory.InventoryClickEvent
+import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * Invero
@@ -11,16 +13,27 @@ import cc.trixey.invero.common.event.WindowClickEvent
  */
 interface Clickable<T> {
 
-    fun runHandler(event: WindowClickEvent): Boolean
+    /* 点击回调 */
+    val clickCallback: CopyOnWriteArrayList<T.(ClickType, InventoryClickEvent?) -> Unit>
 
-    fun addHandler(handler: (WindowClickEvent, clicked: T) -> Any)
-
-    fun onClick(handler: WindowClickEvent.(clicked: T) -> Any): T {
-        addHandler(handler)
+    /* 增加点击回调动作 */
+    fun onClick(handler: T.(ClickType, InventoryClickEvent?) -> Unit): T {
+        clickCallback += handler
         return getInstance()
     }
 
-    fun getInstance(): T
+    /* 增加点击回调动作 */
+    fun click(handler: (T) -> Unit): T {
+        clickCallback += { _, _ -> handler(this) }
+        return getInstance()
+    }
 
+    /* 调用 */
+    fun runClickCallbacks(clickType: ClickType, e: InventoryClickEvent?) {
+        clickCallback.forEach { it(getInstance(), clickType, e) }
+    }
+
+    /* 返回对象 */
+    fun getInstance(): T
 
 }

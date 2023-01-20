@@ -1,8 +1,12 @@
 package cc.trixey.invero.bukkit.api.dsl
 
+import cc.trixey.invero.bukkit.PanelContainer
 import cc.trixey.invero.bukkit.panel.FreeformStandardPanel
 import cc.trixey.invero.common.Panel
-import cc.trixey.invero.common.panel.*
+import cc.trixey.invero.common.panel.ElementalPanel
+import cc.trixey.invero.common.panel.FreeformPanel
+import cc.trixey.invero.common.panel.PagedPanel
+import cc.trixey.invero.common.panel.ScrollPanel
 
 /**
  * Invero

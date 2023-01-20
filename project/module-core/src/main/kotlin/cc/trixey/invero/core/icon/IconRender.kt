@@ -28,15 +28,15 @@ fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
             translateUpdate(session, element, this)
         }
         ?: element.value.also { generated = false }
-
     item.apply {
         if (generated) {
             if (name == null && original.hasName()) postName(original.getName()!!)
             if (lore.isNullOrEmpty() && original.hasLore()) postLore(original.getLore()!!)
             if (frame.amount == null && original.amount != 1) postAmount(original.amount)
         }
-        if (name != null) postName(session.parse(name))
-        if (!lore.isNullOrEmpty()) postLore(session.parse(lore).defaultColored())
+        val context = element.context
+        if (name != null) postName(session.parse(name, context))
+        if (!lore.isNullOrEmpty()) postLore(session.parse(lore, context).defaultColored())
     }
 
     if (amount != null) item.amount = amount
@@ -51,12 +51,12 @@ fun Frame.translateUpdate(session: Session, element: IconElement, defaultFrame: 
         ?: element.value
 
     itemStack.apply {
-
         val basedName = name ?: defaultFrame.name
         val basedLore = lore ?: defaultFrame.lore
-        if (basedName != null) postName(session.parse(basedName))
-        if (!basedLore.isNullOrEmpty()) postLore(session.parse(basedLore).defaultColored())
+        val context = element.context
 
+        if (basedName != null) postName(session.parse(basedName, context))
+        if (!basedLore.isNullOrEmpty()) postLore(session.parse(basedLore, context).defaultColored())
     }
 
     element.value = itemStack

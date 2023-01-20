@@ -1,11 +1,12 @@
 package cc.trixey.invero.core.panel
 
+import cc.trixey.invero.bukkit.PanelContainer
 import cc.trixey.invero.bukkit.api.dsl.firstAvailablePositionForPanel
 import cc.trixey.invero.bukkit.api.dsl.pagedNetesed
 import cc.trixey.invero.bukkit.panel.PagedNetesedPanel
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
-import cc.trixey.invero.common.panel.PanelContainer
+import cc.trixey.invero.common.panel.TypedPanelContainer
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.Session
@@ -46,10 +47,7 @@ class PanelPaged(
 
     override fun invoke(parent: PanelContainer, session: Session): PagedNetesedPanel {
         return parent.pagedNetesed(scale.raw, locate?.value ?: parent.firstAvailablePositionForPanel()) {
-            pages[defaultPage].invoke(this, session)
-            onPageChanging { _, toPage ->
-                if (toPage in pages.indices) pages[toPage].invoke(this@pagedNetesed, session)
-            }
+            pages.forEach { it.invoke(this, session) }
         }
     }
 

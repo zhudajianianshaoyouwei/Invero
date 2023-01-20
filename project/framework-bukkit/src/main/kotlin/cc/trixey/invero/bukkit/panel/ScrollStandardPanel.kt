@@ -1,12 +1,12 @@
 package cc.trixey.invero.bukkit.panel
 
+import cc.trixey.invero.bukkit.PanelContainer
 import cc.trixey.invero.bukkit.api.dsl.pos
 import cc.trixey.invero.bukkit.api.dsl.ruin
 import cc.trixey.invero.bukkit.element.item.BaseItem
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.panel.ElementalPanel
-import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 import cc.trixey.invero.common.panel.ScrollPanel
 import cc.trixey.invero.common.scroll.ScrollColum

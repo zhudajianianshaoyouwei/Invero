@@ -14,7 +14,7 @@ import cc.trixey.invero.common.panel.PagedPanel
 class ControlPageItem(panel: Panel, private val target: PagedPanel, private val amount: Int = +1) : SimpleItem(panel) {
 
     init {
-        addHandler { _, _ -> target.nextPage(amount) }
+        onClick { _, _ -> target.nextPage(amount) }
     }
 
 }

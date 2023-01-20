@@ -11,14 +11,14 @@ import cc.trixey.invero.common.Panel
  */
 interface PagedPanel : Panel {
 
-    var pageChangingCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit
+    var pageChangeCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit
 
     val maxPageIndex: Int
 
     var pageIndex: Int
 
     fun onPageChanging(block: PagedPanel.(fromPage: Int, toPage: Int) -> Unit) {
-        pageChangingCallback = block
+        pageChangeCallback = block
     }
 
     fun nextPage(value: Int = 1) {

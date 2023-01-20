@@ -1,17 +1,18 @@
 package cc.trixey.invero.bukkit.panel
 
 import cc.trixey.invero.bukkit.BukkitPanel
+import cc.trixey.invero.bukkit.PanelContainer
 import cc.trixey.invero.bukkit.api.dsl.set
 import cc.trixey.invero.bukkit.element.Clickable
 import cc.trixey.invero.bukkit.element.item.BaseItem
 import cc.trixey.invero.common.Elements
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
-import cc.trixey.invero.common.event.WindowClickEvent
+import cc.trixey.invero.common.event.ClickType
 import cc.trixey.invero.common.panel.GeneratorPanel
 import cc.trixey.invero.common.panel.PagedPanel
-import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
+import org.bukkit.event.inventory.InventoryClickEvent
 
 /**
  * Invero
@@ -43,12 +44,12 @@ class PagedGeneratorPanel<T>(
         set(value) {
             if (value < 0) error("Page index can not be a negative number")
             else if (pageIndex > maxPageIndex) error("Page index is out of bounds $maxPageIndex")
-            pageChangingCallback(this, field, value)
+            pageChangeCallback(this, field, value)
             field = value
             render()
         }
 
-    override var pageChangingCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit = { _, _ -> }
+    override var pageChangeCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit = { _, _ -> }
 
     override var maxPageIndex: Int = 0
 
@@ -75,10 +76,11 @@ class PagedGeneratorPanel<T>(
         }
     }
 
-    override fun handleClick(pos: Pos, e: WindowClickEvent): Boolean {
+
+    override fun handleClick(pos: Pos, clickType: ClickType, e: InventoryClickEvent?): Boolean {
         elements.findElement(pos)?.let {
             if (it is Clickable<*>) {
-                it.runHandler(e)
+                it.runClickCallbacks(clickType, e)
                 return true
             }
         }

@@ -5,24 +5,23 @@ package cc.trixey.invero.common.panel
 import cc.trixey.invero.common.Gridable
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Window
-import java.io.File
 
 /**
  * Invero
- * cc.trixey.invero.common.panel.PanelContainer
+ * cc.trixey.invero.common.panel.TypedPanelContainer
  *
  * @author Arasple
  * @since 2022/12/22 14:50
  */
-interface PanelContainer : Gridable {
+interface TypedPanelContainer<T : Panel> : Gridable {
 
-    val panels: ArrayList<Panel>
+    val panels: ArrayList<T>
 
-    operator fun plusAssign(panel: Panel) {
+    operator fun plusAssign(panel: T) {
         panels += panel
     }
 
-    operator fun minusAssign(panel: Panel) {
+    operator fun minusAssign(panel: T) {
         panels -= panel
     }
 
@@ -39,14 +38,13 @@ interface PanelContainer : Gridable {
 
         panels.forEach {
             result += it
-            if (it is PanelContainer) result += it.getPanelsRecursively()
+            if (it is TypedPanelContainer<*>) result += it.getPanelsRecursively()
         }
 
         return result
     }
 
     fun getTopWindow(): Window {
-        File("").deleteRecursively()
         return if (this is Window) this
         else (this as Panel).parent.getTopWindow()
     }
@@ -65,6 +63,10 @@ interface PanelContainer : Gridable {
 
     fun isFreeform(): Boolean {
         return this is FreeformPanel
+    }
+
+    fun isPanelValid(panel: Panel): Boolean {
+        return true
     }
 
 }

@@ -1,21 +1,18 @@
 package cc.trixey.invero.bukkit.panel
 
+import cc.trixey.invero.bukkit.PanelContainer
 import cc.trixey.invero.bukkit.ProxyBukkitInventory
-import cc.trixey.invero.bukkit.event.DelegatedClickEvent
-import cc.trixey.invero.bukkit.event.DelegatedDragEvent
-import cc.trixey.invero.bukkit.event.DelegatedItemsMoveEvent
 import cc.trixey.invero.bukkit.util.reachedMaxStackSize
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
-import cc.trixey.invero.common.event.WindowClickEvent
-import cc.trixey.invero.common.event.WindowDragEvent
-import cc.trixey.invero.common.event.WindowItemsMoveEvent
+import cc.trixey.invero.common.event.ClickType
 import cc.trixey.invero.common.panel.ElementalPanel
 import cc.trixey.invero.common.panel.IOPanel
-import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 import cc.trixey.invero.common.util.locatingAbsoluteSlot
 import org.bukkit.event.inventory.InventoryAction
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.submit
 import taboolib.platform.util.isAir
@@ -100,47 +97,43 @@ open class IOStoragePanel(
         renderStorage()
     }
 
-    override fun handleClick(pos: Pos, e: WindowClickEvent): Boolean {
-        val event = (e as DelegatedClickEvent).event
+
+    override fun handleClick(pos: Pos, clickType: ClickType, e: InventoryClickEvent?): Boolean {
+        require(e != null)
+
         val storageIndex = insertable.indexOf(pos)
 
-        if (!super.handleClick(pos, e)) {
+        if (!super.handleClick(pos, clickType, e)) {
             // apply cursor
-            event.cursor?.clone()?.let { storage[storageIndex] = it }
+            e.cursor?.clone()?.let { storage[storageIndex] = it }
             // hotbar swap action
-            val swapHotItem = {
-                storage[storageIndex] = inventory.getPlayerInventory(e.viewer).getItem(event.hotbarButton)
-            }
-            if (event.action == InventoryAction.HOTBAR_SWAP) {
-                if (event.currentItem == null) swapHotItem()
+            val swapHotItem = { storage[storageIndex] = inventory.getPlayerInventory().getItem(e.hotbarButton) }
+            if (e.action == InventoryAction.HOTBAR_SWAP) {
+                if (e.currentItem == null) swapHotItem()
                 else storage[storageIndex] = null
-            } else if (event.action == InventoryAction.HOTBAR_MOVE_AND_READD) {
+            } else if (e.action == InventoryAction.HOTBAR_MOVE_AND_READD) {
                 swapHotItem()
             }
             // cancel event
-            e.clickCancelled = false
+            e.isCancelled = false
             return true
         }
         return false
     }
 
-    override fun handleDrag(positions: List<Pos>, e: WindowDragEvent): Boolean {
-        val event = (e as DelegatedDragEvent).event
-
-        event.newItems.entries.forEachIndexed { index, entry ->
+    override fun handleDrag(pos: List<Pos>, e: InventoryDragEvent): Boolean {
+        e.newItems.entries.forEachIndexed { index, entry ->
             val itemStack = entry.value
-            insertItemStack(positions[index], itemStack)
+            insertItemStack(pos[index], itemStack)
         }
-
         e.isCancelled = false
         return true
     }
 
-    override fun handleItemsMove(pos: Pos, e: WindowItemsMoveEvent): Boolean {
-        val event = (e as DelegatedItemsMoveEvent).event
+    override fun handleItemsMove(pos: Pos, e: InventoryClickEvent): Boolean {
         val storageIndex = insertable.indexOf(pos)
         if (storageIndex < 0) return false
-        event.isCancelled = false
+        e.isCancelled = false
         submit { storage[storageIndex] = inventory[locatingAbsoluteSlot(pos)] }
         return true
     }

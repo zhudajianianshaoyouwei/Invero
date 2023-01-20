@@ -1,10 +1,10 @@
 package cc.trixey.invero.bukkit.panel
 
+import cc.trixey.invero.bukkit.PanelContainer
 import cc.trixey.invero.bukkit.element.item.BaseItem
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.panel.GeneratorPanel
-import cc.trixey.invero.common.panel.PanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 
 /**

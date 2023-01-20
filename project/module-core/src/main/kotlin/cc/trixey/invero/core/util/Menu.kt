@@ -2,11 +2,7 @@ package cc.trixey.invero.core.util
 
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
-import cc.trixey.invero.core.Context
-import cc.trixey.invero.core.icon.IconElement
 import cc.trixey.invero.core.icon.Slot
-import taboolib.platform.util.bukkitPlugin
-import java.io.File
 
 /**
  * Invero
@@ -17,8 +13,4 @@ import java.io.File
  */
 fun List<Slot>.flatRelease(scale: Scale): List<Pos> {
     return flatMap { it.release(scale) }
-}
-
-fun IconElement.context(): Context {
-    return Context(session, panel, this)
 }
