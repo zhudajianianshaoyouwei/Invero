@@ -29,4 +29,6 @@ interface ProxyBukkitInventory : ProxyInventory {
         if (it > 26) it - 27 else it + 9
     }
 
+    fun isVirtual(): Boolean
+
 }

@@ -14,8 +14,12 @@ import org.bukkit.inventory.ItemStack
  */
 class InventoryPacket(override val window: BukkitWindow) : ProxyBukkitInventory {
 
+    override fun isVirtual(): Boolean {
+        return true
+    }
+
     private var closed: Boolean = true
-    private val windowItems = arrayOfNulls<ItemStack?>(containerType.entireWindowSize)
+     val windowItems = arrayOfNulls<ItemStack?>(containerType.entireWindowSize)
 
     override fun clear(slots: Collection<Int>) {
         slots.forEach { set(it, null) }

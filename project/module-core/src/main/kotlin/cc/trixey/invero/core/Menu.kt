@@ -6,13 +6,13 @@ import cc.trixey.invero.bukkit.PlayerViewer
 import cc.trixey.invero.bukkit.api.dsl.chestWindow
 import cc.trixey.invero.core.serialize.ListAgentPanelSerializer
 import cc.trixey.invero.core.util.session
+import cc.trixey.invero.core.util.unregisterSession
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonNames
 import org.bukkit.entity.Player
-import taboolib.common.platform.function.submit
 
 /**
  * Invero
@@ -41,40 +41,33 @@ class Menu(
     }
 
     fun open(viewer: PlayerViewer) {
-        val session = viewer.session
-
-        submit {
-            val window = chestWindow(
-                viewer,
-                settings.containerType.rows,
-                settings.title.getDefault(session),
-                settings.options.storageMode,
-                isVirtualMenu(),
-            ).onClose {
-                session.paired = null
-                session.unregisterAll()
-            }
-
-            // 部署
-            panels.forEach { it.invoke(window, session) }
-            // 开启 Window
-            // 其本身会检查是否已经打开任何 Window，并自动关闭等效旧菜单的 Window
-            window.open()
-            // 设置新的 Menu，Window
-            session.paired = this@Menu to window
-
-            settings.title.invoke(session)
+        // 注销原有菜单会话
+        if (viewer.session != null) {
+            val session = viewer.unregisterSession()
+            if (session != null && session.elapsed() < 2_00) return
         }
+        // 新建 Window
+        val window = chestWindow(
+            viewer,
+            settings.containerType.rows,
+            settings.title.getDefault(),
+            settings.options.storageMode,
+            isVirtualMenu(),
+        ).onClose { close(viewer, closeWindow = false, closeInventory = false) }
+        // 注册会话
+        val session = Session.register(viewer, this, window)
+        // 开启 Window
+        // 其本身会检查是否已经打开任何 Window，并自动关闭等效旧菜单的 Window
+        window.postRender { panels.forEach { it.invoke(window, session) } }
+        window.open()
+        settings.title.invoke(session)
     }
 
     fun close(viewer: PlayerViewer, closeWindow: Boolean = true, closeInventory: Boolean = true) {
-        val session = viewer.session
-        val window = session.window ?: error("Not found window when closing the menu [$name]")
+        val session = viewer.session ?: error("Not found registered session")
+        require(session.menu == this) { "Error menu handler" }
 
-        session.paired = null
-        session.unregisterAll()
-
-        if (closeWindow) window.close(closeInventory)
+        viewer.unregisterSession { if (closeWindow) it.close(true, closeInventory) }
     }
 
     private fun isVirtualMenu(): Boolean {

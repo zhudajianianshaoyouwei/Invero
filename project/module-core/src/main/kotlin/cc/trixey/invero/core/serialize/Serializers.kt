@@ -188,7 +188,10 @@ internal object MenuTitleSerializer : JsonTransformingSerializer<MenuTitle>(Menu
 
 
     override fun transformSerialize(element: JsonElement) = element.let {
-        val titles = it.jsonObject["value"]?.jsonArray
+        val titles = it.jsonObject["value"]?.let { value ->
+            if (value is JsonPrimitive) buildJsonArray { add(value) }
+            else value as JsonArray
+        }
         if (titles?.size == 1) titles.first() else it
     }
 }

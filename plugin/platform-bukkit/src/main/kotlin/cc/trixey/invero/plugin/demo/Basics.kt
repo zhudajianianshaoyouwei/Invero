@@ -1,7 +1,6 @@
 package cc.trixey.invero.plugin.demo
 
 import cc.trixey.invero.bukkit.api.dsl.*
-import cc.trixey.invero.bukkit.util.launchAsync
 import cc.trixey.invero.bukkit.util.randomMaterial
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -119,20 +118,6 @@ fun showDynamicTitle(player: Player) = chestWindow(player, 3, "_") {
         }
         titles.addAll(titles.reversed())
         titles
-    }
-
-    launchAsync {
-        repeating(3)
-
-        if (!it.isViewing()) {
-            println("# return@launchAsync")
-            return@launchAsync
-        }
-        for (title in dynamicTitles) {
-            it.title = title
-            yield()
-        }
-        it.title = "_"
     }
 
 }

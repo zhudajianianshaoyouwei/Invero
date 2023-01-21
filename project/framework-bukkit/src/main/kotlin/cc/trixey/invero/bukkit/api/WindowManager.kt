@@ -21,12 +21,14 @@ fun PlayerViewer.notViewingWindow(): Boolean {
     return registeredWindows[name] == null
 }
 
-fun BukkitWindow.register() {
-    require(!registeredWindows.containsKey(viewer.name))
-
+fun BukkitWindow.registerWindow() {
     registeredWindows[viewer.name] = this
 }
 
-fun BukkitWindow.unregister() {
+fun BukkitWindow.unregisterWindow() {
     registeredWindows.remove(viewer.name, this)
+}
+
+fun BukkitWindow.isRegistered(): Boolean {
+    return registeredWindows.containsValue(this)
 }

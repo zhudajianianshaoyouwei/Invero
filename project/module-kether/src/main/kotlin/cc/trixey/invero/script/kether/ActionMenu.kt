@@ -24,7 +24,7 @@ import taboolib.platform.util.onlinePlayers
 fun parserMenu() = scriptParser {
     when (it.expects("title", "close", "open")) {
         "title" -> handlerMenuTitle(it)
-        "close" -> actionNow { session().menu?.close(player()) }
+        "close" -> actionNow { session()?.menu?.close(player()) }
         "open" -> handlerMenuOpen(it)
         else -> error("Unknown case")
     }
@@ -32,14 +32,14 @@ fun parserMenu() = scriptParser {
 
 private fun handlerMenuTitle(it: QuestReader) =
     when (it.expects("get", "set", "pause", "resume")) {
-        "get" -> actionNow { session().window?.title }
+        "get" -> actionNow { session()?.window?.title }
 
         "set" -> {
             val input = it.nextParsedAction()
             actionFuture { future ->
                 val session = session()
                 newFrame(input).run<String>().thenApply { title ->
-                    session.window?.title = session.parse(title)
+                    session?.window?.title = session?.parse(title).toString()
                     future.complete(title)
                 }
             }
@@ -47,15 +47,13 @@ private fun handlerMenuTitle(it: QuestReader) =
 
         "pause" -> {
             actionNow {
-                session().variables["title_task_running"] = false
-                false
+                session()?.variables?.set("title_task_running", false)
             }
         }
 
         "resume" -> {
             actionNow {
-                session().variables["title_task_running"] = true
-                true
+                session()?.variables?.set("title_task_running", true)
             }
         }
 
@@ -66,7 +64,7 @@ private fun handlerMenuTitle(it: QuestReader) =
 private fun handlerMenuOpen(reader: QuestReader): ScriptAction<Any?> {
     val input = reader.nextParsedAction()
 
-    return actionNow {
+    return actionFuture { future ->
         newFrame(input).run<Any>().thenApply {
             val id = it.toString()
             val menu = InveroManager.getMenu(id) ?: error("Not found menu with id $id")
@@ -85,6 +83,6 @@ private fun handlerMenuOpen(reader: QuestReader): ScriptAction<Any?> {
                         ?.let { p -> menu.open(p) }
                 }
             }
-        }.getNow(null)
+        }.get().let { future.complete(it) }
     }
 }

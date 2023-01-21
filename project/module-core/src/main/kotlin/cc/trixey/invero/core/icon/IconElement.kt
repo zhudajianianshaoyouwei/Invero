@@ -2,14 +2,13 @@ package cc.trixey.invero.core.icon
 
 import cc.trixey.invero.bukkit.api.dsl.set
 import cc.trixey.invero.bukkit.element.item.SimpleItem
-import cc.trixey.invero.bukkit.util.CoroutineTask
-import cc.trixey.invero.bukkit.util.launchAsync
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.animation.Cyclic
 import cc.trixey.invero.core.util.letCatching
+import taboolib.common.platform.function.submitAsync
 
 /**
  * Invero
@@ -60,24 +59,19 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
             }
         }
 
-    // 正在播放动画的任务
-    private var frameTask: CoroutineTask? = null
-
     /**
      * 部署此图标的相关任务
      */
     fun invoke() {
         // 默认帧相关
         frame = defaultFrame
-        icon.getValidId(agent)
-            ?.let { key -> agent.layout?.search(key) }
-            ?.let { this@IconElement.set(it) }
+        icon.getValidId(agent)?.let { key -> agent.layout?.search(key) }?.let { this@IconElement.set(it) }
 
         framesCyclic = icon.generateCyclicFrames()
 
         // 周期任务 :: 翻译物品帧的相关变量
         if (icon.updatePeriod > 0) {
-            session.launchAsync(delay = 20L, period = icon.updatePeriod) {
+            session.taskMgr.launchAsync(delay = 20L, period = icon.updatePeriod) {
                 if (isVisible() && taskStatus[0]) {
                     frame?.translateUpdate(session, this, defaultFrame)
                 }
@@ -86,7 +80,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
 
         // 周期任务 :: 重定向子图标
         if (icon.relocatePeriod > 0 && !icon.subIcons.isNullOrEmpty()) {
-            session.launchAsync(delay = 20L, period = icon.relocatePeriod) {
+            session.taskMgr.launchAsync(delay = 20L, period = icon.relocatePeriod) {
                 if (isVisible() && taskStatus[1]) {
                     val previousIndex = iconIndex
                     val relocatedIndex = icon.subIcons.indexOfFirst { it.condition?.evalInstant(context) ?: false }
@@ -117,21 +111,21 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
      * 提交动画循环任务
      */
     fun submitFrameTask() {
-        if (frameTask != null) frameTask?.cancel()
+        val frames = framesCyclic!!
 
-        frameTask = launchAsync {
-            loop@ while (true) {
+        fun loop(delay: Long) {
+            submitAsync(delay = delay) {
+                if (frames != framesCyclic || frames.isAnimationEnded()) return@submitAsync
                 if (isVisible() && taskStatus[2]) {
-                    val frames = framesCyclic ?: break@loop
-                    if (frames.isAnimationEnded()) taskStatus[2] = false
-                    else frames.getAndCycle().let {
-                        this@IconElement.frame = it
-                        wait(frame?.delay ?: framesDefaultDelay)
-                    }
+                    frame = frames.getAndCycle()
+                    loop(frame?.delay ?: framesDefaultDelay)
                 }
-            }
-        }.also { session.taskManager += it }
+            }.also { session.taskMgr += it }
+        }
+
+        loop(0)
     }
+
 
     /**
      * 取得有效的交互处理器

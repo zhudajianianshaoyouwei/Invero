@@ -26,16 +26,17 @@ class MenuTitle(
             return
         }
 
+        val menuId = session.menu.name
         val cyclic = value.toCyclic(mode ?: CycleMode.LOOP)
-        session.launchAsync(delay = period!!, period = period) {
+        session.taskMgr.launchAsync(delay = period!!, period = period) {
             if (session.variables["title_task_running"] != false) {
-                session.window?.title = cyclic.getAndCycle().let { session.parse(it) }
+                session.window.title = cyclic.getAndCycle().let { session.parse(it) }
             }
         }
     }
 
     fun isSingle() = value.size <= 1 || period == null || mode == null || period < 0
 
-    fun getDefault(session: Session) = value.getOrElse(0) { "Untitled" }.let { session.parse(it) }
+    fun getDefault() = value.getOrElse(0) { "Untitled" }
 
 }

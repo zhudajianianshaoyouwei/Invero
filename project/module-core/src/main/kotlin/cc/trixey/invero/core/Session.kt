@@ -2,15 +2,17 @@ package cc.trixey.invero.core
 
 import cc.trixey.invero.bukkit.BukkitWindow
 import cc.trixey.invero.bukkit.PlayerViewer
-import cc.trixey.invero.bukkit.util.CoroutineTask
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.parseMiniMessage
+import cc.trixey.invero.core.util.session
 import cc.trixey.invero.core.util.translateAmpersandColor
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import taboolib.common.platform.function.submit
-import taboolib.common.platform.service.PlatformExecutor
+import taboolib.common.LifeCycle
+import taboolib.common.platform.Awake
+import taboolib.common.platform.function.submitAsync
 import taboolib.platform.compat.replacePlaceholder
-import java.util.*
+import taboolib.platform.util.bukkitPlugin
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -20,20 +22,17 @@ import java.util.concurrent.ConcurrentHashMap
  * @author Arasple
  * @since 2023/1/15 22:40
  */
-class Session(val viewer: PlayerViewer, var paired: Pair<Menu, BukkitWindow>? = null) {
+class Session(val viewer: PlayerViewer, val menu: Menu, val window: BukkitWindow) {
 
-    val window: BukkitWindow?
-        get() = paired?.second
+    val createdTime: Long = System.currentTimeMillis()
 
-    val menu: Menu?
-        get() = paired?.first
+    val variables = ConcurrentHashMap<String, Any>()
 
-    val variables: ConcurrentHashMap<String, Any> = ConcurrentHashMap()
+    val taskMgr: TaskManager
+        get() = TaskManager.get(viewer.name)
 
-    val taskManager = TaskManager()
-
-    fun unregisterAll() {
-        taskManager.unregisterAll()
+    fun elapsed(): Long {
+        return System.currentTimeMillis() - createdTime
     }
 
     fun parse(input: String, context: Context? = null): String {
@@ -51,31 +50,37 @@ class Session(val viewer: PlayerViewer, var paired: Pair<Menu, BukkitWindow>? = 
         return input.map { parse(it, context) }
     }
 
-    fun launch(
-        now: Boolean = false,
-        async: Boolean = false,
-        delay: Long = 0,
-        period: Long = 0,
-        comment: String? = null,
-        executor: (task: PlatformExecutor.PlatformTask) -> Unit,
-    ) {
-        submit(now, async, delay, period, comment, executor).also { taskManager += it }
-    }
-
-    fun launchAsync(
-        now: Boolean = false,
-        delay: Long = 0,
-        period: Long = 0,
-        comment: String? = null,
-        executor: (task: PlatformExecutor.PlatformTask) -> Unit,
-    ) = launch(now, true, delay, period, comment, executor)
-
     companion object {
 
         private val sessions = ConcurrentHashMap<String, Session>()
 
-        fun get(viewer: PlayerViewer): Session {
-            return sessions.computeIfAbsent(viewer.name) { Session(viewer) }
+        fun getSession(viewer: PlayerViewer): Session? {
+            return sessions[viewer.name]
+        }
+
+        fun register(viewer: PlayerViewer, menu: Menu, window: BukkitWindow): Session {
+            val session = Session(viewer, menu, window)
+            sessions[viewer.name] = session
+            return session
+        }
+
+        fun unregister(session: Session) {
+            sessions.remove(session.viewer.name, session)
+            session.taskMgr.unregisterAll()
+            val viewer = session.viewer
+            // patch for unwanted issues
+            submitAsync(delay = 40L) { if (viewer.session == null) TaskManager.get(viewer.name).unregisterAll(true) }
+        }
+
+        @Awake(LifeCycle.DISABLE)
+        fun unregister() {
+            Bukkit.getScheduler().apply {
+                pendingTasks
+                    .filter { it.owner == bukkitPlugin && !it.isCancelled }
+                    .forEach { it.cancel() }
+            }
+
+            sessions.values.forEach { unregister(it) }
         }
 
     }

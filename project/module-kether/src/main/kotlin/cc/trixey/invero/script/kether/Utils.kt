@@ -23,12 +23,12 @@ fun ScriptFrame.player(): Player {
 }
 
 fun ScriptFrame.getRecursivePanels(): List<Panel> {
-    return session().window?.getPanelsRecursively() ?: listOf()
+    return session()?.window?.getPanelsRecursively() ?: listOf()
 }
 
 fun <T : Panel> ScriptFrame.findPanelAt(indexs: List<Int>): T? {
     val iterator = indexs.iterator()
-    var panel: Any? = session().window
+    var panel: Any? = session()?.window
 
     while (iterator.hasNext() && panel is PanelContainer) {
         val index = iterator.next()
@@ -41,9 +41,9 @@ fun <T : Panel> ScriptFrame.findPanelAt(indexs: List<Int>): T? {
 inline fun <reified T : Panel> ScriptFrame.findNearstPanel(): T? {
     val siblings = variables().get<Panel>("@panel").getOrNull()?.getSiblings()
 
-    return (siblings ?: session().window?.panels)?.filterIsInstance<T>()?.firstOrNull()
+    return (siblings ?: session()?.window?.panels)?.filterIsInstance<T>()?.firstOrNull()
 }
 
-fun ScriptFrame.session(): Session {
+fun ScriptFrame.session(): Session? {
     return player().session
 }

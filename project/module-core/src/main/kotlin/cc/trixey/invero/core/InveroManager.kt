@@ -42,7 +42,8 @@ object InveroManager {
 
         // 注销旧菜单
         if (menus.isNotEmpty()) {
-            onlinePlayers.forEach { player -> player.session.menu?.close(player) }
+            // TODO 改善 RELOAD 体验
+            onlinePlayers.forEach { player -> player.session?.menu?.close(player) }
             menus.clear()
         }
         // 获取工作空间
@@ -116,11 +117,11 @@ object InveroManager {
                     // replace in memory
                     menus[menuId] = loaded
 
-                    println("MenuId: $menuId // ${onlinePlayers.first().session.menu?.name}")
+                    println("MenuId: $menuId // ${onlinePlayers.first().session?.menu?.name}")
 
                     // auto open
                     onlinePlayers
-                        .filter { it.session.menu?.name == menuId }
+                        .filter { it.session?.menu?.name == menuId }
                         .also {
                             if (it.isNotEmpty())
                                 console().cast<CommandSender>().sendLang("menu-loader-auto-reload-successed", menuId)

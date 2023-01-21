@@ -1,9 +1,12 @@
 package cc.trixey.invero.bukkit
 
 import cc.trixey.invero.bukkit.api.findWindow
-import cc.trixey.invero.bukkit.api.register
-import cc.trixey.invero.bukkit.api.unregister
+import cc.trixey.invero.bukkit.api.isRegistered
+import cc.trixey.invero.bukkit.api.registerWindow
+import cc.trixey.invero.bukkit.api.unregisterWindow
+import cc.trixey.invero.bukkit.nms.isTitleUpdating
 import cc.trixey.invero.bukkit.nms.updateTitle
+import cc.trixey.invero.bukkit.util.synced
 import cc.trixey.invero.common.ContainerType
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.StorageMode
@@ -27,7 +30,7 @@ abstract class BukkitWindow(
     override var title: String = title
         set(value) {
             field = value
-            submit { updateTitle(value) }
+            updateTitle(value)
         }
 
     override val panels = arrayListOf<BukkitPanel>()
@@ -41,6 +44,8 @@ abstract class BukkitWindow(
     private var postOpenCallback: (BukkitWindow) -> Boolean = { _ -> true }
 
     private var postCloseCallback: (BukkitWindow) -> Unit = { _ -> }
+
+    private var postRenderCallback: (BukkitWindow) -> Unit = { _ -> }
 
     abstract override val inventory: ProxyBukkitInventory
 
@@ -64,20 +69,32 @@ abstract class BukkitWindow(
         return this
     }
 
+    fun postRender(block: (BukkitWindow) -> Unit): BukkitWindow {
+        postRenderCallback = block
+        return this
+    }
+
     override fun open() {
         // 如果被取消
         if (!postOpenCallback(this)) return
         // 正在查看一个 Window，则伪关闭
-        findWindow(viewer.name)?.close(doCloseInventory = false, updateInventory = false)
+        findWindow(viewer.name)?.unregisterWindow()
+        // 注册窗口
+        registerWindow()
         // 开启新容器
-        register()
-        inventory.open()
+        // 避免更新标题带来的残影
+        if (viewer.isTitleUpdating()) submit(delay = 2L) { inventory.open() }
+        else synced { inventory.open() }
+        // 回调
+        postRenderCallback(this)
         render()
     }
 
     override fun close(doCloseInventory: Boolean, updateInventory: Boolean) {
+        require(isRegistered()) { "Can not close an unregistered window" }
+
         postCloseCallback(this)
-        unregister()
+        unregisterWindow()
         inventory.close(doCloseInventory, updateInventory)
         closeCallback(this)
     }
@@ -85,9 +102,7 @@ abstract class BukkitWindow(
     override fun render() {
         require(panels.all { it.parent == this })
 
-        panels
-            .sortedByDescending { it.weight }
-            .forEach { it.render() }
+        panels.sortedByDescending { it.weight }.forEach { it.render() }
     }
 
     override fun isViewing(): Boolean {

@@ -1,5 +1,6 @@
 package cc.trixey.invero.bukkit
 
+import cc.trixey.invero.bukkit.api.isRegistered
 import cc.trixey.invero.bukkit.panel.IOStoragePanel
 import cc.trixey.invero.common.event.ClickType
 import org.bukkit.Bukkit
@@ -19,6 +20,10 @@ import org.bukkit.inventory.ItemStack
  * @since 2023/1/20 13:13
  */
 class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory {
+
+    override fun isVirtual(): Boolean {
+        return false
+    }
 
     private val storage = PlayerStorage(viewer)
 
@@ -147,7 +152,10 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     }
 
     fun handleClose(e: InventoryCloseEvent) {
-        window.close(doCloseInventory = false, updateInventory = true)
+        println("close window from Inventory Vanilla ${window.isRegistered()}")
+        if (window.isRegistered()) {
+            window.close(doCloseInventory = false, updateInventory = false)
+        }
     }
 
     class Holder(val window: BukkitWindow) : InventoryHolder {

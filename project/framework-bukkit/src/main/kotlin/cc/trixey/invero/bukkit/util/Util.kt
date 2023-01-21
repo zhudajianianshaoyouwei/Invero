@@ -20,6 +20,11 @@ fun Boolean.proceed(block: () -> Unit): Boolean {
     return this
 }
 
+fun Boolean.elseProceed(block: () -> Unit): Boolean {
+    if (!this) block()
+    return this
+}
+
 fun <T> T.proceed(condition: (T) -> Boolean, block: () -> Unit): T {
     if (condition(this)) block()
     return this

@@ -1,7 +1,7 @@
 package cc.trixey.invero.core.util
 
 import cc.trixey.invero.bukkit.PlayerViewer
-import cc.trixey.invero.common.Viewer
+import cc.trixey.invero.common.Window
 import cc.trixey.invero.core.Session
 import org.bukkit.entity.Player
 
@@ -12,8 +12,16 @@ import org.bukkit.entity.Player
  * @author Arasple
  * @since 2023/1/16 12:12
  */
-inline val Viewer.session: Session
-    get() = Session.get(this as PlayerViewer)
 
-inline val Player.session: Session
-    get() = Session.get(PlayerViewer(this))
+inline val PlayerViewer.session: Session?
+    get() = Session.getSession(this)
+
+inline val Player.session: Session?
+    get() = Session.getSession(PlayerViewer(this))
+
+fun PlayerViewer.unregisterSession(callback: (Window) -> Unit = {}): Session? {
+    return session?.also {
+        Session.unregister(it)
+        callback(it.window)
+    }
+}
