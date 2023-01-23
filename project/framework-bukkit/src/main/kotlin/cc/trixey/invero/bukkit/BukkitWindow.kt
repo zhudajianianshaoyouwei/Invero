@@ -41,7 +41,7 @@ abstract class BukkitWindow(
 
     private var openCallback: (BukkitWindow) -> Unit = { _ -> }
 
-    private var postOpenCallback: (BukkitWindow) -> Boolean = { _ -> true }
+    private var postOpenCallback: (BukkitWindow) -> Any = { _ -> true }
 
     private var postCloseCallback: (BukkitWindow) -> Unit = { _ -> }
 
@@ -59,7 +59,7 @@ abstract class BukkitWindow(
         return this
     }
 
-    fun postOpen(block: (BukkitWindow) -> Boolean): BukkitWindow {
+    fun postOpen(block: (BukkitWindow) -> Any): BukkitWindow {
         postOpenCallback = block
         return this
     }
@@ -76,7 +76,7 @@ abstract class BukkitWindow(
 
     override fun open() {
         // 如果被取消
-        if (!postOpenCallback(this)) return
+        if (postOpenCallback(this) == false) return
         // 正在查看一个 Window，则伪关闭
         findWindow(viewer.name)?.unregisterWindow()
         // 注册窗口

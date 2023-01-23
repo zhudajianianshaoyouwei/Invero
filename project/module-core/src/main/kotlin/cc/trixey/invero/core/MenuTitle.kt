@@ -19,9 +19,7 @@ import kotlinx.serialization.json.JsonNames
  */
 @Serializable
 class MenuTitle(
-    @Serializable(with = ListStringSerializer::class)
-    @JsonNames("values")
-    val value: List<String>,
+    @Serializable(with = ListStringSerializer::class) @JsonNames("values") val value: List<String>,
     val period: Long?,
     val mode: CycleMode?
 ) {
@@ -38,6 +36,10 @@ class MenuTitle(
                 }
             }
         }
+    }
+
+    fun update(session: Session) {
+        session.window.title = session.parse(getDefault())
     }
 
     fun isSingle() = value.size <= 1 || period == null || mode == null || period < 0

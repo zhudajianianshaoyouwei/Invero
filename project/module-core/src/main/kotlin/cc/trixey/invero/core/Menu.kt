@@ -54,7 +54,7 @@ class Menu(
         val window = chestWindow(
             viewer,
             settings.containerType.rows,
-            settings.title.getDefault(),
+            "untitled_",
             settings.options.storageMode,
             isVirtualMenu(),
         ).onClose { close(viewer, closeWindow = false, closeInventory = false) }
@@ -62,7 +62,8 @@ class Menu(
         val session = Session.register(viewer, this, window)
         // 开启 Window
         // 其本身会检查是否已经打开任何 Window，并自动关闭等效旧菜单的 Window
-        window.postRender { panels.forEach { it.invoke(window, session) } }
+        window.postOpen { panels.forEach { it.invoke(window, session) } }
+        window.postRender { settings.title.update(session) }
         window.open()
         settings.title.invoke(session)
     }

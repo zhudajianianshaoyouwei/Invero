@@ -34,7 +34,7 @@ object ActionMenu {
     }
 
     private fun handlerMenuTitle(it: QuestReader) =
-        when (it.expects("get", "set", "pause", "resume")) {
+        when (it.expects("get", "set", "pause", "resume", "update")) {
             "get" -> actionNow { session()?.window?.title }
 
             "set" -> {
@@ -48,25 +48,20 @@ object ActionMenu {
                 }
             }
 
-            "pause" -> {
-                actionNow {
-                    session()?.variables?.set("title_task_running", false)
-                }
+            "pause" -> actionNow {
+                session()?.variables?.set("title_task_running", false)
             }
 
-            "resume" -> {
-                actionNow {
-                    session()?.variables?.set("title_task_running", true)
-                }
+
+            "resume" -> actionNow {
+                session()?.variables?.set("title_task_running", true)
             }
 
-            "update" -> {
-                actionNow {
-                    session()?.apply {
-                        window.title = parse(menu.settings.title.getDefault())
-                    }
-                }
+
+            "update" -> actionNow {
+                session()?.apply { menu.settings.title.update(this) }
             }
+
 
             else -> error("Unknown case")
         }

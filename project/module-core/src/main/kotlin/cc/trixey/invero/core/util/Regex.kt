@@ -17,6 +17,10 @@ fun String.containsAnyPlaceholder(): Boolean {
     return contains(PLACEHOLDER_ANY)
 }
 
+fun String.clearPlaceholders(): String {
+    return replace(PLACEHOLDER_ANY, "")
+}
+
 inline val Any?.bool: Boolean
     get() = this.bool()
 
