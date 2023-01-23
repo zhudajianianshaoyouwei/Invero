@@ -1,7 +1,5 @@
 package cc.trixey.invero.script.kether
 
-import taboolib.library.kether.QuestAction
-import taboolib.library.kether.QuestReader
 import taboolib.module.kether.KetherParser
 import taboolib.module.kether.actionNow
 import taboolib.module.kether.expects
@@ -14,30 +12,44 @@ import taboolib.module.kether.scriptParser
  * @author Arasple
  * @since 2023/1/19 21:20
  */
-private fun handlePanelOperators(token: String, indexs: List<Int>, reader: QuestReader): QuestAction<*> {
-    return when (token) {
-//        "page" -> ActionPage.parser().let {
-//            println(it.javaClass.simpleName)
-//            it.reader.invoke(reader)
-//        }
+object ActionPanel {
 
-        else -> TODO()
-    }
-}
+    /*
+    panel {at 0 at 1 at 2} <handler>
 
-@KetherParser(["panel"], namespace = "invero", shared = true)
-fun parsePanel() = scriptParser {
-    val indexs = mutableListOf<Int>()
+    handlers:
+    - page
+    - scroll
+    - shift
+    - filter
+    - icon
+     */
+    @KetherParser(["panel"], namespace = "invero", shared = true)
+    fun parsePanel() = scriptParser {
+        val indexs = mutableListOf<Int>()
 
-    actionNow {
-        while (it.hasNext()) {
-            when (it.expects("index", "at", "page", "scroll")) {
-                "at", "index" -> indexs += it.nextInt()
-                else -> {
-                    handlePanelOperators(it.nextToken(), indexs, it)
-                    break
+        actionNow {
+            while (it.hasNext()) {
+                when (it.expects("at", "page", "icon")) {
+                    "at" -> indexs += it.nextInt()
+                    "page" -> {
+                        ActionPage.parser(indexs).reader.invoke(it)
+                        break
+                    }
+
+                    "icon" -> {
+                        // by Name
+                        it.expects("by", "at")
+                        val iconId = it.nextToken()
+                        break
+                    }
                 }
             }
         }
     }
+
+    private fun handleIconOperators() {
+
+    }
+
 }

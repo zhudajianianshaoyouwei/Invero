@@ -6,13 +6,9 @@ import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.parseMiniMessage
 import cc.trixey.invero.core.util.session
 import cc.trixey.invero.core.util.translateAmpersandColor
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import taboolib.common.LifeCycle
-import taboolib.common.platform.Awake
 import taboolib.common.platform.function.submitAsync
 import taboolib.platform.compat.replacePlaceholder
-import taboolib.platform.util.bukkitPlugin
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -68,19 +64,7 @@ class Session(val viewer: PlayerViewer, val menu: Menu, val window: BukkitWindow
             sessions.remove(session.viewer.name, session)
             session.taskMgr.unregisterAll()
             val viewer = session.viewer
-            // patch for unwanted issues
             submitAsync(delay = 40L) { if (viewer.session == null) TaskManager.get(viewer.name).unregisterAll(true) }
-        }
-
-        @Awake(LifeCycle.DISABLE)
-        fun unregister() {
-            Bukkit.getScheduler().apply {
-                pendingTasks
-                    .filter { it.owner == bukkitPlugin && !it.isCancelled }
-                    .forEach { it.cancel() }
-            }
-
-            sessions.values.forEach { unregister(it) }
         }
 
     }

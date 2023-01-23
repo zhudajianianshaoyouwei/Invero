@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @since 2022/12/29 13:51
  */
 @JvmInline
-value class Elements(private val value: ConcurrentHashMap<Element, Positions> = ConcurrentHashMap()) {
+value class Elements(val value: ConcurrentHashMap<Element, Positions> = ConcurrentHashMap()) {
 
     fun occupiedPositions(): Set<Pos> {
         return value.values.flatMap { it.values }.toSet()

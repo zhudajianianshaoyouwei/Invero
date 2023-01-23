@@ -44,7 +44,7 @@ abstract class BaseItem<T : Element>(override val panel: Panel) : Supplier<ItemS
         return value
     }
 
-    protected fun isVisible(): Boolean {
+    open fun isVisible(): Boolean {
         return panel.parent.isPanelValid(panel) && panel.isElementValid(this)
     }
 

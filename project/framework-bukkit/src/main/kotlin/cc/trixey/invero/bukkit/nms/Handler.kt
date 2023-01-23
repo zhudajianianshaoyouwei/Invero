@@ -43,14 +43,15 @@ fun PlayerViewer.isTitleUpdating(): Boolean {
 }
 
 fun BukkitWindow.updateTitle(title: String, updateInventory: Boolean = true) {
-    viewer.setTitleUpdating()
+    if (viewer.isTitleUpdating()) return
+    else viewer.setTitleUpdating()
     val player = viewer.get<Player>()
     val virtual = inventory is InventoryPacket
     val id = if (virtual) persistContainerId else handler.getContainerId(player)
 
     handler.sendWindowOpen(player, id, type, title)
-    if (updateInventory) player.updateInventory()
     if (virtual) (inventory as InventoryPacket).update()
+    else if (updateInventory) player.updateInventory()
 
     // 补刀
     submitAsync { if (viewer.notViewingWindow()) handler.sendWindowClose(player, id) }

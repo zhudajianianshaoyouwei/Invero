@@ -9,6 +9,7 @@ dependencies {
     compileOnly("com.mojang:datafixerupper:4.0.26")
 
     compileOnly("io.izzel.taboolib:common:$taboolibVersion")
+    compileOnly("io.izzel.taboolib:common-5:$taboolibVersion")
     compileOnly("io.izzel.taboolib:platform-bukkit:$taboolibVersion")
     compileOnly("io.izzel.taboolib:module-kether:$taboolibVersion")
 }

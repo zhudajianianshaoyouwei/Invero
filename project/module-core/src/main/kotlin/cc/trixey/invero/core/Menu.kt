@@ -43,8 +43,12 @@ class Menu(
     fun open(viewer: PlayerViewer) {
         // 注销原有菜单会话
         if (viewer.session != null) {
-            val session = viewer.unregisterSession()
-            if (session != null && session.elapsed() < 2_00) return
+            val session = viewer.session
+            if (session != null && session.elapsed() < 2_00) {
+                return
+            } else {
+                viewer.unregisterSession()
+            }
         }
         // 新建 Window
         val window = chestWindow(
@@ -64,14 +68,14 @@ class Menu(
     }
 
     fun close(viewer: PlayerViewer, closeWindow: Boolean = true, closeInventory: Boolean = true) {
-        val session = viewer.session ?: error("Not found registered session")
-        require(session.menu == this) { "Error menu handler" }
+        val session = viewer.session ?: return
+        if (session.menu != this) return
 
         viewer.unregisterSession { if (closeWindow) it.close(true, closeInventory) }
     }
 
     private fun isVirtualMenu(): Boolean {
-        return !panels.any { it.requireBukkitWindow() } && settings.packet
+        return !panels.any { it.requireBukkitWindow() } && settings.virtual
     }
 
 }

@@ -1,7 +1,11 @@
 package cc.trixey.invero.core
 
+import org.bukkit.Bukkit
+import taboolib.common.LifeCycle
+import taboolib.common.platform.Awake
 import taboolib.common.platform.function.submit
 import taboolib.common.platform.service.PlatformExecutor
+import taboolib.platform.util.bukkitPlugin
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CopyOnWriteArraySet
 
@@ -14,14 +18,9 @@ import java.util.concurrent.CopyOnWriteArraySet
  */
 class TaskManager(private val platformTasks: CopyOnWriteArraySet<PlatformExecutor.PlatformTask> = CopyOnWriteArraySet()) {
 
-
     fun unregisterAll(cleanup: Boolean = false) {
         platformTasks.forEach { it.cancel() }
-        if (cleanup) {
-            platformTasks.clear()
-        }
-
-        println("platformTasks:::${platformTasks.size}")
+        if (cleanup) platformTasks.clear()
     }
 
     fun launch(
@@ -57,6 +56,17 @@ class TaskManager(private val platformTasks: CopyOnWriteArraySet<PlatformExecuto
 
         fun get(key: String): TaskManager {
             return taskMgrs.computeIfAbsent(key) { TaskManager() }
+        }
+
+        @Awake(LifeCycle.DISABLE)
+        fun unregister() {
+            taskMgrs.values.forEach { it.unregisterAll() }
+
+            Bukkit.getScheduler().apply {
+                pendingTasks
+                    .filter { it.owner == bukkitPlugin && !it.isCancelled }
+                    .forEach { it.cancel() }
+            }
         }
 
     }

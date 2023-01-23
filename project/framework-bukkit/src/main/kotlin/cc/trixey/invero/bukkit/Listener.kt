@@ -64,7 +64,6 @@ object Listener {
                 val id = packet.read<Int>(FIELD_CONTAINER_ID) ?: return
                 if (id == persistContainerId) {
                     val window = viewer.viewingWindow() ?: return
-                    println("close window from PacketPlayInCloseWindow")
                     submit { window.close(doCloseInventory = false, updateInventory = true) }
                 }
             }

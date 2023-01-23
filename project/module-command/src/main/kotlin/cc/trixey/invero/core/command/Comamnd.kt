@@ -1,5 +1,10 @@
 package cc.trixey.invero.core.command
 
+import cc.trixey.invero.core.InveroManager
+import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
+import taboolib.common.platform.command.*
+
 /**
  * Invero
  * cc.trixey.invero.core.command.Comamnd
@@ -7,5 +12,40 @@ package cc.trixey.invero.core.command
  * @author Arasple
  * @since 2023/1/19 11:36
  */
-class Comamnd {
+@CommandHeader(name = "invero", aliases = ["i"], permission = "invero.command")
+object Comamnd {
+
+    @CommandBody
+    val main = mainCommand { createHelper() }
+
+    @CommandBody
+    val dev = CommandDev
+
+    @CommandBody
+    val reload = subCommand { execute { sender, _, _ -> InveroManager.load(sender) } }
+
+    /*
+    invero open <menuId>[:context] [for <player>]
+     */
+    @CommandBody
+    val open = subCommand {
+        dynamic("id") {
+            suggestMenuIds()
+            literal("for", optional = true) {
+                dynamic("player") {
+                    suggestPlayers()
+                    execute<CommandSender> { _, ctx, _ ->
+                        val player = ctx["player"].retrievePlayer()
+                        val menu = ctx["id"].retrieveMenu()
+
+                        if (player != null) {
+                            menu?.open(player)
+                        }
+                    }
+                }
+            }
+            execute<Player> { player, ctx, _ -> ctx["id"].retrieveMenu()?.open(player) }
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-package cc.trixey.invero.plugin.dev
+package cc.trixey.invero.core.command
 
 import cc.trixey.invero.bukkit.InventoryPacket
 import cc.trixey.invero.bukkit.InventoryVanilla
@@ -14,6 +14,7 @@ import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 import taboolib.common.platform.command.CommandBody
 import taboolib.common.platform.command.CommandHeader
+import taboolib.common.platform.command.mainCommand
 import taboolib.common.platform.command.subCommand
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.submitAsync
@@ -23,13 +24,16 @@ import taboolib.platform.util.onlinePlayers
 
 /**
  * Invero
- * cc.trixey.invero.plugin.dev.InveroDev
+ * cc.trixey.invero.core.command.CommandDev
  *
  * @author Arasple
  * @since 2023/1/15 15:44
  */
-@CommandHeader(name = "invero")
-object InveroDev {
+@CommandHeader(name = "idev")
+object CommandDev {
+
+    @CommandBody
+    val main = mainCommand { createHelper() }
 
     @CommandBody
     val run = subCommand {
@@ -38,30 +42,15 @@ object InveroDev {
             val script = argument.removePrefix("run ")
 
             submitAsync {
-                KetherHandler
-                    .invoke(script, player, mapOf())
-                    .thenApply {
-                        println(
-                            """
+                KetherHandler.invoke(script, player, mapOf()).thenApply {
+                    println(
+                        """
                         ------------------>
                         Script: $script
                         Result: $it
                     """.trimIndent()
-                        )
-                    }.get()
-            }
-        }
-    }
-
-    @Awake(LifeCycle.ACTIVE)
-    fun invoke() = InveroManager.load(console().cast())
-
-    @CommandBody
-    val reload = subCommand {
-        execute<CommandSender> { sender, _, _ ->
-            InveroManager.load(sender)
-            InveroManager.getMenus().keys.forEach {
-                println("Menu:: $it")
+                    )
+                }.get()
             }
         }
     }
@@ -159,12 +148,9 @@ object InveroDev {
                 inventory.windowItems
             } else {
                 (inventory as InventoryVanilla).container.contents
+            }.filterNot { it.isAir }.joinToString(",") { it!!.type.name }.let {
+                println("Storage: [ $it ]")
             }
-                .filterNot { it.isAir }
-                .joinToString(",") { it!!.type.name }
-                .let {
-                    println("Storage: [ $it ]")
-                }
         }
     }
 

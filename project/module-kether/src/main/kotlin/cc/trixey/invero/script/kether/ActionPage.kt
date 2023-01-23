@@ -12,60 +12,59 @@ import java.util.concurrent.CompletableFuture
  * @author Arasple
  * @since 2023/1/19 20:33
  */
+object ActionPage {
 
+    /*
+    page get
+    page max
+    page next by [value]
+    page previous by [value]
+    page set <value]
+     */
+    @KetherParser(["page"], namespace = "invero", shared = true)
+    fun parser() = parser(null)
 
-/*
-page get
-page max
-page next by [value]
-page previous by [value]
-page set <value>
- */
-@KetherParser(["page"], namespace = "invero", shared = true)
-fun parser() = parser(null)
-
-fun parser(indexs: List<Int>?) = combinationParser {
-    it.group(symbol()).apply(it) { type ->
-        val operator = PageOperator.of(type)
-
-        var value: ParsedAction<*>? = null
-        if (operator == PageOperator.MODIFY) {
-            it.group(action()).apply(it) { info -> value = info }
-        } else if (!operator.isOutput()) {
-            it.group(command("by", "to", then = action()).option().defaultsTo(null)).apply(it) { info ->
-                value = info
+    internal fun parser(panelLocation: List<Int>?) = combinationParser {
+        it.group(symbol()).apply(it) { type ->
+            val operator = PageOperator.of(type)
+            var value: ParsedAction<*>? = null
+            if (operator == PageOperator.MODIFY) {
+                it.group(action()).apply(it) { info -> value = info }
+            } else if (!operator.isOutput()) {
+                it.group(command("by", "to", then = action()).option().defaultsTo(null)).apply(it) { info ->
+                    value = info
+                }
             }
+            future { run(this, operator, value, panelLocation) }
+        }
+    }
+
+    private fun run(
+        frame: ScriptFrame,
+        operator: PageOperator,
+        value: ParsedAction<*>?,
+        panelLocation: List<Int>?
+    ): CompletableFuture<Any?> {
+        val located = if (panelLocation.isNullOrEmpty()) null else frame.findPanelAt<PagedPanel>(panelLocation)
+        val panel = located ?: frame.findNearstPanel() ?: return CompletableFuture.completedFuture(-1)
+
+        // 输出 Page 值
+        if (operator.isOutput()) {
+            return when (operator) {
+                PageOperator.GET -> panel.pageIndex
+                PageOperator.GET_MAX -> panel.maxPageIndex
+                else -> error("unreachable")
+            }.let { CompletableFuture.completedFuture(it) }
         }
 
-        future { run(this, operator, value, indexs) }
-    }
-}
+        // 修改 Page
+        if (value != null) {
+            frame.run(value).int { operator.invoke(panel, it) }
+        } else {
+            operator.invoke(panel, 1)
+        }
 
-
-private fun run(
-    frame: ScriptFrame,
-    operator: PageOperator,
-    value: ParsedAction<*>?,
-    indexs: List<Int>?
-): CompletableFuture<Any?> {
-    val located = if (indexs.isNullOrEmpty()) null else frame.findPanelAt<PagedPanel>(indexs)
-    val panel = located ?: frame.findNearstPanel() ?: return CompletableFuture.completedFuture(-1)
-
-    // 输出 Page 值
-    if (operator.isOutput()) {
-        return when (operator) {
-            PageOperator.GET -> panel.pageIndex
-            PageOperator.GET_MAX -> panel.maxPageIndex
-            else -> error("unreachable")
-        }.let { CompletableFuture.completedFuture(it) }
+        return CompletableFuture.completedFuture(panel.pageIndex)
     }
 
-    // 修改 Page
-    if (value != null) {
-        frame.run(value).int { operator.invoke(panel, it) }
-    } else {
-        operator.invoke(panel, 1)
-    }
-
-    return CompletableFuture.completedFuture(panel.pageIndex)
 }

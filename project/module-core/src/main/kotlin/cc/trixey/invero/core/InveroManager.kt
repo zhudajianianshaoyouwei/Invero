@@ -6,6 +6,8 @@ import cc.trixey.invero.core.util.listRecursively
 import cc.trixey.invero.core.util.prettyPrint
 import cc.trixey.invero.core.util.session
 import org.bukkit.command.CommandSender
+import taboolib.common.LifeCycle
+import taboolib.common.platform.Awake
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.submitAsync
 import taboolib.common5.FileWatcher
@@ -35,6 +37,9 @@ object InveroManager {
     fun getMenus(): Map<String, Menu> {
         return menus
     }
+
+    @Awake(LifeCycle.ACTIVE)
+    fun invoke() = load(console().cast())
 
     fun load(sender: CommandSender) {
         val workspaces = getWorkspaces()

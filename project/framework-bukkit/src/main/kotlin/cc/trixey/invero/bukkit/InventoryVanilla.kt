@@ -152,7 +152,6 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     }
 
     fun handleClose(e: InventoryCloseEvent) {
-        println("close window from Inventory Vanilla ${window.isRegistered()}")
         if (window.isRegistered()) {
             window.close(doCloseInventory = false, updateInventory = false)
         }

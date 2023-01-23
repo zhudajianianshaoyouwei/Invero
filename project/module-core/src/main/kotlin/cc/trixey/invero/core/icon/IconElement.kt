@@ -8,6 +8,7 @@ import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.animation.Cyclic
 import cc.trixey.invero.core.util.letCatching
+import cc.trixey.invero.core.util.session
 import taboolib.common.platform.function.submitAsync
 
 /**
@@ -20,7 +21,7 @@ import taboolib.common.platform.function.submitAsync
 open class IconElement(val session: Session, val icon: Icon, val agent: AgentPanel, panel: Panel) : SimpleItem(panel) {
 
     // 任务是否未被暂停
-    val taskStatus = arrayOf(
+    private val taskStatus = arrayOf(
         // 翻译物品变量 (Update)
         true,
         // 重定向子图标 (Relocate)
@@ -71,30 +72,15 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
 
         // 周期任务 :: 翻译物品帧的相关变量
         if (icon.updatePeriod > 0) {
-            session.taskMgr.launchAsync(delay = 20L, period = icon.updatePeriod) {
-                if (isVisible() && taskStatus[0]) {
-                    frame?.translateUpdate(session, this, defaultFrame)
-                }
+            session.taskMgr.launchAsync(delay = 10L, period = icon.updatePeriod) {
+                if (isVisible() && taskStatus[0]) update()
             }
         }
 
         // 周期任务 :: 重定向子图标
         if (icon.relocatePeriod > 0 && !icon.subIcons.isNullOrEmpty()) {
-            session.taskMgr.launchAsync(delay = 20L, period = icon.relocatePeriod) {
-                if (isVisible() && taskStatus[1]) {
-                    val previousIndex = iconIndex
-                    val relocatedIndex = icon.subIcons.indexOfFirst { it.condition?.evalInstant(context) ?: false }
-                    // 子图标 ->> 默认图标
-                    if (previousIndex > 0 && relocatedIndex < 0) {
-                        framesDefaultDelay = icon.framesProperties?.defaultDelay ?: 20L
-                        framesCyclic = icon.generateCyclicFrames()
-                    } else if (previousIndex != relocatedIndex) {
-                        val subIcon = icon.subIcons[relocatedIndex]
-                        iconIndex = relocatedIndex
-                        framesCyclic = subIcon.generateCyclicFrames()
-                        framesDefaultDelay = subIcon.framesProperties?.defaultDelay ?: 20L
-                    }
-                }
+            session.taskMgr.launchAsync(delay = 10L, period = icon.relocatePeriod) {
+                if (isVisible() && taskStatus[1]) relocate()
             }
         }
 
@@ -110,12 +96,12 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
     /**
      * 提交动画循环任务
      */
-    fun submitFrameTask() {
+    private fun submitFrameTask() {
         val frames = framesCyclic!!
 
         fun loop(delay: Long) {
             submitAsync(delay = delay) {
-                if (frames != framesCyclic || frames.isAnimationEnded()) return@submitAsync
+                if (frames != framesCyclic || frames.isAnimationEnded() || shouldUnregister()) return@submitAsync
                 if (isVisible() && taskStatus[2]) {
                     frame = frames.getAndCycle()
                     loop(frame?.delay ?: framesDefaultDelay)
@@ -126,12 +112,69 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
         loop(0)
     }
 
+    /**
+     * 翻译当前物品帧的变量
+     */
+    fun update() {
+        frame?.translateUpdate(session, this, defaultFrame)
+    }
+
+    /**
+     * 重新定位子图标
+     */
+    fun relocate() {
+        if (icon.subIcons == null) return
+
+        val previousIndex = iconIndex
+        val relocatedIndex = icon.subIcons.indexOfFirst { it.condition?.evalInstant(context) ?: false }
+        // 子图标 ->> 默认图标
+        if (previousIndex > 0 && relocatedIndex < 0) {
+            framesDefaultDelay = icon.framesProperties?.defaultDelay ?: 20L
+            framesCyclic = icon.generateCyclicFrames()
+        } else if (previousIndex != relocatedIndex) {
+            val subIcon = icon.subIcons[relocatedIndex]
+            iconIndex = relocatedIndex
+            framesCyclic = subIcon.generateCyclicFrames()
+            framesDefaultDelay = subIcon.framesProperties?.defaultDelay ?: 20L
+        }
+    }
+
+    fun pauseUpdateTask() {
+        taskStatus[0] = false
+    }
+
+    fun pauseRelocateTask() {
+        taskStatus[1] = false
+    }
+
+    fun pauseFramesTask() {
+        taskStatus[2] = false
+    }
+
+    fun resumeUpdateTask() {
+        taskStatus[0] = true
+    }
+
+    fun resumeRelocateTask() {
+        taskStatus[1] = true
+    }
+
+    fun resumeFramesTask() {
+        taskStatus[2] = true
+    }
 
     /**
      * 取得有效的交互处理器
      */
     fun getIconHandler(): IconHandler? {
         return if (iconIndex > 0) icon.subIcons!![iconIndex].handler ?: icon.handler else icon.handler
+    }
+
+    /**
+     * 是否需要注销
+     */
+    fun shouldUnregister(): Boolean {
+        return session != session.viewer.session
     }
 
 }

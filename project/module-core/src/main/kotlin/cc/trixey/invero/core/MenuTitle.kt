@@ -5,6 +5,7 @@ import cc.trixey.invero.core.animation.toCyclic
 import cc.trixey.invero.core.serialize.ListStringSerializer
 import cc.trixey.invero.core.util.containsAnyPlaceholder
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
 /**
  * Invero
@@ -16,6 +17,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 class MenuTitle(
     @Serializable(with = ListStringSerializer::class)
+    @JsonNames("values")
     val value: List<String>,
     val period: Long?,
     val mode: CycleMode?
