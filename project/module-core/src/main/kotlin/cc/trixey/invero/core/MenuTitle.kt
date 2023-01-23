@@ -1,9 +1,12 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package cc.trixey.invero.core
 
 import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.animation.toCyclic
 import cc.trixey.invero.core.serialize.ListStringSerializer
 import cc.trixey.invero.core.util.containsAnyPlaceholder
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
 
@@ -24,15 +27,15 @@ class MenuTitle(
 ) {
 
     fun invoke(session: Session) {
-        if (isSingle() && !value.single().containsAnyPlaceholder()) {
+        if (isSingle() && !value.single().containsAnyPlaceholder() && period == null) {
             return
         }
-
-        val menuId = session.menu.name
         val cyclic = value.toCyclic(mode ?: CycleMode.LOOP)
-        session.taskMgr.launchAsync(delay = period!!, period = period) {
-            if (session.variables["title_task_running"] != false) {
-                session.window.title = cyclic.getAndCycle().let { session.parse(it) }
+        if (period != null) {
+            session.taskMgr.launchAsync(delay = period, period = period) {
+                if (session.variables["title_task_running"] != false) {
+                    session.window.title = cyclic.getAndCycle().let { session.parse(it) }
+                }
             }
         }
     }

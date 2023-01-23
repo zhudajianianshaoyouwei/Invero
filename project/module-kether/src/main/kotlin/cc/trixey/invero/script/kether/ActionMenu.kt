@@ -18,6 +18,7 @@ object ActionMenu {
     - menu title set "xxx"
     - menu title pause
     - menu title resume
+    - menu title update
     - menu close
     - menu open [menuId] for [player]
      */
@@ -56,6 +57,14 @@ object ActionMenu {
             "resume" -> {
                 actionNow {
                     session()?.variables?.set("title_task_running", true)
+                }
+            }
+
+            "update" -> {
+                actionNow {
+                    session()?.apply {
+                        window.title = parse(menu.settings.title.getDefault())
+                    }
                 }
             }
 
