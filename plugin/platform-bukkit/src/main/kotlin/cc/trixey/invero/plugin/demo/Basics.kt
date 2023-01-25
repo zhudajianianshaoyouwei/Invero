@@ -112,7 +112,7 @@ fun showDynamicTitle(player: Player) = chestWindow(player, 3, "_") {
         var current = "_"
         val titles = mutableListOf<String>()
 
-        "Invero Animated Title".windowed(1, 1).forEachIndexed { _, s ->
+        "Invero Animated MenuTitle".windowed(1, 1).forEachIndexed { _, s ->
             current += s
             titles.add(current)
         }

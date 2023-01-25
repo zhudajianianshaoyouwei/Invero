@@ -6,10 +6,11 @@ import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.event.ClickType
 import cc.trixey.invero.core.Layout
-import cc.trixey.invero.core.MenuTitle
 import cc.trixey.invero.core.action.*
 import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.icon.IconHandler
+import cc.trixey.invero.core.menu.CommandArgument
+import cc.trixey.invero.core.menu.MenuTitle
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.IntArraySerializer
@@ -29,6 +30,21 @@ import org.bukkit.event.inventory.InventoryType
  * @author Arasple
  * @since 2023/1/18 0:12
  */
+internal object CommandArgumentSerailizer : JsonTransformingSerializer<CommandArgument>(serializer()) {
+
+    override fun transformDeserialize(element: JsonElement): JsonElement {
+        return if (element is JsonPrimitive) {
+            buildJsonObject {
+                put("id", element.content)
+                put("type", "STRING")
+            }
+        } else {
+            element
+        }
+    }
+
+}
+
 internal object IconHandlerSerializer : JsonTransformingSerializer<IconHandler>(serializer()) {
 
     override fun transformDeserialize(element: JsonElement): JsonElement {
@@ -158,7 +174,7 @@ internal object ActionKetherSerializer : KSerializer<ActionKether> {
             .joinToString("\\n") { it }
             .let { ActionKether(it) }
     } catch (e: Throwable) {
-        ActionKether(decoder.decodeString())
+        ActionKether((decoder as JsonDecoder).decodeJsonElement().jsonPrimitive.content)
     }
 
     override fun serialize(encoder: Encoder, value: ActionKether) {

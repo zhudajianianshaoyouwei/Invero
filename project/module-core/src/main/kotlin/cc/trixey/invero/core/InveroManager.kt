@@ -1,5 +1,6 @@
 package cc.trixey.invero.core
 
+import cc.trixey.invero.core.menu.MenuBindings
 import cc.trixey.invero.core.serialize.deserializeToMenu
 import cc.trixey.invero.core.serialize.hocon.PatchedLoader
 import cc.trixey.invero.core.util.listRecursively
@@ -30,6 +31,8 @@ object InveroManager {
 
     internal val menus = ConcurrentHashMap<String, Menu>()
 
+    internal val bindings = ConcurrentHashMap<String, MenuBindings>()
+
     fun getMenu(name: String): Menu? {
         return menus[name]
     }
@@ -49,6 +52,7 @@ object InveroManager {
         if (menus.isNotEmpty()) {
             // TODO 改善 RELOAD 体验
             onlinePlayers.forEach { player -> player.session?.menu?.close(player) }
+            menus.values.forEach { it.unregister() }
             menus.clear()
         }
         // 获取工作空间
@@ -102,16 +106,10 @@ object InveroManager {
     private fun registerService(file: File, menu: Menu) {
         val menuId = menu.name!!
 
-        if (FileWatcher.INSTANCE.hasListener(file)) {
-            return println("Already has listener for file ${file.path}")
-        } else {
-            println("Registerting listener for file ${file.path}")
-        }
-
+        if (FileWatcher.INSTANCE.hasListener(file)) return
         FileWatcher.INSTANCE.addSimpleListener(file) {
             submitAsync {
                 if (!file.exists() || !menus.containsKey(menuId)) {
-                    println("UNREGISTER SIMPLE FILE LISTENER ${file.exists()} ${menus.containsKey(menuId)}")
                     FileWatcher.INSTANCE.removeListener(file)
                 } else runCatching {
                     PatchedLoader.loadFromFile(file).deserializeToMenu(name = menuId)
@@ -120,10 +118,8 @@ object InveroManager {
                     console().cast<CommandSender>().sendLang("menu-loader-auto-reload-errored", menu.name!!)
                 }.getOrNull()?.let { loaded ->
                     // replace in memory
+                    menus[menuId]?.unregister()
                     menus[menuId] = loaded
-
-                    println("MenuId: $menuId // ${onlinePlayers.first().session?.menu?.name}")
-
                     // auto open
                     onlinePlayers
                         .filter { it.session?.menu?.name == menuId }

@@ -2,7 +2,6 @@ package cc.trixey.invero.core.icon
 
 import cc.trixey.invero.common.event.ClickType
 import cc.trixey.invero.core.action.Action
-import cc.trixey.invero.core.serialize.IconHandlerSerializer
 import kotlinx.serialization.Serializable
 
 /**

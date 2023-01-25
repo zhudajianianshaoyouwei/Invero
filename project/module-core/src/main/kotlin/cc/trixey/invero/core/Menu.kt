@@ -1,82 +1,36 @@
-@file:OptIn(ExperimentalSerializationApi::class)
-
 package cc.trixey.invero.core
 
 import cc.trixey.invero.bukkit.PlayerViewer
-import cc.trixey.invero.bukkit.api.dsl.chestWindow
-import cc.trixey.invero.core.serialize.ListAgentPanelSerializer
-import cc.trixey.invero.core.util.session
-import cc.trixey.invero.core.util.unregisterSession
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.SerialName
+import cc.trixey.invero.core.serialize.SelectorMenu
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
-import kotlinx.serialization.json.JsonNames
 import org.bukkit.entity.Player
 
 /**
  * Invero
- * cc.trixey.invero.core.Menu
+ * cc.trixey.invero.core.AbstractMenu
  *
  * @author Arasple
- * @since 2023/1/15 17:16
+ * @since 2023/1/24 21:27
  */
-@Serializable
-class Menu(
-    @Transient
-    var name: String? = null,
-    @SerialName("menu")
-    val settings: MenuSettings,
-    @Serializable(with = ListAgentPanelSerializer::class)
-    @JsonNames("panel", "pane", "panes")
-    val panels: List<AgentPanel>
-) {
+@Serializable(with = SelectorMenu::class)
+abstract class Menu {
 
-    fun open(player: Player) {
-        return open(PlayerViewer(player))
-    }
+    var name: String? = null
 
-    fun close(player: Player) {
-        return close(PlayerViewer(player))
-    }
+    abstract val panels: List<AgentPanel>
 
-    fun open(viewer: PlayerViewer) {
-        // 注销原有菜单会话
-        if (viewer.session != null) {
-            val session = viewer.session
-            if (session != null && session.elapsed() < 2_00) {
-                return
-            } else {
-                viewer.unregisterSession()
-            }
-        }
-        // 新建 Window
-        val window = chestWindow(
-            viewer,
-            settings.containerType.rows,
-            "untitled_",
-            settings.options.storageMode,
-            isVirtualMenu(),
-        ).onClose { close(viewer, closeWindow = false, closeInventory = false) }
-        // 注册会话
-        val session = Session.register(viewer, this, window)
-        // 开启 Window
-        // 其本身会检查是否已经打开任何 Window，并自动关闭等效旧菜单的 Window
-        window.postOpen { panels.forEach { it.invoke(window, session) } }
-        window.postRender { settings.title.update(session) }
-        window.open()
-        settings.title.invoke(session)
-    }
+    fun open(player: Player, variables: Map<String, Any> = emptyMap()) = open(PlayerViewer(player), variables)
 
-    fun close(viewer: PlayerViewer, closeWindow: Boolean = true, closeInventory: Boolean = true) {
-        val session = viewer.session ?: return
-        if (session.menu != this) return
+    fun close(player: Player) = close(PlayerViewer(player))
 
-        viewer.unregisterSession { if (closeWindow) it.close(true, closeInventory) }
-    }
+    abstract fun open(viewer: PlayerViewer, variables: Map<String, Any> = emptyMap()): Session?
 
-    private fun isVirtualMenu(): Boolean {
-        return !panels.any { it.requireBukkitWindow() } && settings.virtual
-    }
+    abstract fun close(viewer: PlayerViewer, closeWindow: Boolean = true, closeInventory: Boolean = true)
+
+    abstract fun updateTitle(session: Session)
+
+    abstract fun isVirtual(): Boolean
+
+    abstract fun unregister()
 
 }

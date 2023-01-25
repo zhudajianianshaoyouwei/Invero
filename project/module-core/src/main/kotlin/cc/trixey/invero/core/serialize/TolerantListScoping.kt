@@ -3,6 +3,7 @@ package cc.trixey.invero.core.serialize
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.icon.Slot
+import cc.trixey.invero.core.menu.CommandArgument
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.JsonArray
@@ -25,6 +26,12 @@ internal object ListStringSerializer :
 
 internal object ListIconSerializer :
     JsonTransformingSerializer<List<Icon>>(ListSerializer(Icon.serializer())) {
+    override fun transformSerialize(element: JsonElement) = element.tolerantListSerialize()
+    override fun transformDeserialize(element: JsonElement) = element.tolerantListDeserialize()
+}
+
+internal object ListCommandArgumentSerializer :
+    JsonTransformingSerializer<List<CommandArgument>>(ListSerializer(CommandArgument.serializer())) {
     override fun transformSerialize(element: JsonElement) = element.tolerantListSerialize()
     override fun transformDeserialize(element: JsonElement) = element.tolerantListDeserialize()
 }

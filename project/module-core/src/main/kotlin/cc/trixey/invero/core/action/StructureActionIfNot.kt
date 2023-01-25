@@ -7,14 +7,14 @@ import java.util.concurrent.CompletableFuture
 
 /**
  * Invero
- * cc.trixey.invero.core.action.StructureActionTertiary
+ * cc.trixey.invero.core.action.StructureActionIfNot
  *
  * @author Arasple
- * @since 2023/1/15 22:42
+ * @since 2023/1/24 21:07
  */
 @Serializable
-class StructureActionTertiary(
-    @SerialName("if")
+class StructureActionIfNot(
+    @SerialName("if_not")
     val condition: ScriptKether,
     @SerialName("then")
     val accept: Action?,
@@ -28,7 +28,7 @@ class StructureActionTertiary(
 
     override fun run(context: Context): CompletableFuture<Boolean> {
         return condition.eval(context).thenCompose {
-            if (it) accept?.run(context)
+            if (!it) accept?.run(context)
             else deny?.run(context)
         }
     }

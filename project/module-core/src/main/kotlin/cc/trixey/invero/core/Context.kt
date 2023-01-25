@@ -1,5 +1,6 @@
 package cc.trixey.invero.core
 
+import cc.trixey.invero.bukkit.PlayerViewer
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Window
 import cc.trixey.invero.common.panel.PagedPanel
@@ -14,22 +15,23 @@ import org.bukkit.entity.Player
  * @since 2023/1/17 11:14
  */
 class Context(
-    val session: Session,
+    val viewer: PlayerViewer,
+    val session: Session? = null,
     val panel: Panel? = null,
     val icon: IconElement? = null,
 ) {
 
     val player: Player
-        get() = session.viewer.get()
+        get() = viewer.get()
 
     val menu: Menu?
-        get() = session.menu
+        get() = session?.menu
 
     val window: Window?
-        get() = session.window
+        get() = session?.window
 
     val variables: Map<String, Any>
-        get() = session.variables + buildMap {
+        get() = (session?.variables ?: emptyMap()) + buildMap {
             if (panel != null) put("@panel", panel)
             if (icon != null) put("@icon", icon)
             if (menu != null) put("@menu", menu!!)

@@ -41,11 +41,11 @@ abstract class BukkitWindow(
 
     private var openCallback: (BukkitWindow) -> Unit = { _ -> }
 
-    private var postOpenCallback: (BukkitWindow) -> Any = { _ -> true }
+    private var preOpenCallback: (BukkitWindow) -> Any = { _ -> true }
 
-    private var postCloseCallback: (BukkitWindow) -> Unit = { _ -> }
+    private var preCloseCallback: (BukkitWindow) -> Unit = { _ -> }
 
-    private var postRenderCallback: (BukkitWindow) -> Unit = { _ -> }
+    private var preRenderCallback: (BukkitWindow) -> Unit = { _ -> }
 
     abstract override val inventory: ProxyBukkitInventory
 
@@ -59,24 +59,24 @@ abstract class BukkitWindow(
         return this
     }
 
-    fun postOpen(block: (BukkitWindow) -> Any): BukkitWindow {
-        postOpenCallback = block
+    fun preOpen(block: (BukkitWindow) -> Any): BukkitWindow {
+        preOpenCallback = block
         return this
     }
 
-    fun postClose(block: (BukkitWindow) -> Unit): BukkitWindow {
-        postCloseCallback = block
+    fun preClose(block: (BukkitWindow) -> Unit): BukkitWindow {
+        preCloseCallback = block
         return this
     }
 
-    fun postRender(block: (BukkitWindow) -> Unit): BukkitWindow {
-        postRenderCallback = block
+    fun preRender(block: (BukkitWindow) -> Unit): BukkitWindow {
+        preRenderCallback = block
         return this
     }
 
     override fun open() {
         // 如果被取消
-        if (postOpenCallback(this) == false) return
+        if (preOpenCallback(this) == false) return
         // 正在查看一个 Window，则伪关闭
         findWindow(viewer.name)?.unregisterWindow()
         // 注册窗口
@@ -86,14 +86,14 @@ abstract class BukkitWindow(
         if (viewer.isTitleUpdating()) submit(delay = 2L) { inventory.open() }
         else synced { inventory.open() }
         // 回调
-        postRenderCallback(this)
+        preRenderCallback(this)
         render()
     }
 
     override fun close(doCloseInventory: Boolean, updateInventory: Boolean) {
         require(isRegistered()) { "Can not close an unregistered window" }
 
-        postCloseCallback(this)
+        preCloseCallback(this)
         unregisterWindow()
         inventory.close(doCloseInventory, updateInventory)
         closeCallback(this)

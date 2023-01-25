@@ -19,8 +19,8 @@ fun String.retrieveMenu(): Menu? {
     return InveroManager.getMenu(this)
 }
 
-fun CommandComponentDynamic.suggestMenuIds() {
-    suggestion<CommandSender>(uncheck = true) { _, _ -> InveroManager.getMenus().keys.toList() }
+fun CommandComponentDynamic.suggestMenuIds(uncheck: Boolean = false) {
+    suggestion<CommandSender>(uncheck = uncheck) { _, _ -> InveroManager.getMenus().keys.toList() }
 }
 
 /**

@@ -7,6 +7,7 @@ plugins {
 dependencies {
     compileOnly(project(":project:framework-common"))
     compileOnly(project(":project:framework-bukkit"))
+    compileOnly(project(":project:module-library"))
 
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
@@ -22,4 +23,5 @@ dependencies {
     compileOnly("io.izzel.taboolib:platform-bukkit:$taboolibVersion")
     compileOnly("io.izzel.taboolib:module-configuration:$taboolibVersion")
     compileOnly("io.izzel.taboolib:module-kether:$taboolibVersion")
+    compileOnly("io.izzel.taboolib:module-nms:$taboolibVersion")
 }

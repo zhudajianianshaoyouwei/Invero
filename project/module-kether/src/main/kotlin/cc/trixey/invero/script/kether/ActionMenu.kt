@@ -59,7 +59,7 @@ object ActionMenu {
 
 
             "update" -> actionNow {
-                session()?.apply { menu.settings.title.update(this) }
+                session()?.apply { menu.updateTitle(this) }
             }
 
 

@@ -68,7 +68,7 @@ class Comparator(val type: Type, val value: String) {
 
         CONTAINS_IGNORECASE("~~"),
 
-        CONTAINS("~");
+        CONTAINS("has", "contains", "~");
 
         constructor(vararg operators: String) : this(operators.map { it })
 

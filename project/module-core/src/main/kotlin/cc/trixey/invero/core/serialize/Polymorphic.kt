@@ -4,6 +4,8 @@ package cc.trixey.invero.core.serialize
 
 import cc.trixey.invero.core.AgentIcon
 import cc.trixey.invero.core.AgentPanel
+import cc.trixey.invero.core.Menu
+import cc.trixey.invero.core.menu.StandardMenu
 import cc.trixey.invero.core.action.*
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.item.Texture
@@ -22,6 +24,14 @@ import kotlinx.serialization.json.*
  * @author Arasple
  * @since 2023/1/18 10:47
  */
+internal object SelectorMenu : JsonContentPolymorphicSerializer<Menu>(Menu::class) {
+
+    override fun selectDeserializer(element: JsonElement): DeserializationStrategy<out Menu> {
+        return StandardMenu.serializer()
+    }
+
+}
+
 internal object SelectorAction : JsonContentPolymorphicSerializer<Action>(Action::class) {
 
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<out Action> {
@@ -33,7 +43,8 @@ internal object SelectorAction : JsonContentPolymorphicSerializer<Action>(Action
         } else {
             val primaryKeys = element.jsonObject.keys
             when {
-                "if" in primaryKeys -> StructureActionTertiary.serializer()
+                "if" in primaryKeys -> StructureActionIf.serializer()
+                "if not" in primaryKeys || "if_not" in primaryKeys -> StructureActionIfNot.serializer()
                 "when" in primaryKeys -> StructureActionWhen.serializer()
                 "kether" in primaryKeys -> StructureActionKether.serializer()
                 else -> error("unregonized action [$primaryKeys]")

@@ -18,11 +18,16 @@ import java.util.concurrent.ConcurrentHashMap
  * @author Arasple
  * @since 2023/1/15 22:40
  */
-class Session(val viewer: PlayerViewer, val menu: Menu, val window: BukkitWindow) {
+class Session(
+    val viewer: PlayerViewer,
+    val menu: Menu,
+    val window: BukkitWindow,
+    variables: Map<String, Any> = emptyMap()
+) {
 
     val createdTime: Long = System.currentTimeMillis()
 
-    val variables = ConcurrentHashMap<String, Any>()
+    val variables: ConcurrentHashMap<String, Any> = ConcurrentHashMap(variables)
 
     val taskMgr: TaskManager
         get() = TaskManager.get(viewer.name)
@@ -54,8 +59,8 @@ class Session(val viewer: PlayerViewer, val menu: Menu, val window: BukkitWindow
             return sessions[viewer.name]
         }
 
-        fun register(viewer: PlayerViewer, menu: Menu, window: BukkitWindow): Session {
-            val session = Session(viewer, menu, window)
+        fun register(viewer: PlayerViewer, menu: Menu, window: BukkitWindow, variables: Map<String, Any>): Session {
+            val session = Session(viewer, menu, window, variables)
             sessions[viewer.name] = session
             return session
         }

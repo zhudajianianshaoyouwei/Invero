@@ -1,0 +1,29 @@
+#
+# 标准的 Invero 菜单配置
+#
+
+menu:
+  title: 'Standard Invero Menu'
+  rows: 6
+  virtual: true
+
+panels:
+  - layout: |-
+      #########
+      |       |
+      #########
+  - layout: |-
+      [ABCDEFG]
+      <       >
+
+panel:
+  layout: |-
+    #########
+    
+    
+    
+    #########
+  icons:
+    '#':
+      material: cyan stained glass panel
+      name: 'cyan stained glass'
