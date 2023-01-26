@@ -95,7 +95,7 @@ abstract class BukkitWindow(
 
         preCloseCallback(this)
         unregisterWindow()
-        inventory.close(doCloseInventory, updateInventory)
+        synced { inventory.close(doCloseInventory, updateInventory) }
         closeCallback(this)
     }
 

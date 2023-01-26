@@ -33,7 +33,7 @@ class MenuBindings(
     private val item: List<String> = listOf(),
     @Serializable(with = ListStringSerializer::class)
     private val chat: List<String> = listOf(),
-    @JsonNames("items")
+    @JsonNames("commands", "cmd", "cmds")
     private val command: JsonElement? = null
 ) {
 

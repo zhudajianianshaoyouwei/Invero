@@ -13,46 +13,46 @@ import taboolib.module.kether.combinationParser
  */
 object ActionContext {
 
-    @KetherParser(["context"], release = ["ctx"], namespace = "invero", shared = true)
+    @KetherParser(["context", "ctx"], namespace = "invero", shared = true)
     fun parser() = combinationParser {
         it.group(
-            // action
+            // get, set, del, inc, dec
             symbol(),
             // key
             text(),
             // value
             command("to", "by", then = action()).option().defaultsTo(null)
-        ).apply(it) { action, key, value ->
-            now {
-                val modification = if (value != null) newFrame(value).run<Any>().get() else null
+        ).apply(it) { action, key, mod ->
+
+            future {
+                val value = if (mod != null) newFrame(mod).run<Any>() else null
 
                 when (action) {
-                    "get" -> session()?.variables?.get(key)
+                    "get" -> completedFuture(vars { get(key) })
+
                     "set" -> {
-                        modification ?: error("Can not set nulled value as context variable")
-                        session()?.variables?.set(key, modification)
+                        (value ?: error("No valid value")).thenApply { vars { put(key, it) } }
                     }
 
-                    "del", "rem", "delete" -> {
-                        // TODO removable global, static
-                        session()?.variables?.remove(key)
+                    "rem", "del", "delete" -> {
+                        completedFuture(vars { remove(key) })
                     }
 
-                    "add", "inc", "increase", "+=" -> {
-                        val current =
-                            session()?.variables?.get(key).toString().toDoubleOrNull() ?: error("Not a valid number")
-
-                        session()?.variables?.set(key, current + modification.cdouble)
+                    "inc", "increase", "+=" -> {
+                        (value ?: error("No valid value")).thenApply {
+                            vars {
+                                put(key, get(key).cdouble + it.cdouble)
+                            }
+                        }
                     }
 
-                    "sub", "dec", "decrease", "-=" -> {
-                        val current =
-                            session()?.variables?.get(key).toString().toDoubleOrNull() ?: error("Not a valid number")
-
-                        session()?.variables?.set(key, current - modification.cdouble)
+                    "dec", "decrease", "-=" -> {
+                        (value ?: error("No valid value")).thenApply {
+                            vars { put(key, get(key).cdouble - it.cdouble) }
+                        }
                     }
 
-                    else -> error("Unknown operator $action")
+                    else -> error("Unknown action $action")
                 }
             }
         }

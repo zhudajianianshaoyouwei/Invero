@@ -34,7 +34,7 @@ class StructureActionWhen(
         }
         default?.let { return@thenCompose it.run(context) }
 
-        return@thenCompose CompletableFuture<Boolean>().also { it.complete(false) }
+        return@thenCompose CompletableFuture.completedFuture(true)
     }
 
 }

@@ -87,8 +87,10 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
         // 交互逻辑
         onClick { clickType, _ ->
             getIconHandler()?.letCatching {
-                it.all?.run(context)?.get()
-                it.response[clickType]?.run(context)?.get()
+                submitAsync {
+                    it.all?.run(context)?.get()
+                    it.response[clickType]?.run(context)?.get()
+                }
             }
         }
     }

@@ -34,10 +34,6 @@ class StandardMenu(
     override val panels: List<AgentPanel>
 ) : Menu() {
 
-    init {
-        bindings?.register(this)
-    }
-
     override fun open(viewer: PlayerViewer, variables: Map<String, Any>): Session? {
         // Events_PreOpen
         if (events?.preOpen?.run(Context(viewer))?.get() == false) {
@@ -56,7 +52,7 @@ class StandardMenu(
         val window = chestWindow(
             viewer,
             settings.containerType.rows,
-            "untitled_",
+            "",
             settings.storageMode,
             isVirtual(),
         ).onClose { close(viewer, closeWindow = false, closeInventory = false) }
@@ -66,6 +62,7 @@ class StandardMenu(
         // 其本身会检查是否已经打开任何 Window，并自动关闭等效旧菜单的 Window
         window.preOpen { panels.forEach { it.invoke(window, session) } }
         window.preRender { updateTitle(session) }
+        updateTitle(session)
         window.open()
         settings.title.invoke(session)
         // Events_PostOpen
@@ -77,14 +74,13 @@ class StandardMenu(
     override fun close(viewer: PlayerViewer, closeWindow: Boolean, closeInventory: Boolean) {
         val session = viewer.session ?: return
         if (session.menu != this) return
-        val context = Context(viewer, session)
         viewer.unregisterSession { if (closeWindow) it.close(true, closeInventory) }
 
         // Events_Close
-        if (events?.close?.run(context)?.get() == false) {
-            submitAsync(delay = 10L) {
-                open(viewer)
-            }
+        if (events?.close?.run(Context(viewer, session))?.get() == false) {
+            // Unclosable menu
+            // Not recommended
+            submitAsync { open(viewer) }
         }
     }
 

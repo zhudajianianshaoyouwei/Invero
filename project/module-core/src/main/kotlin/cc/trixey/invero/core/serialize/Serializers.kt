@@ -189,7 +189,9 @@ internal object ScriptKetherSerializer : KSerializer<ScriptKether> {
 
     override val descriptor = PrimitiveSerialDescriptor("ScriptKether", PrimitiveKind.STRING)
 
-    override fun deserialize(decoder: Decoder) = ScriptKether(decoder.decodeString())
+    override fun deserialize(decoder: Decoder): ScriptKether {
+        return ScriptKether((decoder as JsonDecoder).decodeJsonElement().jsonPrimitive.content)
+    }
 
     override fun serialize(encoder: Encoder, value: ScriptKether) = encoder.encodeString(value.script)
 

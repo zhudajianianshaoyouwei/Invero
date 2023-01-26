@@ -49,19 +49,16 @@ object ActionMenu {
             }
 
             "pause" -> actionNow {
-                session()?.variables?.set("title_task_running", false)
+                vars { put("title_task_running", false) }
             }
-
 
             "resume" -> actionNow {
-                session()?.variables?.set("title_task_running", true)
+                vars { remove("title_task_running") }
             }
-
 
             "update" -> actionNow {
                 session()?.apply { menu.updateTitle(this) }
             }
-
 
             else -> error("Unknown case")
         }

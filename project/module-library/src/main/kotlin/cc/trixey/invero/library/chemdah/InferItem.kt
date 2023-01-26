@@ -27,7 +27,7 @@ import taboolib.platform.util.takeItem
  * @author sky
  * @since 2021/4/5 9:32 下午
  */
-class InferItem(val items: List<Item>) {
+data class InferItem(val items: List<Item>) {
 
     fun isItem(item: ItemStack) = items.any { it.match(item) }
 
@@ -39,14 +39,14 @@ class InferItem(val items: List<Item>) {
         return inventory.takeItem(amount) { items.any { item -> item.match(it) } }
     }
 
-    open class Item(val material: String, val flags: List<Flags>, val data: List<DataMatch>) {
+    data class Item(val material: String, val flags: List<Flags>, val data: List<DataMatch>) {
 
-        open fun match(item: ItemStack) = matchType(item.type.name.lowercase()) && matchMetaData(item)
+        fun match(item: ItemStack) = matchType(item.type.name.lowercase()) && matchMetaData(item)
 
-        open fun matchType(type: String) = flags.any { it.match(type, material) }
+        fun matchType(type: String) = flags.any { it.match(type, material) }
 
         @Suppress("SpellCheckingInspection")
-        open fun matchMetaData(item: ItemStack): Boolean {
+        fun matchMetaData(item: ItemStack): Boolean {
             val meta = item.itemMeta
             return data.all {
                 when (it.key) {
@@ -87,16 +87,16 @@ class InferItem(val items: List<Item>) {
             }
         }
 
-        open fun matchMetaData(item: ItemStack, itemMeta: ItemMeta?, dataMatch: DataMatch): Boolean {
+        fun matchMetaData(item: ItemStack, itemMeta: ItemMeta?, dataMatch: DataMatch): Boolean {
             warning("$material[${dataMatch.key} ${dataMatch.type} ${dataMatch.value}] not supported.")
             return false
         }
 
-        open fun check(inventory: Inventory, amount: Int): Boolean {
+        fun check(inventory: Inventory, amount: Int): Boolean {
             return inventory.hasItem(amount) { match(it) }
         }
 
-        open fun take(inventory: Inventory, amount: Int): Boolean {
+        fun take(inventory: Inventory, amount: Int): Boolean {
             return inventory.takeItem(amount) { match(it) }
         }
     }

@@ -1,6 +1,7 @@
 package cc.trixey.invero.core
 
 import cc.trixey.invero.core.menu.MenuBindings
+import cc.trixey.invero.core.menu.StandardMenu
 import cc.trixey.invero.core.serialize.deserializeToMenu
 import cc.trixey.invero.core.serialize.hocon.PatchedLoader
 import cc.trixey.invero.core.util.listRecursively
@@ -100,6 +101,11 @@ object InveroManager {
                 val took = (System.currentTimeMillis() - start).div(1000.0)
                 sender.sendLang("menu-loader-menu-finished", menus.size, took)
             }
+        }
+
+        // 注册菜单绑定
+        menus.forEach { (_, menu) ->
+            if (menu is StandardMenu) menu.bindings?.register(menu)
         }
     }
 

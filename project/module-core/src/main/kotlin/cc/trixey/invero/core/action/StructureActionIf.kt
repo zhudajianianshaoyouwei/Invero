@@ -28,8 +28,8 @@ class StructureActionIf(
 
     override fun run(context: Context): CompletableFuture<Boolean> {
         return condition.eval(context).thenCompose {
-            if (it) accept?.run(context)
-            else deny?.run(context)
+            (if (it) accept?.run(context) else deny?.run(context))
+                ?: CompletableFuture.completedFuture(true)
         }
     }
 

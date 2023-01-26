@@ -1,9 +1,9 @@
 package cc.trixey.invero.core
 
+import cc.trixey.invero.core.util.session
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerInteractEvent
-import org.bukkit.inventory.PlayerInventory
 import taboolib.common.platform.event.EventPriority
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common5.Baffle
@@ -24,12 +24,11 @@ object InveroListener {
         Baffle.of(1_000, TimeUnit.MILLISECONDS)
     }
 
-    @SubscribeEvent(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @SubscribeEvent
     fun bindingsItem(e: PlayerInteractEvent) {
         if (majorLegacy >= 10900 && e.isOffhand()) return
-        if (e.player.openInventory.topInventory !is PlayerInventory) return
+        if (e.player.session != null) return
         if (!baffle.hasNext(e.player.name)) return
-
         val item = e.item ?: return
 
         InveroManager
@@ -44,7 +43,7 @@ object InveroListener {
             }
     }
 
-    @SubscribeEvent(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @SubscribeEvent(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun bindingsChatCommand(e: PlayerCommandPreprocessEvent) {
         val player = e.player
         val message = e.message
@@ -54,7 +53,7 @@ object InveroListener {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @SubscribeEvent(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun bindingsChat(e: AsyncPlayerChatEvent) {
         runChatBindings(e.message)
             ?.let { InveroManager.getMenu(it) }

@@ -10,13 +10,10 @@ import cc.trixey.invero.core.util.session
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import taboolib.common.LifeCycle
-import taboolib.common.platform.Awake
 import taboolib.common.platform.command.CommandBody
 import taboolib.common.platform.command.CommandHeader
 import taboolib.common.platform.command.mainCommand
 import taboolib.common.platform.command.subCommand
-import taboolib.common.platform.function.console
 import taboolib.common.platform.function.submitAsync
 import taboolib.platform.util.bukkitPlugin
 import taboolib.platform.util.isAir
