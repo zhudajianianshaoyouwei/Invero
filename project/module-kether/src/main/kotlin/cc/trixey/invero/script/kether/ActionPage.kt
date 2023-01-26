@@ -1,5 +1,6 @@
 package cc.trixey.invero.script.kether
 
+import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.panel.PagedPanel
 import taboolib.library.kether.ParsedAction
 import taboolib.module.kether.*
@@ -24,7 +25,7 @@ object ActionPage {
     @KetherParser(["page"], namespace = "invero", shared = true)
     fun parser() = parser(null)
 
-    internal fun parser(panelLocation: List<Int>?) = combinationParser {
+    internal fun parser(ref: PagedPanel?) = combinationParser {
         it.group(symbol()).apply(it) { type ->
             val operator = PageOperator.of(type)
             var value: ParsedAction<*>? = null
@@ -35,7 +36,7 @@ object ActionPage {
                     value = info
                 }
             }
-            future { run(this, operator, value, panelLocation) }
+            future { run(this, operator, value, ref) }
         }
     }
 
@@ -43,10 +44,9 @@ object ActionPage {
         frame: ScriptFrame,
         operator: PageOperator,
         value: ParsedAction<*>?,
-        panelLocation: List<Int>?
+        ref: PagedPanel?
     ): CompletableFuture<Any?> {
-        val located = if (panelLocation.isNullOrEmpty()) null else frame.findPanelAt<PagedPanel>(panelLocation)
-        val panel = located ?: frame.findNearstPanel() ?: return CompletableFuture.completedFuture(-1)
+        val panel = ref ?: frame.findNearstPanel() ?: return CompletableFuture.completedFuture(-1)
 
         // 输出 Page 值
         if (operator.isOutput()) {

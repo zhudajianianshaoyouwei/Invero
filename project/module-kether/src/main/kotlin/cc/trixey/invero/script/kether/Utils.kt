@@ -25,7 +25,7 @@ fun ScriptFrame.player(): Player {
 }
 
 fun ScriptFrame.getRecursivePanels(): List<Panel> {
-    return session()?.window?.getPanelsRecursively() ?: listOf()
+    return session()?.window?.getPanelsRecursively() ?: emptyList()
 }
 
 fun <T : Panel> ScriptFrame.findPanelAt(indexs: List<Int>): T? {
@@ -39,8 +39,8 @@ fun <T : Panel> ScriptFrame.findPanelAt(indexs: List<Int>): T? {
     return panel as T?
 }
 
-fun ScriptFrame.iconElementBy(byName: String?, bySlot: Int?): IconElement {
-    return selfPanel<ElementalPanel>().findIconElement(byName, bySlot) ?: selfIcon()
+fun ScriptFrame.iconElementBy(byName: String?, bySlot: Int?, referedPanel: ElementalPanel?): IconElement {
+    return (referedPanel ?: selfPanel()).findIconElement(byName, bySlot) ?: selfIcon()
 }
 
 fun ElementalPanel.findIconElement(byName: String?, bySlot: Int?): IconElement? {

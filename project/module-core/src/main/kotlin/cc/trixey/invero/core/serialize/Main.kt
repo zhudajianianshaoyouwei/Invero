@@ -58,7 +58,7 @@ private val module = SerializersModule {
 
 }
 
-private val json = Json {
+val mainJson = Json {
     prettyPrint = true
     ignoreUnknownKeys = true
     serializersModule = module
@@ -67,9 +67,9 @@ private val json = Json {
 
 fun Configuration.deserializeToMenu(name: String? = null): Menu {
     changeType(Type.JSON)
-    return json.decodeFromString<Menu>(saveToString()).also { if (name != null && it.name == null) it.name = name }
+    return mainJson.decodeFromString<Menu>(saveToString()).also { if (name != null && it.name == null) it.name = name }
 }
 
 fun Menu.serializeToJson(): String {
-    return json.encodeToString(value = this)
+    return mainJson.encodeToString(value = this)
 }

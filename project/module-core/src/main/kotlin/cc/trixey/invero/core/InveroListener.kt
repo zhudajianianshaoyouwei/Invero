@@ -45,16 +45,24 @@ object InveroListener {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun bindingsChatCommand(e: PlayerCommandPreprocessEvent) {
-        val player = e.player
+        if (!baffle.hasNext(e.player.name)) return
+
         val message = e.message
 
-        if (message.length > 1 && baffle.hasNext(player.name)) {
+        if (message.length > 1)
             runChatBindings(message)
-        }
+                ?.let { InveroManager.getMenu(it) }
+                ?.let {
+                    it.open(e.player)
+                    e.isCancelled = true
+                }
+
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     fun bindingsChat(e: AsyncPlayerChatEvent) {
+        if (!baffle.hasNext(e.player.name)) return
+
         runChatBindings(e.message)
             ?.let { InveroManager.getMenu(it) }
             ?.let {
@@ -67,7 +75,7 @@ object InveroListener {
         return InveroManager
             .bindings
             .entries
-            .find { entry -> entry.value.inferChat.any { it.matches(message) } }
+            .find { entry -> entry.value.chat.any { it == message } }
             ?.key
     }
 

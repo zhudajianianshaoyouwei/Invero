@@ -13,6 +13,7 @@ import cc.trixey.invero.core.menu.CommandArgument
 import cc.trixey.invero.core.menu.MenuTitle
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializer
 import kotlinx.serialization.builtins.IntArraySerializer
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
@@ -30,6 +31,7 @@ import org.bukkit.event.inventory.InventoryType
  * @author Arasple
  * @since 2023/1/18 0:12
  */
+@Serializer(forClass = CommandArgument::class)
 internal object CommandArgumentSerailizer : JsonTransformingSerializer<CommandArgument>(serializer()) {
 
     override fun transformDeserialize(element: JsonElement): JsonElement {

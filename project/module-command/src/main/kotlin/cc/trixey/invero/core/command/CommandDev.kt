@@ -33,10 +33,10 @@ object CommandDev {
     val main = mainCommand { createHelper() }
 
     @CommandBody
-    val run = subCommand {
+    val kether = subCommand {
         execute<CommandSender> { sender, _, argument ->
             val player = if (sender is Player) sender else onlinePlayers.random()
-            val script = argument.removePrefix("run ")
+            val script = argument.removePrefix("kether ")
 
             submitAsync {
                 KetherHandler.invoke(script, player, mapOf()).thenApply {
@@ -49,14 +49,6 @@ object CommandDev {
                     )
                 }.get()
             }
-        }
-    }
-
-    @CommandBody
-    val open = subCommand {
-        execute<Player> { player, _, argument ->
-            val menuId = argument.split(" ").getOrNull(1) ?: return@execute
-            InveroManager.getMenu(menuId)?.open(player)
         }
     }
 

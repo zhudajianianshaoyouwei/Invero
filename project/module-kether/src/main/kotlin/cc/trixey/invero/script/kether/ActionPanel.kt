@@ -1,9 +1,7 @@
 package cc.trixey.invero.script.kether
 
-import taboolib.module.kether.KetherParser
-import taboolib.module.kether.actionNow
-import taboolib.module.kether.expects
-import taboolib.module.kether.scriptParser
+import cc.trixey.invero.common.Panel
+import taboolib.module.kether.*
 
 /**
  * Invero
@@ -25,7 +23,7 @@ object ActionPanel {
     - icon
      */
     @KetherParser(["panel"], namespace = "invero", shared = true)
-    fun parsePanel() = scriptParser {
+    fun parser() = scriptParser {
         val indexs = mutableListOf<Int>()
 
         actionNow {
@@ -33,14 +31,12 @@ object ActionPanel {
                 when (it.expects("at", "page", "icon")) {
                     "at" -> indexs += it.nextInt()
                     "page" -> {
-                        ActionPage.parser(indexs).reader.invoke(it)
+                        ActionPage.parser(locatePanel(indexs)).reader.invoke(it)
                         break
                     }
 
                     "icon" -> {
-                        // by Name
-                        it.expects("by", "at")
-                        val iconId = it.nextToken()
+                        ActionIcon.parser(locatePanel(indexs)).reader.invoke(it)
                         break
                     }
                 }
@@ -48,8 +44,8 @@ object ActionPanel {
         }
     }
 
-    private fun handleIconOperators() {
-
+    private fun <T : Panel> ScriptFrame.locatePanel(indexs: List<Int>): T? {
+        return if (indexs.isEmpty()) null else findPanelAt(indexs)
     }
 
 }

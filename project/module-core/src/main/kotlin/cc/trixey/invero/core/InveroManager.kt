@@ -1,9 +1,9 @@
 package cc.trixey.invero.core
 
 import cc.trixey.invero.core.menu.MenuBindings
-import cc.trixey.invero.core.menu.StandardMenu
 import cc.trixey.invero.core.serialize.deserializeToMenu
 import cc.trixey.invero.core.serialize.hocon.PatchedLoader
+import cc.trixey.invero.core.util.letCatching
 import cc.trixey.invero.core.util.listRecursively
 import cc.trixey.invero.core.util.prettyPrint
 import cc.trixey.invero.core.util.session
@@ -80,7 +80,7 @@ object InveroManager {
             // 载入内存
             configurations.forEach { conf ->
                 val file = conf.file ?: error("No file is found for conf ${conf.name}")
-                val menu = runCatching { conf.deserializeToMenu(conf.name) }
+                val menu = runCatching { conf.deserializeToMenu(conf.name).also { it.register() } }
                     .onFailure {
                         it.prettyPrint()
                         sender.sendLang("menu-loader-menu-errored", file.path ?: conf.name)
@@ -102,11 +102,6 @@ object InveroManager {
                 sender.sendLang("menu-loader-menu-finished", menus.size, took)
             }
         }
-
-        // 注册菜单绑定
-        menus.forEach { (_, menu) ->
-            if (menu is StandardMenu) menu.bindings?.register(menu)
-        }
     }
 
     private fun registerService(file: File, menu: Menu) {
@@ -126,6 +121,7 @@ object InveroManager {
                     // replace in memory
                     menus[menuId]?.unregister()
                     menus[menuId] = loaded
+                    letCatching { loaded.register() }
                     // auto open
                     onlinePlayers
                         .filter { it.session?.menu?.name == menuId }
@@ -133,7 +129,7 @@ object InveroManager {
                             if (it.isNotEmpty())
                                 console().cast<CommandSender>().sendLang("menu-loader-auto-reload-successed", menuId)
                         }
-                        .forEach { loaded.open(player = it) }
+                        .forEach { loaded.open(player = it, variables = it.session?.variables ?: emptyMap()) }
                 }
             }
         }

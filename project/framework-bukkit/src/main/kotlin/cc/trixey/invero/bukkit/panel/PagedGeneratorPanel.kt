@@ -28,7 +28,7 @@ class PagedGeneratorPanel<T>(
     locate: Pos
 ) : BukkitPanel(parent, weight, scale, locate), PagedPanel, GeneratorPanel<T, BaseItem<*>> {
 
-    override var sourceElements: List<T> = listOf()
+    override var sourceElements: List<T> = emptyList()
 
     override val outputElements by lazy {
         ArrayList(arrayOfNulls<BaseItem<*>?>(sourceElements.size).toList())

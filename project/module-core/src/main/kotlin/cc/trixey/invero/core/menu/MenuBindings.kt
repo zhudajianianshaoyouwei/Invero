@@ -6,17 +6,15 @@ import cc.trixey.invero.core.InveroManager
 import cc.trixey.invero.core.Menu
 import cc.trixey.invero.core.menu.CommandArgument.Type.*
 import cc.trixey.invero.core.serialize.ListStringSerializer
+import cc.trixey.invero.core.serialize.mainJson
 import cc.trixey.invero.library.chemdah.InferItem.Companion.toInferItem
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.*
 import org.bukkit.entity.Player
-import taboolib.common.platform.command.command
+import taboolib.common.platform.command.*
 import taboolib.common.platform.command.component.CommandComponent
-import taboolib.common.platform.command.restrictBoolean
-import taboolib.common.platform.command.restrictDouble
-import taboolib.common.platform.command.restrictInt
 import taboolib.common.platform.function.unregisterCommand
 
 /**
@@ -28,20 +26,13 @@ import taboolib.common.platform.function.unregisterCommand
  */
 @Serializable
 class MenuBindings(
-    @Serializable(with = ListStringSerializer::class)
-    @JsonNames("items")
-    private val item: List<String> = listOf(),
-    @Serializable(with = ListStringSerializer::class)
-    private val chat: List<String> = listOf(),
-    @JsonNames("commands", "cmd", "cmds")
-    private val command: JsonElement? = null
+    @Serializable(with = ListStringSerializer::class) @JsonNames("items") private val item: List<String> = emptyList(),
+    @Serializable(with = ListStringSerializer::class) internal val chat: List<String> = emptyList(),
+    @JsonNames("commands", "cmd", "cmds") private val command: JsonElement? = null
 ) {
 
     @Transient
     val inferItem = item.toInferItem()
-
-    @Transient
-    val inferChat = chat.map { it.toRegex() }
 
     @Transient
     val registeredCommands = mutableSetOf<String>()
@@ -52,12 +43,12 @@ class MenuBindings(
 
         when (command) {
             is JsonPrimitive -> registerCommandLabel(menu, command)
-            is JsonObject -> registerCommandStrucutre(menu, command)
+            is JsonObject -> registerCommandStructure(menu, command)
             is JsonArray -> {
                 if (command.firstOrNull() is JsonPrimitive) {
                     command.forEach { registerCommandLabel(menu, it as JsonPrimitive) }
                 } else {
-                    command.forEach { registerCommandStrucutre(menu, it as JsonObject) }
+                    command.forEach { registerCommandStructure(menu, it as JsonObject) }
                 }
             }
 
@@ -69,10 +60,8 @@ class MenuBindings(
         registeredCommands.forEach { unregisterCommand(it) }
     }
 
-    private fun registerCommandStrucutre(menu: Menu, jsonObject: JsonObject) {
-        Json
-            .decodeFromJsonElement<CommandStructure>(jsonObject)
-            .apply {
+    private fun registerCommandStructure(menu: Menu, jsonObject: JsonObject) {
+        mainJson.decodeFromJsonElement<CommandStructure>(jsonObject).apply {
                 command(
                     name,
                     aliases ?: emptyList(),
@@ -81,22 +70,26 @@ class MenuBindings(
                     permission ?: "",
                     permissionMessage ?: ""
                 ) {
-                    execute<Player> { sender, _, _ -> menu.open(sender) }
+                    // 无参数或没有必选参数，则添加默认执行为打开菜单
+                    if (arguments.isNullOrEmpty() || arguments.all { it.optional }) {
+                        execute<Player> { sender, _, _ -> menu.open(sender) }
+                    }
+                    // 标记当前层
                     var layer: CommandComponent = this
-                    val implmeneted = mutableSetOf<String>()
-
+                    // 记录截至目前每层的参数
+                    val impl = mutableSetOf<String>()
+                    // 遍历参数实现
                     arguments?.forEach { argument ->
-                        val id = argument.id
-                        val type = argument.type
+                        val id = argument.id.also { impl += it }
+                        val type = argument.type ?: ANY
                         val default = argument.default
-                        val optional = default != null
-
-                        implmeneted += id
+                        val restrict = argument.restrict
+                        val suggest = argument.suggest ?: emptyList()
 
                         layer.dynamic(id, optional) {
                             execute<Player> { sender, ctx, _ ->
                                 val variables = buildMap {
-                                    implmeneted.forEach { key ->
+                                    impl.forEach { key ->
                                         val value = ctx.getOrNull(key) ?: default ?: error("No valid value")
                                         put("_args_$key", value)
                                     }
@@ -104,10 +97,12 @@ class MenuBindings(
                                 menu.open(sender, variables)
                             }
                             when (type) {
+                                ANY -> suggestion<Player>(!restrict) { _, _ -> suggest }
                                 DECIMAL -> restrictDouble()
                                 INTEGER -> restrictInt()
                                 BOOLEAN -> restrictBoolean()
-                                else -> {}
+                                PLAYER -> suggestPlayers(suggest)
+                                WORLD -> suggestWorlds(suggest)
                             }
                         }.also { layer = it }
                     }

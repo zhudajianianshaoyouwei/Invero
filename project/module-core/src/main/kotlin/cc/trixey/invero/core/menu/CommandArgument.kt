@@ -1,7 +1,12 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package cc.trixey.invero.core.menu
 
-import cc.trixey.invero.core.serialize.CommandArgumentSerailizer
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
+import kotlinx.serialization.json.JsonNames
+import kotlinx.serialization.json.JsonPrimitive
 
 /**
  * Invero
@@ -10,15 +15,20 @@ import kotlinx.serialization.Serializable
  * @author Arasple
  * @since 2023/1/25 20:21
  */
-@Serializable(with = CommandArgumentSerailizer::class)
+@Serializable
 class CommandArgument(
+    @JsonNames("key", "name", "label")
     val id: String,
-    val type: Type = Type.ANY,
+    val type: Type?,
     val suggest: List<String>?,
-    val unchecked: Boolean = false,
-    val default: Any?,
-    val incorrectMessage: String?,
+    val restrict: Boolean = false,
+    @JsonNames("optional")
+    val default: JsonPrimitive?,
+    val incorrectMessage: String?
 ) {
+
+    @Transient
+    val optional = default != null
 
     enum class Type {
 

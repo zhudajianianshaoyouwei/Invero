@@ -21,7 +21,7 @@ class ScrollGeneratorPanel<T>(
     locate: Pos
 ) : ScrollStandardPanel(parent, weight, scale, locate), GeneratorPanel<T, BaseItem<*>> {
 
-    override var sourceElements: List<T> = listOf()
+    override var sourceElements: List<T> = emptyList()
 
     override val outputElements by lazy {
         ArrayList(arrayOfNulls<BaseItem<*>?>(sourceElements.size).toList())

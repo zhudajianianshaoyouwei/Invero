@@ -84,6 +84,10 @@ class StandardMenu(
         }
     }
 
+    override fun register() {
+        bindings?.register(this)
+    }
+
     override fun unregister() {
         bindings?.unregister()
     }

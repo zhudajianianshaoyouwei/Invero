@@ -31,6 +31,8 @@ abstract class Menu {
 
     abstract fun isVirtual(): Boolean
 
+    abstract fun register()
+
     abstract fun unregister()
 
 }
