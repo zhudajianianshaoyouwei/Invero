@@ -2,12 +2,14 @@ package cc.trixey.invero.core
 
 import cc.trixey.invero.bukkit.BukkitWindow
 import cc.trixey.invero.bukkit.PlayerViewer
+import cc.trixey.invero.core.Session.Companion.VarType.*
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.parseMiniMessage
 import cc.trixey.invero.core.util.session
 import cc.trixey.invero.core.util.translateAmpersandColor
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submitAsync
+import taboolib.expansion.getDataContainer
 import taboolib.platform.compat.replacePlaceholder
 import java.util.concurrent.ConcurrentHashMap
 
@@ -27,10 +29,47 @@ class Session(
 
     val createdTime: Long = System.currentTimeMillis()
 
-    val variables: ConcurrentHashMap<String, Any> = ConcurrentHashMap(variables)
+    private val variables: ConcurrentHashMap<String, Any> = ConcurrentHashMap(variables)
 
     val taskMgr: TaskManager
         get() = TaskManager.get(viewer.name)
+
+    init {
+        updateVariables()
+    }
+
+    fun updateVariables() {
+        variables += InveroDatabase.globalDataDatabase.source
+        variables += viewer.get<Player>().getDataContainer().source
+    }
+
+    fun getVariables(): ConcurrentHashMap<String, Any> {
+        return variables
+    }
+
+    fun getVariable(key: String): Any? {
+        return variables[key]
+    }
+
+    fun setVariable(key: String, value: Any) {
+        // push to database
+        when (key.varType) {
+            GLOBAL -> InveroDatabase.globalDataDatabase[key] = value
+            PLAYER -> viewer.get<Player>().getDataContainer()[key] = value
+            TEMP -> {}
+        }
+        variables[key] = value
+    }
+
+    fun removeVariable(key: String) {
+        // push to database
+        when (key.varType) {
+            GLOBAL -> InveroDatabase.globalDataDatabase.source.remove(key)
+            PLAYER -> viewer.get<Player>().getDataContainer().source.remove(key)
+            TEMP -> {}
+        }
+        variables.remove(key)
+    }
 
     fun elapsed(): Long {
         return System.currentTimeMillis() - createdTime
@@ -70,6 +109,21 @@ class Session(
             session.taskMgr.unregisterAll()
             val viewer = session.viewer
             submitAsync(delay = 40L) { if (viewer.session == null) TaskManager.get(viewer.name).unregisterAll(true) }
+        }
+
+        val String.varType: VarType
+            get() = values().find { startsWith(it.prefix) } ?: TEMP
+
+        enum class VarType {
+
+            TEMP,
+
+            GLOBAL,
+
+            PLAYER;
+
+            val prefix = name.lowercase() + "@"
+
         }
 
     }

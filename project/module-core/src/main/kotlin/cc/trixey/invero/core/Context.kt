@@ -32,7 +32,7 @@ class Context(
         get() = session?.window
 
     val variables: Map<String, Any>
-        get() = (session?.variables ?: emptyMap()) + buildMap {
+        get() = (session?.getVariables() ?: emptyMap()) + buildMap {
             if (panel != null) put("@panel", panel)
             if (icon != null) put("@icon", icon)
             if (menu != null) put("@menu", menu!!)

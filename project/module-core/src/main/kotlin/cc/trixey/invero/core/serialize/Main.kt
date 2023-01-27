@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalSerializationApi::class)
+@file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class)
 @file:RuntimeDependencies(
     RuntimeDependency(
         "!org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.4.1",

@@ -49,11 +49,11 @@ object ActionMenu {
             }
 
             "pause" -> actionNow {
-                vars { put("title_task_running", false) }
+                session()?.setVariable("title_task_running", false)
             }
 
             "resume" -> actionNow {
-                vars { remove("title_task_running") }
+                session()?.removeVariable("title_task_running")
             }
 
             "update" -> actionNow {

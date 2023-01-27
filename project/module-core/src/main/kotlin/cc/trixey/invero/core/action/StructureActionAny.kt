@@ -17,13 +17,14 @@ import java.util.concurrent.CompletableFuture
 @Serializable
 class StructureActionAny(
     @SerialName("any")
+    @Serializable(with = ListScriptKetherSerializer::class)
     override val conditions: List<ScriptKether>,
-    override val accept: Action?,
-    override val deny: Action?
+    override val then: Action?,
+    override val `else`: Action?
 ) : ActionTernary, Action() {
 
     init {
-        require(accept != null || deny != null) { "At least one type of response is required for IF structure" }
+        require(then != null || `else` != null) { "At least one type of response is required for IF structure" }
     }
 
     override fun run(context: Context): CompletableFuture<Boolean> {
@@ -32,7 +33,7 @@ class StructureActionAny(
             future = future.thenCombine(cond.eval(context)) { b, o -> b || o.cbool }
         }
         return future.thenCompose {
-            (if (it) accept?.run(context) else deny?.run(context)) ?: CompletableFuture.completedFuture(true)
+            (if (it) then?.run(context) else `else`?.run(context)) ?: CompletableFuture.completedFuture(true)
         }
     }
 

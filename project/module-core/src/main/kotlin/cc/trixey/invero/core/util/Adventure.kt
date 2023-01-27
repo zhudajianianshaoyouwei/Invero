@@ -8,6 +8,7 @@ package cc.trixey.invero.core.util
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.internal.parser.ParsingExceptionImpl
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import taboolib.module.nms.MinecraftVersion
 
 /**
  * Invero
@@ -20,13 +21,22 @@ private const val SECTION_CHAR: Char = '§'
 
 private const val AMPERSAND_CHAR = '&'
 
+private val legacyComponentSerializer by lazy {
+    LegacyComponentSerializer.builder().apply {
+        if (MinecraftVersion.majorLegacy >= 11600) {
+            hexColors()
+            useUnusualXRepeatedCharacterHexFormat()
+        }
+    }.build()
+}
+
 fun String.parseMiniMessage(): String {
     val component = try {
         MiniMessage.miniMessage().deserialize(this)
     } catch (e: ParsingExceptionImpl) {
         return translateLegacyColor().parseMiniMessage()
     }
-    return LegacyComponentSerializer.legacySection().serialize(component)
+    return legacyComponentSerializer.serialize(component)
 }
 
 fun String.translateAmpersandColor(): String {

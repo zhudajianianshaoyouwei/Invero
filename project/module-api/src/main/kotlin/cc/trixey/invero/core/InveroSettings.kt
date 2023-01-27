@@ -1,8 +1,10 @@
 package cc.trixey.invero.core
 
+import taboolib.library.configuration.ConfigurationSection
 import taboolib.module.configuration.Config
 import taboolib.module.configuration.ConfigNode
 import taboolib.module.configuration.Configuration
+import taboolib.platform.util.bukkitPlugin
 
 /**
  * Invero
@@ -18,10 +20,29 @@ object InveroSettings {
         private set
 
     /**
+     * 插件根目录
+     */
+    val pluginFolder by lazy { bukkitPlugin.dataFolder }
+
+    /**
      * 工作路径
      */
     @ConfigNode("Workspaces.paths")
     var workspaces = listOf<String>()
+        private set
+
+    /**
+     * 数据库类型
+     */
+    @ConfigNode("Database.type")
+    var databaseType = "SQL"
+        private set
+
+    /**
+     * SQL 配置
+     */
+    @ConfigNode("Database.sql")
+    var sqlSection: ConfigurationSection? = null
         private set
 
     /**

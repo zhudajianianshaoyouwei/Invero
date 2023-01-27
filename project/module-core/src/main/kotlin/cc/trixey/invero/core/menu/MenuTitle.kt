@@ -41,7 +41,7 @@ class MenuTitle(
         val cyclic = value.toCyclic(mode ?: CycleMode.LOOP)
         if (period != null) {
             session.taskMgr.launchAsync(delay = period, period = period) {
-                if (session.variables["title_task_running"] != false) {
+                if (session.getVariable("title_task_running") != false) {
                     session.window.title = cyclic.getAndCycle().let { session.parse(it) }
                 }
             }

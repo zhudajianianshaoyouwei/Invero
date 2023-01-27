@@ -10,7 +10,6 @@ import cc.trixey.invero.core.util.session
 import org.bukkit.entity.Player
 import taboolib.module.kether.ScriptFrame
 import taboolib.module.kether.script
-import java.util.concurrent.ConcurrentHashMap
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -70,8 +69,4 @@ inline fun <reified T : Panel> ScriptFrame.findNearstPanel(): T? {
 
 fun ScriptFrame.session(): Session? {
     return player().session
-}
-
-fun <T> ScriptFrame.vars(block: ConcurrentHashMap<String, Any>.() -> T): T {
-    return player().session!!.variables.block()
 }

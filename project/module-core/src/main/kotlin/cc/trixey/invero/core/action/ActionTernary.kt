@@ -1,9 +1,5 @@
 package cc.trixey.invero.core.action
 
-import cc.trixey.invero.core.serialize.ListScriptKetherSerializer
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
 /**
  * Invero
  * cc.trixey.invero.core.action.ActionTernary
@@ -13,13 +9,10 @@ import kotlinx.serialization.Serializable
  */
 interface ActionTernary {
 
-    @Serializable(with = ListScriptKetherSerializer::class)
     val conditions: List<ScriptKether>
 
-    @SerialName("then")
-    val accept: Action?
+    val then: Action?
 
-    @SerialName("else")
-    val deny: Action?
+    val `else`: Action?
 
 }

@@ -91,7 +91,7 @@ object CommandDev {
                     Viewer: ${session.viewer.name}
                     Window: ${session.window.type.name}
                     Menu: ${session.menu.name}
-                    Variables: ${session.variables}
+                    Variables: ${session.getVariables()}
                     TaskMgr: ${session.taskMgr}
                     --------------------------------------------------
                     

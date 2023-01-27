@@ -28,27 +28,29 @@ object ActionContext {
                 val value = if (mod != null) newFrame(mod).run<Any>() else null
 
                 when (action) {
-                    "get" -> completedFuture(vars { get(key) })
-
+                    "get" -> completedFuture(session()?.getVariable(key))
+                    "update" -> completedFuture(session()?.updateVariables())
                     "set" -> {
-                        (value ?: error("No valid value")).thenApply { vars { put(key, it) } }
+                        (value ?: error("No valid value")).thenApply { session()?.setVariable(key, it) }
                     }
 
                     "rem", "del", "delete" -> {
-                        completedFuture(vars { remove(key) })
+                        completedFuture(session()?.removeVariable(key))
                     }
 
                     "inc", "increase", "+=" -> {
                         (value ?: error("No valid value")).thenApply {
-                            vars {
-                                put(key, get(key).cdouble + it.cdouble)
+                            session()?.apply {
+                                setVariable(key, getVariable(key).cdouble + it.cdouble)
                             }
                         }
                     }
 
                     "dec", "decrease", "-=" -> {
                         (value ?: error("No valid value")).thenApply {
-                            vars { put(key, get(key).cdouble - it.cdouble) }
+                            session()?.apply {
+                                setVariable(key, getVariable(key).cdouble - it.cdouble)
+                            }
                         }
                     }
 

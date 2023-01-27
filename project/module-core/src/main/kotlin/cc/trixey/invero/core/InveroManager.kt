@@ -129,7 +129,7 @@ object InveroManager {
                             if (it.isNotEmpty())
                                 console().cast<CommandSender>().sendLang("menu-loader-auto-reload-successed", menuId)
                         }
-                        .forEach { loaded.open(player = it, variables = it.session?.variables ?: emptyMap()) }
+                        .forEach { loaded.open(player = it, variables = it.session?.getVariables() ?: emptyMap()) }
                 }
             }
         }
