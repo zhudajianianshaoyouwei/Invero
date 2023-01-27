@@ -1,6 +1,7 @@
 package cc.trixey.invero.script.kether
 
 import cc.trixey.invero.common.Panel
+import taboolib.common5.cint
 import taboolib.module.kether.*
 
 /**
@@ -29,7 +30,7 @@ object ActionPanel {
         actionNow {
             while (it.hasNext()) {
                 when (it.expects("at", "page", "icon")) {
-                    "at" -> indexs += it.nextInt()
+                    "at" -> indexs += newFrame(it.nextParsedAction()).run<Any>().getNow(null).cint
                     "page" -> {
                         ActionPage.parser(locatePanel(indexs)).reader.invoke(it)
                         break

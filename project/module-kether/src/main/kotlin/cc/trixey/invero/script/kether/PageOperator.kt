@@ -15,6 +15,10 @@ enum class PageOperator(val aliases: Set<String> = setOf()) {
 
     GET_MAX(setOf("max")),
 
+    IS_FIRST_PAGE(setOf("isFirst")),
+
+    IS_LAST_PAGE(setOf("isLast")),
+
     MODIFY(setOf("set", "to", "switch")),
 
     NEXT(setOf("next", "add", "increase", "+")),
@@ -22,7 +26,7 @@ enum class PageOperator(val aliases: Set<String> = setOf()) {
     PREVIOUS(setOf("previous", "sub", "decrease", "-"));
 
     fun isOutput(): Boolean {
-        return this == GET || this == GET_MAX
+        return this == GET || this == GET_MAX || this == IS_FIRST_PAGE || this == IS_LAST_PAGE
     }
 
     fun invoke(panel: PagedPanel, value: Int) {
@@ -30,7 +34,7 @@ enum class PageOperator(val aliases: Set<String> = setOf()) {
             MODIFY -> panel.pageIndex = value
             NEXT -> panel.nextPage(value)
             PREVIOUS -> panel.previousPage(value)
-            GET, GET_MAX -> error("out of case")
+            else -> error("out of case")
         }
     }
 

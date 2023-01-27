@@ -19,6 +19,7 @@ class Context(
     val session: Session? = null,
     val panel: Panel? = null,
     val icon: IconElement? = null,
+    val extenedVars: Map<String, Any>? = null
 ) {
 
     val player: Player
@@ -40,6 +41,6 @@ class Context(
                 put("page", panel.pageIndex)
                 put("page_max", panel.maxPageIndex)
             }
-        }
+        } + (extenedVars ?: emptyMap())
 
 }

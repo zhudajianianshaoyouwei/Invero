@@ -1,20 +1,22 @@
 package cc.trixey.invero.core.action
 
 import cc.trixey.invero.core.Context
+import cc.trixey.invero.core.serialize.ListScriptKetherSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import taboolib.common5.cbool
 import java.util.concurrent.CompletableFuture
 
 /**
  * Invero
- * cc.trixey.invero.core.action.StructureActionIf
+ * cc.trixey.invero.core.action.StructureActionAny
  *
  * @author Arasple
- * @since 2023/1/15 22:42
+ * @since 2023/1/26 22:42
  */
 @Serializable
-class StructureActionIf(
-    @SerialName("if")
+class StructureActionAny(
+    @SerialName("any")
     override val conditions: List<ScriptKether>,
     override val accept: Action?,
     override val deny: Action?
@@ -25,9 +27,12 @@ class StructureActionIf(
     }
 
     override fun run(context: Context): CompletableFuture<Boolean> {
-        return conditions.first().eval(context).thenCompose {
-            (if (it) accept?.run(context) else deny?.run(context))
-                ?: CompletableFuture.completedFuture(true)
+        var future = CompletableFuture.completedFuture(true)
+        conditions.forEach { cond ->
+            future = future.thenCombine(cond.eval(context)) { b, o -> b || o.cbool }
+        }
+        return future.thenCompose {
+            (if (it) accept?.run(context) else deny?.run(context)) ?: CompletableFuture.completedFuture(true)
         }
     }
 

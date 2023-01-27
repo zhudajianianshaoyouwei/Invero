@@ -15,19 +15,17 @@ import java.util.concurrent.CompletableFuture
 @Serializable
 class StructureActionIfNot(
     @SerialName("if_not")
-    val condition: ScriptKether,
-    @SerialName("then")
-    val accept: Action?,
-    @SerialName("else")
-    val deny: Action?
-) : Action() {
+    override val conditions: List<ScriptKether>,
+    override val accept: Action?,
+    override val deny: Action?
+) : ActionTernary, Action() {
 
     init {
         require(accept != null || deny != null) { "At least one type of response is required for IF structure" }
     }
 
     override fun run(context: Context): CompletableFuture<Boolean> {
-        return condition.eval(context).thenCompose {
+        return conditions.first().eval(context).thenCompose {
             (if (!it) accept?.run(context)
             else deny?.run(context)) ?: CompletableFuture.completedFuture(true)
         }

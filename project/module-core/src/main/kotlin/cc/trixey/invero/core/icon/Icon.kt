@@ -31,7 +31,7 @@ import kotlinx.serialization.json.JsonNames
 class Icon(
     @JsonNames("key")
     override val id: String?,
-    @JsonNames("require", "requirement", "rule")
+    @JsonNames("require", "requirement", "rule", "if")
     val condition: ScriptKether?,
     @SerialName("update")
     val updatePeriod: Long = -1,

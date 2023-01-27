@@ -1,6 +1,5 @@
 package cc.trixey.invero.script.kether
 
-import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.panel.PagedPanel
 import taboolib.library.kether.ParsedAction
 import taboolib.module.kether.*
@@ -53,6 +52,8 @@ object ActionPage {
             return when (operator) {
                 PageOperator.GET -> panel.pageIndex
                 PageOperator.GET_MAX -> panel.maxPageIndex
+                PageOperator.IS_FIRST_PAGE -> panel.pageIndex == 0
+                PageOperator.IS_LAST_PAGE -> panel.pageIndex == panel.maxPageIndex
                 else -> error("unreachable")
             }.let { CompletableFuture.completedFuture(it) }
         }

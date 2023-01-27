@@ -41,9 +41,19 @@ open class IOStoragePanel(
 
     private var storageCallback: Array<ItemStack?>.() -> Unit = { }
 
-    override val insertable: List<Pos> by lazy { (area - locked.toSet()).sorted() }
+    override val insertable: ArrayList<Pos> by lazy { ArrayList((area - locked.toSet()).sorted()) }
 
-    override val locked: List<Pos> by lazy { elements.occupiedPositions().sorted() }
+    override val locked: ArrayList<Pos> by lazy { ArrayList(elements.occupiedPositions().sorted()) }
+
+    override fun lock(pos: Pos) {
+        locked += pos
+        insertable -= pos
+    }
+
+    override fun free(pos: Pos) {
+        locked -= pos
+        insertable += pos
+    }
 
     override fun renderStorage() {
         insertable.forEachIndexed { index, pos ->

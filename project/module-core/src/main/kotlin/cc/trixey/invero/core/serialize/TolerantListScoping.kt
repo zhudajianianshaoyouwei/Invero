@@ -1,6 +1,7 @@
 package cc.trixey.invero.core.serialize
 
 import cc.trixey.invero.core.AgentPanel
+import cc.trixey.invero.core.action.ScriptKether
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.icon.Slot
 import cc.trixey.invero.core.menu.CommandArgument
@@ -18,6 +19,12 @@ import kotlinx.serialization.json.jsonArray
  * @author Arasple
  * @since 2023/1/18 10:56
  */
+internal object ListScriptKetherSerializer :
+    JsonTransformingSerializer<List<ScriptKether>>(ListSerializer(ScriptKether.serializer())) {
+    override fun transformSerialize(element: JsonElement) = element.tolerantListSerialize()
+    override fun transformDeserialize(element: JsonElement) = element.tolerantListDeserialize()
+}
+
 internal object ListStringSerializer :
     JsonTransformingSerializer<List<String>>(ListSerializer(String.serializer())) {
     override fun transformSerialize(element: JsonElement) = element.tolerantListSerialize()
