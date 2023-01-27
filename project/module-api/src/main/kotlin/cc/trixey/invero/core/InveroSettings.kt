@@ -35,7 +35,7 @@ object InveroSettings {
      * 数据库类型
      */
     @ConfigNode("Database.type")
-    var databaseType = "SQL"
+    var databaseType = "SQLITE"
         private set
 
     /**

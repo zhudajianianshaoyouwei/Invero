@@ -11,4 +11,5 @@ dependencies {
     compileOnly("io.izzel.taboolib:platform-bukkit:$taboolibVersion")
     compileOnly("io.izzel.taboolib:module-chat:$taboolibVersion")
     compileOnly("io.izzel.taboolib:module-lang:$taboolibVersion")
+    compileOnly("io.izzel.taboolib:expansion-player-database:$taboolibVersion")
 }

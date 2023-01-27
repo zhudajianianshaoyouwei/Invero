@@ -2,6 +2,7 @@ package cc.trixey.invero.core
 
 import cc.trixey.invero.core.util.prettyPrint
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import taboolib.common.LifeCycle
@@ -10,6 +11,7 @@ import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.console
 import taboolib.expansion.*
 import taboolib.platform.util.sendLang
+import java.io.File
 import java.util.*
 
 
@@ -34,7 +36,7 @@ object InveroDatabase {
 
         runCatching {
             when (type) {
-                Type.SQLITE -> setupPlayerDatabase()
+                Type.SQLITE -> setupPlayerDatabase(File(InveroSettings.pluginFolder, "data/invero_data.db"))
                 Type.SQL -> setupPlayerDatabase(InveroSettings.sqlSection ?: error("No valid sql section configurated"))
             }
         }.onFailure {
@@ -53,6 +55,10 @@ object InveroDatabase {
     @SubscribeEvent
     fun e(e: PlayerQuitEvent) {
         e.player.releaseDataContainer()
+    }
+
+    fun getPlayerDataContainer(it: Player): DataContainer {
+        return it.getDataContainer()
     }
 
     enum class Type {

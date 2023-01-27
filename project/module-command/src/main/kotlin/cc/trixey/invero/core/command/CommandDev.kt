@@ -3,6 +3,7 @@ package cc.trixey.invero.core.command
 import cc.trixey.invero.bukkit.InventoryPacket
 import cc.trixey.invero.bukkit.InventoryVanilla
 import cc.trixey.invero.bukkit.PanelContainer
+import cc.trixey.invero.core.InveroDatabase
 import cc.trixey.invero.core.InveroManager
 import cc.trixey.invero.core.serialize.serializeToJson
 import cc.trixey.invero.core.util.KetherHandler
@@ -33,7 +34,7 @@ object CommandDev {
     val main = mainCommand { createHelper() }
 
     @CommandBody
-    val kether = subCommand {
+    val runKether = subCommand {
         execute<CommandSender> { sender, _, argument ->
             val player = if (sender is Player) sender else onlinePlayers.random()
             val script = argument.removePrefix("kether ")
@@ -71,6 +72,29 @@ object CommandDev {
                     Tasks: (activeWorkers=$activeWorkers, pendingTasks=$pendingTasks)
                 """.trimIndent()
             )
+        }
+    }
+
+    @CommandBody
+    val printVariables = subCommand {
+        execute<CommandSender> { _, _, argument ->
+            val globaldata = InveroDatabase.globalDataDatabase.source
+            println(
+                """
+                    
+                    [I][Print] ------------------------------ [Variables]
+                    GlobalData: (${globaldata.keys.size})
+                """.trimIndent()
+            )
+            globaldata.forEach { (key, value) ->
+                println("- [${key.removePrefix("global@")}] : $value")
+            }
+            onlinePlayers.forEach {
+                println("[I][PLAYER: ${it.name}] ------------------------------ [Player_Variables]")
+                InveroDatabase.getPlayerDataContainer(it).source.forEach { (key, value) ->
+                    println("- [${key.removePrefix("player@")}] : $value")
+                }
+            }
         }
     }
 

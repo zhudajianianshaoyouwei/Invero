@@ -21,14 +21,16 @@ object ActionMenu {
     - menu title update
     - menu close
     - menu open [menuId] for [player]
+    - menu switch [menuId] for [player]
      */
 
     @KetherParser(["menu"], namespace = "invero", shared = true)
     fun parserMenu() = scriptParser {
-        when (it.expects("title", "close", "open")) {
+        when (it.expects("title", "close", "open", "open_ctx", "switch")) {
             "title" -> handlerMenuTitle(it)
             "close" -> actionNow { session()?.menu?.close(player()) }
             "open" -> handlerMenuOpen(it)
+            "open_ctx", "switch" -> handlerMenuOpen(it, true)
             else -> error("Unknown case")
         }
     }
@@ -64,7 +66,7 @@ object ActionMenu {
         }
 
 
-    private fun handlerMenuOpen(reader: QuestReader): ScriptAction<Any?> {
+    private fun handlerMenuOpen(reader: QuestReader, reserveContext: Boolean = false): ScriptAction<Any?> {
         val input = reader.nextParsedAction()
 
         return actionFuture { future ->
@@ -83,7 +85,10 @@ object ActionMenu {
                     newFrame(player).run<Any>().thenApply { playerId ->
                         onlinePlayers
                             .find { p -> p.name == playerId }
-                            ?.let { p -> menu.open(p) }
+                            ?.let { p ->
+                                val pass = (if (reserveContext) session()?.getVariables() else null) ?: emptyMap()
+                                menu.open(p, pass)
+                            }
                     }
                 }
             }.get().let { future.complete(it) }
