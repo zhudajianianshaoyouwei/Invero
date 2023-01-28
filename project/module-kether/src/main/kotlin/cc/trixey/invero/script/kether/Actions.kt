@@ -1,8 +1,7 @@
 package cc.trixey.invero.script.kether
 
+import cc.trixey.invero.core.compat.parseAndSendMiniMessage
 import cc.trixey.invero.core.util.KetherHandler
-import cc.trixey.invero.core.util.parseMiniMessage
-import cc.trixey.invero.core.util.translateAmpersandColor
 import org.bukkit.entity.Player
 import taboolib.module.kether.KetherParser
 import taboolib.module.kether.combinationParser
@@ -26,13 +25,10 @@ internal fun actionMessage() = combinationParser {
                 session.apply { viewer.get<Player>().sendMessage(parse(message)) }
             else {
                 val player = player()
-                player.sendMessage(
-                    KetherHandler
-                        .parseInline(message, player, mapOf())
-                        .parseMiniMessage()
-                        .translateAmpersandColor()
-                        .replacePlaceholder(player)
-                )
+                KetherHandler
+                    .parseInline(message, player, mapOf())
+                    .replacePlaceholder(player)
+                    .parseAndSendMiniMessage(player)
             }
         }
     }

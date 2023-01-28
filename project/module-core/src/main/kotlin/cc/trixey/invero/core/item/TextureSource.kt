@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack
  */
 @Serializable
 class TextureSource(@SerialName("source") override val raw: String, val value: String) : Texture() {
+
     override fun generateItem(session: Session, delayedItem: (ItemStack) -> Unit): ItemStack {
         TODO("Not yet implemented")
     }

@@ -72,7 +72,9 @@ object PatchIncluder {
                 if (resource.shouldIgnore()) {
                     match.value
                 } else {
-                    "include file(\"$path/$resource\")".also { println("[HOCON PATCH] [${file.name}] Changed [ ${match.value} ] to [ $it ]") }
+                    "include file(\"$path/$resource\")".also {
+//                        println("[HOCON PATCH] [${file.name}] Changed [ ${match.value} ] to [ $it ]")
+                    }
                 }
             }
         }

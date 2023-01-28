@@ -30,7 +30,7 @@ fun CommandComponentDynamic.suggestMenuIds(uncheck: Boolean = false) {
  */
 internal fun CommandComponent.createHelper() = execute<ProxyCommandSender> { sender, context, _ ->
     val command = context.command
-    val builder = StringBuilder("§bUsage: /${command.name}")
+    val builder = StringBuilder("§3Usage: §b/${command.name}")
     var newline = false
 
     fun print(
@@ -52,10 +52,10 @@ internal fun CommandComponent.createHelper() = execute<ProxyCommandSender> { sen
                     newline = true
                     builder.appendLine()
                     builder.append(space(offset))
-                    if (level > 1) builder.append(if (end) " " else "§7│")
+                    if (level > 1) builder.append(if (end) " " else "§8│")
                     builder.append(space(level))
-                    if (index + 1 < size) builder.append("§7├── ")
-                    else builder.append("§7└── ")
+                    if (index + 1 < size) builder.append("§8├── ")
+                    else builder.append("§8└── ")
                     builder.append("§3${compound.aliases[0]}")
                 }
                 option = false
@@ -70,7 +70,7 @@ internal fun CommandComponent.createHelper() = execute<ProxyCommandSender> { sen
                 }
                 comment = if (compound.optional || option) {
                     option = true
-                    builder.append(" ").append("§8[<$value>]")
+                    builder.append(" ").append("§7[<$value>]")
                     compound.comment.length + 4
                 } else {
                     builder.append(" ").append("§7<$value>")

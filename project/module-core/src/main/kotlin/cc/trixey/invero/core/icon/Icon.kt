@@ -40,14 +40,19 @@ class Icon(
     @JsonNames("frames-properties", "frames-prop")
     val framesProperties: Frame.Properties?,
     val frames: List<Frame>?,
-    @Serializable @JsonNames("material", "mat")
-    val texture: Texture?,
+
+    @Serializable @JsonNames("texture", "mat")
+    val material: Texture?,
+
+
     val name: String?,
     @Serializable(with = ListStringSerializer::class)
     @JsonNames("lores")
     val lore: List<String>?,
     @Serializable @JsonNames("amt")
     val amount: Int?,
+    val damage: Short?,
+
     @Serializable(with = ListSlotSerializer::class) @JsonNames("slots", "pos", "position", "positions")
     val slot: List<Slot>?,
     @Serializable(with = ListIconSerializer::class) @SerialName("sub")
@@ -62,11 +67,12 @@ class Icon(
     var parent: AgentIcon? = null
 
     @Transient
-    val defaultFrame = if (parent == null) Frame(null, texture, name, lore, amount, slot) else null
+    val defaultFrame = if (parent == null) Frame(null, material, name, lore, amount, slot) else null
 
     init {
         subIcons?.forEach { it.parent = this }
-        require(arrayOf(texture, frames).any { it != null }) {
+        require(arrayOf(material, frames).any { it != null }) {
+
             "Valid texture(material) for this icon is required"
         }
     }

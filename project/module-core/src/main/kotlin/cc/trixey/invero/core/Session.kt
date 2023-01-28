@@ -3,10 +3,10 @@ package cc.trixey.invero.core
 import cc.trixey.invero.bukkit.BukkitWindow
 import cc.trixey.invero.bukkit.PlayerViewer
 import cc.trixey.invero.core.Session.Companion.VarType.*
+import cc.trixey.invero.core.compat.parseMiniMessage
+import cc.trixey.invero.core.compat.translateAmpersandColor
 import cc.trixey.invero.core.util.KetherHandler
-import cc.trixey.invero.core.util.parseMiniMessage
 import cc.trixey.invero.core.util.session
-import cc.trixey.invero.core.util.translateAmpersandColor
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submitAsync
 import taboolib.expansion.getDataContainer
@@ -36,6 +36,10 @@ class Session(
 
     init {
         updateVariables()
+    }
+
+    fun hasVariable(key: String): Boolean {
+        return variables.containsKey(key)
     }
 
     fun updateVariables() {
@@ -81,9 +85,9 @@ class Session(
         return if (input.isBlank()) input
         else KetherHandler
             .parseInline(input, player, context?.variables ?: variables)
-            .parseMiniMessage()
-            .translateAmpersandColor()
             .replacePlaceholder(player)
+            .translateAmpersandColor()
+            .parseMiniMessage()
     }
 
     fun parse(input: List<String>, context: Context? = null): List<String> {

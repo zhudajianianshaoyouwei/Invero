@@ -31,6 +31,7 @@ taboolib {
 
     relocate("kotlinx.serialization", "kotlinx_1_4_1.serialization")
     relocate("kotlinx.coroutines", "kotlinx_1_6_4.coroutines")
+//    relocate("net.kyori", "cc.trixey.invero.library.kyori")
 
     classifier = null
     version = taboolibVersion

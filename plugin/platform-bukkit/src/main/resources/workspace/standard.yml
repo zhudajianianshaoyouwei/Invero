@@ -12,7 +12,6 @@ menu:
     tasks: { }
     scripts: { }
 
-
 bindings:
   items: 'minecraft:compass'
   # simple command without permission limit

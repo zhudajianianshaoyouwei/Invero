@@ -1,14 +1,13 @@
-//@file:RuntimeDependencies(
-//    RuntimeDependency("!net.kyori:adventure-api:4.9.3", transitive = false),
-//    RuntimeDependency("!net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT", transitive = false)
-//)
+package cc.trixey.invero.core.compat
 
-package cc.trixey.invero.core.util
-
+import net.kyori.adventure.platform.bukkit.BukkitAudiences
+import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.text.minimessage.internal.parser.ParsingExceptionImpl
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import org.bukkit.entity.Player
 import taboolib.module.nms.MinecraftVersion
+import taboolib.platform.util.bukkitPlugin
 
 /**
  * Invero
@@ -21,6 +20,8 @@ private const val SECTION_CHAR: Char = '§'
 
 private const val AMPERSAND_CHAR = '&'
 
+private val bukkitAudiences by lazy { BukkitAudiences.create(bukkitPlugin) }
+
 private val legacyComponentSerializer by lazy {
     LegacyComponentSerializer.builder().apply {
         if (MinecraftVersion.majorLegacy >= 11600) {
@@ -30,13 +31,22 @@ private val legacyComponentSerializer by lazy {
     }.build()
 }
 
+
 fun String.parseMiniMessage(): String {
     val component = try {
-        MiniMessage.miniMessage().deserialize(this)
+        parseMiniMessageComponent()
     } catch (e: ParsingExceptionImpl) {
         return translateLegacyColor().parseMiniMessage()
     }
     return legacyComponentSerializer.serialize(component)
+}
+
+fun String.parseMiniMessageComponent(): Component {
+    return MiniMessage.miniMessage().deserialize(this)
+}
+
+fun String.parseAndSendMiniMessage(player: Player) {
+    bukkitAudiences.player(player).sendMessage(parseMiniMessageComponent())
 }
 
 fun String.translateAmpersandColor(): String {

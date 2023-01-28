@@ -1,0 +1,13 @@
+icons:
+  '#':
+    # 材质
+    material: 'cyan stained glass pane'
+    head: '{{player name}}'
+    source:
+      oraxen: my_oraxen_item
+      json: "JSON content"
+
+    # 属性
+    glow: true
+    color: 'WHITE'
+    unbreakable: false

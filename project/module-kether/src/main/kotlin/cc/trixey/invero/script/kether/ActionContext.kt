@@ -16,20 +16,23 @@ object ActionContext {
     @KetherParser(["context", "ctx"], namespace = "invero", shared = true)
     fun parser() = combinationParser {
         it.group(
-            // get, set, del, inc, dec
+            // get, has, set, del, inc, dec
             symbol(),
             // key
-            text(),
+            text().option(),
             // value
             command("to", "by", then = action()).option().defaultsTo(null)
         ).apply(it) { action, key, mod ->
 
             future {
                 val value = if (mod != null) newFrame(mod).run<Any>() else null
+                if (key == null || action == "update") {
+                    return@future completedFuture(session()?.updateVariables())
+                }
 
                 when (action) {
                     "get" -> completedFuture(session()?.getVariable(key))
-                    "update" -> completedFuture(session()?.updateVariables())
+                    "has" -> completedFuture(session()?.hasVariable(key) ?: false)
                     "set" -> {
                         (value ?: error("No valid value")).thenApply { session()?.setVariable(key, it) }
                     }
