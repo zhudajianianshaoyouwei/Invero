@@ -26,10 +26,14 @@ import kotlinx.serialization.json.JsonNames
 @ExperimentalSerializationApi
 @Serializable
 class PanelPaged(
-    @Serializable(with = ScaleSerializer::class) override val scale: Scale,
-    @Serializable(with = PosSerializer::class) override val locate: Pos?,
-    @SerialName("default-page") @JsonNames("default", "def-page") val defaultPage: Int = 0,
-    @Serializable(with = ListAgentPanelSerializer::class) val pages: List<AgentPanel>
+    @Serializable(with = ScaleSerializer::class)
+    override val scale: Scale,
+    @Serializable(with = PosSerializer::class)
+    override val locate: Pos?,
+    @SerialName("default-page") @JsonNames("default", "def-page")
+    val defaultPage: Int = 0,
+    @Serializable(with = ListAgentPanelSerializer::class)
+    val pages: List<AgentPanel>
 ) : AgentPanel() {
 
     override val layout: Layout? = null

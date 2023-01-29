@@ -27,7 +27,7 @@ import kotlinx.serialization.json.JsonNames
 @OptIn(ExperimentalSerializationApi::class)
 class Icon(
     @JsonNames("key")
-    override val id: String?,
+    override var id: String?,
     @JsonNames("if")
     val condition: ScriptKether?,
     @SerialName("update")
@@ -52,7 +52,6 @@ class Icon(
     var parent: AgentIcon? = null
 
     init {
-        subIcons?.forEach { it.parent = this }
         require(arrayOf(defaultFrame.texture, frames).any { it != null }) {
             "Valid texture(material) for this icon is required"
         }

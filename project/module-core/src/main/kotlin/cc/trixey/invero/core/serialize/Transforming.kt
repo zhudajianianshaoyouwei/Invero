@@ -30,6 +30,7 @@ internal object StandardMenuSerializer : JsonTransformingSerializer<StandardMenu
         "layout",
         "locate",
         "scale",
+        "pages",
         "items", "icons", "item", "icon"
     )
 
