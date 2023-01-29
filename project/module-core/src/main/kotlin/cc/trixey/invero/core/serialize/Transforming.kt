@@ -31,6 +31,7 @@ internal object StandardMenuSerializer : JsonTransformingSerializer<StandardMenu
         "locate",
         "scale",
         "pages",
+        "generator",
         "items", "icons", "item", "icon"
     )
 
@@ -75,11 +76,11 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
         "nbt"
     )
 
-    private val headTextureKeys = arrayOf(
+    private val textureKeysHead = arrayOf(
         "head"
     )
 
-    private val sourcedTextureKeys = arrayOf(
+    private val textureSourcedKeys = arrayOf(
         "zaphkiel", "zap",
         "oraxen",
         "itemsadder", "ia",
@@ -90,16 +91,16 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
         val struc = element.jsonObject.toMutableMap()
 
         if ("display" !in struc.keys) {
-            var speciTexture = false
+            var textureSpecified = false
             val texture = buildJsonObject {
                 // head
-                val head = headTextureKeys.any { key ->
+                val head = textureKeysHead.any { key ->
                     val value = struc[key]
                     value?.let { put("head", value) }
                     value != null
                 }
                 // sourced
-                val source = sourcedTextureKeys.any { key ->
+                val source = textureSourcedKeys.any { key ->
                     val value = struc[key]
                     value?.let {
                         put("source", key.uppercase())
@@ -107,13 +108,13 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
                     }
                     value != null
                 }
-                speciTexture = head || source
+                textureSpecified = head || source
             }
             struc["display"] = buildJsonObject {
                 displayKeys.forEach { key ->
                     struc[key]?.let { value -> put(key, value) }
                 }
-                if (speciTexture) {
+                if (textureSpecified) {
                     struc["texture"] = texture
                 }
             }

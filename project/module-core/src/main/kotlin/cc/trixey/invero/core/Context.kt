@@ -18,8 +18,8 @@ class Context(
     val viewer: PlayerViewer,
     val session: Session? = null,
     val panel: Panel? = null,
-    val icon: IconElement? = null,
-    val extenedVars: Map<String, Any>? = null
+    val iconElement: IconElement? = null,
+    val extenedVars: MutableMap<String, Any> = mutableMapOf()
 ) {
 
     val player: Player
@@ -34,13 +34,13 @@ class Context(
     val variables: Map<String, Any>
         get() = (session?.getVariables() ?: emptyMap()) + buildMap {
             if (panel != null) put("@panel", panel)
-            if (icon != null) put("@icon", icon)
+            if (iconElement != null) put("@icon", iconElement)
             if (menu != null) put("@menu", menu!!)
 
             if (panel is PagedPanel) {
                 put("page", panel.pageIndex)
                 put("page_max", panel.maxPageIndex)
             }
-        } + (extenedVars ?: emptyMap())
+        } + extenedVars
 
 }

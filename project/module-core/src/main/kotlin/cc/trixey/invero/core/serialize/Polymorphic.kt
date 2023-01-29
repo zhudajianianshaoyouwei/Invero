@@ -9,10 +9,12 @@ import cc.trixey.invero.core.item.Texture
 import cc.trixey.invero.core.item.TextureHead
 import cc.trixey.invero.core.item.TextureMaterial
 import cc.trixey.invero.core.item.TextureSource
+import cc.trixey.invero.core.panel.PanelGenerator
 import cc.trixey.invero.core.panel.PanelPaged
 import cc.trixey.invero.core.panel.PanelStandard
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.*
 
 /**
@@ -72,10 +74,14 @@ internal object SelectorTexture : JsonContentPolymorphicSerializer<Texture>(Text
 
 internal object SelectorAgentPanel : JsonContentPolymorphicSerializer<AgentPanel>(AgentPanel::class) {
 
-    override fun selectDeserializer(element: JsonElement) = when {
-        // generator -> PanelGeneraotr... etc
-        "pages" in element.jsonObject -> PanelPaged.serializer()
-        else -> PanelStandard.serializer()
+    override fun selectDeserializer(element: JsonElement): KSerializer<out AgentPanel> {
+        val keys = element.jsonObject
+        return when {
+            // generator -> PanelGeneraotr... etc
+            "pages" in keys -> PanelPaged.serializer()
+            "generator" in keys -> PanelGenerator.serializer()
+            else -> PanelStandard.serializer()
+        }
     }
 
 }

@@ -31,7 +31,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
     )
 
     // 针对本图标的上下文
-    val context by lazy {
+    open val context by lazy {
         Context(session.viewer, session, panel, this)
     }
 

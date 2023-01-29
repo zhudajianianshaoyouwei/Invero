@@ -1,7 +1,7 @@
 package cc.trixey.invero.core.item
 
 import cc.trixey.invero.core.Session
-import cc.trixey.invero.core.item.source.SourceManager
+import cc.trixey.invero.core.item.source.SourceProviderManager
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack
 class TextureSource(val source: String, @SerialName("value") override val raw: String) : Texture() {
 
     private val provider by lazy {
-        SourceManager.getProvider(source) ?: error("Invalid source provider: $source")
+        SourceProviderManager.getProvider(source) ?: error("Invalid source provider: $source")
     }
 
     @Transient

@@ -9,6 +9,7 @@ import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.command.component.CommandComponent
 import taboolib.common.platform.command.component.CommandComponentDynamic
 import taboolib.common.platform.command.component.CommandComponentLiteral
+import taboolib.module.chat.TellrawJson
 import taboolib.module.lang.asLangText
 
 fun String.retrievePlayer(): Player? {
@@ -30,7 +31,7 @@ fun CommandComponentDynamic.suggestMenuIds(uncheck: Boolean = false) {
  */
 internal fun CommandComponent.createHelper() = execute<ProxyCommandSender> { sender, context, _ ->
     val command = context.command
-    val builder = StringBuilder("§3Usage: §b/${command.name}")
+    val builder = TellrawJson().also { it.append("§3Usage: §b/${command.name}") }
     var newline = false
 
     fun print(
@@ -50,7 +51,7 @@ internal fun CommandComponent.createHelper() = execute<ProxyCommandSender> { sen
                     builder.append(" ").append("§3${compound.aliases[0]}")
                 } else {
                     newline = true
-                    builder.appendLine()
+                    builder.newLine()
                     builder.append(space(offset))
                     if (level > 1) builder.append(if (end) " " else "§8│")
                     builder.append(space(level))
@@ -94,7 +95,7 @@ internal fun CommandComponent.createHelper() = execute<ProxyCommandSender> { sen
     context.commandCompound.children.forEachIndexed { index, children ->
         print(children, index, size, end = index + 1 == size)
     }
-    builder.lines().forEach { sender.sendMessage(it) }
+    builder.sendTo(sender)
 }
 
 private fun space(space: Int) = (1..space).joinToString("") { " " }

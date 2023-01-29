@@ -4,12 +4,12 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Invero
- * cc.trixey.invero.core.item.source.SourceManager
+ * cc.trixey.invero.core.item.source.SourceProviderManager
  *
  * @author Arasple
  * @since 2023/1/29 15:35
  */
-object SourceManager {
+object SourceProviderManager {
 
     private val sourceProviders = ConcurrentHashMap<String, Provider>()
 
@@ -22,6 +22,5 @@ object SourceManager {
     fun register(name: String, provider: Provider) {
         sourceProviders[name] = provider
     }
-
 
 }

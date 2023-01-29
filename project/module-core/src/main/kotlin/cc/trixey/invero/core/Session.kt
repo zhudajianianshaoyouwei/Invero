@@ -47,8 +47,8 @@ class Session(
         variables += viewer.get<Player>().getDataContainer().source
     }
 
-    fun getVariables(): ConcurrentHashMap<String, Any> {
-        return variables
+    fun getVariables(extend: Map<String, Any> = emptyMap()): Map<String, Any> {
+        return variables + extend
     }
 
     fun getVariable(key: String): Any? {

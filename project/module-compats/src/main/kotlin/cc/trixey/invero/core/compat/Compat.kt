@@ -5,7 +5,7 @@ import cc.trixey.invero.core.compat.item.ItemsAdderItemProvider
 import cc.trixey.invero.core.compat.item.OraxenItemProvider
 import cc.trixey.invero.core.compat.item.ZaphkielItemProvider
 import cc.trixey.invero.core.item.source.Provider
-import cc.trixey.invero.core.item.source.SourceManager
+import cc.trixey.invero.core.item.source.SourceProviderManager
 import taboolib.common.platform.Awake
 
 /**
@@ -32,7 +32,7 @@ object Compat {
 
     private fun Provider.register(vararg namespace: String) {
         if (!isHooked) return
-        namespace.forEach { SourceManager.register(it, this) }
+        namespace.forEach { SourceProviderManager.register(it, this) }
     }
 
 }

@@ -15,6 +15,8 @@ import java.util.concurrent.CompletableFuture
 object ActionPage {
 
     /*
+    page isFirst
+    page isLast
     page get
     page max
     page next by [value]
