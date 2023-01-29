@@ -2,7 +2,6 @@ package cc.trixey.invero.core.item
 
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.util.MATERIAL_ID
-import cc.trixey.invero.core.util.containsAnyPlaceholder
 import kotlinx.serialization.*
 import kotlinx.serialization.encoding.*
 import org.bukkit.inventory.ItemStack
@@ -22,21 +21,13 @@ import kotlin.jvm.optionals.getOrNull
 class TextureMaterial(override val raw: String) : Texture() {
 
     @Transient
-    val containsPlaceholder = raw.containsAnyPlaceholder()
-
-    @Transient
-    val lazyMaterial = run {
+    override val lazyTexture = run {
         if (containsPlaceholder) null
         else generate(raw) ?: DEFAULT_TEXTURE
     }
 
     override fun generateItem(session: Session, delayedItem: (ItemStack) -> Unit): ItemStack {
-        return if (!containsPlaceholder) lazyMaterial!!
-        else generate(session.parse(raw)) ?: DEFAULT_TEXTURE
-    }
-
-    override fun isStatic(): Boolean {
-        return lazyMaterial != null
+        return lazyTexture ?: generate(session.parse(raw)) ?: DEFAULT_TEXTURE
     }
 
     private fun generate(material: String): ItemStack? {

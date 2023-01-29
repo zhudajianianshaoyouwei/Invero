@@ -1,6 +1,5 @@
 package cc.trixey.invero.core.menu
 
-import cc.trixey.invero.core.serialize.CommandArgumentSerailizer
 import cc.trixey.invero.core.serialize.ListCommandArgumentSerializer
 import cc.trixey.invero.core.serialize.ListStringSerializer
 import kotlinx.serialization.SerialName

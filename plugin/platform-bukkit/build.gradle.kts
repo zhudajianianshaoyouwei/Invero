@@ -8,6 +8,7 @@ taboolib {
     install("common")
     install("common-5")
     install("module-nms")
+    install("module-nms-util")
     install("module-kether")
     install("module-configuration")
     install("module-lang")

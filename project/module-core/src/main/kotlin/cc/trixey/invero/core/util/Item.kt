@@ -36,3 +36,7 @@ fun ItemStack.postLore(lore: List<String>) = synchronized(this) {
 fun ItemStack.postAmount(amount: Int) = synchronized(this) {
     this.amount = amount
 }
+
+fun ItemStack.postModel(model: Int) = synchronized(this) {
+    itemMeta = itemMeta?.also { it.setCustomModelData(model) }
+}

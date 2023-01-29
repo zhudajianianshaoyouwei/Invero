@@ -71,7 +71,8 @@ object InveroManager {
                 .mapNotNull {
                     runCatching {
                         val conf = PatchedLoader.loadFromFile(it)
-                        if ("menu" in conf.getKeys(false)) conf else null
+                        val keys = conf.getKeys(false)
+                        if (arrayOf("menu", "title").any { it in keys }) conf else null
                     }.onFailure { failure ->
                         failure.prettyPrint()
                         sender.sendLang("menu-loader-file-errored", it.name)

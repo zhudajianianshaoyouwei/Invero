@@ -6,7 +6,6 @@ import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.icon.Slot
 import cc.trixey.invero.core.menu.CommandArgument
 import kotlinx.serialization.builtins.ListSerializer
-import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonTransformingSerializer
@@ -26,19 +25,19 @@ internal object ListScriptKetherSerializer :
 }
 
 internal object ListStringSerializer :
-    JsonTransformingSerializer<List<String>>(ListSerializer(String.serializer())) {
+    JsonTransformingSerializer<List<String>>(listStringSerializer) {
     override fun transformSerialize(element: JsonElement) = element.tolerantListSerialize()
     override fun transformDeserialize(element: JsonElement) = element.tolerantListDeserialize()
 }
 
 internal object ListIconSerializer :
-    JsonTransformingSerializer<List<Icon>>(ListSerializer(Icon.serializer())) {
+    JsonTransformingSerializer<List<Icon>>(ListSerializer(IconSerializer)) {
     override fun transformSerialize(element: JsonElement) = element.tolerantListSerialize()
     override fun transformDeserialize(element: JsonElement) = element.tolerantListDeserialize()
 }
 
 internal object ListCommandArgumentSerializer :
-    JsonTransformingSerializer<List<CommandArgument>>(ListSerializer(CommandArgument.serializer())) {
+    JsonTransformingSerializer<List<CommandArgument>>(ListSerializer(CommandArgumentSerailizer)) {
     override fun transformSerialize(element: JsonElement) = element.tolerantListSerialize()
     override fun transformDeserialize(element: JsonElement) = element.tolerantListDeserialize()
 }

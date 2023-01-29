@@ -27,7 +27,7 @@ class MenuSettings(
     @SerialName("override-player-inventory")
     val overridePlayerInventory: Boolean = true,
     @SerialName("hide-player-storage")
-    val hidePlayerStorage: Boolean = false
+    val hidePlayerStorage: Boolean = false,
 ) {
 
     @Transient

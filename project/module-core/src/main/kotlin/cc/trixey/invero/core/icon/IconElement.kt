@@ -48,9 +48,6 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
     // 多帧物品的默认持续时间
     private var framesDefaultDelay: Long = icon.framesProperties?.defaultDelay ?: 20
 
-    // 默认物品帧
-    private val defaultFrame: Frame = icon.defaultFrame!!
-
     // 正在循环的集合
     private var framesCyclic: Cyclic<Frame>? = null
         set(value) {
@@ -65,21 +62,21 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
      */
     fun invoke() {
         // 默认帧相关
-        frame = defaultFrame
+        frame = icon.defaultFrame
         icon.getValidId(agent)?.let { key -> agent.layout?.search(key) }?.let { this@IconElement.set(it) }
 
         framesCyclic = icon.generateCyclicFrames()
 
         // 周期任务 :: 翻译物品帧的相关变量
-        if (icon.updatePeriod > 0) {
-            session.taskMgr.launchAsync(delay = 10L, period = icon.updatePeriod) {
+        if (icon.periodUpdate > 0) {
+            session.taskMgr.launchAsync(delay = 10L, period = icon.periodUpdate) {
                 if (isVisible() && taskStatus[0]) update()
             }
         }
 
         // 周期任务 :: 重定向子图标
-        if (icon.relocatePeriod > 0 && !icon.subIcons.isNullOrEmpty()) {
-            session.taskMgr.launchAsync(delay = 10L, period = icon.relocatePeriod) {
+        if (icon.periodRelocate > 0 && !icon.subIcons.isNullOrEmpty()) {
+            session.taskMgr.launchAsync(delay = 10L, period = icon.periodRelocate) {
                 if (isVisible() && taskStatus[1]) relocate()
             }
         }
@@ -118,7 +115,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
      * 翻译当前物品帧的变量
      */
     fun update() {
-        frame?.translateUpdate(session, this, defaultFrame)
+        frame?.translateUpdate(session, this, icon.defaultFrame)
     }
 
     /**

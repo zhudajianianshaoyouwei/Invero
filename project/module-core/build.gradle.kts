@@ -20,6 +20,7 @@ dependencies {
     compileOnly("io.izzel.taboolib:module-configuration:$taboolibVersion")
     compileOnly("io.izzel.taboolib:module-kether:$taboolibVersion")
     compileOnly("io.izzel.taboolib:module-nms:$taboolibVersion")
+    compileOnly("io.izzel.taboolib:module-nms-util:$taboolibVersion")
     compileOnly("io.izzel.taboolib:module-chat:$taboolibVersion")
     compileOnly("io.izzel.taboolib:module-database:$taboolibVersion")
     compileOnly("io.izzel.taboolib:expansion-player-database:$taboolibVersion")

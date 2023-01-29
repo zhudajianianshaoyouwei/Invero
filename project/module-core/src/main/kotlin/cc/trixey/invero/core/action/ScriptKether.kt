@@ -13,11 +13,25 @@ import java.util.concurrent.CompletableFuture
  * @author Arasple
  * @since 2023/1/16 13:11
  */
-@JvmInline
 @Serializable(with = ScriptKetherSerializer::class)
-value class ScriptKether(val script: String) : Condition {
+class ScriptKether(val script: String) : Condition {
+
+    private val staticCondition: Pair<Boolean, CompletableFuture<Any?>>
+
+    init {
+        val isTrue =
+            script == "1" || script.equals("true", ignoreCase = true) || script.equals("yes", ignoreCase = true);
+
+        val isFale =
+            script == "0" || script.equals("false", ignoreCase = true) || script.equals("no", ignoreCase = true);
+
+        staticCondition = (isTrue || isFale) to CompletableFuture.completedFuture(isTrue)
+    }
+
 
     override fun invoke(context: Context): CompletableFuture<Any?> {
+        if (staticCondition.first) return staticCondition.second
+
         val player = context.player
 
         // TODO Context compatible with kether

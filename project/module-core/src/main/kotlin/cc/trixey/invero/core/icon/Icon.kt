@@ -8,11 +8,8 @@ import cc.trixey.invero.core.action.ScriptKether
 import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.animation.Cyclic
 import cc.trixey.invero.core.animation.toCyclic
-import cc.trixey.invero.core.item.Texture
 import cc.trixey.invero.core.serialize.IconHandlerSerializer
 import cc.trixey.invero.core.serialize.ListIconSerializer
-import cc.trixey.invero.core.serialize.ListSlotSerializer
-import cc.trixey.invero.core.serialize.ListStringSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -31,31 +28,19 @@ import kotlinx.serialization.json.JsonNames
 class Icon(
     @JsonNames("key")
     override val id: String?,
-    @JsonNames("require", "requirement", "rule", "if")
+    @JsonNames("if")
     val condition: ScriptKether?,
     @SerialName("update")
-    val updatePeriod: Long = -1,
-    @SerialName("relocate") @JsonNames("relocate", "refresh")
-    val relocatePeriod: Long = -1,
+    val periodUpdate: Long = -1,
+    @SerialName("relocate")
+    val periodRelocate: Long = -1,
+    @SerialName("display")
+    val defaultFrame: Frame,
     @JsonNames("frames-properties", "frames-prop")
     val framesProperties: Frame.Properties?,
     val frames: List<Frame>?,
-
-    @Serializable @JsonNames("texture", "mat")
-    val material: Texture?,
-
-
-    val name: String?,
-    @Serializable(with = ListStringSerializer::class)
-    @JsonNames("lores")
-    val lore: List<String>?,
-    @Serializable @JsonNames("amt")
-    val amount: Int?,
-    val damage: Short?,
-
-    @Serializable(with = ListSlotSerializer::class) @JsonNames("slots", "pos", "position", "positions")
-    val slot: List<Slot>?,
-    @Serializable(with = ListIconSerializer::class) @SerialName("sub")
+    @SerialName("sub")
+    @Serializable(with = ListIconSerializer::class)
     val subIcons: List<Icon>?,
     @SerialName("action")
     @JsonNames("actions", "handler", "click")
@@ -66,13 +51,9 @@ class Icon(
     @Transient
     var parent: AgentIcon? = null
 
-    @Transient
-    val defaultFrame = if (parent == null) Frame(null, material, name, lore, amount, slot) else null
-
     init {
         subIcons?.forEach { it.parent = this }
-        require(arrayOf(material, frames).any { it != null }) {
-
+        require(arrayOf(defaultFrame.texture, frames).any { it != null }) {
             "Valid texture(material) for this icon is required"
         }
     }

@@ -2,10 +2,11 @@ package cc.trixey.invero.core.item
 
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.serialize.SelectorTexture
+import cc.trixey.invero.core.util.containsAnyPlaceholder
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.XMaterial
-import java.util.concurrent.CompletableFuture
 
 /**
  * Invero
@@ -19,9 +20,15 @@ abstract class Texture {
 
     abstract val raw: String
 
+    val containsPlaceholder by lazy { raw.containsAnyPlaceholder() }
+
+    abstract val lazyTexture: ItemStack?
+
     abstract fun generateItem(session: Session, delayedItem: (ItemStack) -> Unit = {}): ItemStack
 
-    abstract fun isStatic(): Boolean
+    fun isStatic(): Boolean {
+        return lazyTexture != null
+    }
 
     companion object {
 

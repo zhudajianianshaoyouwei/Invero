@@ -5,7 +5,6 @@ package cc.trixey.invero.core.serialize
 import cc.trixey.invero.core.AgentIcon
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Menu
-import cc.trixey.invero.core.menu.StandardMenu
 import cc.trixey.invero.core.action.*
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.item.Texture
@@ -27,7 +26,7 @@ import kotlinx.serialization.json.*
 internal object SelectorMenu : JsonContentPolymorphicSerializer<Menu>(Menu::class) {
 
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<out Menu> {
-        return StandardMenu.serializer()
+        return StandardMenuSerializer
     }
 
 }

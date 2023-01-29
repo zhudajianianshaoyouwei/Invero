@@ -4,16 +4,12 @@ package cc.trixey.invero.core.serialize
 
 import cc.trixey.invero.common.Pos
 import cc.trixey.invero.common.Scale
-import cc.trixey.invero.common.event.ClickType
 import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.action.*
 import cc.trixey.invero.core.animation.CycleMode
-import cc.trixey.invero.core.icon.IconHandler
-import cc.trixey.invero.core.menu.CommandArgument
 import cc.trixey.invero.core.menu.MenuTitle
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializer
 import kotlinx.serialization.builtins.IntArraySerializer
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
@@ -21,7 +17,6 @@ import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
-import kotlinx.serialization.serializer
 import org.bukkit.event.inventory.InventoryType
 
 /**
@@ -31,63 +26,8 @@ import org.bukkit.event.inventory.InventoryType
  * @author Arasple
  * @since 2023/1/18 0:12
  */
-@Serializer(forClass = CommandArgument::class)
-internal object CommandArgumentSerailizer : JsonTransformingSerializer<CommandArgument>(serializer()) {
 
-    override fun transformDeserialize(element: JsonElement): JsonElement {
-        return if (element is JsonPrimitive) {
-            buildJsonObject {
-                put("id", element.content)
-                put("type", "STRING")
-            }
-        } else {
-            element
-        }
-    }
-
-}
-
-internal object IconHandlerSerializer : JsonTransformingSerializer<IconHandler>(serializer()) {
-
-    override fun transformDeserialize(element: JsonElement): JsonElement {
-        return when (element) {
-            is JsonPrimitive, is JsonArray -> {
-                buildJsonObject { put("all", element) }
-            }
-
-            is JsonObject -> {
-                val jsonObject = element.jsonObject
-
-                if (arrayOf("if", "when").any { it in jsonObject }) {
-                    return buildJsonObject { put("all", jsonObject) }
-                }
-
-                buildJsonObject {
-                    jsonObject["all"]?.let { put("all", it) }
-
-                    buildJsonObject {
-                        jsonObject.keys.filterNot { it == "all" }.forEach { key ->
-                            val type = ClickType.values()
-                                .find { it.name.equals(key, true) || it.bukkitId.equals(key, true) }
-                            val action = jsonObject[key]
-                            if (type != null && action != null) put(type.name, action)
-                        }
-                    }.let {
-                        put("response", it)
-                    }
-                }
-            }
-        }
-    }
-
-    override fun transformSerialize(element: JsonElement): JsonElement {
-        val all = element.jsonObject["all"]
-        val specificed = element.jsonObject["response"]
-
-        return if ((all is JsonPrimitive || all is JsonArray) && specificed?.jsonObject.isNullOrEmpty()) all else element
-    }
-
-}
+internal val listStringSerializer = ListSerializer(String.serializer())
 
 internal object ScaleSerializer : KSerializer<Scale> {
 
@@ -104,20 +44,18 @@ internal object ScaleSerializer : KSerializer<Scale> {
 
 internal object LayoutSerializer : KSerializer<Layout> {
 
-    private val listSerializer = ListSerializer(String.serializer())
-
-    override val descriptor = SerialDescriptor("Layout", listSerializer.descriptor)
+    override val descriptor = SerialDescriptor("Layout", listStringSerializer.descriptor)
 
     override fun deserialize(decoder: Decoder) = try {
         decoder as JsonDecoder
         decoder
-            .decodeSerializableValue(listSerializer)
+            .decodeSerializableValue(listStringSerializer)
             .let { Layout(it) }
     } catch (e: Throwable) {
         Layout(decoder.decodeString().split("\n"))
     }
 
-    override fun serialize(encoder: Encoder, value: Layout) = encoder.encodeSerializableValue(listSerializer, value.raw)
+    override fun serialize(encoder: Encoder, value: Layout) = encoder.encodeSerializableValue(listStringSerializer, value.raw)
 
 }
 
@@ -166,13 +104,12 @@ internal object NetesedActionSerializer : KSerializer<NetesedAction> {
 
 internal object ActionKetherSerializer : KSerializer<ActionKether> {
 
-    private val listSerializer = ListSerializer(String.serializer())
     override val descriptor = buildClassSerialDescriptor("ActionKether") { element<String>("script") }
 
     override fun deserialize(decoder: Decoder) = try {
         decoder as JsonDecoder
         decoder
-            .decodeSerializableValue(listSerializer)
+            .decodeSerializableValue(listStringSerializer)
             .joinToString("\\n") { it }
             .let { ActionKether(it) }
     } catch (e: Throwable) {
@@ -182,7 +119,7 @@ internal object ActionKetherSerializer : KSerializer<ActionKether> {
     override fun serialize(encoder: Encoder, value: ActionKether) {
         val scripts = value.script.split("\\n")
         scripts.singleOrNull()?.let { encoder.encodeString(it) }
-            ?: encoder.encodeSerializableValue(listSerializer, scripts)
+            ?: encoder.encodeSerializableValue(listStringSerializer, scripts)
     }
 
 }
@@ -214,6 +151,7 @@ internal object MenuTitleSerializer : JsonTransformingSerializer<MenuTitle>(Menu
         }
         if (titles?.size == 1) titles.first() else it
     }
+
 }
 
 internal object CycleModeSerializer : KSerializer<CycleMode> {
@@ -233,6 +171,7 @@ internal object InventoryTypeSerializer : KSerializer<InventoryType> {
     override fun deserialize(decoder: Decoder): InventoryType = decoder.decodeString().tolerantEnum(InventoryType.CHEST)
 
     override fun serialize(encoder: Encoder, value: InventoryType) = encoder.encodeString(value.name)
+
 }
 
 
