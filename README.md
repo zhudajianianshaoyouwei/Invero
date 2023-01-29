@@ -1,8 +1,35 @@
 # Invero
+Versatile GUIs
 
-Versatile GUIs framework based on Minecraft containers
+---
 
-### Usage
+### Menu
+```yaml
+title: 'Spawn Menu'
+
+layout: |-
+  #########
+  |       |
+  |   *   |
+  |       |
+  #########
+
+items:
+  '#':
+    material: gray stained glass pane
+  '|':
+    material: cyan stained glass pane
+  '*':
+    material: beacon
+    name: '<red><bold>CLICK TP TO SPAWN'
+    action: |-
+      command "spawn"
+```
+![SPAWN](https://user-images.githubusercontent.com/35389235/215314320-b98cbca8-5542-4a69-88b1-e969c2c68ff3.png)
+
+---
+
+### Window
 
 ```kotlin
 packetChestWindow(rows = 6, "Loop Scroll (horizontally)") {
@@ -32,10 +59,12 @@ packetChestWindow(rows = 6, "Loop Scroll (horizontally)") {
 
 }
 ```
-
 ![scroll](https://user-images.githubusercontent.com/35389235/211839566-1718ffa8-4190-4532-8c39-352ec6629417.gif)
 
-### Preview
+
+---
+
+### Capacity
 
 https://user-images.githubusercontent.com/35389235/210974601-22d94b34-f1b9-4ed2-bedf-467b24940acc.mp4
 
