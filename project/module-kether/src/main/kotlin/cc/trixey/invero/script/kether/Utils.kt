@@ -44,7 +44,7 @@ fun ScriptFrame.iconElementBy(byName: String?, bySlot: Int?, referedPanel: Eleme
 
 fun ElementalPanel.findIconElement(byName: String?, bySlot: Int?): IconElement? {
     return if (byName != null) {
-        elements.value.keys.find { (it as IconElement).icon.name == byName } as IconElement?
+        elements.value.keys.find { (it as IconElement).icon.id == byName } as IconElement?
     } else if (bySlot != null) {
         val position = scale.convertToPosition(bySlot)
         elements.value.entries.find { it.value.contains(position) }?.key as IconElement?

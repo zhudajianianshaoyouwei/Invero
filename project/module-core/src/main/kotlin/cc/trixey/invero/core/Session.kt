@@ -3,10 +3,10 @@ package cc.trixey.invero.core
 import cc.trixey.invero.bukkit.BukkitWindow
 import cc.trixey.invero.bukkit.PlayerViewer
 import cc.trixey.invero.core.Session.Companion.VarType.*
-import cc.trixey.invero.core.compat.parseMiniMessage
-import cc.trixey.invero.core.compat.translateAmpersandColor
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.session
+import cc.trixey.invero.library.adventure.parseMiniMessage
+import cc.trixey.invero.library.adventure.translateAmpersandColor
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submitAsync
 import taboolib.expansion.getDataContainer

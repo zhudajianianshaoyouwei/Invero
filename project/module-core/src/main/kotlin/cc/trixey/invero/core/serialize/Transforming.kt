@@ -26,12 +26,27 @@ internal object StandardMenuSerializer : JsonTransformingSerializer<StandardMenu
         "hidePlayerStorage"
     )
 
+    private val panelKeys = arrayOf(
+        "layout",
+        "locate",
+        "scale",
+        "items", "icons", "item", "icon"
+    )
+
     override fun transformDeserialize(element: JsonElement): JsonElement {
         val struc = element.jsonObject.toMutableMap()
 
         if ("menu" !in struc.keys) {
             struc["menu"] = buildJsonObject {
                 menuKeys.forEach { key ->
+                    struc[key]?.let { value -> put(key, value) }
+                }
+            }
+        }
+
+        if (arrayOf("panel", "panels").none { it in struc.keys } && "layout" in struc.keys) {
+            struc["panel"] = buildJsonObject {
+                panelKeys.forEach { key ->
                     struc[key]?.let { value -> put(key, value) }
                 }
             }
@@ -59,17 +74,49 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
         "nbt"
     )
 
+    private val headTextureKeys = arrayOf(
+        "head"
+    )
+
+    private val sourcedTextureKeys = arrayOf(
+        "zaphkiel", "zap",
+        "oraxen",
+        "itemsadder", "ia",
+        "headdatabase", "hdb"
+    )
+
     override fun transformDeserialize(element: JsonElement): JsonElement {
         val struc = element.jsonObject.toMutableMap()
 
         if ("display" !in struc.keys) {
+            var speciTexture = false
+            val texture = buildJsonObject {
+                // head
+                val head = headTextureKeys.any { key ->
+                    val value = struc[key]
+                    value?.let { put("head", value) }
+                    value != null
+                }
+                // sourced
+                val source = sourcedTextureKeys.any { key ->
+                    val value = struc[key]
+                    value?.let {
+                        put("source", key.uppercase())
+                        put("value", value)
+                    }
+                    value != null
+                }
+                speciTexture = head || source
+            }
             struc["display"] = buildJsonObject {
                 displayKeys.forEach { key ->
                     struc[key]?.let { value -> put(key, value) }
                 }
+                if (speciTexture) {
+                    struc["texture"] = texture
+                }
             }
         }
-
         return JsonObject(struc)
     }
 

@@ -2,14 +2,13 @@
 
 package cc.trixey.invero.core.serialize
 
-import cc.trixey.invero.core.AgentIcon
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Menu
 import cc.trixey.invero.core.action.*
-import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.item.Texture
 import cc.trixey.invero.core.item.TextureHead
 import cc.trixey.invero.core.item.TextureMaterial
+import cc.trixey.invero.core.item.TextureSource
 import cc.trixey.invero.core.panel.PanelPaged
 import cc.trixey.invero.core.panel.PanelStandard
 import kotlinx.serialization.DeserializationStrategy
@@ -57,25 +56,16 @@ internal object SelectorTexture : JsonContentPolymorphicSerializer<Texture>(Text
 
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<out Texture> {
         return if (element is JsonObject) {
+            val keys = element.jsonObject.keys
             when {
-                "head" in element.jsonObject -> TextureHead.serializer()
-                "source" in element.jsonObject -> TextureHead.serializer()
+                "head" in keys -> TextureHead.serializer()
+                "source" in keys -> TextureSource.serializer()
                 else -> error("Unregonized texture format: $element")
             }
         } else {
-            // head:{{player name}}  SUPPORT
             require(element is JsonPrimitive)
             TextureMaterial.serializer()
         }
-    }
-
-}
-
-internal object SelectorAgentIcon : JsonContentPolymorphicSerializer<AgentIcon>(AgentIcon::class) {
-
-    override fun selectDeserializer(element: JsonElement) = when {
-        "frame" in element.jsonObject -> Icon.serializer()
-        else -> Icon.serializer()
     }
 
 }

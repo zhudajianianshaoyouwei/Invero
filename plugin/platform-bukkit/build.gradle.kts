@@ -26,7 +26,11 @@ taboolib {
         }
 
         dependencies {
-            name("PlaceholderAPI")
+            name("PlaceholderAPI").optional(true)
+            name("Zaphkiel").optional(true)
+            name("HeadDatabase").optional(true)
+            name("Oraxen").optional(true)
+            name("ItemsAdder").optional(true)
         }
     }
 

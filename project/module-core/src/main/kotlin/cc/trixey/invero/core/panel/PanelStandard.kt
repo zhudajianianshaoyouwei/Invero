@@ -9,6 +9,8 @@ import cc.trixey.invero.core.AgentIcon
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.Session
+import cc.trixey.invero.core.icon.Icon
+import cc.trixey.invero.core.serialize.MappedIconSerializer
 import cc.trixey.invero.core.serialize.PosSerializer
 import cc.trixey.invero.core.serialize.ScaleSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -34,7 +36,8 @@ class PanelStandard(
     @Serializable(with = PosSerializer::class)
     override val locate: Pos?,
     @JsonNames("icon", "item", "items")
-    val icons: Map<String, AgentIcon>
+    @Serializable(with = MappedIconSerializer::class)
+    val icons: Map<String, Icon>
 ) : AgentPanel() {
 
     @Transient

@@ -1,4 +1,4 @@
-package cc.trixey.invero.core.compat
+package cc.trixey.invero.library.adventure
 
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import net.kyori.adventure.text.Component

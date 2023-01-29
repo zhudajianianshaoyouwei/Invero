@@ -1,6 +1,8 @@
 database-errored: '&8[&3I&8] &c初始化 &7{0} &c数据库失败... 请检查相关配置'
 database-connected: '&8[&3I&8] &7已成功连接 &a{0} &7数据库'
 
+plugin-hooked: '&8[&3I&8] &7已成功载入对 &e{0} &7插件的支持'
+
 menu-loader-workspace-empty: '&8[&3I&8] &c没有找到有效的工作空间, 菜单加载停止'
 menu-loader-workspace-inited: '&8[&3I&8] &7初始化 &a{0} &7个工作空间... 开始加载菜单'
 menu-loader-file-errored: '&8[&3I&8] &c配置文件 &7{0} &c载入出错, 已忽略...'

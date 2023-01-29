@@ -2,8 +2,6 @@ package cc.trixey.invero.core
 
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.core.icon.IconElement
-import cc.trixey.invero.core.serialize.SelectorAgentIcon
-import kotlinx.serialization.Serializable
 
 /**
  * Invero
@@ -12,7 +10,6 @@ import kotlinx.serialization.Serializable
  * @author Arasple
  * @since 2023/1/16 9:54
  */
-@Serializable(with = SelectorAgentIcon::class)
 abstract class AgentIcon {
 
     abstract val id: String?

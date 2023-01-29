@@ -1,7 +1,7 @@
 package cc.trixey.invero.script.kether
 
-import cc.trixey.invero.core.compat.parseAndSendMiniMessage
 import cc.trixey.invero.core.util.KetherHandler
+import cc.trixey.invero.library.adventure.parseAndSendMiniMessage
 import org.bukkit.entity.Player
 import taboolib.module.kether.KetherParser
 import taboolib.module.kether.combinationParser

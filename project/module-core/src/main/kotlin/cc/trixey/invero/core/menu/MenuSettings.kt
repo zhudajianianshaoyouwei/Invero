@@ -20,7 +20,7 @@ import org.bukkit.event.inventory.InventoryType
 class MenuSettings(
     @Serializable(with = MenuTitleSerializer::class)
     val title: MenuTitle,
-    val rows: Int = 6,
+    var rows: Int?,
     val virtual: Boolean = false,
     @Serializable(with = InventoryTypeSerializer::class)
     val type: InventoryType = InventoryType.CHEST,
@@ -30,10 +30,9 @@ class MenuSettings(
     val hidePlayerStorage: Boolean = false,
 ) {
 
-    @Transient
-    val containerType = let {
+    val containerType by lazy {
         if (type != InventoryType.CHEST) ContainerType.fromBukkitType(type.name)
-        else ContainerType.ofRows(rows)
+        else ContainerType.ofRows(rows ?: 6)
     }
 
     @Transient

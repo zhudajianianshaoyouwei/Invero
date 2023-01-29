@@ -34,6 +34,12 @@ class StandardMenu(
     override val panels: List<AgentPanel>
 ) : Menu() {
 
+    init {
+        // auto-rows
+        if (settings.rows == null)
+            settings.rows = panels.maxBy { it.scale.height }.scale.height.coerceIn(1..6)
+    }
+
     override fun open(viewer: PlayerViewer, variables: Map<String, Any>): Session? {
         // Events_PreOpen
         if (events?.preOpen?.run(Context(viewer))?.get() == false) {
@@ -62,12 +68,10 @@ class StandardMenu(
         // 其本身会检查是否已经打开任何 Window，并自动关闭等效旧菜单的 Window
         window.preOpen { panels.forEach { it.invoke(window, session) } }
         window.preRender { updateTitle(session) }
-        updateTitle(session)
         window.open()
         settings.title.invoke(session)
         // Events_PostOpen
         events?.postOpen?.run(Context(viewer, session))
-
         return session
     }
 

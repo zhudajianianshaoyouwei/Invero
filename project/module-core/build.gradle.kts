@@ -9,7 +9,6 @@ dependencies {
     compileOnly(project(":project:framework-bukkit"))
     compileOnly(project(":project:module-library"))
     compileOnly(project(":project:module-api"))
-    compileOnly(project(":project:module-compats"))
 
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
     compileOnly("ink.ptms:nms-all:1.0.0")

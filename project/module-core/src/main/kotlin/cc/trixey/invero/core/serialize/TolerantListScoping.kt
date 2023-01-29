@@ -6,6 +6,8 @@ import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.icon.Slot
 import cc.trixey.invero.core.menu.CommandArgument
 import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.MapSerializer
+import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonTransformingSerializer
@@ -29,6 +31,9 @@ internal object ListStringSerializer :
     override fun transformSerialize(element: JsonElement) = element.tolerantListSerialize()
     override fun transformDeserialize(element: JsonElement) = element.tolerantListDeserialize()
 }
+
+internal object MappedIconSerializer :
+    JsonTransformingSerializer<Map<String, Icon>>(MapSerializer(String.serializer(), IconSerializer))
 
 internal object ListIconSerializer :
     JsonTransformingSerializer<List<Icon>>(ListSerializer(IconSerializer)) {

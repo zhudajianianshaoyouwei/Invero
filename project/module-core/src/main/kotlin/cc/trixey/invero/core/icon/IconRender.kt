@@ -8,7 +8,7 @@ import cc.trixey.invero.bukkit.util.proceed
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.InveroSettings
 import cc.trixey.invero.core.Session
-import cc.trixey.invero.core.compat.isPrefixColored
+import cc.trixey.invero.library.adventure.isPrefixColored
 import cc.trixey.invero.core.panel.PanelStandard
 import cc.trixey.invero.core.util.*
 import kotlinx.serialization.ExperimentalSerializationApi
