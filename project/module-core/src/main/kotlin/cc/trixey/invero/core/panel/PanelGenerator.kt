@@ -40,12 +40,15 @@ class PanelGenerator(
     override val layout: Layout?,
     @Serializable(with = PosSerializer::class)
     override val locate: Pos?,
-    @SerialName("generator")
-    val settings: GeneratorSettings,
+    @SerialName("generator") val settings: GeneratorSettings,
     @JsonNames("icon", "item", "items")
     @Serializable(with = MappedIconSerializer::class)
-    val icons: Map<String, Icon>
-) : AgentPanel() {
+    override val icons: Map<String, Icon>
+) : AgentPanel(), IconContainer {
+
+    init {
+        registerIcons()
+    }
 
     @Transient
     override val scale = run {
@@ -58,38 +61,35 @@ class PanelGenerator(
     override fun invoke(parent: PanelContainer, session: Session): Panel {
         return parent.generatorPaged(scale.raw, parent.locate()) {
             // 生成默认图标
-            icons.forEach { (_, icon) -> icon.invoke(session, this@PanelGenerator, this@generatorPaged) }
-            // 应用元素
-            generatorElements { createGenearte(session) }
-            // 生成输出
-            onGenerate {
-                settings
-                    .output
-                    .invoke(session, this@PanelGenerator, this)
-                    .also { it.context.extenedVars["@source"] = it }
+            icons.forEach { (_, icon) ->
+                icon.invoke(session, this@PanelGenerator, this@generatorPaged)
             }
+            // 应用元素
+            generatorElements { genearte(session) }
+            // 生成输出
+            onGenerate { settings.output.invoke(session, this@PanelGenerator, this, mapOf("@element" to it)) }
         }
     }
 
-    private fun createGenearte(session: Session): List<Object> {
+    private fun genearte(session: Session): List<Object> {
         val viewer = session.viewer.get<Player>()
         val created = settings.create().apply {
             generate()
-            if (!settings.extenedObjects.isNullOrEmpty()) {
+            if (settings.extenedObjects != null) {
                 generated = generated!! + settings.extenedObjects
             }
-            if (settings.extension != null) {
+            if (settings.extenedProperties != null) {
                 generated = generated?.map {
                     val content = it.content.toMutableMap()
-                    settings.extension.forEach { (key, value) -> content[key] = "source.extension:$value" }
+                    settings.extenedProperties.forEach { (key, value) -> content[key] = "ext.kether:$value" }
                     Object(content)
                 }
             }
             if (settings.filter != null) {
-                filter { KetherHandler.invoke(settings.filter, viewer, mapOf("@source" to it)).getNow(true).cbool }
+                filter { KetherHandler.invoke(settings.filter, viewer, mapOf("@element" to it)).getNow(true).cbool }
             }
             if (settings.sortBy != null) {
-                sort { KetherHandler.invoke(settings.sortBy, viewer, mapOf("@source" to it)).getNow(null).toString() }
+                sortBy { KetherHandler.invoke(settings.sortBy, viewer, mapOf("@element" to it)).getNow(null).toString() }
             }
         }
         return created.generated!!

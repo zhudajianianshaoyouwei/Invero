@@ -47,8 +47,8 @@ class Session(
         variables += viewer.get<Player>().getDataContainer().source
     }
 
-    fun getVariables(extend: Map<String, Any> = emptyMap()): Map<String, Any> {
-        return variables + extend
+    fun getVariables(extend: Map<String, Any>? = null): Map<String, Any> {
+        return variables + (extend ?: emptyMap())
     }
 
     fun getVariable(key: String): Any? {
@@ -86,8 +86,8 @@ class Session(
         else KetherHandler
             .parseInline(input, player, context?.variables ?: variables)
             .replacePlaceholder(player)
-            .translateAmpersandColor()
             .parseMiniMessage()
+            .translateAmpersandColor()
     }
 
     fun parse(input: List<String>, context: Context? = null): List<String> {

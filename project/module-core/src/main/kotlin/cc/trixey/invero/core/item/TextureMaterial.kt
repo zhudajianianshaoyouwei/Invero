@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.core.Session
+import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.util.MATERIAL_ID
 import kotlinx.serialization.*
 import kotlinx.serialization.encoding.*
@@ -26,8 +26,8 @@ class TextureMaterial(override val raw: String) : Texture() {
         else generate(raw) ?: DEFAULT_TEXTURE
     }
 
-    override fun generateItem(session: Session, delayedItem: (ItemStack) -> Unit): ItemStack {
-        return lazyTexture ?: generate(session.parse(raw)) ?: DEFAULT_TEXTURE
+    override fun generateItem(context: Context, block: (ItemStack) -> Unit) {
+        block(lazyTexture ?: generate(context.parse(raw)) ?: DEFAULT_TEXTURE)
     }
 
     private fun generate(material: String): ItemStack? {

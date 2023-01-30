@@ -78,7 +78,7 @@ fun showTheGameOfLife(player: Player) = chestWindow(player, 6, formattedTitle())
     freeformPanel(9 to 6) {
         onClick { pos, _, _ ->
             if (!state) {
-                cells += pos
+                cells += pos.absolute
                 refresh()
                 false
             } else true

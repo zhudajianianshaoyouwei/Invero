@@ -1,7 +1,7 @@
-package cc.trixey.invero.core.icon
+package cc.trixey.invero.core.item
 
 import cc.trixey.invero.core.animation.CycleMode
-import cc.trixey.invero.core.item.Texture
+import cc.trixey.invero.core.icon.Slot
 import cc.trixey.invero.core.serialize.ListSlotSerializer
 import cc.trixey.invero.core.serialize.ListStringSerializer
 import cc.trixey.invero.core.util.containsAnyPlaceholder
@@ -15,7 +15,7 @@ import taboolib.module.nms.ItemTagData
 
 /**
  * Invero
- * cc.trixey.invero.core.icon.Frame
+ * cc.trixey.invero.core.item.Frame
  *
  * @author Arasple
  * @since 2023/1/16 11:51

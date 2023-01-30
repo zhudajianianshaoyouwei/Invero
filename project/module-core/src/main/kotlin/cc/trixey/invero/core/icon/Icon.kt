@@ -8,6 +8,7 @@ import cc.trixey.invero.core.action.ScriptKether
 import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.animation.Cyclic
 import cc.trixey.invero.core.animation.toCyclic
+import cc.trixey.invero.core.item.Frame
 import cc.trixey.invero.core.serialize.IconHandlerSerializer
 import cc.trixey.invero.core.serialize.ListIconSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -57,8 +58,13 @@ class Icon(
         }
     }
 
-    override fun invoke(session: Session, agent: AgentPanel, panel: Panel): IconElement {
-        return IconElement(session, this, agent, panel).also { it.invoke() }
+    override fun invoke(
+        session: Session,
+        agent: AgentPanel,
+        panel: Panel,
+        vars: Map<String, Any>
+    ) = IconElement(session, this, agent, panel, vars).also {
+        it.invoke()
     }
 
     fun generateCyclicFrames(): Cyclic<Frame>? {

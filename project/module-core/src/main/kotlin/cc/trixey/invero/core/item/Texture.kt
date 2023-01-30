@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.core.Session
+import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.serialize.SelectorTexture
 import cc.trixey.invero.core.util.containsAnyPlaceholder
 import kotlinx.serialization.Serializable
@@ -23,7 +23,7 @@ abstract class Texture {
 
     abstract val lazyTexture: ItemStack?
 
-    abstract fun generateItem(session: Session, delayedItem: (ItemStack) -> Unit = {}): ItemStack
+    abstract fun generateItem(context: Context, block: ItemStack.() -> Unit = {})
 
     fun isStatic(): Boolean {
         return lazyTexture != null
@@ -32,7 +32,7 @@ abstract class Texture {
     companion object {
 
         val DEFAULT_TEXTURE by lazy {
-            XMaterial.STONE.parseItem()!!
+            XMaterial.BEDROCK.parseItem()!!
         }
 
     }

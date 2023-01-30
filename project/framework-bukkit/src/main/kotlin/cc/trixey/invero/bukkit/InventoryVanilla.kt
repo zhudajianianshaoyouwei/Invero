@@ -68,7 +68,7 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         if (doCloseInventory && isViewing()) viewer.closeInventory()
         if (updateInventory) viewer.updateInventory()
 
-        storage.afterClose(window.storageMode)
+        storage.afterClose()
     }
 
     fun handleClick(e: InventoryClickEvent) {

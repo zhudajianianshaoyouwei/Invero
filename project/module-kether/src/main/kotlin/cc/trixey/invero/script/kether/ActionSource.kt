@@ -3,7 +3,6 @@ package cc.trixey.invero.script.kether
 import cc.trixey.invero.core.util.KetherHandler
 import taboolib.module.kether.KetherParser
 import taboolib.module.kether.combinationParser
-import java.util.concurrent.CompletableFuture
 
 /**
  * Invero
@@ -14,16 +13,16 @@ import java.util.concurrent.CompletableFuture
  */
 object ActionSource {
 
-    @KetherParser(["source"], namespace = "invero", shared = true)
+    @KetherParser(["element"], namespace = "invero", shared = true)
     fun parser() = combinationParser {
         it.group(text()).apply(it) { key ->
-            future {
+            now {
                 val value = selfSourceObject()[key]
-                if (value?.startsWith("source.extension:") == true) {
-                    val source = value.removePrefix("source.extension:")
-                    KetherHandler.invoke(source, player(), emptyMap())
+                if (value?.startsWith("ext.kether:") == true) {
+                    val source = value.removePrefix("ext.kether:")
+                    KetherHandler.invoke(source, player(), variables().toMap()).getNow("<TIMEOUT>")
                 } else {
-                    CompletableFuture.completedFuture(value)
+                    value
                 }
             }
         }

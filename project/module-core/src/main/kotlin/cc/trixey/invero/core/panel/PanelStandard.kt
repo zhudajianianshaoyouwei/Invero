@@ -36,17 +36,11 @@ class PanelStandard(
     override val locate: Pos?,
     @JsonNames("icon", "item", "items")
     @Serializable(with = MappedIconSerializer::class)
-    val icons: Map<String, Icon>
-) : AgentPanel() {
+    override val icons: Map<String, Icon>
+) : AgentPanel(), IconContainer {
 
     init {
-        icons.forEach { (name, icon) ->
-            if (icon.id == null) icon.id = name
-            icon.subIcons?.forEach {
-                it.parent = icon
-                it.id = icon.id
-            }
-        }
+        registerIcons()
     }
 
     @Transient

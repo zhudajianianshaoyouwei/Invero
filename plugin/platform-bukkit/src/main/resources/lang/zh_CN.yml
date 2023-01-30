@@ -13,4 +13,4 @@ menu-loader-menu-finished: '&8[&3I&8] &7已成功载入了 &a{0} &7个有效菜�
 menu-loader-auto-reload-errored: '&8[&3I&8] &c自动重载 &7{0} &c菜单失败'
 menu-loader-auto-reload-successed: '&8[&3I&8] &7自动载入了菜单 {0} &7的更改.'
 
-throwable-print: '&8[&3I&8] &7An error occurred'
+throwable-print: '&8[&3I&8] &c产生了一个错误'

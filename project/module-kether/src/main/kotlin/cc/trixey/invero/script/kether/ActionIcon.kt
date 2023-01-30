@@ -16,6 +16,7 @@ object ActionIcon {
     /*
     icon [by <id>] [at <slot>] update/relocate/item
 
+    refresh
     pause_update
     pause_relocate
     pause_frames
@@ -41,6 +42,13 @@ object ActionIcon {
 
                     "update" -> {
                         iconElementBy(by, at, ref).update()
+                    }
+
+                    "refresh" -> {
+                        iconElementBy(by, at, ref).apply {
+                            relocate()
+                            update()
+                        }
                     }
 
                     "item" -> {

@@ -7,7 +7,7 @@ import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.animation.Cyclic
-import cc.trixey.invero.core.util.letCatching
+import cc.trixey.invero.core.item.Frame
 import cc.trixey.invero.core.util.session
 import taboolib.common.platform.function.submitAsync
 
@@ -18,78 +18,57 @@ import taboolib.common.platform.function.submitAsync
  * @author Arasple
  * @since 2023/1/16 12:22
  */
-open class IconElement(val session: Session, val icon: Icon, val agent: AgentPanel, panel: Panel) : SimpleItem(panel) {
+open class IconElement(
+    val session: Session,
+    val icon: Icon,
+    val agent: AgentPanel,
+    panel: Panel,
+    vars: Map<String, Any>
+) : SimpleItem(panel) {
 
-    // 任务是否未被暂停
-    private val taskStatus = arrayOf(
-        // 翻译物品变量 (Update)
-        true,
-        // 重定向子图标 (Relocate)
-        true,
-        // 动态帧播放 (Frames)
-        true
-    )
+    private val paused = arrayOf(true, true, true)
 
-    // 针对本图标的上下文
-    open val context by lazy {
-        Context(session.viewer, session, panel, this)
-    }
+    internal val context by lazy { Context(session.viewer, session, panel, this, vars) }
 
-    // 子图标定位
-    private var iconIndex: Int = -1
+    private var iconIndex = relocateIndex()
 
-    // 当前使用的物品帧属性
     private var frame: Frame? = null
         set(value) {
             value?.render(session, agent, this)
             field = value
         }
 
-    // 多帧物品的默认持续时间
     private var framesDefaultDelay: Long = icon.framesProperties?.defaultDelay ?: 20
 
-    // 正在循环的集合
     private var framesCyclic: Cyclic<Frame>? = null
         set(value) {
             field = value
-            if (value != null && !value.isSingle()) {
-                submitFrameTask()
-            }
+            if (value != null && !value.isSingle()) submitFrameTask()
         }
 
-    /**
-     * 部署此图标的相关任务
-     */
     fun invoke() {
-        // 默认帧相关
+        // 默认帧
         frame = icon.defaultFrame
-        icon.getValidId(agent)?.let { key -> agent.layout?.search(key) }?.let { this@IconElement.set(it) }
-
+        // 布局定位
+        agent.layout
+            ?.search(icon.id)
+            ?.let { this@IconElement.set(it) }
+        // 循环物品帧
         framesCyclic = icon.generateCyclicFrames()
-
-        // 周期任务 :: 翻译物品帧的相关变量
+        // 周期任务：翻译物品帧的相关变量
         if (icon.periodUpdate > 0) {
             session.taskMgr.launchAsync(delay = 10L, period = icon.periodUpdate) {
-                if (isVisible() && taskStatus[0]) update()
+                if (isVisible() && paused[0]) update()
             }
         }
-
-        // 周期任务 :: 重定向子图标
+        // 周期任务：重定向子图标
         if (icon.periodRelocate > 0 && !icon.subIcons.isNullOrEmpty()) {
             session.taskMgr.launchAsync(delay = 10L, period = icon.periodRelocate) {
-                if (isVisible() && taskStatus[1]) relocate()
+                if (isVisible() && paused[1]) relocate()
             }
         }
-
         // 交互逻辑
-        onClick { clickType, _ ->
-            getIconHandler()?.letCatching {
-                submitAsync {
-                    it.all?.run(context)?.get()
-                    it.response[clickType]?.run(context)?.get()
-                }
-            }
-        }
+        onClick { type, _ -> getIconHandler()?.run(context, type) }
     }
 
     /**
@@ -101,7 +80,7 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
         fun loop(delay: Long) {
             submitAsync(delay = delay) {
                 if (frames != framesCyclic || frames.isAnimationEnded() || shouldUnregister()) return@submitAsync
-                if (isVisible() && taskStatus[2]) {
+                if (isVisible() && paused[2]) {
                     frame = frames.getAndCycle()
                     loop(frame?.delay ?: framesDefaultDelay)
                 }
@@ -125,48 +104,58 @@ open class IconElement(val session: Session, val icon: Icon, val agent: AgentPan
         if (icon.subIcons == null) return
 
         val previousIndex = iconIndex
-        val relocatedIndex = icon.subIcons.indexOfFirst { it.condition?.evalInstant(context) ?: false }
-        // 子图标 ->> 默认图标
-        if (previousIndex > 0 && relocatedIndex < 0) {
+        val relocatedIndex = relocateIndex()
+
+        if (relocatedIndex <= 0 && previousIndex > 0) {
+            println("RELOCATING BACK TO DEFAULT FRAME....")
+            iconIndex = -1
+            frame = icon.defaultFrame
             framesDefaultDelay = icon.framesProperties?.defaultDelay ?: 20L
             framesCyclic = icon.generateCyclicFrames()
-        } else if (previousIndex != relocatedIndex) {
+        } else if (relocatedIndex > 0 && relocatedIndex != previousIndex) {
+            println("RELOCATING BACK TO SUB ICON $relocatedIndex....")
+
             val subIcon = icon.subIcons[relocatedIndex]
             iconIndex = relocatedIndex
+            frame = subIcon.defaultFrame
             framesCyclic = subIcon.generateCyclicFrames()
             framesDefaultDelay = subIcon.framesProperties?.defaultDelay ?: 20L
         }
     }
 
+    fun relocateIndex(): Int {
+        return icon.subIcons?.indexOfFirst { it.condition?.evalInstant(context) ?: false } ?: -1
+    }
+
     fun pauseUpdateTask() {
-        taskStatus[0] = false
+        paused[0] = false
     }
 
     fun pauseRelocateTask() {
-        taskStatus[1] = false
+        paused[1] = false
     }
 
     fun pauseFramesTask() {
-        taskStatus[2] = false
+        paused[2] = false
     }
 
     fun resumeUpdateTask() {
-        taskStatus[0] = true
+        paused[0] = true
     }
 
     fun resumeRelocateTask() {
-        taskStatus[1] = true
+        paused[1] = true
     }
 
     fun resumeFramesTask() {
-        taskStatus[2] = true
+        paused[2] = true
     }
 
     /**
      * 取得有效的交互处理器
      */
     fun getIconHandler(): IconHandler? {
-        return if (iconIndex > 0) icon.subIcons!![iconIndex].handler ?: icon.handler else icon.handler
+        return (icon.subIcons?.getOrNull(iconIndex) ?: icon).handler
     }
 
     /**

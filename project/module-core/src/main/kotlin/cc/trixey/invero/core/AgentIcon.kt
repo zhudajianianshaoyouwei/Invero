@@ -14,6 +14,11 @@ abstract class AgentIcon {
 
     abstract val id: String?
 
-    abstract fun invoke(session: Session, agent: AgentPanel, panel: Panel): IconElement
+    abstract fun invoke(
+        session: Session,
+        agent: AgentPanel,
+        panel: Panel,
+        vars: Map<String, Any> = emptyMap()
+    ): IconElement
 
 }

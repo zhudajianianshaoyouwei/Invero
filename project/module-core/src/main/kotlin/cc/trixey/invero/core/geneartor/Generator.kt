@@ -24,7 +24,7 @@ interface Generator {
     /**
      * 排序
      */
-    fun <R : Comparable<R>> sort(block: (Object) -> R): Generator
+    fun <R : Comparable<R>> sortBy(block: (Object) -> R): Generator
 
     /**
      * 当前有效元素是否为空

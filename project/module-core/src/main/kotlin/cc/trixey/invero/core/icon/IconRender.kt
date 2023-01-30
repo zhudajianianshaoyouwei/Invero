@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalSerializationApi::class)
 @file:Suppress("DEPRECATION")
 
 package cc.trixey.invero.core.icon
@@ -8,12 +7,12 @@ import cc.trixey.invero.bukkit.util.proceed
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.InveroSettings
 import cc.trixey.invero.core.Session
-import cc.trixey.invero.library.adventure.isPrefixColored
-import cc.trixey.invero.core.panel.PanelStandard
+import cc.trixey.invero.core.item.Frame
 import cc.trixey.invero.core.util.*
-import kotlinx.serialization.ExperimentalSerializationApi
+import cc.trixey.invero.library.adventure.isPrefixColored
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
+import org.bukkit.inventory.ItemStack
 import taboolib.module.nms.ItemTag
 import taboolib.module.nms.getItemTag
 
@@ -28,14 +27,10 @@ import taboolib.module.nms.getItemTag
 fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
     val frame = this@render
     val original = element.value
-    var generated = true
-    val item = texture?.generateItem(session) {
-        element.value = it
-        translateUpdate(session, element, this)
-    } ?: element.value.also { generated = false }
-    item.apply {
-        // 生成的新物品，自动继承之前物品丢失的相关属性
-        if (generated) {
+    var generated = texture == null
+
+    if (texture == null) {
+        element.value = element.value.apply {
             // 当前材质无名称，但之前有，则继承
             if (name == null && original.hasName()) postName(original.getName()!!)
             // 当前材质无Lore，但之前有，则继承
@@ -43,9 +38,10 @@ fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
             // 当前材质的数量继承
             if (frame.amount == null && original.amount != 1) postAmount(original.amount)
         }
+    } else texture.generateItem(element.context) {
         val context = element.context
-        name?.let { postName(session.parse(name, context)) }
-        lore?.let { postLore(session.parse(lore, context).defaultColored()) }
+        name?.let { postName(context.parse(name)) }
+        lore?.let { postLore(context.parse(lore).defaultColored()) }
         damage?.let { durability = it }
         customModelData?.let { postModel(it) }
         glow?.proceed {
@@ -57,46 +53,43 @@ fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
         }?.let { flags ->
             itemMeta = itemMeta?.also { it.addItemFlags(*flags.toTypedArray()) }
         }
-
         unbreakable?.proceed { itemMeta = itemMeta?.also { it.isUnbreakable = true } }
         nbtData?.let {
             val raw = if (nbtDataDynamic) ItemTag.fromLegacyJson(session.parse(nbtData.toJson(), context)) else nbtData
 
             ItemTag().apply {
-                putAll(item.getItemTag())
+                putAll(getItemTag())
                 putAll(raw)
-                saveTo(item)
+                saveTo(this@generateItem)
             }
         }
         // TODO
         // support for color,enchantments
+        if (this@render.amount != null) amount = this@render.amount
+        element.value = this
     }
 
-    if (amount != null) item.amount = amount
     if (slot != null) element.set(slot.flatRelease(agent.scale))
-
-    element.value = item
 }
 
 fun Frame.translateUpdate(session: Session, element: IconElement, defaultFrame: Frame) {
-    val itemStack = texture?.let { if (it.isStatic()) element.value else it.generateItem(session) } ?: element.value
 
-    itemStack.apply {
+    fun ItemStack.update(): ItemStack {
         val basedName = name ?: defaultFrame.name
         val basedLore = lore ?: defaultFrame.lore
         val context = element.context
 
         if (basedName != null) postName(session.parse(basedName, context))
         if (!basedLore.isNullOrEmpty()) postLore(session.parse(basedLore, context).defaultColored())
+
+        return this
     }
 
-    element.value = itemStack
-}
-
-fun Icon.getValidId(agentPanel: AgentPanel) = when {
-    id != null -> id
-    agentPanel is PanelStandard -> agentPanel.icons.entries.find { it.value == this }?.key
-    else -> null
+    if (texture == null || texture.isStatic()) {
+        element.value = element.value.update()
+    } else {
+        texture.generateItem(element.context) { element.value = update() }
+    }
 }
 
 fun List<String>.defaultColored() = map {

@@ -39,7 +39,7 @@ class PlayerGenerator : Generator {
         return this
     }
 
-    override fun <R : Comparable<R>> sort(block: (Object) -> R): PlayerGenerator {
+    override fun <R : Comparable<R>> sortBy(block: (Object) -> R): PlayerGenerator {
         generated = generated?.sortedBy(block)
         return this
     }

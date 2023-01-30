@@ -83,11 +83,13 @@ abstract class BukkitWindow(
         registerWindow()
         // 开启新容器
         // 避免更新标题带来的残影
-        if (viewer.isTitleUpdating()) submit(delay = 2L) { inventory.open() }
-        else synced { inventory.open() }
-        // 回调
-        preRenderCallback(this)
-        render()
+        val invokable: () -> Unit = {
+            inventory.open()
+            preRenderCallback(this)
+            render()
+        }
+        if (viewer.isTitleUpdating()) submit(delay = 2L) { invokable() }
+        else synced { invokable() }
     }
 
     override fun close(doCloseInventory: Boolean, updateInventory: Boolean) {

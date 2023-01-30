@@ -10,9 +10,9 @@ import cc.trixey.invero.core.geneartor.Object
  * @author Arasple
  * @since 2023/1/29 22:30
  */
-class CustomGenerator(custom: List<Object> = emptyList()) : Generator {
+class CustomGenerator : Generator {
 
-    override var generated: List<Object>? = custom
+    override var generated: List<Object>? = listOf()
 
     override fun generate(): List<Object> {
         return generated!!
@@ -23,7 +23,7 @@ class CustomGenerator(custom: List<Object> = emptyList()) : Generator {
         return this
     }
 
-    override fun <R : Comparable<R>> sort(block: (Object) -> R): Generator {
+    override fun <R : Comparable<R>> sortBy(block: (Object) -> R): Generator {
         generated = generated?.sortedBy(block)
         return this
     }

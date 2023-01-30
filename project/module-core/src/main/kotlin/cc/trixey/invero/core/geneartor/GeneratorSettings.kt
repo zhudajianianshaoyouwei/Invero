@@ -22,7 +22,8 @@ class GeneratorSettings(
     val elements: List<JsonObject>?,
     val filter: String?,
     val sortBy: String?,
-    val extension: Map<String, String>?,
+    @SerialName("extension")
+    val extenedProperties: Map<String, String>?,
     @Serializable(with = IconSerializer::class)
     val output: Icon,
 ) {

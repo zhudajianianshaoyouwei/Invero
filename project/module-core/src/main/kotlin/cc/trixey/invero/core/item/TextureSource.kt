@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.core.Session
+import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.item.source.SourceProviderManager
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -27,8 +27,8 @@ class TextureSource(val source: String, @SerialName("value") override val raw: S
         else provider.getItem(raw)
     }
 
-    override fun generateItem(session: Session, delayedItem: (ItemStack) -> Unit): ItemStack {
-        return lazyTexture ?: provider.getItem(session.parse(raw)) ?: DEFAULT_TEXTURE
+    override fun generateItem(context: Context, block: (ItemStack) -> Unit) {
+        block(lazyTexture ?: provider.getItem(context.parse(raw)) ?: DEFAULT_TEXTURE)
     }
 
 }

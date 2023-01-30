@@ -58,11 +58,11 @@ fun ScriptFrame.selfIcon(): IconElement {
 }
 
 fun ScriptFrame.selfSourceObject(): Object {
-    return variableAs<Object>("@source") ?: error("Nulled sourceObject context")
+    return variableAs<Object>("@element") ?: error("Nulled sourceObject context")
 }
 
 inline fun <reified T : Panel> ScriptFrame.selfPanel(): T {
-    return variableAs<T>("@panel") ?: error("Nulled panel context")
+    return variableAs<T>("@panel") ?: findNearstPanel() ?: error("Nulled panel context")
 }
 
 inline fun <reified T : Panel> ScriptFrame.findNearstPanel(): T? {
@@ -72,7 +72,7 @@ inline fun <reified T : Panel> ScriptFrame.findNearstPanel(): T? {
 }
 
 fun <T> ScriptFrame.variableAs(key: String): T? {
-    return variables().getOrNull<T?>(key)
+    return variables().getOrNull<T>(key)
 }
 
 fun ScriptFrame.session(): Session? {

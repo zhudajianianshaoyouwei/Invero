@@ -1,5 +1,6 @@
 package cc.trixey.invero.core
 
+import cc.trixey.invero.bukkit.util.requestHead
 import cc.trixey.invero.core.util.prettyPrint
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -50,6 +51,7 @@ object InveroDatabase {
     @SubscribeEvent
     fun e(e: PlayerJoinEvent) {
         e.player.setupDataContainer()
+        requestHead(e.player.name) {}
     }
 
     @SubscribeEvent

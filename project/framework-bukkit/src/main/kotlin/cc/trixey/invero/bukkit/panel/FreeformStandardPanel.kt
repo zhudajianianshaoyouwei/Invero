@@ -9,7 +9,6 @@ import cc.trixey.invero.common.Scale
 import cc.trixey.invero.common.event.ClickType
 import cc.trixey.invero.common.panel.ElementalPanel
 import cc.trixey.invero.common.panel.FreeformPanel
-import cc.trixey.invero.common.panel.TypedPanelContainer
 import cc.trixey.invero.common.panel.PanelWeight
 import org.bukkit.event.inventory.InventoryClickEvent
 
@@ -39,7 +38,7 @@ open class FreeformStandardPanel(
         }
 
     override fun handleClick(pos: Pos, clickType: ClickType, e: InventoryClickEvent?): Boolean {
-        elements.findElement(pos + viewport)?.let {
+        elements.findElement(pos.absolute)?.let {
             if (it is Clickable<*>) {
                 it.runClickCallbacks(clickType, e)
                 return true

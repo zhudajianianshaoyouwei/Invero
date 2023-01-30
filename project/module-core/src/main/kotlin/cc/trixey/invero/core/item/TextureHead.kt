@@ -1,12 +1,12 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.core.Session
+import cc.trixey.invero.bukkit.util.requestHead
+import cc.trixey.invero.core.Context
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.XMaterial
-import taboolib.library.xseries.XSkull
 
 /**
  * Invero
@@ -22,21 +22,14 @@ class TextureHead(@SerialName("head") override val raw: String) : Texture() {
     private val defaultHead = XMaterial.PLAYER_HEAD.parseItem()!!
 
     @Transient
-    override val lazyTexture: ItemStack? = run {
-        if (containsPlaceholder) null
-        else generate(raw)
-    }
+    override var lazyTexture: ItemStack? = null
 
-    override fun generateItem(session: Session, delayedItem: (ItemStack) -> Unit): ItemStack {
-        return lazyTexture ?: generate(session.parse(raw))
-    }
-
-    private fun generate(identifier: String): ItemStack {
-        val builder = defaultHead.clone()
-        val meta = builder.itemMeta!!
-
-        builder.itemMeta = XSkull.applySkin(meta, identifier)
-        return builder
+    override fun generateItem(context: Context, block: (ItemStack) -> Unit) {
+        if (lazyTexture != null) return block(lazyTexture!!)
+        if (!containsPlaceholder && raw.length > 20) requestHead(raw) { lazyTexture = it.also(block) }
+        else {
+            requestHead(context.parse(raw)) { block(it.clone()) }
+        }
     }
 
 }

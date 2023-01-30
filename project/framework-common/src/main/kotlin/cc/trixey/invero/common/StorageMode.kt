@@ -16,12 +16,6 @@ package cc.trixey.invero.common
  */
 data class StorageMode(val overridePlayerInventory: Boolean = true, val alwaysClean: Boolean = true) {
 
-    val shouldBackup: Boolean
-        get() = shouldRestore
-
-    val shouldRestore: Boolean
-        get() = overridePlayerInventory
-
     val shouldClean: Boolean
         get() = overridePlayerInventory && alwaysClean
 

@@ -22,15 +22,17 @@ class ActionKether(val script: String) : Action() {
     override fun run(context: Context): CompletableFuture<Boolean> {
         val player = context.player
         val scripts = script.split("\\n")
+        val variables = context.variables
 
         if (scripts.size <= 1) {
-            return KetherHandler.invoke(script, player, context.variables).thenApply { it.bool }
+            return KetherHandler.invoke(script, player, variables).thenApply { it.bool }
         } else {
             val future = CompletableFuture<Boolean>()
             submit(async = !isPrimaryThread) {
                 for (index in scripts.indices) {
                     val script = scripts[index]
-                    val result = KetherHandler.invoke(script, player, context.variables).thenApply { it.bool }.get()
+                    val result =
+                        KetherHandler.invoke(script, player, variables).thenApply { it.bool }.get()
                     if (!result) {
                         future.complete(false)
                         break

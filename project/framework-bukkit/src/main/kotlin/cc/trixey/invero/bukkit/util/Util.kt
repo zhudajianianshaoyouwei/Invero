@@ -2,6 +2,7 @@ package cc.trixey.invero.bukkit.util
 
 import taboolib.common.platform.function.isPrimaryThread
 import taboolib.common.platform.function.submit
+import java.net.URL
 
 /**
  * Invero
@@ -10,6 +11,14 @@ import taboolib.common.platform.function.submit
  * @author Arasple
  * @since 2022/12/30 13:02
  */
+fun fromURL(url: String): String {
+    return try {
+        String(URL(url).openStream().readBytes())
+    } catch (t: Throwable) {
+        ""
+    }
+}
+
 inline fun synced(crossinline block: () -> Unit) {
     if (isPrimaryThread) block()
     else submit { block() }

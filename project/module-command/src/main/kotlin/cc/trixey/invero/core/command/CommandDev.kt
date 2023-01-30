@@ -37,7 +37,7 @@ object CommandDev {
     val runKether = subCommand {
         execute<CommandSender> { sender, _, argument ->
             val player = if (sender is Player) sender else onlinePlayers.random()
-            val script = argument.removePrefix("kether ")
+            val script = argument.removePrefix("runKether ")
 
             submitAsync {
                 KetherHandler.invoke(script, player, mapOf()).thenApply {

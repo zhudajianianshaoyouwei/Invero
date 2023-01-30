@@ -77,7 +77,7 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
     )
 
     private val textureKeysHead = arrayOf(
-        "head"
+        "head", "skull"
     )
 
     private val textureSourcedKeys = arrayOf(
@@ -110,13 +110,10 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
                 }
                 textureSpecified = head || source
             }
+
             struc["display"] = buildJsonObject {
-                displayKeys.forEach { key ->
-                    struc[key]?.let { value -> put(key, value) }
-                }
-                if (textureSpecified) {
-                    struc["texture"] = texture
-                }
+                displayKeys.forEach { key -> struc[key]?.let { value -> put(key, value) } }
+                if (textureSpecified) put("texture", texture)
             }
         }
         return JsonObject(struc)

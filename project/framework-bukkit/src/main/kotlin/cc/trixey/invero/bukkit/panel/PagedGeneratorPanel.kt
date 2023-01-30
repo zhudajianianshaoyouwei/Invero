@@ -29,6 +29,10 @@ class PagedGeneratorPanel<T>(
 ) : BukkitPanel(parent, weight, scale, locate), PagedPanel, GeneratorPanel<T, BaseItem<*>> {
 
     override var sourceElements: List<T> = emptyList()
+        set(value) {
+            field = value
+            maxPageIndex = value.size / generatorPool.size
+        }
 
     override val outputElements by lazy {
         ArrayList(arrayOfNulls<BaseItem<*>?>(sourceElements.size).toList())
@@ -66,11 +70,13 @@ class PagedGeneratorPanel<T>(
             elements.apply {
                 generatorPool.forEachIndexed { index, pos ->
                     removeElement(pos)
-
                     if (index <= apply.lastIndex) {
                         apply[index]?.set(pos)
                     }
                 }
+                generatorPool
+                    .filter { findElement(it) == null }
+                    .let { wipe(it) }
             }
             return super.render()
         }

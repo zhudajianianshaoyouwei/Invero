@@ -22,7 +22,7 @@ internal fun actionMessage() = combinationParser {
         now {
             val session = session()
             if (session != null)
-                session.apply { viewer.get<Player>().sendMessage(parse(message)) }
+                session.apply { viewer.get<Player>().sendMessage(parse(message, variableAs("@context"))) }
             else {
                 val player = player()
                 KetherHandler

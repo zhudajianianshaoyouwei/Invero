@@ -33,6 +33,6 @@ object KetherHandler {
         )
     }.onFailure {
         it.prettyPrint()
-    }.getOrElse { "§c{ERROR: $source}" }
+    }.getOrElse { "§c[ERROR: $source]" }
 
 }

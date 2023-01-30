@@ -16,6 +16,9 @@ interface FreeformPanel : Panel {
 
     var viewport: Pos
 
+    val Pos.absolute: Pos
+        get() = this + viewport
+
     fun toAbsolutePosition(slot: Int): Pos {
         return viewport + scale.convertToPosition(slot)
     }

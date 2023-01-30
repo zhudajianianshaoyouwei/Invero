@@ -49,7 +49,7 @@ class Layout(val raw: List<String>) {
         return scale
     }
 
-    fun search(key: String): Set<Pos> {
+    fun search(key: String?): Set<Pos> {
         return mapped[key]?.values ?: setOf()
     }
 

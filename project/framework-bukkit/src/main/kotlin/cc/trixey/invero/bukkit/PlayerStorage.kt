@@ -14,13 +14,11 @@ import org.bukkit.inventory.ItemStack
 class PlayerStorage(val player: Player, var storage: Array<ItemStack?> = arrayOfNulls(36)) {
 
     fun beforeOpen(storageMode: StorageMode) {
-        if (storageMode.shouldBackup) {
-            backup(storageMode.shouldClean)
-        }
+        backup(storageMode.shouldClean)
     }
 
-    fun afterClose(storageMode: StorageMode) {
-        if (storageMode.shouldRestore) restore()
+    fun afterClose() {
+        restore()
     }
 
     fun backup(clean: Boolean = false) {
