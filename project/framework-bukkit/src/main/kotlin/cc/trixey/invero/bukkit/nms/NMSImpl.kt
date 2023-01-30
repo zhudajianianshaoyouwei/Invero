@@ -20,6 +20,9 @@ import taboolib.module.nms.sendPacketBlocking
  *
  * @author Arasple
  * @since 2022/10/20
+ *
+ * 总感觉他妈的发包容器轻飘飘的还迟钝 ??????????
+ * TODO 究竟是什么发包问题
  */
 class NMSImpl : NMS {
 
