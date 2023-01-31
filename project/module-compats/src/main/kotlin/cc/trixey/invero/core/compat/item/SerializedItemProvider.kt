@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @author Arasple
  * @since 2023/1/29 15:45
  */
-class SerializedItemProvider : Provider() {
+class SerializedItemProvider : Provider {
 
     private val cache = ConcurrentHashMap<ByteArray, ItemStack>()
 

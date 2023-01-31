@@ -42,8 +42,9 @@ open class IconElement(
 
     private var framesCyclic: Cyclic<Frame>? = null
         set(value) {
+            val previousIndex = field?.index
             field = value
-            if (value != null && !value.isSingle()) submitFrameTask(field?.index)
+            if (value != null && !value.isSingle()) submitFrameTask(previousIndex)
         }
 
     fun invoke() {
@@ -106,8 +107,6 @@ open class IconElement(
 
         val previousIndex = iconIndex
         val relocatedIndex = relocateIndex()
-
-        println("Relocating::: $previousIndex --> $relocatedIndex")
 
         if (previousIndex >= 0 && relocatedIndex < 0) {
             iconIndex = -1

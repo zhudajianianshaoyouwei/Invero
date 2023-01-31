@@ -1,5 +1,6 @@
 package cc.trixey.invero.core.compat.item
 
+import cc.trixey.invero.core.compat.PluginHook
 import cc.trixey.invero.core.item.source.Provider
 import ink.ptms.zaphkiel.ZaphkielAPI
 import org.bukkit.inventory.ItemStack
@@ -11,7 +12,7 @@ import org.bukkit.inventory.ItemStack
  * @author Arasple
  * @since 2023/1/29 15:44
  */
-class ZaphkielItemProvider : Provider() {
+class ZaphkielItemProvider : Provider, PluginHook() {
 
     override val pluginName = "Zaphkiel"
 

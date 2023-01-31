@@ -5,6 +5,7 @@ dependencies {
     compileOnly(project(":project:framework-bukkit"))
     compileOnly(project(":project:module-core"))
     compileOnly(project(":project:module-library"))
+    compileOnly(project(":project:module-compats"))
 
     compileOnly("ink.ptms.core:v11903:11903-minimize:universal")
     compileOnly("com.mojang:datafixerupper:4.0.26")

@@ -54,7 +54,7 @@ fun BukkitWindow.updateTitle(title: String, updateInventory: Boolean = true) {
     else if (updateInventory) player.updateInventory()
 
     // 补刀
-    submitAsync { if (viewer.notViewingWindow()) handler.sendWindowClose(player, id) }
+    submitAsync(delay = 2L) { if (viewer.notViewingWindow()) handler.sendWindowClose(player, id) }
 
     viewer.setTitleUpdating(true)
 }
