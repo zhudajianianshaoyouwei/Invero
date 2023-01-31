@@ -1,6 +1,7 @@
 package cc.trixey.invero.script.kether
 
 import cc.trixey.invero.common.panel.ElementalPanel
+import taboolib.common.platform.function.submitAsync
 import taboolib.module.kether.KetherParser
 import taboolib.module.kether.combinationParser
 
@@ -35,51 +36,26 @@ object ActionIcon {
             symbol(),
         ).apply(it) { by, at, action ->
             now {
-                when (action) {
-                    "relocate" -> {
-                        iconElementBy(by, at, ref).relocate()
-                    }
+                iconElementBy(by, at, ref).apply {
+                    if (action == "item") return@now value
+                    else submitAsync(delay = 2L) {
+                        when (action) {
+                            "relocate" -> relocate()
+                            "update" -> update()
+                            "refresh" -> {
+                                relocate()
+                                update()
+                            }
 
-                    "update" -> {
-                        iconElementBy(by, at, ref).update()
-                    }
-
-                    "refresh" -> {
-                        iconElementBy(by, at, ref).apply {
-                            relocate()
-                            update()
+                            "pause_update" -> pauseUpdateTask()
+                            "pause_relocate" -> pauseRelocateTask()
+                            "pause_frames" -> pauseFramesTask()
+                            "resume_update" -> resumeUpdateTask()
+                            "resume_relocate" -> resumeRelocateTask()
+                            "resume_frames" -> resumeFramesTask()
+                            else -> error("Unsupported action for icon: $action")
                         }
                     }
-
-                    "item" -> {
-                        iconElementBy(by, at, ref).value
-                    }
-
-                    "pause_update" -> {
-                        iconElementBy(by, at, ref).pauseUpdateTask()
-                    }
-
-                    "pause_relocate" -> {
-                        iconElementBy(by, at, ref).pauseRelocateTask()
-                    }
-
-                    "pause_frames" -> {
-                        iconElementBy(by, at, ref).pauseFramesTask()
-                    }
-
-                    "resume_update" -> {
-                        iconElementBy(by, at, ref).resumeUpdateTask()
-                    }
-
-                    "resume_relocate" -> {
-                        iconElementBy(by, at, ref).resumeRelocateTask()
-                    }
-
-                    "resume_frames" -> {
-                        iconElementBy(by, at, ref).resumeFramesTask()
-                    }
-
-                    else -> error("Unsupported action for icon: $action")
                 }
             }
         }

@@ -23,7 +23,6 @@ object ActionContext {
             // value
             command("to", "by", then = action()).option().defaultsTo(null)
         ).apply(it) { action, key, mod ->
-
             future {
                 val value = if (mod != null) newFrame(mod).run<Any>() else null
                 if (key == null || action == "update") {
@@ -33,18 +32,24 @@ object ActionContext {
                 when (action) {
                     "get" -> completedFuture(session()?.getVariable(key))
                     "has" -> completedFuture(session()?.hasVariable(key) ?: false)
-                    "set" -> {
-                        (value ?: error("No valid value")).thenApply { session()?.setVariable(key, it) }
+                    "rem", "del", "delete" -> {
+                        variables().remove(key)
+                        completedFuture(session()?.removeVariable(key))
                     }
 
-                    "rem", "del", "delete" -> {
-                        completedFuture(session()?.removeVariable(key))
+                    "set" -> {
+                        (value ?: error("No valid value")).thenApply {
+                            variables().set(key, it)
+                            session()?.setVariable(key, it)
+                        }
                     }
 
                     "inc", "increase", "+=" -> {
                         (value ?: error("No valid value")).thenApply {
                             session()?.apply {
-                                setVariable(key, getVariable(key).cdouble + it.cdouble)
+                                val result = getVariable(key).cdouble + it.cdouble
+                                variables().set(key, result)
+                                setVariable(key, result)
                             }
                         }
                     }
@@ -52,7 +57,9 @@ object ActionContext {
                     "dec", "decrease", "-=" -> {
                         (value ?: error("No valid value")).thenApply {
                             session()?.apply {
-                                setVariable(key, getVariable(key).cdouble - it.cdouble)
+                                val result = getVariable(key).cdouble - it.cdouble
+                                variables().set(key, result)
+                                setVariable(key, result)
                             }
                         }
                     }

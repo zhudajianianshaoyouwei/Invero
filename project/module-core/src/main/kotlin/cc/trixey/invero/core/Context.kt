@@ -43,6 +43,6 @@ class Context(
     }
 
     val variables: Map<String, Any>
-        get() = session!!.getVariables(contextVariables)
+        get() = session?.getVariables(contextVariables) ?: emptyMap()
 
 }

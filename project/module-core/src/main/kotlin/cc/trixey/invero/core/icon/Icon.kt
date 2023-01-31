@@ -7,6 +7,7 @@ import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.action.ScriptKether
 import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.animation.Cyclic
+import cc.trixey.invero.core.animation.FrameProperties
 import cc.trixey.invero.core.animation.toCyclic
 import cc.trixey.invero.core.item.Frame
 import cc.trixey.invero.core.serialize.IconHandlerSerializer
@@ -31,14 +32,15 @@ class Icon(
     override var id: String?,
     @JsonNames("if")
     val condition: ScriptKether?,
+    val inherit: Boolean?,
     @SerialName("update")
     val periodUpdate: Long = -1,
     @SerialName("relocate")
     val periodRelocate: Long = -1,
     @SerialName("display")
     val defaultFrame: Frame,
-    @JsonNames("frames-properties", "frames-prop")
-    val framesProperties: Frame.Properties?,
+    @JsonNames("frames-properties", "frames-prop", "prop")
+    val framesProperties: FrameProperties?,
     val frames: List<Frame>?,
     @SerialName("sub")
     @Serializable(with = ListIconSerializer::class)
@@ -56,6 +58,7 @@ class Icon(
         require(arrayOf(defaultFrame.texture, frames).any { it != null }) {
             "Valid texture(material) for this icon is required"
         }
+        condition?.default = false
     }
 
     override fun invoke(

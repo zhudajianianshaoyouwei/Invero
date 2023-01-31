@@ -1,6 +1,7 @@
 package cc.trixey.invero.core.panel
 
 import cc.trixey.invero.core.icon.Icon
+import taboolib.library.reflex.Reflex.Companion.setProperty
 
 /**
  * Invero
@@ -19,6 +20,12 @@ interface IconContainer {
             icon.subIcons?.forEach {
                 it.parent = icon
                 it.id = icon.id
+                if (it.inherit != false) {
+                    it.defaultFrame.inheirt(icon.defaultFrame)
+                    if (it.frames == null) it.setProperty("frames", icon.frames)
+                    if (it.framesProperties == null) it.setProperty("framesProperties", icon.framesProperties)
+                    if (it.handler == null) it.setProperty("handler", icon.handler)
+                }
             }
         }
     }

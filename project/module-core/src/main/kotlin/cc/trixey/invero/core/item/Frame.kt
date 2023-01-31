@@ -1,21 +1,26 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.core.animation.CycleMode
+import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.icon.Slot
 import cc.trixey.invero.core.serialize.ListSlotSerializer
 import cc.trixey.invero.core.serialize.ListStringSerializer
 import cc.trixey.invero.core.util.containsAnyPlaceholder
+import cc.trixey.invero.core.util.postAmount
+import cc.trixey.invero.core.util.postLore
+import cc.trixey.invero.core.util.postName
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonNames
+import org.bukkit.inventory.ItemStack
+import taboolib.library.reflex.Reflex.Companion.getProperty
+import taboolib.library.reflex.Reflex.Companion.setProperty
 import taboolib.module.nms.ItemTag
 import taboolib.module.nms.ItemTagData
 
 /**
  * Invero
- * cc.trixey.invero.core.item.Frame
+ * cc.trixey.invero.core.item.WindowFrame
  *
  * @author Arasple
  * @since 2023/1/16 11:51
@@ -23,6 +28,7 @@ import taboolib.module.nms.ItemTagData
 @OptIn(ExperimentalSerializationApi::class)
 @Serializable
 class Frame(
+    @JsonNames("last")
     val delay: Long?,
     @Serializable
     @JsonNames("material", "mat")
@@ -67,14 +73,36 @@ class Frame(
      - banner
      */
 
-    @Serializable
-    class Properties(
-        @SerialName("delay")
-        @JsonNames("default-delay", "period")
-        val defaultDelay: Long = 20,
-        @SerialName("mode")
-        @JsonNames("type")
-        val frameMode: CycleMode = CycleMode.LOOP
-    )
+    fun generateItem(context: Context, callback: (ItemStack) -> Unit) = texture?.generateItem(context) {
+        val meta = itemMeta
+        name?.let { postName(context.parse(it)) }
+        lore?.let { postLore(context.parse(lore)) }
+        damage?.let { durability = it }
+        customModelData?.let { meta?.setCustomModelData(it) }
+        // No more properties are supported
+        postAmount(amount)
+        itemMeta = meta
+
+        callback(this)
+    }
+
+    fun inheirt(frame: Frame) = arrayOf(
+        "texture",
+        "name",
+        "lore",
+        "amount",
+        "damage",
+        "customModelData",
+        "color",
+        "glow",
+        "enchantments",
+        "flags",
+        "unbreakable",
+        "nbt",
+        "slot"
+    ).forEach {
+        if (getProperty<Any?>(it) == null) setProperty(it, frame.getProperty(it))
+    }
+
 
 }

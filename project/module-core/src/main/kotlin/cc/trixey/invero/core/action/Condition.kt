@@ -13,12 +13,14 @@ import java.util.concurrent.CompletableFuture
  */
 interface Condition : Expression {
 
+    val default: Boolean
+
     fun evalInstant(context: Context, valueIfAbsent: Boolean = false): Boolean {
         return eval(context).getNow(valueIfAbsent)
     }
 
     fun eval(context: Context): CompletableFuture<Boolean> {
-        return invoke(context).thenApply { it.bool }
+        return invoke(context).thenApply { it.bool(default) }
     }
 
 }

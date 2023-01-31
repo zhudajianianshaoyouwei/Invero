@@ -40,7 +40,8 @@ class PanelGenerator(
     override val layout: Layout?,
     @Serializable(with = PosSerializer::class)
     override val locate: Pos?,
-    @SerialName("generator") val settings: GeneratorSettings,
+    @SerialName("generator")
+    val settings: GeneratorSettings,
     @JsonNames("icon", "item", "items")
     @Serializable(with = MappedIconSerializer::class)
     override val icons: Map<String, Icon>
@@ -89,7 +90,7 @@ class PanelGenerator(
                 filter { KetherHandler.invoke(settings.filter, viewer, mapOf("@element" to it)).getNow(true).cbool }
             }
             if (settings.sortBy != null) {
-                sortBy { KetherHandler.invoke(settings.sortBy, viewer, mapOf("@element" to it)).getNow(null).toString() }
+                sortBy { it[settings.sortBy].toString() }
             }
         }
         return created.generated!!

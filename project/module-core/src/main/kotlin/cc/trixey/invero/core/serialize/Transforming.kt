@@ -46,7 +46,9 @@ internal object StandardMenuSerializer : JsonTransformingSerializer<StandardMenu
             }
         }
 
-        if (arrayOf("panel", "panels").none { it in struc.keys } && "layout" in struc.keys) {
+        if (
+            arrayOf("panel", "panels").none { it in struc.keys } && arrayOf("layout", "scale").any { it in struc.keys }
+        ) {
             struc["panel"] = buildJsonObject {
                 panelKeys.forEach { key ->
                     struc[key]?.let { value -> put(key, value) }

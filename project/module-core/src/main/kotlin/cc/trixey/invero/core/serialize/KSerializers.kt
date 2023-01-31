@@ -17,6 +17,7 @@ import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
+import org.bukkit.Sound
 import org.bukkit.event.inventory.InventoryType
 
 /**
@@ -55,7 +56,8 @@ internal object LayoutSerializer : KSerializer<Layout> {
         Layout(decoder.decodeString().split("\n"))
     }
 
-    override fun serialize(encoder: Encoder, value: Layout) = encoder.encodeSerializableValue(listStringSerializer, value.raw)
+    override fun serialize(encoder: Encoder, value: Layout) =
+        encoder.encodeSerializableValue(listStringSerializer, value.raw)
 
 }
 
@@ -106,14 +108,16 @@ internal object ActionKetherSerializer : KSerializer<ActionKether> {
 
     override val descriptor = buildClassSerialDescriptor("ActionKether") { element<String>("script") }
 
-    override fun deserialize(decoder: Decoder) = try {
-        decoder as JsonDecoder
-        decoder
-            .decodeSerializableValue(listStringSerializer)
-            .joinToString("\\n") { it }
-            .let { ActionKether(it) }
-    } catch (e: Throwable) {
-        ActionKether((decoder as JsonDecoder).decodeJsonElement().jsonPrimitive.content)
+    override fun deserialize(decoder: Decoder): ActionKether {
+        val element = (decoder as JsonDecoder).decodeJsonElement()
+        return when (element) {
+            is JsonArray -> element
+                .mapNotNull { it.jsonPrimitive.contentOrNull }
+                .joinToString("\\n") { it }
+
+            is JsonPrimitive -> element.contentOrNull
+            is JsonObject -> error("ActionKetherSerializer does not support JsonObject")
+        }!!.let { ActionKether(it) }
     }
 
     override fun serialize(encoder: Encoder, value: ActionKether) {

@@ -5,8 +5,7 @@ import cc.trixey.invero.core.serialize.ActionKetherSerializer
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.bool
 import kotlinx.serialization.Serializable
-import taboolib.common.platform.function.isPrimaryThread
-import taboolib.common.platform.function.submit
+import taboolib.common.platform.function.submitAsync
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -27,21 +26,13 @@ class ActionKether(val script: String) : Action() {
         if (scripts.size <= 1) {
             return KetherHandler.invoke(script, player, variables).thenApply { it.bool }
         } else {
-            val future = CompletableFuture<Boolean>()
-            submit(async = !isPrimaryThread) {
-                for (index in scripts.indices) {
+            submitAsync {
+                for (index in 0 until scripts.lastIndex) {
                     val script = scripts[index]
-                    val result =
-                        KetherHandler.invoke(script, player, variables).thenApply { it.bool }.get()
-                    if (!result) {
-                        future.complete(false)
-                        break
-                    } else if (index == scripts.lastIndex) {
-                        future.complete(true)
-                    }
+                    KetherHandler.invoke(script, player, variables).thenApply { it.bool }.get()
                 }
             }
-            return future
+            return KetherHandler.invoke(scripts.last(), player, variables).thenApply { it.bool }
         }
     }
 

@@ -43,7 +43,7 @@ open class IconElement(
     private var framesCyclic: Cyclic<Frame>? = null
         set(value) {
             field = value
-            if (value != null && !value.isSingle()) submitFrameTask()
+            if (value != null && !value.isSingle()) submitFrameTask(field?.index)
         }
 
     fun invoke() {
@@ -74,8 +74,9 @@ open class IconElement(
     /**
      * 提交动画循环任务
      */
-    private fun submitFrameTask() {
+    private fun submitFrameTask(inherit: Int?) {
         val frames = framesCyclic!!
+        if (inherit != null && inherit <= frames.maxIndex) frames.index = inherit
 
         fun loop(delay: Long) {
             submitAsync(delay = delay) {
@@ -101,20 +102,19 @@ open class IconElement(
      * 重新定位子图标
      */
     fun relocate() {
-        if (icon.subIcons == null) return
+        if (icon.subIcons.isNullOrEmpty()) return
 
         val previousIndex = iconIndex
         val relocatedIndex = relocateIndex()
 
-        if (relocatedIndex <= 0 && previousIndex > 0) {
-            println("RELOCATING BACK TO DEFAULT FRAME....")
+        println("Relocating::: $previousIndex --> $relocatedIndex")
+
+        if (previousIndex >= 0 && relocatedIndex < 0) {
             iconIndex = -1
             frame = icon.defaultFrame
             framesDefaultDelay = icon.framesProperties?.defaultDelay ?: 20L
             framesCyclic = icon.generateCyclicFrames()
-        } else if (relocatedIndex > 0 && relocatedIndex != previousIndex) {
-            println("RELOCATING BACK TO SUB ICON $relocatedIndex....")
-
+        } else if (relocatedIndex >= 0 && relocatedIndex != previousIndex) {
             val subIcon = icon.subIcons[relocatedIndex]
             iconIndex = relocatedIndex
             frame = subIcon.defaultFrame

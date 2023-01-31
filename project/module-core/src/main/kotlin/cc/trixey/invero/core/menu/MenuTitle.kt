@@ -25,6 +25,7 @@ class MenuTitle(
     @JsonNames("values")
     val value: List<String>,
     val period: Long?,
+    @JsonNames("type")
     val mode: CycleMode?
 ) {
 

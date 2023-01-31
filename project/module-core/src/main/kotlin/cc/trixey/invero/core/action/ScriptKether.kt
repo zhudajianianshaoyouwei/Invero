@@ -16,6 +16,8 @@ import java.util.concurrent.CompletableFuture
 @Serializable(with = ScriptKetherSerializer::class)
 class ScriptKether(val script: String) : Condition {
 
+    override var default: Boolean = true
+
     private val staticCondition: Pair<Boolean, CompletableFuture<Any?>>
 
     init {

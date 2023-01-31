@@ -33,12 +33,13 @@ class NMSImpl : NMS {
 
         when {
             isUniversal -> {
+                val emptyTitle = CraftChatMessage.fromStringOrNull("§r§r")
                 player.postPacket(
                     instance,
                     "containerId" to containerId,
                     if (majorLegacy < 11900) "type" to type.serialId
                     else "type" to Containers::class.java.getProperty<Containers<*>>(type.vanillaId, true),
-                    "title" to CraftChatMessage.fromStringOrNull(title)
+                    "title" to (CraftChatMessage.fromStringOrNull(title) ?: emptyTitle)
                 )
             }
 
