@@ -78,8 +78,9 @@ class PagedGeneratorPanel<T>(
                     .filter { findElement(it) == null }
                     .let { wipe(it) }
             }
-            return super.render()
         }
+
+        return super.render()
     }
 
 

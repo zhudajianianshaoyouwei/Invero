@@ -27,11 +27,10 @@ object Compat {
         OraxenItemProvider().register("oraxen")
         ItemsAdderItemProvider().register("itemsadder", "ia")
         HDBItemProvider().register("headdatabase", "hdb")
-
     }
 
     private fun Provider.register(vararg namespace: String) {
-        if (!isHooked) return
+        if (this is PluginHook && !isHooked) return
         namespace.forEach { SourceProviderManager.register(it, this) }
     }
 

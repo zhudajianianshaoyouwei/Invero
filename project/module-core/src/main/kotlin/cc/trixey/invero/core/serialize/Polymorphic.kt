@@ -34,6 +34,19 @@ internal object SelectorMenu : JsonContentPolymorphicSerializer<Menu>(Menu::clas
 
 internal object SelectorAction : JsonContentPolymorphicSerializer<Action>(Action::class) {
 
+   private val serializers = buildMap<DeserializationStrategy<out Action>, Set<String>> {
+        put(StructureActionIf.serializer(), setOf("if"))
+        put(StructureActionIfNot.serializer(), setOf("if not", "if_not"))
+        put(StructureActionAll.serializer(), setOf("all"))
+        put(StructureActionAny.serializer(), setOf("any"))
+        put(StructureActionNone.serializer(), setOf("none"))
+        put(StructureActionWhen.serializer(), setOf("when", "case"))
+        put(FunctionalActionCatchers.serializer(), setOf("catchers"))
+        put(FunctionalActionCatcher.serializer(), setOf("id", "afterInput"))
+    }
+
+    val structuredKeys = serializers.values.flatten()
+
     override fun selectDeserializer(element: JsonElement): DeserializationStrategy<out Action> {
         return if (element is JsonPrimitive) {
             ActionKether.serializer()
@@ -41,14 +54,11 @@ internal object SelectorAction : JsonContentPolymorphicSerializer<Action>(Action
             if (element.jsonArray.firstOrNull() is JsonPrimitive) ActionKether.serializer()
             else NetesedAction.serializer()
         } else {
-            val primaryKeys = element.jsonObject.keys
-            when {
-                "if" in primaryKeys -> StructureActionIf.serializer()
-                "if not" in primaryKeys || "if_not" in primaryKeys -> StructureActionIfNot.serializer()
-                "when" in primaryKeys -> StructureActionWhen.serializer()
-                "kether" in primaryKeys -> StructureActionKether.serializer()
-                else -> error("unregonized action [$primaryKeys]")
-            }
+            val keys = element.jsonObject.keys
+            serializers
+                .entries
+                .find { it.value.any { it in keys } }
+                ?.key ?: error("unregonized action [$keys]")
         }
     }
 

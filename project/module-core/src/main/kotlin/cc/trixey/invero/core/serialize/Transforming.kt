@@ -157,23 +157,20 @@ internal object IconHandlerSerializer : JsonTransformingSerializer<IconHandler>(
 
             is JsonObject -> {
                 val jsonObject = element.jsonObject
-
-                if (arrayOf("if", "when").any { it in jsonObject }) {
+                if (SelectorAction.structuredKeys.any { it in jsonObject }) {
                     return buildJsonObject { put("all", jsonObject) }
                 }
-
                 buildJsonObject {
                     jsonObject["all"]?.let { put("all", it) }
-
                     buildJsonObject {
                         jsonObject.keys.filterNot { it == "all" }.forEach { key ->
-                            val type = ClickType.values()
-                                .find { it.name.equals(key, true) || it.bukkitId.equals(key, true) }
+                            val type =
+                                ClickType.values().find { it.name.equals(key, true) || it.bukkitId.equals(key, true) }
                             val action = jsonObject[key]
                             if (type != null && action != null) put(type.name, action)
                         }
                     }.let {
-                        put("response", it)
+                        put("typed", it)
                     }
                 }
             }
@@ -181,8 +178,8 @@ internal object IconHandlerSerializer : JsonTransformingSerializer<IconHandler>(
     }
 
     override fun transformSerialize(element: JsonElement): JsonElement {
-        val all = element.jsonObject["all"]
-        val specificed = element.jsonObject["response"]
+        val all = element.jsonObject["default"]
+        val specificed = element.jsonObject["typed"]
 
         return if ((all is JsonPrimitive || all is JsonArray) && specificed?.jsonObject.isNullOrEmpty()) all else element
     }

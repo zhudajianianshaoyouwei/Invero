@@ -50,9 +50,14 @@ private val module = SerializersModule {
     polymorphic(Action::class) {
         subclass(ActionKether::class)
         subclass(StructureActionIf::class)
+        subclass(StructureActionAll::class)
+        subclass(StructureActionAny::class)
+        subclass(StructureActionNone::class)
         subclass(StructureActionIfNot::class)
         subclass(StructureActionWhen::class)
         subclass(StructureActionKether::class)
+        subclass(FunctionalActionCatcher::class)
+        subclass(FunctionalActionCatchers::class)
         subclass(NetesedAction::class)
     }
 

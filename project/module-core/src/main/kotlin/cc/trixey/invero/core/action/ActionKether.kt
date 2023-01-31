@@ -23,8 +23,8 @@ class ActionKether(val script: String) : Action() {
         val scripts = script.split("\\n")
         val variables = context.variables
 
-        if (scripts.size <= 1) {
-            return KetherHandler.invoke(script, player, variables).thenApply { it.bool }
+        return if (scripts.size <= 1) {
+            KetherHandler.invoke(script, player, variables).thenApply { it.bool }
         } else {
             submitAsync {
                 for (index in 0 until scripts.lastIndex) {
@@ -32,7 +32,7 @@ class ActionKether(val script: String) : Action() {
                     KetherHandler.invoke(script, player, variables).thenApply { it.bool }.get()
                 }
             }
-            return KetherHandler.invoke(scripts.last(), player, variables).thenApply { it.bool }
+            KetherHandler.invoke(scripts.last(), player, variables).thenApply { it.bool }
         }
     }
 

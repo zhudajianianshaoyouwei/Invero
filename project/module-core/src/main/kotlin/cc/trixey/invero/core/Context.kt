@@ -3,7 +3,12 @@ package cc.trixey.invero.core
 import cc.trixey.invero.bukkit.PlayerViewer
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.core.icon.IconElement
+import cc.trixey.invero.core.util.KetherHandler
+import cc.trixey.invero.library.adventure.parseMiniMessage
+import cc.trixey.invero.library.adventure.translateAmpersandColor
 import org.bukkit.entity.Player
+import taboolib.platform.compat.replacePlaceholder
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Invero
@@ -17,12 +22,14 @@ class Context(
     val session: Session? = null,
     val panel: Panel? = null,
     val icon: IconElement? = null,
-    val vars: Map<String, Any> = emptyMap()
+    val extVars: Map<String, Any> = emptyMap()
 ) {
 
-    fun parse(input: String): String {
-        return session?.parse(input, this) ?: "CONTEXT HAS NO VALID SESSION"
-    }
+    fun parse(input: String) = session?.parse(input, this) ?: KetherHandler
+        .parseInline(input, player, variables)
+        .replacePlaceholder(player)
+        .parseMiniMessage()
+        .translateAmpersandColor()
 
     fun parse(input: List<String>): List<String> {
         return input.map { parse(it) }
@@ -34,15 +41,15 @@ class Context(
     val menu: Menu?
         get() = session?.menu
 
-    private val contextVariables: Map<String, Any> = buildMap {
+    val contextVariables: ConcurrentHashMap<String, Any> = buildMap {
         icon?.let { put("@icon", it) }
         menu?.let { put("@menu", it) }
         panel?.let { put("@panel", it) }
         put("@context", this@Context)
-        this += vars
-    }
+        this += extVars
+    }.let { ConcurrentHashMap(it) }
 
     val variables: Map<String, Any>
-        get() = session?.getVariables(contextVariables) ?: emptyMap()
+        get() = session?.getVariables(contextVariables) ?: contextVariables
 
 }

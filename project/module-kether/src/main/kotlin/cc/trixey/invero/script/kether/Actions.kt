@@ -37,7 +37,7 @@ internal fun actionMessage() = combinationParser {
             else {
                 val player = player()
                 KetherHandler
-                    .parseInline(message, player, mapOf())
+                    .parseInline(message, player, variables().toMap())
                     .replacePlaceholder(player)
                     .parseAndSendMiniMessage(player)
             }
