@@ -1,7 +1,5 @@
-val taboolibVersion: String by project
-
 plugins {
-    id("io.izzel.taboolib") version ("1.53")
+    id("io.izzel.taboolib") version taboolibPluginVersion
 }
 
 taboolib {
@@ -19,7 +17,7 @@ taboolib {
     install("platform-bukkit")
 
     description {
-        name = rootProject.name
+        name = projectName
 
         contributors {
             name("Arasple")
@@ -36,7 +34,6 @@ taboolib {
 
     relocate("kotlinx.serialization", "kotlinx_1_4_1.serialization")
     relocate("kotlinx.coroutines", "kotlinx_1_6_4.coroutines")
-//    relocate("net.kyori", "cc.trixey.invero.library.kyori")
 
     classifier = null
     version = taboolibVersion
@@ -54,5 +51,5 @@ dependencies {
 }
 
 tasks.jar {
-    archiveBaseName.set(rootProject.name)
+    archiveBaseName.set(projectName)
 }

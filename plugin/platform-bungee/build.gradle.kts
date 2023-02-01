@@ -1,7 +1,5 @@
-val taboolibVersion: String by project
-
 plugins {
-    id("io.izzel.taboolib") version ("1.53")
+    id("io.izzel.taboolib") version taboolibPluginVersion
 }
 
 taboolib {
@@ -9,7 +7,7 @@ taboolib {
     install("platform-bungee")
 
     description {
-        name = rootProject.name
+        name = projectName
 
         contributors {
             name("Arasple")
@@ -21,5 +19,5 @@ taboolib {
 }
 
 tasks.jar {
-    archiveBaseName.set(rootProject.name)
+    archiveBaseName.set(projectName)
 }

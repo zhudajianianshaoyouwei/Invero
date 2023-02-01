@@ -1,19 +1,51 @@
-val taboolibVersion: String by project
-
 dependencies {
-    compileOnly(project(":project:framework-common"))
+    compileModule("framework-common")
 
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+    compileTaboo("common")
+    compileTaboo("platform-bukkit")
+    compileTaboo("module-nms")
+    compileTaboo("module-nms-util")
 
-    compileOnly("ink.ptms:nms-all:1.0.0")
-    compileOnly("ink.ptms.core:v11903:11903-minimize:mapped")
-    compileOnly("ink.ptms.core:v11903:11903-minimize:universal")
-    compileOnly("ink.ptms.core:v11701:11701-minimize:mapped")
-    compileOnly("ink.ptms.core:v11701:11701-minimize:universal")
-    compileOnly("ink.ptms.core:v11604:11604")
-
-    compileOnly("io.izzel.taboolib:common:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:platform-bukkit:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:module-nms:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:module-nms-util:$taboolibVersion")
+    compileNMS()
+    compileCore(11903)
+    compileCore(11701)
+    compileCore(11604, complete = true)
 }
+
+/*
+cc.trixey.invero
+
+ui (framework)
+  bukkit
+  common
+
+common
+  library
+  animation
+  action
+  api (interface)
+
+core
+  api (impl)
+  command
+  compats
+  kether
+  menu
+  serializer
+
+ */
+
+/*
+framework-bukkit
+framework-common
+
+module-common (common.*)
+module-core (core.*)
+
+impled core:
+
+1 module-api (core.api)
+2 module-command (core.command)
+3 module-compats (core.compats)
+4 module-kether (core.kether)
+ */
