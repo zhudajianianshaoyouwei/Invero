@@ -1,10 +1,5 @@
 package cc.trixey.invero.core.panel
 
-import cc.trixey.invero.bukkit.PanelContainer
-import cc.trixey.invero.bukkit.api.dsl.standard
-import cc.trixey.invero.common.Panel
-import cc.trixey.invero.common.Pos
-import cc.trixey.invero.common.Scale
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.Session
@@ -12,6 +7,11 @@ import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.serialize.MappedIconSerializer
 import cc.trixey.invero.core.serialize.PosSerializer
 import cc.trixey.invero.core.serialize.ScaleSerializer
+import cc.trixey.invero.ui.bukkit.PanelContainer
+import cc.trixey.invero.ui.bukkit.api.dsl.standard
+import cc.trixey.invero.ui.common.Panel
+import cc.trixey.invero.ui.common.Pos
+import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

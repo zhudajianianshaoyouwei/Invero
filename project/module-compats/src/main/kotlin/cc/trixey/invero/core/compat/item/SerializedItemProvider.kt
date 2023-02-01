@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.compat.item
 
-import cc.trixey.invero.core.item.source.Provider
+import cc.trixey.invero.common.supplier.ItemSourceProvider
 import org.bukkit.inventory.ItemStack
 import taboolib.platform.util.deserializeToItemStack
 import java.util.concurrent.ConcurrentHashMap
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @author Arasple
  * @since 2023/1/29 15:45
  */
-class SerializedItemProvider : Provider {
+class SerializedItemProvider : ItemSourceProvider {
 
     private val cache = ConcurrentHashMap<ByteArray, ItemStack>()
 

@@ -1,12 +1,12 @@
 package cc.trixey.invero.core.icon
 
-import cc.trixey.invero.bukkit.api.dsl.set
-import cc.trixey.invero.bukkit.element.item.SimpleItem
-import cc.trixey.invero.common.Panel
+import cc.trixey.invero.common.animation.Cyclic
+import cc.trixey.invero.ui.bukkit.api.dsl.set
+import cc.trixey.invero.ui.bukkit.element.item.SimpleItem
+import cc.trixey.invero.ui.common.Panel
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.Session
-import cc.trixey.invero.core.animation.Cyclic
 import cc.trixey.invero.core.item.Frame
 import cc.trixey.invero.core.util.session
 import taboolib.common.platform.function.submitAsync
@@ -58,13 +58,13 @@ open class IconElement(
         framesCyclic = icon.generateCyclicFrames()
         // 周期任务：翻译物品帧的相关变量
         if (icon.periodUpdate > 0) {
-            session.taskMgr.launchAsync(delay = 10L, period = icon.periodUpdate) {
+            session.taskGroup.launchAsync(delay = 10L, period = icon.periodUpdate) {
                 if (isVisible() && paused[0]) update()
             }
         }
         // 周期任务：重定向子图标
         if (icon.periodRelocate > 0 && !icon.subIcons.isNullOrEmpty()) {
-            session.taskMgr.launchAsync(delay = 10L, period = icon.periodRelocate) {
+            session.taskGroup.launchAsync(delay = 10L, period = icon.periodRelocate) {
                 if (isVisible() && paused[1]) relocate()
             }
         }
@@ -86,7 +86,7 @@ open class IconElement(
                     frame = frames.getAndCycle()
                     loop(frame?.delay ?: framesDefaultDelay)
                 }
-            }.also { session.taskMgr += it }
+            }.also { session.taskGroup += it }
         }
 
         loop(0)

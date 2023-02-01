@@ -1,10 +1,10 @@
 package cc.trixey.invero.plugin.demo
 
-import cc.trixey.invero.bukkit.api.dsl.*
-import cc.trixey.invero.bukkit.element.item.SimpleItem
-import cc.trixey.invero.bukkit.nms.updateTitle
-import cc.trixey.invero.common.Pos
-import cc.trixey.invero.common.panel.PanelWeight
+import cc.trixey.invero.ui.bukkit.api.dsl.*
+import cc.trixey.invero.ui.bukkit.element.item.SimpleItem
+import cc.trixey.invero.ui.bukkit.nms.updateTitle
+import cc.trixey.invero.ui.common.Pos
+import cc.trixey.invero.ui.common.panel.PanelWeight
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submitAsync

@@ -16,21 +16,9 @@
 
 package cc.trixey.invero.core.serialize
 
-import cc.trixey.invero.core.AgentPanel
-import cc.trixey.invero.core.Menu
-import cc.trixey.invero.core.action.*
-import cc.trixey.invero.core.panel.PanelStandard
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.*
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.polymorphic
-import kotlinx.serialization.modules.subclass
 import taboolib.common.env.RuntimeDependencies
 import taboolib.common.env.RuntimeDependency
-import taboolib.module.configuration.Configuration
-import taboolib.module.configuration.Type
 
 /**
  * Invero
@@ -40,41 +28,3 @@ import taboolib.module.configuration.Type
  * @since 2023/1/17 22:50
  */
 
-@OptIn(ExperimentalSerializationApi::class)
-private val module = SerializersModule {
-
-    polymorphic(AgentPanel::class) {
-        subclass(PanelStandard::class)
-    }
-
-    polymorphic(Action::class) {
-        subclass(ActionKether::class)
-        subclass(StructureActionIf::class)
-        subclass(StructureActionAll::class)
-        subclass(StructureActionAny::class)
-        subclass(StructureActionNone::class)
-        subclass(StructureActionIfNot::class)
-        subclass(StructureActionWhen::class)
-        subclass(StructureActionKether::class)
-        subclass(FunctionalActionCatcher::class)
-        subclass(FunctionalActionCatchers::class)
-        subclass(NetesedAction::class)
-    }
-
-}
-
-val mainJson = Json {
-    prettyPrint = true
-    ignoreUnknownKeys = true
-    serializersModule = module
-    explicitNulls = false
-}
-
-fun Configuration.deserializeToMenu(name: String? = null): Menu {
-    changeType(Type.JSON)
-    return mainJson.decodeFromString<Menu>(saveToString()).also { if (name != null && it.name == null) it.name = name }
-}
-
-fun Menu.serializeToJson(): String {
-    return mainJson.encodeToString(value = this)
-}

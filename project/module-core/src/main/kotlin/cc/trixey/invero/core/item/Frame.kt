@@ -5,9 +5,9 @@ import cc.trixey.invero.core.icon.Slot
 import cc.trixey.invero.core.serialize.ListSlotSerializer
 import cc.trixey.invero.core.serialize.ListStringSerializer
 import cc.trixey.invero.core.util.containsAnyPlaceholder
-import cc.trixey.invero.core.util.postAmount
-import cc.trixey.invero.core.util.postLore
-import cc.trixey.invero.core.util.postName
+import cc.trixey.invero.common.util.postAmount
+import cc.trixey.invero.common.util.postLore
+import cc.trixey.invero.common.util.postName
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

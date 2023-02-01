@@ -1,12 +1,12 @@
 package cc.trixey.invero.plugin.demo
 
-import cc.trixey.invero.bukkit.api.dsl.chestWindow
-import cc.trixey.invero.bukkit.api.dsl.item
-import cc.trixey.invero.bukkit.api.dsl.set
-import cc.trixey.invero.bukkit.api.dsl.storageIOPanel
-import cc.trixey.invero.bukkit.impl.ChestWindow
-import cc.trixey.invero.common.Pos
-import cc.trixey.invero.common.StorageMode
+import cc.trixey.invero.ui.bukkit.api.dsl.chestWindow
+import cc.trixey.invero.ui.bukkit.api.dsl.item
+import cc.trixey.invero.ui.bukkit.api.dsl.set
+import cc.trixey.invero.ui.bukkit.api.dsl.storageIOPanel
+import cc.trixey.invero.ui.bukkit.impl.ChestWindow
+import cc.trixey.invero.ui.common.Pos
+import cc.trixey.invero.ui.common.StorageMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
 

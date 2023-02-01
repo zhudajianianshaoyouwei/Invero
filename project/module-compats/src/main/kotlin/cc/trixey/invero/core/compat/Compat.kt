@@ -1,11 +1,12 @@
 package cc.trixey.invero.core.compat
 
+import cc.trixey.invero.common.Invero
+import cc.trixey.invero.common.supplier.ItemSourceProvider
 import cc.trixey.invero.core.compat.item.HDBItemProvider
 import cc.trixey.invero.core.compat.item.ItemsAdderItemProvider
 import cc.trixey.invero.core.compat.item.OraxenItemProvider
 import cc.trixey.invero.core.compat.item.ZaphkielItemProvider
-import cc.trixey.invero.core.item.source.Provider
-import cc.trixey.invero.core.item.source.SourceProviderManager
+import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 
 /**
@@ -17,7 +18,7 @@ import taboolib.common.platform.Awake
  */
 object Compat {
 
-    @Awake
+    @Awake(LifeCycle.INIT)
     fun inject() {
         registerItemSources()
     }
@@ -29,9 +30,9 @@ object Compat {
         HDBItemProvider().register("headdatabase", "hdb")
     }
 
-    private fun Provider.register(vararg namespace: String) {
+    private fun ItemSourceProvider.register(vararg namespace: String) {
         if (this is PluginHook && !isHooked) return
-        namespace.forEach { SourceProviderManager.register(it, this) }
+        namespace.forEach { Invero.api().registerItemSourceProvider(it, this) }
     }
 
 }

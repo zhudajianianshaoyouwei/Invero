@@ -1,16 +1,16 @@
 package cc.trixey.invero.core.panel
 
-import cc.trixey.invero.bukkit.PanelContainer
-import cc.trixey.invero.bukkit.api.dsl.pagedNetesed
-import cc.trixey.invero.bukkit.panel.PagedNetesedPanel
-import cc.trixey.invero.common.Pos
-import cc.trixey.invero.common.Scale
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.serialize.ListAgentPanelSerializer
 import cc.trixey.invero.core.serialize.PosSerializer
 import cc.trixey.invero.core.serialize.ScaleSerializer
+import cc.trixey.invero.ui.bukkit.PanelContainer
+import cc.trixey.invero.ui.bukkit.api.dsl.pagedNetesed
+import cc.trixey.invero.ui.bukkit.panel.PagedNetesedPanel
+import cc.trixey.invero.ui.common.Pos
+import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

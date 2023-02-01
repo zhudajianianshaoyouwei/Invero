@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.bukkit.util.requestHead
+import cc.trixey.invero.ui.bukkit.util.requestHead
 import cc.trixey.invero.core.Context
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -1,9 +1,9 @@
 package cc.trixey.invero.core.menu
 
-import cc.trixey.invero.common.ContainerType
-import cc.trixey.invero.common.StorageMode
 import cc.trixey.invero.core.serialize.InventoryTypeSerializer
 import cc.trixey.invero.core.serialize.MenuTitleSerializer
+import cc.trixey.invero.ui.common.ContainerType
+import cc.trixey.invero.ui.common.StorageMode
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient

@@ -7,17 +7,14 @@ taboolib {
     install("platform-bungee")
 
     description {
-        name = projectName
+        name = rootName
 
         contributors {
             name("Arasple")
         }
     }
 
+    options("skip-minimize", "keep-kotlin-module", "skip-taboolib-relocate")
     classifier = null
     version = taboolibVersion
-}
-
-tasks.jar {
-    archiveBaseName.set(projectName)
 }

@@ -1,15 +1,17 @@
-val taboolibVersion: String by project
-
 dependencies {
-    compileOnly(project(":project:framework-common"))
-    compileOnly(project(":project:framework-bukkit"))
-    compileOnly(project(":project:module-core"))
+    compileModule("framework-common")
+    compileModule("framework-bukkit")
+    compileModule("module-common")
+    compileModule("module-core")
 
-    compileOnly("ink.ptms.core:v11903:11903-minimize:universal")
+    installTaboo("common")
+    installTaboo("common-5")
+    installTaboo("platform-bukkit")
+    installTaboo("module-configuration")
+    installTaboo("module-kether")
+    installTaboo("module-nms")
+    installTaboo("module-nms-util")
+    installTaboo("expansion-player-database")
 
-    compileOnly("io.izzel.taboolib:common:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:platform-bukkit:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:module-chat:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:module-lang:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:expansion-player-database:$taboolibVersion")
+    compileCore(11903)
 }

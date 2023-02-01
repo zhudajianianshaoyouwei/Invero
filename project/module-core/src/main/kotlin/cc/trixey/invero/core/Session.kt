@@ -1,12 +1,15 @@
 package cc.trixey.invero.core
 
-import cc.trixey.invero.bukkit.BukkitWindow
-import cc.trixey.invero.bukkit.PlayerViewer
+import cc.trixey.invero.common.Invero
+import cc.trixey.invero.common.Menu
+import cc.trixey.invero.common.TaskGroup
+import cc.trixey.invero.common.adventure.parseMiniMessage
+import cc.trixey.invero.common.adventure.translateAmpersandColor
 import cc.trixey.invero.core.Session.Companion.VarType.*
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.session
-import cc.trixey.invero.library.adventure.parseMiniMessage
-import cc.trixey.invero.library.adventure.translateAmpersandColor
+import cc.trixey.invero.ui.bukkit.BukkitWindow
+import cc.trixey.invero.ui.bukkit.PlayerViewer
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submitAsync
 import taboolib.expansion.getDataContainer
@@ -15,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Invero
- * cc.trixey.invero.core.Session
+ * cc.trixey.invero.common.Session
  *
  * @author Arasple
  * @since 2023/1/15 22:40
@@ -31,8 +34,8 @@ class Session(
 
     private val variables: ConcurrentHashMap<String, Any> = ConcurrentHashMap(variables)
 
-    val taskMgr: TaskManager
-        get() = TaskManager.get(viewer.name)
+    val taskGroup: TaskGroup
+        get() = TaskGroup.get(viewer.name)
 
     init {
         updateVariables()
@@ -43,7 +46,7 @@ class Session(
     }
 
     fun updateVariables() {
-        variables += InveroDatabase.globalDataDatabase.source
+        variables += Invero.api().getDataManager().getGlobalData().source
         variables += viewer.get<Player>().getDataContainer().source
     }
 
@@ -58,7 +61,7 @@ class Session(
     fun setVariable(key: String, value: Any) {
         // push to database
         when (key.varType) {
-            GLOBAL -> InveroDatabase.globalDataDatabase[key] = value
+            GLOBAL -> Invero.api().getDataManager().getGlobalData()[key] = value
             PLAYER -> viewer.get<Player>().getDataContainer()[key] = value
             TEMP -> {}
         }
@@ -68,7 +71,7 @@ class Session(
     fun removeVariable(key: String) {
         // push to database
         when (key.varType) {
-            GLOBAL -> InveroDatabase.globalDataDatabase.source.remove(key)
+            GLOBAL -> Invero.api().getDataManager().getGlobalData().source.remove(key)
             PLAYER -> viewer.get<Player>().getDataContainer().source.remove(key)
             TEMP -> {}
         }
@@ -110,9 +113,9 @@ class Session(
 
         fun unregister(session: Session) {
             sessions.remove(session.viewer.name, session)
-            session.taskMgr.unregisterAll()
+            session.taskGroup.unregisterAll()
             val viewer = session.viewer
-            submitAsync(delay = 40L) { if (viewer.session == null) TaskManager.get(viewer.name).unregisterAll(true) }
+            submitAsync(delay = 40L) { if (viewer.session == null) TaskGroup.get(viewer.name).unregisterAll(true) }
         }
 
         val String.varType: VarType

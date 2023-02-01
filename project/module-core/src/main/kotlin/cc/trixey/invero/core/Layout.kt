@@ -1,7 +1,7 @@
 package cc.trixey.invero.core
 
-import cc.trixey.invero.common.Pos
-import cc.trixey.invero.common.Positions
+import cc.trixey.invero.ui.common.Pos
+import cc.trixey.invero.ui.common.Positions
 import cc.trixey.invero.core.util.SPECIAL_GROUP
 import cc.trixey.invero.core.serialize.LayoutSerializer
 import kotlinx.serialization.Serializable

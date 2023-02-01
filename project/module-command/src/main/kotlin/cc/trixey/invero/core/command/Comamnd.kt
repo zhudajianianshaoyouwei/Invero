@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.command
 
-import cc.trixey.invero.core.InveroManager
+import cc.trixey.invero.common.Invero
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import taboolib.common.platform.command.*
@@ -22,7 +22,7 @@ object Comamnd {
     val dev = CommandDev
 
     @CommandBody
-    val reload = subCommand { execute { sender, _, _ -> InveroManager.load(sender) } }
+    val reload = subCommand { execute { sender, _, _ -> Invero.api().getMenuManager().reload(sender) } }
 
     /*
     invero open <menuId>[:context] [for <player>]

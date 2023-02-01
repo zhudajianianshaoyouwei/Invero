@@ -2,8 +2,8 @@
 
 package cc.trixey.invero.core.menu
 
+import cc.trixey.invero.common.animation.CycleMode
 import cc.trixey.invero.core.Session
-import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.animation.toCyclic
 import cc.trixey.invero.core.serialize.ListStringSerializer
 import cc.trixey.invero.core.util.containsAnyPlaceholder
@@ -41,7 +41,7 @@ class MenuTitle(
         }
         val cyclic = value.toCyclic(mode ?: CycleMode.LOOP)
         if (period != null) {
-            session.taskMgr.launchAsync(delay = period, period = period) {
+            session.taskGroup.launchAsync(delay = period, period = period) {
                 if (session.getVariable("title_task_running") != false) {
                     session.window.title = cyclic.getAndCycle().let { session.parse(it) }
                 }

@@ -1,8 +1,8 @@
 package cc.trixey.invero.core.util
 
-import cc.trixey.invero.bukkit.PlayerViewer
-import cc.trixey.invero.common.Window
 import cc.trixey.invero.core.Session
+import cc.trixey.invero.ui.bukkit.PlayerViewer
+import cc.trixey.invero.ui.common.Window
 import org.bukkit.entity.Player
 
 /**

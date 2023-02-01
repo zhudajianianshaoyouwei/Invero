@@ -3,14 +3,14 @@ import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.plugins.PluginAware
 import org.gradle.kotlin.dsl.*
 
-val projectName = "Invero"
-val projectGroup = "cc.trixey.invero"
-val projectVersion = "1.0.0-dev-7"
+val rootName = "Invero"
+val rootGroup = "cc.trixey.invero"
+val rootVersion = "1.0.0-dev-7"
 
 val kotlinVersion = "1.8.0"
 val shadowJarVersion = "7.1.2"
 val taboolibVersion = "6.0.10-70"
-val taboolibPluginVersion = "1.53"
+val taboolibPluginVersion = "1.56"
 
 val repoTabooProject = "https://repo.tabooproject.org/repository/releases"
 

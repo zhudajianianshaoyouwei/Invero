@@ -1,11 +1,11 @@
 package cc.trixey.invero.core
 
-import cc.trixey.invero.bukkit.PanelContainer
-import cc.trixey.invero.bukkit.api.dsl.firstAvailablePositionForPanel
-import cc.trixey.invero.common.Panel
-import cc.trixey.invero.common.Pos
-import cc.trixey.invero.common.Scale
 import cc.trixey.invero.core.serialize.SelectorAgentPanel
+import cc.trixey.invero.ui.bukkit.PanelContainer
+import cc.trixey.invero.ui.bukkit.api.dsl.firstAvailablePositionForPanel
+import cc.trixey.invero.ui.common.Panel
+import cc.trixey.invero.ui.common.Pos
+import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.Serializable
 
 /**

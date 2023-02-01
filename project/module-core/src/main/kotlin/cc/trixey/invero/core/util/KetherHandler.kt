@@ -1,5 +1,6 @@
 package cc.trixey.invero.core.util
 
+import cc.trixey.invero.common.util.prettyPrint
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.adaptPlayer
 import taboolib.common.platform.function.console

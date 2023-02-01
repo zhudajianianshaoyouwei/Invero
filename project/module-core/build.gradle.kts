@@ -1,26 +1,25 @@
-val taboolibVersion: String by project
-
 plugins {
     kotlin("plugin.serialization") version "1.7.21"
 }
 
 dependencies {
-    compileOnly(project(":project:framework-common"))
-    compileOnly(project(":project:framework-bukkit"))
-    compileOnly(project(":project:module-library"))
-    compileOnly(project(":project:module-api"))
+    compileModule("framework-common")
+    compileModule("framework-bukkit")
+    compileModule("module-common")
 
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-    compileOnly("ink.ptms:nms-all:1.0.0")
-    compileOnly("ink.ptms.core:v11903:11903-minimize:universal")
-    compileOnly("io.izzel.taboolib:common:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:common-5:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:platform-bukkit:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:module-configuration:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:module-kether:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:module-nms:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:module-nms-util:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:module-chat:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:module-database:$taboolibVersion")
-    compileOnly("io.izzel.taboolib:expansion-player-database:$taboolibVersion")
+
+    installTaboo("common")
+    installTaboo("common-5")
+    installTaboo("platform-bukkit")
+    installTaboo("module-configuration")
+    installTaboo("module-kether")
+    installTaboo("module-chat")
+    installTaboo("module-database")
+    installTaboo("module-nms")
+    installTaboo("module-nms-util")
+    installTaboo("expansion-player-database")
+
+    compileNMS()
+    compileCore(11903)
 }

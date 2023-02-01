@@ -1,9 +1,9 @@
 package cc.trixey.invero.plugin.demo
 
-import cc.trixey.invero.bukkit.PanelContainer
-import cc.trixey.invero.bukkit.api.dsl.*
-import cc.trixey.invero.bukkit.util.randomMaterial
-import cc.trixey.invero.common.Pos
+import cc.trixey.invero.ui.bukkit.PanelContainer
+import cc.trixey.invero.ui.bukkit.api.dsl.*
+import cc.trixey.invero.ui.bukkit.util.randomMaterial
+import cc.trixey.invero.ui.common.Pos
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submit

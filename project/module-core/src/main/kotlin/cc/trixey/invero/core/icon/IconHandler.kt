@@ -1,9 +1,9 @@
 package cc.trixey.invero.core.icon
 
-import cc.trixey.invero.common.event.ClickType
+import cc.trixey.invero.ui.common.event.ClickType
 import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.action.Action
-import cc.trixey.invero.core.util.letCatching
+import cc.trixey.invero.common.util.letCatching
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames

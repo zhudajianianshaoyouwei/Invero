@@ -20,9 +20,9 @@ fun PublishingExtension.createPublish(project: Project) {
 
     publications {
         create<MavenPublication>("maven") {
-            artifactId = projectName
-            groupId = projectGroup
-            version = projectVersion
+            artifactId = project.name
+            groupId = rootGroup
+            version = rootVersion
             artifact(project.tasks["kotlinSourcesJar"])
             artifact(project.tasks["shadowJar"]) { classifier = null }
             println("> Apply \"$groupId:$artifactId:$version\"")

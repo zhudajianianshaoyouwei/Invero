@@ -1,7 +1,7 @@
 package cc.trixey.invero.core.command
 
-import cc.trixey.invero.core.InveroManager
-import cc.trixey.invero.core.Menu
+import cc.trixey.invero.common.Invero
+import cc.trixey.invero.common.Menu
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -9,19 +9,18 @@ import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.command.component.CommandComponent
 import taboolib.common.platform.command.component.CommandComponentDynamic
 import taboolib.common.platform.command.component.CommandComponentLiteral
-import taboolib.module.chat.TellrawJson
-import taboolib.module.lang.asLangText
+import taboolib.platform.util.asLangText
 
 fun String.retrievePlayer(): Player? {
     return Bukkit.getPlayerExact(this)
 }
 
 fun String.retrieveMenu(): Menu? {
-    return InveroManager.getMenu(this)
+    return Invero.api().getMenuManager().getMenu(this)
 }
 
 fun CommandComponentDynamic.suggestMenuIds(uncheck: Boolean = false) {
-    suggestion<CommandSender>(uncheck = uncheck) { _, _ -> InveroManager.getMenus().keys.toList() }
+    suggestion<CommandSender>(uncheck = uncheck) { _, _ -> Invero.api().getMenuManager().getMenus().map { it.id!! } }
 }
 
 /**
@@ -31,7 +30,7 @@ fun CommandComponentDynamic.suggestMenuIds(uncheck: Boolean = false) {
  */
 internal fun CommandComponent.createHelper() = execute<ProxyCommandSender> { sender, context, _ ->
     val command = context.command
-    val builder = TellrawJson().also { it.append("§3Usage: §b/${command.name}") }
+    val builder = StringBuilder("§3Usage: §b/${command.name}")
     var newline = false
 
     fun print(
@@ -51,7 +50,7 @@ internal fun CommandComponent.createHelper() = execute<ProxyCommandSender> { sen
                     builder.append(" ").append("§3${compound.aliases[0]}")
                 } else {
                     newline = true
-                    builder.newLine()
+                    builder.appendLine()
                     builder.append(space(offset))
                     if (level > 1) builder.append(if (end) " " else "§8│")
                     builder.append(space(level))
@@ -65,7 +64,7 @@ internal fun CommandComponent.createHelper() = execute<ProxyCommandSender> { sen
 
             is CommandComponentDynamic -> {
                 val value = if (compound.comment.startsWith("@")) {
-                    sender.asLangText(compound.comment.substring(1))
+                    sender.cast<CommandSender>().asLangText(compound.comment.substring(1))
                 } else {
                     compound.comment
                 }
@@ -95,7 +94,7 @@ internal fun CommandComponent.createHelper() = execute<ProxyCommandSender> { sen
     context.commandCompound.children.forEachIndexed { index, children ->
         print(children, index, size, end = index + 1 == size)
     }
-    builder.sendTo(sender)
+    sender.sendMessage(builder.toString())
 }
 
 private fun space(space: Int) = (1..space).joinToString("") { " " }

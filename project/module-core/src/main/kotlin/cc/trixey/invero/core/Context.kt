@@ -1,11 +1,11 @@
 package cc.trixey.invero.core
 
-import cc.trixey.invero.bukkit.PlayerViewer
-import cc.trixey.invero.common.Panel
+import cc.trixey.invero.common.adventure.parseMiniMessage
+import cc.trixey.invero.common.adventure.translateAmpersandColor
 import cc.trixey.invero.core.icon.IconElement
 import cc.trixey.invero.core.util.KetherHandler
-import cc.trixey.invero.library.adventure.parseMiniMessage
-import cc.trixey.invero.library.adventure.translateAmpersandColor
+import cc.trixey.invero.ui.bukkit.PlayerViewer
+import cc.trixey.invero.ui.common.Panel
 import org.bukkit.entity.Player
 import taboolib.platform.compat.replacePlaceholder
 import java.util.concurrent.ConcurrentHashMap
@@ -38,8 +38,8 @@ class Context(
     val player: Player
         get() = viewer.get()
 
-    val menu: Menu?
-        get() = session?.menu
+    val menu: BaseMenu?
+        get() = session?.menu as? BaseMenu
 
     val contextVariables: ConcurrentHashMap<String, Any> = buildMap {
         icon?.let { put("@icon", it) }

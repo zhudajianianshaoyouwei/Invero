@@ -2,21 +2,20 @@
 
 package cc.trixey.invero.core.panel
 
-import cc.trixey.invero.bukkit.PanelContainer
-import cc.trixey.invero.bukkit.api.dsl.generatorPaged
-import cc.trixey.invero.common.Panel
-import cc.trixey.invero.common.Pos
-import cc.trixey.invero.common.Scale
+import cc.trixey.invero.common.supplier.Object
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.Session
-import cc.trixey.invero.core.geneartor.GeneratorSettings
-import cc.trixey.invero.core.geneartor.Object
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.serialize.MappedIconSerializer
 import cc.trixey.invero.core.serialize.PosSerializer
 import cc.trixey.invero.core.serialize.ScaleSerializer
 import cc.trixey.invero.core.util.KetherHandler
+import cc.trixey.invero.ui.bukkit.PanelContainer
+import cc.trixey.invero.ui.bukkit.api.dsl.generatorPaged
+import cc.trixey.invero.ui.common.Panel
+import cc.trixey.invero.ui.common.Pos
+import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -41,7 +40,7 @@ class PanelGenerator(
     @Serializable(with = PosSerializer::class)
     override val locate: Pos?,
     @SerialName("generator")
-    val settings: GeneratorSettings,
+    val settings: GeneratorStructure,
     @JsonNames("icon", "item", "items")
     @Serializable(with = MappedIconSerializer::class)
     override val icons: Map<String, Icon>

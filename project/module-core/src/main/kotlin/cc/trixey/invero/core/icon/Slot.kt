@@ -1,7 +1,7 @@
 package cc.trixey.invero.core.icon
 
-import cc.trixey.invero.common.Pos
-import cc.trixey.invero.common.Scale
+import cc.trixey.invero.ui.common.Pos
+import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.*
 import kotlinx.serialization.encoding.*
 import taboolib.common5.cint

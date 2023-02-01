@@ -2,8 +2,8 @@
 
 package cc.trixey.invero.core.action
 
+import cc.trixey.invero.common.Invero
 import cc.trixey.invero.core.Context
-import cc.trixey.invero.core.InveroManager
 import cc.trixey.invero.core.serialize.ListStringSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -41,14 +41,16 @@ class FunctionalActionCatcher(
 
     override fun run(context: Context): CompletableFuture<Boolean> {
         val session = context.session ?: error("FunctionalActionCatcher can only be used when there is a valid session")
-        val menu = session.menu.name
+        val menu = session.menu.id
         val player = context.viewer.get<Player>()
         // close window
         session.menu.close(player)
         // input
         submitAsync(delay = 2L) {
             inputCatcher.run(player, context) {
-                if (menu != null) InveroManager.getMenu(menu)?.open(player, context.variables)
+                if (menu != null) {
+                    Invero.api().getMenuManager().getMenu(menu)?.open(player, context.variables)
+                }
             }
         }
         return CompletableFuture.completedFuture(false)

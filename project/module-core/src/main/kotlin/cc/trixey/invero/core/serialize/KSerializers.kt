@@ -2,11 +2,11 @@
 
 package cc.trixey.invero.core.serialize
 
-import cc.trixey.invero.common.Pos
-import cc.trixey.invero.common.Scale
+import cc.trixey.invero.common.animation.CycleMode
+import cc.trixey.invero.ui.common.Pos
+import cc.trixey.invero.ui.common.Scale
 import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.action.*
-import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.menu.MenuTitle
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
@@ -17,7 +17,6 @@ import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
-import org.bukkit.Sound
 import org.bukkit.event.inventory.InventoryType
 
 /**

@@ -3,7 +3,6 @@
 package cc.trixey.invero.core.serialize
 
 import cc.trixey.invero.core.AgentPanel
-import cc.trixey.invero.core.Menu
 import cc.trixey.invero.core.action.*
 import cc.trixey.invero.core.item.Texture
 import cc.trixey.invero.core.item.TextureHead
@@ -24,17 +23,9 @@ import kotlinx.serialization.json.*
  * @author Arasple
  * @since 2023/1/18 10:47
  */
-internal object SelectorMenu : JsonContentPolymorphicSerializer<Menu>(Menu::class) {
-
-    override fun selectDeserializer(element: JsonElement): DeserializationStrategy<out Menu> {
-        return StandardMenuSerializer
-    }
-
-}
-
 internal object SelectorAction : JsonContentPolymorphicSerializer<Action>(Action::class) {
 
-   private val serializers = buildMap<DeserializationStrategy<out Action>, Set<String>> {
+    private val serializers = buildMap<DeserializationStrategy<out Action>, Set<String>> {
         put(StructureActionIf.serializer(), setOf("if"))
         put(StructureActionIfNot.serializer(), setOf("if not", "if_not"))
         put(StructureActionAll.serializer(), setOf("all"))

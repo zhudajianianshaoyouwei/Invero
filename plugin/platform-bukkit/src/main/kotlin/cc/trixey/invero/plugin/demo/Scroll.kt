@@ -1,8 +1,8 @@
 package cc.trixey.invero.plugin.demo
 
-import cc.trixey.invero.bukkit.api.dsl.*
-import cc.trixey.invero.bukkit.util.randomMaterial
-import cc.trixey.invero.common.scroll.ScrollDirection
+import cc.trixey.invero.ui.bukkit.api.dsl.*
+import cc.trixey.invero.ui.bukkit.util.randomMaterial
+import cc.trixey.invero.ui.common.scroll.ScrollDirection
 import org.bukkit.Material
 import org.bukkit.entity.Player
 

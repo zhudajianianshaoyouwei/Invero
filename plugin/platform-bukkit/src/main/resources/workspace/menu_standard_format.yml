@@ -3,7 +3,7 @@
 #
 
 menu:
-  title: 'Standard Invero Menu'
+  title: 'Standard Invero BaseMenu'
   rows: 6
   virtual: true
 

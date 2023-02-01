@@ -2,12 +2,11 @@
 
 package cc.trixey.invero.core.menu
 
-import cc.trixey.invero.core.InveroManager
-import cc.trixey.invero.core.Menu
+import cc.trixey.invero.common.Invero
+import cc.trixey.invero.common.chemdah.InferItem.Companion.toInferItem
+import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.menu.CommandArgument.Type.*
 import cc.trixey.invero.core.serialize.ListStringSerializer
-import cc.trixey.invero.core.serialize.mainJson
-import cc.trixey.invero.library.chemdah.InferItem.Companion.toInferItem
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -26,20 +25,21 @@ import taboolib.common.platform.function.unregisterCommand
  */
 @Serializable
 class MenuBindings(
-    @Serializable(with = ListStringSerializer::class) @JsonNames("items") private val item: List<String> = emptyList(),
-    @Serializable(with = ListStringSerializer::class) internal val chat: List<String> = emptyList(),
+    @Serializable(with = ListStringSerializer::class)
+    @JsonNames("items")
+    private val item: List<String> = emptyList(),
+    @Serializable(with = ListStringSerializer::class) val chat: List<String> = emptyList(),
     @JsonNames("commands", "cmd", "cmds") private val command: JsonElement? = null
 ) {
 
     @Transient
-    val inferItem = item.toInferItem()
+    val inferItem = if (!item.isEmpty()) item.toInferItem() else null
 
     @Transient
     val registeredCommands = mutableSetOf<String>()
 
-    fun register(menu: Menu) {
-        val id = menu.name!!
-        InveroManager.bindings[id] = this
+    fun register(menu: BaseMenu) {
+        Invero.api().getMenuManager().initMenuBindings(menu)
 
         when (command) {
             is JsonPrimitive -> registerCommandLabel(menu, command)
@@ -60,8 +60,9 @@ class MenuBindings(
         registeredCommands.forEach { unregisterCommand(it) }
     }
 
-    private fun registerCommandStructure(menu: Menu, jsonObject: JsonObject) {
-        mainJson.decodeFromJsonElement<CommandStructure>(jsonObject).apply {
+    private fun registerCommandStructure(menu: BaseMenu, jsonObject: JsonObject) {
+        Invero.api().getMenuManager().getJsonSerializer<Json>().decodeFromJsonElement<CommandStructure>(jsonObject)
+            .apply {
                 command(
                     name,
                     aliases ?: emptyList(),
@@ -112,10 +113,10 @@ class MenuBindings(
             }
     }
 
-    private fun registerCommandLabel(menu: Menu, jsonPrimitive: JsonPrimitive) {
-        val id = menu.name ?: return
+    private fun registerCommandLabel(menu: BaseMenu, jsonPrimitive: JsonPrimitive) {
+        val id = menu.id ?: return
         val content = jsonPrimitive.contentOrNull?.lowercase() ?: return
-        command(content) { execute<Player> { sender, _, _ -> InveroManager.getMenu(id)?.open(sender) } }
+        command(content) { execute<Player> { sender, _, _ -> Invero.api().getMenuManager().getMenu(id)?.open(sender) } }
         registeredCommands += content
     }
 

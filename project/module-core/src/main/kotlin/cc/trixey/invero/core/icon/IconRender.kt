@@ -2,14 +2,15 @@
 
 package cc.trixey.invero.core.icon
 
-import cc.trixey.invero.bukkit.api.dsl.set
-import cc.trixey.invero.bukkit.util.proceed
+import cc.trixey.invero.common.adventure.isPrefixColored
+import cc.trixey.invero.common.api.InveroSettings
+import cc.trixey.invero.common.util.*
 import cc.trixey.invero.core.AgentPanel
-import cc.trixey.invero.core.InveroSettings
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.item.Frame
 import cc.trixey.invero.core.util.*
-import cc.trixey.invero.library.adventure.isPrefixColored
+import cc.trixey.invero.ui.bukkit.api.dsl.set
+import cc.trixey.invero.ui.bukkit.util.proceed
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
@@ -78,7 +79,7 @@ fun Frame.translateUpdate(session: Session, element: IconElement, defaultFrame: 
         val basedLore = lore ?: defaultFrame.lore
         val context = element.context
 
-        if (basedName != null) postName(session.parse(basedName, context))
+        if (basedName != null) postName(session.parse(basedName, context).defaultColored())
         if (!basedLore.isNullOrEmpty()) postLore(session.parse(basedLore, context).defaultColored())
 
         return this
@@ -96,5 +97,6 @@ fun List<String>.defaultColored() = map {
     else it
 }
 
-fun String.defaultColored() = if (!isPrefixColored() && isNotBlank()) "${InveroSettings.defaultNameColor}$this"
-else this
+fun String.defaultColored() =
+    if (!isPrefixColored() && isNotBlank()) "${InveroSettings.defaultNameColor}$this"
+    else this

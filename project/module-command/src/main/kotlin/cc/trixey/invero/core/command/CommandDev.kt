@@ -1,13 +1,11 @@
 package cc.trixey.invero.core.command
 
-import cc.trixey.invero.bukkit.InventoryPacket
-import cc.trixey.invero.bukkit.InventoryVanilla
-import cc.trixey.invero.bukkit.PanelContainer
-import cc.trixey.invero.core.InveroDatabase
-import cc.trixey.invero.core.InveroManager
-import cc.trixey.invero.core.serialize.serializeToJson
+import cc.trixey.invero.common.Invero
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.session
+import cc.trixey.invero.ui.bukkit.InventoryPacket
+import cc.trixey.invero.ui.bukkit.InventoryVanilla
+import cc.trixey.invero.ui.bukkit.PanelContainer
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -57,7 +55,9 @@ object CommandDev {
     val printSerailizedMenu = subCommand {
         execute<CommandSender> { _, _, argument ->
             val menuId = argument.split(" ").getOrNull(1) ?: return@execute
-            InveroManager.getMenu(menuId)?.let { println(it.serializeToJson()) }
+            val menuManager = Invero.api().getMenuManager()
+
+            menuManager.getMenu(menuId)?.let { println(menuManager.serializeToJson(it)) }
         }
     }
 
@@ -78,7 +78,7 @@ object CommandDev {
     @CommandBody
     val printVariables = subCommand {
         execute<CommandSender> { _, _, argument ->
-            val globaldata = InveroDatabase.globalDataDatabase.source
+            val globaldata = Invero.api().getDataManager().getGlobalData().source
             println(
                 """
                     
@@ -91,7 +91,7 @@ object CommandDev {
             }
             onlinePlayers.forEach {
                 println("[I][PLAYER: ${it.name}] ------------------------------ [Player_Variables]")
-                InveroDatabase.getPlayerDataContainer(it).source.forEach { (key, value) ->
+                Invero.api().getDataManager().getPlayerData(it).source.forEach { (key, value) ->
                     println("- [${key.removePrefix("player@")}] : $value")
                 }
             }
@@ -114,9 +114,9 @@ object CommandDev {
                     
                     Viewer: ${session.viewer.name}
                     Window: ${session.window.type.name}
-                    Menu: ${session.menu.name}
+                    Menu: ${session.menu.id}
                     Variables: ${session.getVariables()}
-                    TaskMgr: ${session.taskMgr}
+                    TaskMgr: ${session.taskGroup}
                     --------------------------------------------------
                     
                 """.trimIndent()
