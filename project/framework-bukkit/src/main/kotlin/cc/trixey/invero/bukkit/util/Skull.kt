@@ -7,6 +7,7 @@ import com.mojang.authlib.properties.Property
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.inventory.meta.SkullMeta
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.submitAsync
@@ -54,6 +55,8 @@ private fun requestPlayerHead(name: String, response: (ItemStack) -> Unit) {
         if (player != null) {
             requestCustomTextureHead(player.getPlayerTexture()).also(response)
         } else {
+            response(defaultHead.modifyMeta<ItemMeta> { setDisplayName("§8...") })
+
             submitAsync {
                 val profile = JsonParser().parse(fromURL("${mojangAPI[0]}$name")) as? JsonObject
                 if (profile == null) {

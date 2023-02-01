@@ -16,7 +16,7 @@ import taboolib.platform.util.bukkitPlugin
  * @author Arasple
  * @since 2023/1/16 18:27
  */
-private const val SECTION_CHAR: Char = '§'
+private const val SECTION_CHAR = '§'
 
 private const val AMPERSAND_CHAR = '&'
 

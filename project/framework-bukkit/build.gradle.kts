@@ -15,4 +15,5 @@ dependencies {
     compileOnly("io.izzel.taboolib:common:$taboolibVersion")
     compileOnly("io.izzel.taboolib:platform-bukkit:$taboolibVersion")
     compileOnly("io.izzel.taboolib:module-nms:$taboolibVersion")
+    compileOnly("io.izzel.taboolib:module-nms-util:$taboolibVersion")
 }

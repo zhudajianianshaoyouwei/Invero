@@ -27,7 +27,6 @@ import taboolib.module.nms.getItemTag
 fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
     val frame = this@render
     val original = element.value
-    var generated = texture == null
 
     if (texture == null) {
         element.value = element.value.apply {

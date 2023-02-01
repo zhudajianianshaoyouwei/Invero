@@ -59,6 +59,7 @@ abstract class BaseItem<T : Element>(override val panel: Panel) : Supplier<ItemS
 
     override fun push() {
         val window = panel.window as BukkitWindow
+        val viewer = window.viewer.name
         postRender {
             val slot = locatingAbsoluteSlot(it, panel)
             if (slot >= 0) {

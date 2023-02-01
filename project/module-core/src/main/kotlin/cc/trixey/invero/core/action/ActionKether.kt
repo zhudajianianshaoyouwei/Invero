@@ -26,13 +26,14 @@ class ActionKether(val script: String) : Action() {
         return if (scripts.size <= 1) {
             KetherHandler.invoke(script, player, variables).thenApply { it.bool }
         } else {
+            // list of String kether
+            // return TRUE
             submitAsync {
-                for (index in 0 until scripts.lastIndex) {
-                    val script = scripts[index]
+                for (script in scripts) {
                     KetherHandler.invoke(script, player, variables).thenApply { it.bool }.get()
                 }
             }
-            KetherHandler.invoke(scripts.last(), player, variables).thenApply { it.bool }
+            CompletableFuture.completedFuture(true)
         }
     }
 

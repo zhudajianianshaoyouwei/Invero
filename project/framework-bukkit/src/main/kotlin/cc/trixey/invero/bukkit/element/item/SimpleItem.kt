@@ -1,6 +1,5 @@
 package cc.trixey.invero.bukkit.element.item
 
-import cc.trixey.invero.bukkit.util.distinguish
 import cc.trixey.invero.common.Panel
 import cc.trixey.invero.common.Viewer
 import org.bukkit.Material
@@ -19,11 +18,11 @@ import java.util.function.Supplier
  * @author Arasple
  * @since 2022/12/29 22:37
  */
-open class SimpleItem(panel: Panel, value: ItemStack = ItemStack(Material.AIR)) : BaseItem<SimpleItem>(panel) {
+open class SimpleItem(panel: Panel, value: ItemStack = ItemStack(Material.STONE)) : BaseItem<SimpleItem>(panel) {
 
     override var value: ItemStack = value
         set(value) {
-            field = value.distinguish()
+            field = value
             safePush()
         }
 

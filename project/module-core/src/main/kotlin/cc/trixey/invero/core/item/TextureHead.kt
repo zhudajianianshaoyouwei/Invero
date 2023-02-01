@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import org.bukkit.inventory.ItemStack
 import taboolib.library.xseries.XMaterial
+import taboolib.platform.util.buildItem
 
 /**
  * Invero
@@ -19,7 +20,7 @@ import taboolib.library.xseries.XMaterial
 class TextureHead(@SerialName("head") override val raw: String) : Texture() {
 
     @Transient
-    private val defaultHead = XMaterial.PLAYER_HEAD.parseItem()!!
+    private val defaultHead = buildItem(XMaterial.PLAYER_HEAD) { name = "§8..." }
 
     @Transient
     override var lazyTexture: ItemStack? = null
@@ -28,7 +29,8 @@ class TextureHead(@SerialName("head") override val raw: String) : Texture() {
         if (lazyTexture != null) return block(lazyTexture!!)
         if (!containsPlaceholder && raw.length > 20) requestHead(raw) { lazyTexture = it.also(block) }
         else {
-            requestHead(context.parse(raw)) { block(it.clone()) }
+            val parsed = context.parse(raw)
+            requestHead(parsed) { block(it.clone()) }
         }
     }
 

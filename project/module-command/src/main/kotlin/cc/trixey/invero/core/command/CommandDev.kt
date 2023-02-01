@@ -41,12 +41,12 @@ object CommandDev {
 
             submitAsync {
                 KetherHandler.invoke(script, player, mapOf()).thenApply {
-                    println(
+                    sender.sendMessage(
                         """
-                        ------------------>
-                        Script: $script
-                        Result: $it
-                    """.trimIndent()
+                            ------------------>
+                            Script: $script
+                            Result: $it
+                        """.trimIndent()
                     )
                 }.get()
             }

@@ -1,26 +1,26 @@
 package cc.trixey.invero.bukkit.util
 
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.ItemMeta
-import org.bukkit.persistence.PersistentDataType
-import taboolib.platform.BukkitPlugin
-import taboolib.platform.util.*
+import taboolib.module.nms.ItemTag
+import taboolib.module.nms.ItemTagData
+import taboolib.module.nms.getItemTag
+import taboolib.platform.util.ItemBuilder
+import taboolib.platform.util.buildItem
+import taboolib.platform.util.isAir
+import taboolib.platform.util.isNotAir
 
-/**
- * Invero
- * cc.trixey.invero.bukkit.util.Item
- *
- * @author Arasple
- * @since 2023/1/5 14:35
- */
-private val namespacedKey = NamespacedKey(BukkitPlugin.getInstance(), "invero_slot")
-
-fun ItemStack.distinguish(mark: Byte = (Byte.MIN_VALUE..Byte.MAX_VALUE).random().toByte()): ItemStack {
-    return if (isAir) this else modifyMeta<ItemMeta> {
-        persistentDataContainer.set(namespacedKey, PersistentDataType.BYTE, mark)
+fun ItemStack.mark(viewer: String, slot: Int): ItemStack {
+    if (isNotAir()) {
+//        ItemTag().apply {
+//            putAll(getItemTag())
+//            put("invero", ItemTagData.toNBT(buildMap {
+//                put("viewer", viewer)
+//                put("slot", slot)
+//            }))
+//        }.saveTo(this)
     }
+    return this
 }
 
 fun randomItem(builder: ItemBuilder.() -> Unit = {}): ItemStack {
