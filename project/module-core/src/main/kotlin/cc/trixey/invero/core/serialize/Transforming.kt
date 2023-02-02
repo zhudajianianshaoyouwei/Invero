@@ -1,10 +1,10 @@
 package cc.trixey.invero.core.serialize
 
 import cc.trixey.invero.core.BaseMenu
-import cc.trixey.invero.ui.common.event.ClickType
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.icon.IconHandler
 import cc.trixey.invero.core.menu.CommandArgument
+import cc.trixey.invero.ui.common.event.ClickType
 import kotlinx.serialization.json.*
 import kotlinx.serialization.serializer
 
@@ -15,7 +15,7 @@ import kotlinx.serialization.serializer
  * @author Arasple
  * @since 2023/1/29 13:43
  */
-internal object BaseMenuSerializer : JsonTransformingSerializer<BaseMenu>(serializer()) {
+object BaseMenuSerializer : JsonTransformingSerializer<BaseMenu>(serializer()) {
 
     private val menuKeys = arrayOf(
         "title",
@@ -86,7 +86,9 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
         "zaphkiel", "zap",
         "oraxen",
         "itemsadder", "ia",
-        "headdatabase", "hdb"
+        "headdatabase", "hdb",
+        "base64", "serialized",
+        "kether", "script"
     )
 
     override fun transformDeserialize(element: JsonElement): JsonElement {

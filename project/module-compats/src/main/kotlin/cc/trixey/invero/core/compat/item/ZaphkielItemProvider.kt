@@ -16,7 +16,7 @@ class ZaphkielItemProvider : ItemSourceProvider, PluginHook() {
 
     override val pluginName = "Zaphkiel"
 
-    override fun getItem(identifier: String): ItemStack? {
+    override fun getItem(identifier: String, context: Any?): ItemStack? {
         return ZaphkielAPI.getItem(identifier)?.itemStack
     }
 

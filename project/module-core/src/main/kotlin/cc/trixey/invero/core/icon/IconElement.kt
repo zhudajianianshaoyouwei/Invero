@@ -1,14 +1,14 @@
 package cc.trixey.invero.core.icon
 
-import cc.trixey.invero.common.animation.Cyclic
-import cc.trixey.invero.ui.bukkit.api.dsl.set
-import cc.trixey.invero.ui.bukkit.element.item.SimpleItem
-import cc.trixey.invero.ui.common.Panel
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.Session
+import cc.trixey.invero.core.animation.Cyclic
 import cc.trixey.invero.core.item.Frame
 import cc.trixey.invero.core.util.session
+import cc.trixey.invero.ui.bukkit.api.dsl.set
+import cc.trixey.invero.ui.bukkit.element.item.SimpleItem
+import cc.trixey.invero.ui.common.Panel
 import taboolib.common.platform.function.submitAsync
 
 /**
@@ -30,7 +30,7 @@ open class IconElement(
 
     internal val context by lazy { Context(session.viewer, session, panel, this, vars) }
 
-    private var iconIndex = relocateIndex()
+    var iconIndex = relocateIndex()
 
     private var frame: Frame? = null
         set(value) {
@@ -48,14 +48,16 @@ open class IconElement(
         }
 
     fun invoke() {
-        // 默认帧
-        frame = icon.defaultFrame
-        // 布局定位
         agent.layout
             ?.search(icon.id)
             ?.let { this@IconElement.set(it) }
+    }
+
+    fun render() {
+        // 默认帧
+        frame = currentIcon.defaultFrame
         // 循环物品帧
-        framesCyclic = icon.generateCyclicFrames()
+        framesCyclic = currentIcon.generateCyclicFrames()
         // 周期任务：翻译物品帧的相关变量
         if (icon.periodUpdate > 0) {
             session.taskGroup.launchAsync(delay = 10L, period = icon.periodUpdate) {
@@ -69,7 +71,7 @@ open class IconElement(
             }
         }
         // 交互逻辑
-        onClick { type, _ -> getIconHandler()?.run(context, type) }
+        onClick { type, _ -> currentHandler?.run(context, type) }
     }
 
     /**
@@ -153,9 +155,14 @@ open class IconElement(
     /**
      * 取得有效的交互处理器
      */
-    fun getIconHandler(): IconHandler? {
-        return (icon.subIcons?.getOrNull(iconIndex) ?: icon).handler
-    }
+    val currentHandler: IconHandler?
+        get() = currentIcon.handler
+
+    /**
+     * 取得有效图标
+     */
+    val currentIcon: Icon
+        get() = icon.subIcons?.getOrNull(iconIndex) ?: icon
 
     /**
      * 是否需要注销

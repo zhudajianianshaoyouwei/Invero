@@ -6,6 +6,10 @@ fun DependencyHandler.`framework`() {
     compileModule("framework-common", "framework-bukkit")
 }
 
+fun DependencyHandler.`serialization`() {
+    add("compileOnly", "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
+}
+
 fun DependencyHandler.`compileLocal`(project: Project, vararg dir: String) {
     dir.forEach { add("compileOnly", project.fileTree(it)) }
 }
@@ -34,7 +38,7 @@ fun DependencyHandler.`compileCore`(
 }
 
 fun DependencyHandler.compileTabooLib() {
-    standardTabooModules.forEach { installTaboo(it) }
+    usedTaboolibModules.forEach { installTaboo(it) }
 }
 
 fun DependencyHandler.installTaboo(vararg module: String) = module.forEach {

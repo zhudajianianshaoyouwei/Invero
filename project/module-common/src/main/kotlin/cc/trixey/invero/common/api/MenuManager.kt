@@ -1,9 +1,9 @@
 package cc.trixey.invero.common.api
 
 import cc.trixey.invero.common.Menu
-import cc.trixey.invero.common.chemdah.InferItem
 import org.bukkit.command.CommandSender
 import org.bukkit.inventory.ItemStack
+import taboolib.common.platform.function.console
 import taboolib.module.configuration.Configuration
 import java.io.File
 
@@ -36,7 +36,7 @@ interface MenuManager {
     /**
      * (插件默认) 的重载菜单
      */
-    fun reload(receiver: CommandSender)
+    fun reload(receiver: CommandSender = console().cast())
 
     /**
      * 初始化菜单绑定
@@ -61,7 +61,7 @@ interface MenuManager {
     /**
      * 寻找符合绑定条件的菜单
      */
-    fun findBound(chat:String): Menu?
+    fun findBound(chat: String): Menu?
 
     /**
      * 取得 JSON 序列化器

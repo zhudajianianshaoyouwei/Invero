@@ -23,17 +23,22 @@ class ScrollGeneratorPanel<T>(
 
     override var sourceElements: List<T> = emptyList()
 
-    override val outputElements by lazy {
-        ArrayList(arrayOfNulls<BaseItem<*>?>(sourceElements.size).toList())
-    }
+    override var outputGenerator: (T) -> BaseItem<*>? = { null }
 
-    override var generator: (T) -> BaseItem<*>? = { null }
+    override var outputElements = arrayListOf<BaseItem<*>?>()
 
-    override val generatorPool: List<Pos> by lazy {
-        (scale.getArea() - elements.occupiedPositions()).sorted()
-    }
+    override var generatorPool = emptyList<Pos>()
 
     private var initialized: Boolean = false
+
+    override fun reset() {
+        outputElements.clear()
+        outputElements = ArrayList(arrayOfNulls<BaseItem<*>?>(sourceElements.size).toList())
+        generatorPool = (scale.getArea() - elements.occupiedPositions()).sorted()
+        initialized = false
+        resetColums()
+        resetViewport()
+    }
 
     private fun initialize() {
         if (initialized) return
@@ -41,7 +46,6 @@ class ScrollGeneratorPanel<T>(
         sourceElements
             .windowed(columCapacity, columCapacity, true)
             .forEach { columElements ->
-
                 insertColum {
                     if (it in columElements.indices) {
                         val element = columElements[it]

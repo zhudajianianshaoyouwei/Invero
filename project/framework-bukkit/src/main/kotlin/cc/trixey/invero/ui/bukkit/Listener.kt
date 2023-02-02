@@ -4,12 +4,17 @@ import cc.trixey.invero.ui.bukkit.api.dsl.viewer
 import cc.trixey.invero.ui.bukkit.api.findWindow
 import cc.trixey.invero.ui.bukkit.nms.persistContainerId
 import cc.trixey.invero.ui.bukkit.nms.sendCancelCoursor
+import cc.trixey.invero.ui.bukkit.util.copyMarked
 import cc.trixey.invero.ui.common.event.ClickType
+import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.*
 import org.bukkit.event.player.PlayerChangedWorldEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.inventory.ItemStack
+import taboolib.common.LifeCycle
+import taboolib.common.platform.Awake
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.submit
 import taboolib.module.nms.MinecraftVersion.isUniversal
@@ -28,6 +33,12 @@ object Listener {
     private val FILEDS_WINDOW_CLICK =
         if (isUniversal) arrayOf("containerId", "slotNum", "buttonNum", "clickType", "carriedItem")
         else arrayOf("a", "slot", "button", "shift", "chemdah")
+
+    @Awake(LifeCycle.ACTIVE)
+    fun init() {
+        // init NBT handle
+        ItemStack(Material.DIAMOND).copyMarked("Invero", 0)
+    }
 
     @SubscribeEvent
     fun e(e: InventoryClickEvent) = e.delegatedEvent {

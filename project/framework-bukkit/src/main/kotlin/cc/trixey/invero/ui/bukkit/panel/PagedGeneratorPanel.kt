@@ -26,23 +26,15 @@ class PagedGeneratorPanel<T>(
     weight: PanelWeight,
     scale: Scale,
     locate: Pos
-) : cc.trixey.invero.ui.bukkit.BukkitPanel(parent, weight, scale, locate), PagedPanel, GeneratorPanel<T, BaseItem<*>> {
+) : BukkitPanel(parent, weight, scale, locate), PagedPanel, GeneratorPanel<T, BaseItem<*>> {
 
     override var sourceElements: List<T> = emptyList()
-        set(value) {
-            field = value
-            maxPageIndex = value.size / generatorPool.size
-        }
 
-    override val outputElements by lazy {
-        ArrayList(arrayOfNulls<BaseItem<*>?>(sourceElements.size).toList())
-    }
+    override var outputGenerator: (T) -> BaseItem<*>? = { null }
 
-    override var generator: (T) -> BaseItem<*>? = { null }
+    override var outputElements = arrayListOf<BaseItem<*>?>()
 
-    override val generatorPool: List<Pos> by lazy {
-        (scale.getArea() - elements.occupiedPositions()).sorted()
-    }
+    override var generatorPool = emptyList<Pos>()
 
     override var pageIndex: Int = 0
         set(value) {
@@ -53,11 +45,17 @@ class PagedGeneratorPanel<T>(
             render()
         }
 
-    override var pageChangeCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit = { _, _ -> }
-
     override var maxPageIndex: Int = 0
 
+    override var pageChangeCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit = { _, _ -> }
+
     override val elements = Elements()
+
+    override fun reset() {
+        outputElements.clear()
+        outputElements = ArrayList(arrayOfNulls<BaseItem<*>?>(sourceElements.size).toList())
+        generatorPool = (scale.getArea() - elements.occupiedPositions()).sorted()
+    }
 
     override fun render() {
         val fromIndex = pageIndex * generatorPool.size
@@ -65,13 +63,13 @@ class PagedGeneratorPanel<T>(
         maxPageIndex = sourceElements.size / generatorPool.size
 
         if (sourceElements.size > fromIndex) {
-            val apply = (fromIndex..toIndex).map { getOutput(it) }
+            val output = (fromIndex..toIndex).map { getOutput(it) }
 
             elements.apply {
                 generatorPool.forEachIndexed { index, pos ->
                     removeElement(pos)
-                    if (index <= apply.lastIndex) {
-                        apply[index]?.set(pos)
+                    if (index <= output.lastIndex) {
+                        output[index]?.set(pos)
                     }
                 }
                 generatorPool
@@ -82,7 +80,6 @@ class PagedGeneratorPanel<T>(
 
         return super.render()
     }
-
 
     override fun handleClick(pos: Pos, clickType: ClickType, e: InventoryClickEvent?): Boolean {
         elements.findElement(pos)?.let {

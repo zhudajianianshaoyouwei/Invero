@@ -1,6 +1,7 @@
 package cc.trixey.invero.common.chemdah
 
 import cc.trixey.invero.common.chemdah.Flags.Companion.matchType
+import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
@@ -14,6 +15,7 @@ import taboolib.module.nms.getItemTag
 import taboolib.module.nms.getName
 import taboolib.platform.util.hasItem
 import taboolib.platform.util.takeItem
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Chemdah
@@ -92,21 +94,32 @@ data class InferItem(val items: List<Item>) {
             return false
         }
 
-        fun check(inventory: Inventory, amount: Int): Boolean {
+        fun check(player: Player, amount: Int = 1): Boolean {
+            return check(player.inventory, amount)
+        }
+
+        fun take(player: Player, amount: Int = 1): Boolean {
+            return take(player.inventory, amount)
+        }
+
+        fun check(inventory: Inventory, amount: Int = 1): Boolean {
             return inventory.hasItem(amount) { match(it) }
         }
 
-        fun take(inventory: Inventory, amount: Int): Boolean {
+        fun take(inventory: Inventory, amount: Int = 1): Boolean {
             return inventory.takeItem(amount) { match(it) }
         }
+
     }
 
     companion object {
 
+        private val cache = ConcurrentHashMap<String, Item>()
+
         fun List<String>.toInferItem() = InferItem(map { it.toInferItem() })
 
         @Suppress("DuplicatedCode")
-        fun String.toInferItem(): Item {
+        fun String.toInferItem() = cache.computeIfAbsent(this) {
             var type: String
             val data = arrayListOf<DataMatch>()
             val flag = ArrayList<Flags>()
@@ -127,7 +140,7 @@ data class InferItem(val items: List<Item>) {
             } else {
                 Item::class.java
             }
-            return item.invokeConstructor(type.matchType(flag), flag, data)
+            item.invokeConstructor(type.matchType(flag), flag, data)
         }
     }
 

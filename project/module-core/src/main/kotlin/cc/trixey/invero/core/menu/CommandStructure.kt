@@ -1,10 +1,14 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package cc.trixey.invero.core.menu
 
 import cc.trixey.invero.core.serialize.ListCommandArgumentSerializer
 import cc.trixey.invero.core.serialize.ListStringSerializer
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlinx.serialization.json.JsonNames
 
 /**
  * Invero
@@ -24,6 +28,7 @@ class CommandStructure(
     val permission: String?,
     val permissionMessage: String?,
     @Serializable(with = ListCommandArgumentSerializer::class)
+    @JsonNames("argument", "args")
     val arguments: List<CommandArgument>?
 ) {
 

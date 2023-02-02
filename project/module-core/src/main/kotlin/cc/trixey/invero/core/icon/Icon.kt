@@ -1,17 +1,17 @@
 package cc.trixey.invero.core.icon
 
-import cc.trixey.invero.common.animation.CycleMode
-import cc.trixey.invero.common.animation.Cyclic
-import cc.trixey.invero.ui.common.Panel
 import cc.trixey.invero.core.AgentIcon
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.action.ScriptKether
-import cc.trixey.invero.core.item.FrameProperties
+import cc.trixey.invero.core.animation.CycleMode
+import cc.trixey.invero.core.animation.Cyclic
 import cc.trixey.invero.core.animation.toCyclic
 import cc.trixey.invero.core.item.Frame
+import cc.trixey.invero.core.item.FrameProperties
 import cc.trixey.invero.core.serialize.IconHandlerSerializer
 import cc.trixey.invero.core.serialize.ListIconSerializer
+import cc.trixey.invero.ui.common.Panel
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -65,9 +65,11 @@ class Icon(
         session: Session,
         agent: AgentPanel,
         panel: Panel,
-        vars: Map<String, Any>
+        vars: Map<String, Any>,
+        renderNow: Boolean
     ) = IconElement(session, this, agent, panel, vars).also {
         it.invoke()
+        if (renderNow) it.render()
     }
 
     fun generateCyclicFrames(): Cyclic<Frame>? {

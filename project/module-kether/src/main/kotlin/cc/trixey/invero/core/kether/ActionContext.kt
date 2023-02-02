@@ -31,7 +31,8 @@ object ActionContext {
 
                 when (action) {
                     "get" -> completedFuture(session()?.getVariable(key))
-                    "has" -> completedFuture(session()?.hasVariable(key) ?: false)
+                    "has" -> completedFuture(session()?.hasVariable(key) == true)
+                    "without" -> completedFuture(session()?.hasVariable(key) == false)
                     "rem", "del", "delete" -> {
                         variables().remove(key)
                         completedFuture(session()?.removeVariable(key))

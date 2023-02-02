@@ -16,7 +16,7 @@ class OraxenItemProvider : ItemSourceProvider, PluginHook() {
 
     override val pluginName = "Oraxen"
 
-    override fun getItem(identifier: String): ItemStack {
+    override fun getItem(identifier: String, context: Any?): ItemStack {
         return OraxenItems.getItemById(identifier).build()
     }
 

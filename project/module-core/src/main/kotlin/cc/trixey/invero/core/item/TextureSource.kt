@@ -23,12 +23,12 @@ class TextureSource(val source: String, @SerialName("value") override val raw: S
 
     @Transient
     override val lazyTexture: ItemStack? = run {
-        if (containsPlaceholder) null
-        else provider.getItem(raw)
+        if (containsPlaceholder || !provider.translateIdentifier()) null
+        else provider.getItem(raw, null)
     }
 
     override fun generateItem(context: Context, block: (ItemStack) -> Unit) {
-        block(lazyTexture ?: provider.getItem(context.parse(raw)) ?: DEFAULT_TEXTURE)
+        block(lazyTexture ?: provider.getItem(context.parse(raw), context) ?: DEFAULT_TEXTURE)
     }
 
 }

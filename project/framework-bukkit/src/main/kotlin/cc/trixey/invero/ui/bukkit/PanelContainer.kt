@@ -9,4 +9,4 @@ import cc.trixey.invero.ui.common.panel.TypedPanelContainer
  * @author Arasple
  * @since 2023/1/20 14:52
  */
-interface PanelContainer : TypedPanelContainer<cc.trixey.invero.ui.bukkit.BukkitPanel>
+interface PanelContainer : TypedPanelContainer<BukkitPanel>

@@ -2,8 +2,8 @@
 
 package cc.trixey.invero.core.menu
 
-import cc.trixey.invero.common.animation.CycleMode
 import cc.trixey.invero.core.Session
+import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.animation.toCyclic
 import cc.trixey.invero.core.serialize.ListStringSerializer
 import cc.trixey.invero.core.util.containsAnyPlaceholder

@@ -20,3 +20,5 @@ subprojects {
         publishing { createPublish(project) }
     }
 }
+
+buildDirClean()

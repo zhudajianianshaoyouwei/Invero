@@ -16,7 +16,7 @@ class ItemsAdderItemProvider : ItemSourceProvider, PluginHook() {
 
     override val pluginName = "ItemsAdder"
 
-    override fun getItem(identifier: String): ItemStack? {
+    override fun getItem(identifier: String, context: Any?): ItemStack? {
         return CustomStack.getInstance(identifier)?.itemStack
     }
 

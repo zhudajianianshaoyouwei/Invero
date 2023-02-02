@@ -2,6 +2,7 @@ package cc.trixey.invero.ui.bukkit.element.item
 
 import cc.trixey.invero.ui.bukkit.BukkitWindow
 import cc.trixey.invero.ui.bukkit.element.Clickable
+import cc.trixey.invero.ui.bukkit.util.copyMarked
 import cc.trixey.invero.ui.common.Element
 import cc.trixey.invero.ui.common.Panel
 import cc.trixey.invero.ui.common.Pos
@@ -63,7 +64,7 @@ abstract class BaseItem<T : Element>(override val panel: Panel) : Supplier<ItemS
         postRender {
             val slot = locatingAbsoluteSlot(it, panel)
             if (slot >= 0) {
-                window.inventory[slot] = value
+                window.inventory[slot] = value.copyMarked(viewer,slot)
             }
         }
     }

@@ -92,7 +92,7 @@ class MenuBindings(
                                 val variables = buildMap {
                                     impl.forEach { key ->
                                         val value = ctx.getOrNull(key) ?: default ?: error("No valid value")
-                                        put("_args_$key", value)
+                                        put(key, value)
                                     }
                                 }
                                 menu.open(sender, variables)

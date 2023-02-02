@@ -5,7 +5,7 @@ plugins {
 taboolib {
     version = taboolibVersion
 
-    standardTabooModules.forEach { install(it) }
+    usedTaboolibModules.forEach { install(it) }
 
     description {
         name = rootName

@@ -18,9 +18,9 @@ object ActionSource {
         it.group(text()).apply(it) { key ->
             now {
                 val value = selfSourceObject()[key]
-                if (value?.startsWith("ext.kether:") == true) {
-                    val source = value.removePrefix("ext.kether:")
-                    KetherHandler.invoke(source, player(), variables().toMap()).getNow("<TIMEOUT>")
+                if (value?.startsWith("ext@") == true) {
+                    val source = value.removePrefix("ext@")
+                    KetherHandler.invoke(source, player(), variables().toMap()).getNow("<TIMEOUT>").toString()
                 } else {
                     value
                 }

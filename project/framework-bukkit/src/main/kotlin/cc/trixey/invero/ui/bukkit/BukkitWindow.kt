@@ -7,7 +7,6 @@ import cc.trixey.invero.ui.bukkit.api.unregisterWindow
 import cc.trixey.invero.ui.bukkit.nms.isTitleUpdating
 import cc.trixey.invero.ui.bukkit.nms.updateTitle
 import cc.trixey.invero.ui.bukkit.util.synced
-import cc.trixey.invero.ui.common.ContainerType
 import cc.trixey.invero.ui.common.Scale
 import cc.trixey.invero.ui.common.StorageMode
 import cc.trixey.invero.ui.common.Window
@@ -33,7 +32,7 @@ abstract class BukkitWindow(
             updateTitle(value)
         }
 
-    override val panels = arrayListOf<cc.trixey.invero.ui.bukkit.BukkitPanel>()
+    override val panels = arrayListOf<BukkitPanel>()
 
     override val scale: Scale by lazy { Scale(9 to 6) }
 
@@ -84,9 +83,10 @@ abstract class BukkitWindow(
         // 开启新容器
         // 避免更新标题带来的残影
         val invokable: () -> Unit = {
-            inventory.open()
             preRenderCallback(this)
             render()
+            inventory.open()
+            openCallback(this)
         }
         if (viewer.isTitleUpdating()) submit(delay = 2L) { invokable() }
         else synced { invokable() }
@@ -104,7 +104,10 @@ abstract class BukkitWindow(
     override fun render() {
         require(panels.all { it.parent == this })
 
-        panels.sortedByDescending { it.weight }.forEach { it.render() }
+        panels
+            .filterNot { it.skipRender }
+            .sortedByDescending { it.weight }
+            .forEach { it.render() }
     }
 
     override fun isViewing(): Boolean {

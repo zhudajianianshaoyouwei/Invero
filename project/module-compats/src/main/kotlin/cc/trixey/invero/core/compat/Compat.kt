@@ -2,10 +2,7 @@ package cc.trixey.invero.core.compat
 
 import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.supplier.ItemSourceProvider
-import cc.trixey.invero.core.compat.item.HDBItemProvider
-import cc.trixey.invero.core.compat.item.ItemsAdderItemProvider
-import cc.trixey.invero.core.compat.item.OraxenItemProvider
-import cc.trixey.invero.core.compat.item.ZaphkielItemProvider
+import cc.trixey.invero.core.compat.item.*
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 
@@ -28,6 +25,8 @@ object Compat {
         OraxenItemProvider().register("oraxen")
         ItemsAdderItemProvider().register("itemsadder", "ia")
         HDBItemProvider().register("headdatabase", "hdb")
+        SerializedItemProvider().register("base64", "serialized")
+        ScriptItemProvider().register("kether", "script")
     }
 
     private fun ItemSourceProvider.register(vararg namespace: String) {

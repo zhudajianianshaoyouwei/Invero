@@ -24,9 +24,9 @@ open class PagedNetesedPanel(
     scale: Scale,
     locate: Pos,
     defaultPage: Int = 0
-) : cc.trixey.invero.ui.bukkit.BukkitPanel(parent, weight, scale, locate), PagedPanel, PanelContainer {
+) : BukkitPanel(parent, weight, scale, locate), PagedPanel, PanelContainer {
 
-    override val panels = arrayListOf<cc.trixey.invero.ui.bukkit.BukkitPanel>()
+    override val panels = arrayListOf<BukkitPanel>()
 
     override val maxPageIndex: Int
         get() = panels.lastIndex
@@ -42,7 +42,7 @@ open class PagedNetesedPanel(
 
     override var pageChangeCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit = { _, _ -> }
 
-    private val currentPanel: cc.trixey.invero.ui.bukkit.BukkitPanel
+    private val currentPanel: BukkitPanel
         get() = panels[pageIndex]
 
     override fun render() = currentPanel.rerender()

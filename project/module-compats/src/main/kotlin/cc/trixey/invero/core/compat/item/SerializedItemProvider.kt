@@ -16,7 +16,7 @@ class SerializedItemProvider : ItemSourceProvider {
 
     private val cache = ConcurrentHashMap<ByteArray, ItemStack>()
 
-    override fun getItem(identifier: String): ItemStack {
+    override fun getItem(identifier: String, context: Any?): ItemStack {
         val id = identifier.toByteArray()
         return cache.computeIfAbsent(id) { id.deserializeToItemStack() }
     }

@@ -11,6 +11,10 @@ import org.bukkit.inventory.ItemStack
  */
 interface ItemSourceProvider {
 
-    fun getItem(identifier: String): ItemStack?
+    fun translateIdentifier(): Boolean {
+        return true
+    }
+
+    fun getItem(identifier: String, context: Any?): ItemStack?
 
 }

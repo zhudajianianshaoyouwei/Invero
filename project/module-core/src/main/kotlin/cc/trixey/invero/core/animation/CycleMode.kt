@@ -1,12 +1,16 @@
-package cc.trixey.invero.common.animation
+package cc.trixey.invero.core.animation
+
+import cc.trixey.invero.core.serialize.CycleModeSerializer
+import kotlinx.serialization.Serializable
 
 /**
  * TrMenu
- * cc.trixey.invero.common.animation.CycleMode
+ * cc.trixey.invero.core.animation.CycleMode
  *
  * @author Arasple
  * @since 2023/1/13 12:29
  */
+@Serializable(with = CycleModeSerializer::class)
 enum class CycleMode {
 
     ONE_WAY,

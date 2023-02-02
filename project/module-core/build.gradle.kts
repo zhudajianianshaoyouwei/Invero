@@ -7,7 +7,7 @@ dependencies {
     compileNMS()
     compileCore(11903)
     framework()
+    serialization()
 
     compileModule("module-common")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 }

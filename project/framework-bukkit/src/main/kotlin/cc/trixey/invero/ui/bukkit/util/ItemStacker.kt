@@ -1,8 +1,6 @@
 package cc.trixey.invero.ui.bukkit.util
 
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.PlayerInventory
-import taboolib.platform.util.isAir
 
 /**
  * Invero

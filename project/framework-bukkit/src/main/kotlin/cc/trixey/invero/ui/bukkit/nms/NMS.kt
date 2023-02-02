@@ -1,6 +1,5 @@
 package cc.trixey.invero.ui.bukkit.nms
 
-import cc.trixey.invero.ui.common.ContainerType
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 

@@ -23,6 +23,8 @@ abstract class BukkitPanel(
     override val locate: Pos
 ) : Panel {
 
+    var skipRender = false
+
     override val scale: Scale by lazy { scale.coerceIn(parent.scale) }
 
     override val area by lazy { scale.getArea(locate) }

@@ -1,26 +1,34 @@
 package cc.trixey.invero.ui.bukkit.util
 
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.ItemMeta
+import org.bukkit.persistence.PersistentDataType
 import taboolib.module.nms.ItemTag
-import taboolib.module.nms.ItemTagData
+import taboolib.module.nms.MinecraftVersion
 import taboolib.module.nms.getItemTag
-import taboolib.platform.util.ItemBuilder
-import taboolib.platform.util.buildItem
-import taboolib.platform.util.isAir
-import taboolib.platform.util.isNotAir
+import taboolib.module.nms.setItemTag
+import taboolib.platform.BukkitPlugin
+import taboolib.platform.util.*
 
-fun ItemStack.mark(viewer: String, slot: Int): ItemStack {
-    if (isNotAir()) {
-//        ItemTag().apply {
-//            putAll(getItemTag())
-//            put("invero", ItemTagData.toNBT(buildMap {
-//                put("viewer", viewer)
-//                put("slot", slot)
-//            }))
-//        }.saveTo(this)
+private val namespacedKey = NamespacedKey(BukkitPlugin.getInstance(), "invero")
+
+fun ItemStack.copyMarked(viewer: String, slot: Int): ItemStack {
+    if (isAir) return this
+    val modified = clone()
+    val mark = "$viewer:$slot"
+
+    return if (MinecraftVersion.majorLegacy > 11400) {
+        modified.modifyMeta<ItemMeta> {
+            persistentDataContainer.set(namespacedKey, PersistentDataType.STRING, mark)
+        }
+    } else {
+        ItemTag().apply {
+            putAll(getItemTag())
+            put("invero", mark)
+        }.let { modified.setItemTag(it) }
     }
-    return this
 }
 
 fun randomItem(builder: ItemBuilder.() -> Unit = {}): ItemStack {

@@ -1,8 +1,5 @@
 package cc.trixey.invero.core.animation
 
-import cc.trixey.invero.common.animation.CycleMode
-import cc.trixey.invero.common.animation.Cyclic
-
 /**
  * Invero
  * cc.trixey.invero.core.animation.TypeAliases

@@ -2,6 +2,7 @@
 
 package cc.trixey.invero.core.api
 
+import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.Menu
 import cc.trixey.invero.common.api.InveroSettings
 import cc.trixey.invero.common.api.MenuManager
@@ -15,10 +16,10 @@ import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.action.*
 import cc.trixey.invero.core.menu.MenuBindings
 import cc.trixey.invero.core.panel.PanelStandard
+import cc.trixey.invero.core.serialize.BaseMenuSerializer
 import cc.trixey.invero.core.serialize.hocon.PatchedLoader
 import cc.trixey.invero.core.util.session
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
 import kotlinx.serialization.modules.SerializersModule
@@ -49,10 +50,6 @@ import java.util.concurrent.ConcurrentHashMap
  * @since 2023/2/1 17:17
  */
 class DefaultMenManager : MenuManager {
-
-    init {
-        reload(console().cast())
-    }
 
     private val module = SerializersModule {
 
@@ -238,18 +235,17 @@ class DefaultMenManager : MenuManager {
                             if (it.isNotEmpty()) console().sendLang("menu-loader-auto-reload-successed", menuId)
                         }
                         .forEach {
-                            (loaded as BaseMenu)
-                                .open(player = it, vars = it.session?.getVariables() ?: emptyMap())
+                            loaded.open(player = it, vars = it.session?.getVariables() ?: emptyMap())
                         }
                 }
             }
         }
     }
 
-    override fun deserializeToMenu(configuration: Configuration, name: String?): Menu {
+    override fun deserializeToMenu(configuration: Configuration, name: String?): BaseMenu {
         configuration.changeType(Type.JSON)
         return json
-            .decodeFromString<BaseMenu>(configuration.saveToString())
+            .decodeFromString(BaseMenuSerializer, configuration.saveToString())
             .also { if (name != null && it.id == null) it.id = name }
     }
 
@@ -279,6 +275,11 @@ class DefaultMenManager : MenuManager {
         @Awake(LifeCycle.INIT)
         fun init() {
             PlatformFactory.registerAPI<MenuManager>(DefaultMenManager())
+        }
+
+        @Awake(LifeCycle.ACTIVE)
+        fun load() {
+            Invero.api().getMenuManager().reload()
         }
 
     }

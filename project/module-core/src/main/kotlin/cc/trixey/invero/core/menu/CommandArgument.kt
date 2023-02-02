@@ -4,7 +4,6 @@ package cc.trixey.invero.core.menu
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonNames
 import kotlinx.serialization.json.JsonPrimitive
 
@@ -23,12 +22,10 @@ class CommandArgument(
     val suggest: List<String>?,
     val restrict: Boolean = false,
     @JsonNames("optional")
+    val optional: Boolean = true,
     val default: JsonPrimitive?,
     val incorrectMessage: String?
 ) {
-
-    @Transient
-    val optional = default != null
 
     enum class Type {
 

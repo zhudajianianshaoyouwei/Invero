@@ -24,7 +24,7 @@ class PanelGroup(
     locate: Pos
 ) : cc.trixey.invero.ui.bukkit.BukkitPanel(parent, weight, scale, locate), PanelContainer {
 
-    override val panels = arrayListOf<cc.trixey.invero.ui.bukkit.BukkitPanel>()
+    override val panels = arrayListOf<BukkitPanel>()
 
     override fun render() = panels.forEach { it.render() }
 

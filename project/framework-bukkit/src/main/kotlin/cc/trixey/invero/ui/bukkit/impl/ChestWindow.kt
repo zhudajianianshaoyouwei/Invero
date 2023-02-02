@@ -18,7 +18,7 @@ class ChestWindow(
     title: String = "Untitled_Chest",
     storageMode: StorageMode = StorageMode(),
     virtual: Boolean = true
-) : BukkitWindow(viewer, cc.trixey.invero.ui.common.ContainerType.ofRows(rows), title, storageMode) {
+) : BukkitWindow(viewer, ContainerType.ofRows(rows), title, storageMode) {
 
     override val scale = Scale(9 to rows + if (storageMode.overridePlayerInventory) 4 else 0)
 

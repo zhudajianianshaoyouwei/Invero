@@ -7,11 +7,16 @@ package cc.trixey.invero.common.supplier
  * @author Arasple
  * @since 2023/2/1 16:46
  */
-@JvmInline
-value class Object(val content: Map<String, String>) {
+class Object(val content: Map<String, String>) {
 
     operator fun get(key: String): String? {
         return content[key]
+    }
+
+    val variables: Map<String, Any> by lazy {
+        content
+            .map { "element_${it.key}" to it.value }
+            .toMap() + mapOf("@element" to this)
     }
 
 }

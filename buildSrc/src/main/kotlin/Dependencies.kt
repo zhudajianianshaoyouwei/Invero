@@ -17,10 +17,30 @@ val taboolibPluginVersion = "1.56"
 
 val repoTabooProject = "https://repo.tabooproject.org/repository/releases"
 
+val usedTaboolibModules = setOf(
+    "common",
+    "common-5",
+    "platform-bukkit",
+    "module-nms",
+    "module-nms-util",
+    "module-kether",
+    "module-configuration",
+    "module-lang",
+    "module-chat",
+    "module-database",
+    "expansion-javascript",
+    "expansion-player-database",
+)
+
 fun PluginAware.applyPlugins() {
     apply(plugin = "maven-publish")
     apply(plugin = "com.github.johnrengelman.shadow")
     apply(plugin = "org.jetbrains.kotlin.jvm")
+}
+
+fun Project.buildDirClean() {
+    @Suppress("DEPRECATION")
+    gradle.buildFinished { buildDir.deleteRecursively() }
 }
 
 fun Project.initSubProject(publish: Project.() -> Unit) {
@@ -35,8 +55,7 @@ fun Project.initSubProject(publish: Project.() -> Unit) {
     }
 
     if (parent?.name != "plugin") {
-        @Suppress("DEPRECATION")
-        gradle.buildFinished { buildDir.deleteRecursively() }
+        buildDirClean()
     }
     if (parent != rootProject && name.startsWith("framework")) {
         publish()

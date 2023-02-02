@@ -1,4 +1,4 @@
-package cc.trixey.invero.common.animation
+package cc.trixey.invero.core.animation
 
 /**
  * TrMenu

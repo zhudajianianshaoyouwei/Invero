@@ -2,7 +2,7 @@
 
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.common.animation.CycleMode
+import cc.trixey.invero.core.animation.CycleMode
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

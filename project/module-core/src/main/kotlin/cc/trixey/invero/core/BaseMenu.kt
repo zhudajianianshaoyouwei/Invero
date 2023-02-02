@@ -12,12 +12,10 @@ import cc.trixey.invero.core.util.session
 import cc.trixey.invero.core.util.unregisterSession
 import cc.trixey.invero.ui.bukkit.PlayerViewer
 import cc.trixey.invero.ui.bukkit.api.dsl.chestWindow
-import cc.trixey.invero.ui.bukkit.api.dsl.viewer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.JsonNames
-import org.bukkit.entity.Player
 import taboolib.common.platform.function.submitAsync
 
 /**
@@ -33,9 +31,10 @@ class BaseMenu(
     @SerialName("menu")
     val settings: MenuSettings,
     @JsonNames("binding", "activator", "activators")
-    val bindings: MenuBindings? = null,
+    val bindings: MenuBindings?,
     @JsonNames("event", "listener")
-    val events: MenuEvents? = null,
+    val events: MenuEvents?,
+    val scripts: Map<String, String>?,
     @Serializable(with = ListAgentPanelSerializer::class)
     @JsonNames("panel", "pane", "panes")
     val panels: List<AgentPanel>,
@@ -74,7 +73,7 @@ class BaseMenu(
         // 开启 Window
         // 其本身会检查是否已经打开任何 Window，并自动关闭等效旧菜单的 Window
         window.preOpen { panels.forEach { it.invoke(window, session) } }
-        window.preRender { updateTitle(session) }
+        window.onOpen { updateTitle(session) }
         window.open()
         settings.title.invoke(session)
         // Events_PostOpen

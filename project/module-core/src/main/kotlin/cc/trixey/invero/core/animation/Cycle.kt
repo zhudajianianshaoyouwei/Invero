@@ -1,8 +1,8 @@
-package cc.trixey.invero.common.animation
+package cc.trixey.invero.core.animation
 
 /**
  * TrMenu
- * cc.trixey.invero.common.animation.Cycle
+ * cc.trixey.invero.core.animation.Cycle
  *
  * @author Arasple
  * @since 2023/1/13 12:25

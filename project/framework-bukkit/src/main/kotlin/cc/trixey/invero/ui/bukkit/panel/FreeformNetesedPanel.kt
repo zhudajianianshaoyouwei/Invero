@@ -25,7 +25,7 @@ class FreeformNetesedPanel(
     locate: Pos
 ) : cc.trixey.invero.ui.bukkit.BukkitPanel(parent, weight, scale, locate), PanelContainer, FreeformPanel {
 
-    override val panels = arrayListOf<cc.trixey.invero.ui.bukkit.BukkitPanel>()
+    override val panels = arrayListOf<BukkitPanel>()
 
     override var viewport: Pos = Pos.NIL
         set(value) {

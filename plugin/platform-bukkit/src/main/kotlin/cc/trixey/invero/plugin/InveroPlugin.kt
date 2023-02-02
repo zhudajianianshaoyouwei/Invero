@@ -1,5 +1,6 @@
 package cc.trixey.invero.plugin
 
+import org.bukkit.Sound
 import taboolib.common.platform.Plugin
 import taboolib.common.platform.function.info
 

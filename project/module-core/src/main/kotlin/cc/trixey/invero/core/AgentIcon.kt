@@ -18,7 +18,8 @@ abstract class AgentIcon {
         session: Session,
         agent: AgentPanel,
         panel: Panel,
-        vars: Map<String, Any> = emptyMap()
+        vars: Map<String, Any> = emptyMap(),
+        renderNow: Boolean = true,
     ): IconElement
 
 }

@@ -4,6 +4,7 @@ package cc.trixey.invero.core.panel
 
 import cc.trixey.invero.common.supplier.Object
 import cc.trixey.invero.core.AgentPanel
+import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.icon.Icon
@@ -13,6 +14,7 @@ import cc.trixey.invero.core.serialize.ScaleSerializer
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.ui.bukkit.PanelContainer
 import cc.trixey.invero.ui.bukkit.api.dsl.generatorPaged
+import cc.trixey.invero.ui.bukkit.panel.PagedGeneratorPanel
 import cc.trixey.invero.ui.common.Panel
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
@@ -21,7 +23,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonNames
+import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import taboolib.common.platform.function.submit
 import taboolib.common5.cbool
 
 /**
@@ -60,19 +64,46 @@ class PanelGenerator(
 
     override fun invoke(parent: PanelContainer, session: Session): Panel {
         return parent.generatorPaged(scale.raw, parent.locate()) {
+            skipRender = true
+
             // 生成默认图标
-            icons.forEach { (_, icon) ->
-                icon.invoke(session, this@PanelGenerator, this@generatorPaged)
+            val def = icons.map { (_, icon) ->
+                icon.invoke(session, this@PanelGenerator, this@generatorPaged, renderNow = false)
             }
             // 应用元素
-            generatorElements { genearte(session) }
+            generatorElements { genearte() }
+            // 过滤元素
+            if (settings.filter != null) {
+                filter(session, this@generatorPaged, settings.filter)
+            }
             // 生成输出
-            onGenerate { settings.output.invoke(session, this@PanelGenerator, this, mapOf("@element" to it)) }
+            onGenerate {
+                settings.output.invoke(session, this@PanelGenerator, this, (it as Object).variables)
+            }
+
+            Bukkit.getWorlds().first()
+
+            submit(delay = 1L) {
+                render()
+                def.forEach {
+                    it.relocate()
+                    it.render()
+                }
+                (session.menu as BaseMenu).updateTitle(session)
+            }
         }
     }
 
-    private fun genearte(session: Session): List<Object> {
+    fun filter(session: Session, panel: PagedGeneratorPanel<*>, filter: String) {
         val viewer = session.viewer.get<Player>()
+        panel.filter {
+            KetherHandler.invoke(
+                filter, viewer, session.getVariables(ext = (it as Object).variables)
+            ).getNow(true).cbool
+        }
+    }
+
+    private fun genearte(): List<Object> {
         val created = settings.create().apply {
             generate()
             if (settings.extenedObjects != null) {
@@ -81,12 +112,9 @@ class PanelGenerator(
             if (settings.extenedProperties != null) {
                 generated = generated?.map {
                     val content = it.content.toMutableMap()
-                    settings.extenedProperties.forEach { (key, value) -> content[key] = "ext.kether:$value" }
+                    settings.extenedProperties.forEach { (key, value) -> content[key] = "ext@$value" }
                     Object(content)
                 }
-            }
-            if (settings.filter != null) {
-                filter { KetherHandler.invoke(settings.filter, viewer, mapOf("@element" to it)).getNow(true).cbool }
             }
             if (settings.sortBy != null) {
                 sortBy { it[settings.sortBy].toString() }

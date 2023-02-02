@@ -4,6 +4,7 @@ package cc.trixey.invero.core.icon
 
 import cc.trixey.invero.common.adventure.isPrefixColored
 import cc.trixey.invero.common.api.InveroSettings
+import cc.trixey.invero.common.supplier.Object
 import cc.trixey.invero.common.util.*
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Session

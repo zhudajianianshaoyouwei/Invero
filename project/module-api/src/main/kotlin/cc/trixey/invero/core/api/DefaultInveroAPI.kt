@@ -8,6 +8,7 @@ import cc.trixey.invero.common.supplier.ItemSourceProvider
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 import taboolib.common.platform.PlatformFactory
+import taboolib.common.util.Strings
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -30,9 +31,11 @@ class DefaultInveroAPI : InveroAPI {
         elementGenerators[name] = provider
     }
 
-    override fun createElementGenerator(name: String): ElementGenerator {
-        return (elementGenerators[name] ?: elementGenerators.values.first()).javaClass.getConstructor().newInstance()
-    }
+    override fun createElementGenerator(name: String): ElementGenerator = elementGenerators
+        .entries
+        .maxBy { Strings.similarDegree(it.key.lowercase(), name.lowercase()) }
+        .value
+        .javaClass.getConstructor().newInstance()
 
     override fun registerItemSourceProvider(name: String, provider: ItemSourceProvider) {
         itemSourceProvider[name] = provider

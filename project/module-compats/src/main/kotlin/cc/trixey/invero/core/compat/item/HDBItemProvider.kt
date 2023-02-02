@@ -18,7 +18,7 @@ class HDBItemProvider : ItemSourceProvider, PluginHook() {
 
     private val headDatabaseAPI by lazy { HeadDatabaseAPI() }
 
-    override fun getItem(identifier: String): ItemStack? {
+    override fun getItem(identifier: String, context: Any?): ItemStack? {
         return headDatabaseAPI.getItemHead(identifier) ?: headDatabaseAPI.randomHead
     }
 

@@ -42,7 +42,7 @@ class Session(
     }
 
     fun hasVariable(key: String): Boolean {
-        return variables.containsKey(key)
+        return !variables.getOrDefault(key, null)?.toString().isNullOrBlank()
     }
 
     fun updateVariables() {
@@ -50,8 +50,8 @@ class Session(
         variables += viewer.get<Player>().getDataContainer().source
     }
 
-    fun getVariables(extend: Map<String, Any>? = null): Map<String, Any> {
-        return variables + (extend ?: emptyMap())
+    fun getVariables(ext: Map<String, Any>? = null): Map<String, Any> {
+        return variables + (ext ?: emptyMap())
     }
 
     fun getVariable(key: String): Any? {

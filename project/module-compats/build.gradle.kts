@@ -7,6 +7,7 @@ dependencies {
     compileTabooLib()
     compileCore(11903)
     compileLocal(project = project, "libs")
+    framework()
 
     compileModule("module-common")
     compileModule("module-core")

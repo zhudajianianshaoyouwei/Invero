@@ -16,9 +16,9 @@
 
 package cc.trixey.invero.core.serialize
 
-import cc.trixey.invero.common.animation.CycleMode
 import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.action.*
+import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.menu.MenuTitle
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
@@ -173,7 +173,7 @@ internal object MenuTitleSerializer : JsonTransformingSerializer<MenuTitle>(Menu
 
 }
 
-internal object CycleModeSerializer : KSerializer<CycleMode> {
+object CycleModeSerializer : KSerializer<CycleMode> {
 
     override val descriptor = PrimitiveSerialDescriptor("CycleMode", PrimitiveKind.STRING)
 
