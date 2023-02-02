@@ -25,55 +25,55 @@ import java.util.*
  */
 class DefaultDataManager : DataManager {
 
+    private val globalDataDatabase by lazy {
+        val randUUID = UUID.randomUUID()
+        playerDataContainer[randUUID] = DataContainer("@global_data", playerDatabase!!)
+        playerDataContainer[randUUID]!!
+    }
+
+    private val type by lazy {
+        DataManager.Type
+            .values()
+            .find { it.name.equals(InveroSettings.databaseType, true) } ?: DataManager.Type.SQLITE
+    }
+
+    init {
+        runCatching {
+            when (type) {
+                DataManager.Type.SQLITE -> setupPlayerDatabase(
+                    File(InveroSettings.pluginFolder, "data/invero_data.db")
+                )
+
+                DataManager.Type.SQL -> setupPlayerDatabase(
+                    InveroSettings.sqlSection ?: error("No valid sql section configurated")
+                )
+            }
+        }.onFailure {
+            it.prettyPrint()
+            console().sendLang("database-errored", type.name)
+        }.onSuccess {
+            console().sendLang("database-connected", type.name)
+        }.getOrNull()
+    }
+
     override fun getDatabaseType(): DataManager.Type {
-        TODO("Not yet implemented")
+        return type
     }
 
     override fun getGlobalData(): DataContainer {
-        TODO("Not yet implemented")
+        return globalDataDatabase
     }
 
     override fun getPlayerData(player: Player): DataContainer {
-        TODO("Not yet implemented")
+        return player.getDataContainer()
     }
 
     companion object {
 
-        private val globalDataDatabase by lazy {
-            val randUUID = UUID.randomUUID()
-            playerDataContainer[randUUID] = DataContainer("@global_data", playerDatabase!!)
-            playerDataContainer[randUUID]!!
-        }
 
-        private val type by lazy {
-            DataManager.Type
-                .values()
-                .find { it.name.equals(InveroSettings.databaseType, true) } ?: DataManager.Type.SQLITE
-        }
-
-        @Awake(LifeCycle.INIT)
+        @Awake(LifeCycle.ACTIVE)
         fun init() {
             PlatformFactory.registerAPI<DataManager>(DefaultDataManager())
-
-            runCatching {
-                when (type) {
-                    DataManager.Type.SQLITE -> setupPlayerDatabase(
-                        File(
-                            InveroSettings.pluginFolder,
-                            "data/invero_data.db"
-                        )
-                    )
-
-                    DataManager.Type.SQL -> setupPlayerDatabase(
-                        InveroSettings.sqlSection ?: error("No valid sql section configurated")
-                    )
-                }
-            }.onFailure {
-                it.prettyPrint()
-                console().sendLang("database-errored", type.name)
-            }.onSuccess {
-                console().sendLang("database-connected", type.name)
-            }.getOrNull()
         }
 
         @SubscribeEvent

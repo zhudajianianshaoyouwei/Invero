@@ -1,6 +1,7 @@
 package cc.trixey.invero.common.api
 
 import cc.trixey.invero.common.Menu
+import cc.trixey.invero.common.util.prettyPrint
 import java.io.File
 
 /**
@@ -16,6 +17,9 @@ class SerializeResult(
     val state: State,
     val throwable: Throwable? = null
 ) {
+
+    fun print() = throwable?.prettyPrint()
+
 
     enum class State {
 

@@ -1,6 +1,9 @@
+import org.gradle.api.JavaVersion
 import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.RepositoryHandler
+import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.plugins.PluginAware
+import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.*
 
 val rootName = "Invero"
@@ -9,7 +12,7 @@ val rootVersion = "1.0.0-dev-7"
 
 val kotlinVersion = "1.8.0"
 val shadowJarVersion = "7.1.2"
-val taboolibVersion = "6.0.10-70"
+val taboolibVersion = "6.0.10-80"
 val taboolibPluginVersion = "1.56"
 
 val repoTabooProject = "https://repo.tabooproject.org/repository/releases"
@@ -21,6 +24,16 @@ fun PluginAware.applyPlugins() {
 }
 
 fun Project.initSubProject(publish: Project.() -> Unit) {
+    group = rootGroup
+    version = rootVersion
+
+    tasks.withType<JavaCompile> { options.encoding = "UTF-8" }
+    @Suppress("DEPRECATION")
+    configure<JavaPluginConvention> {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
     if (parent?.name != "plugin") {
         @Suppress("DEPRECATION")
         gradle.buildFinished { buildDir.deleteRecursively() }

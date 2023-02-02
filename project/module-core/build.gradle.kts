@@ -3,23 +3,11 @@ plugins {
 }
 
 dependencies {
-    compileModule("framework-common")
-    compileModule("framework-bukkit")
-    compileModule("module-common")
-
-    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-
-    installTaboo("common")
-    installTaboo("common-5")
-    installTaboo("platform-bukkit")
-    installTaboo("module-configuration")
-    installTaboo("module-kether")
-    installTaboo("module-chat")
-    installTaboo("module-database")
-    installTaboo("module-nms")
-    installTaboo("module-nms-util")
-    installTaboo("expansion-player-database")
-
+    compileTabooLib()
     compileNMS()
     compileCore(11903)
+    framework()
+
+    compileModule("module-common")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 }

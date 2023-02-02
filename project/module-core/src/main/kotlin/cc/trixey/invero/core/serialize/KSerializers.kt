@@ -1,13 +1,27 @@
 @file:OptIn(ExperimentalSerializationApi::class)
+@file:RuntimeDependencies(
+    RuntimeDependency(
+        "!org.jetbrains.kotlinx:kotlinx-serialization-core-jvm:1.4.1",
+        test = "!kotlinx.serialization.Serializer",
+        relocate = ["!kotlin.", "!kotlin@kotlin_version_escape@.", "!kotlinx.", "!kotlinx_1_4_1."],
+        transitive = false
+    ),
+    RuntimeDependency(
+        "!org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.4.1",
+        test = "!kotlinx.serialization.json.Json",
+        relocate = ["!kotlin.", "!kotlin@kotlin_version_escape@.", "!kotlinx.", "!kotlinx_1_4_1."],
+        transitive = false
+    )
+)
 
 package cc.trixey.invero.core.serialize
 
 import cc.trixey.invero.common.animation.CycleMode
-import cc.trixey.invero.ui.common.Pos
-import cc.trixey.invero.ui.common.Scale
 import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.action.*
 import cc.trixey.invero.core.menu.MenuTitle
+import cc.trixey.invero.ui.common.Pos
+import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.IntArraySerializer
@@ -18,6 +32,8 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
 import org.bukkit.event.inventory.InventoryType
+import taboolib.common.env.RuntimeDependencies
+import taboolib.common.env.RuntimeDependency
 
 /**
  * Invero

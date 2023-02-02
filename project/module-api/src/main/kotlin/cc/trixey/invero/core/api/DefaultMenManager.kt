@@ -50,6 +50,10 @@ import java.util.concurrent.ConcurrentHashMap
  */
 class DefaultMenManager : MenuManager {
 
+    init {
+        reload(console().cast())
+    }
+
     private val module = SerializersModule {
 
         polymorphic(AgentPanel::class) {
@@ -165,12 +169,14 @@ class DefaultMenManager : MenuManager {
             workspaces
                 .flatMap { deserialize(it) }
                 .forEach {
+                    val file = it.file
                     when (it.state) {
-                        FAILURE_FILE -> receiver.sendLang("menu-loader-file-errored", it.file.name)
-                        FAILURE_MENU -> receiver.sendLang("menu-loader-menu-errored", it.file.name)
-                        FAILURE_DUPLICATED -> receiver.sendLang("menu-loader-menu-duplicate", it.file.name)
-                        SUCCESS -> registerListener(it.file, it.menu as BaseMenu)
+                        FAILURE_FILE -> receiver.sendLang("menu-loader-file-errored", file.name)
+                        FAILURE_MENU -> receiver.sendLang("menu-loader-menu-errored", file.name)
+                        FAILURE_DUPLICATED -> receiver.sendLang("menu-loader-menu-duplicate", file.name)
+                        SUCCESS -> registerListener(file, it.menu as BaseMenu)
                     }
+                    it.print()
                 }
             if (menus.isNotEmpty()) {
                 val took = (System.currentTimeMillis() - start).div(1000.0)

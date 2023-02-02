@@ -2,6 +2,9 @@ import org.gradle.api.Project
 import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.kotlin.dsl.project
 
+fun DependencyHandler.`framework`() {
+    compileModule("framework-common", "framework-bukkit")
+}
 
 fun DependencyHandler.`compileLocal`(project: Project, vararg dir: String) {
     dir.forEach { add("compileOnly", project.fileTree(it)) }
@@ -30,10 +33,14 @@ fun DependencyHandler.`compileCore`(
     add("compileOnly", notation)
 }
 
+fun DependencyHandler.compileTabooLib() {
+    standardTabooModules.forEach { installTaboo(it) }
+}
+
 fun DependencyHandler.installTaboo(vararg module: String) = module.forEach {
     add("compileOnly", "io.izzel.taboolib:$it:$taboolibVersion")
 }
 
-fun DependencyHandler.implementateTaboo(vararg module: String) = module.forEach {
+fun DependencyHandler.shadowTaboo(vararg module: String) = module.forEach {
     add("implementation", "io.izzel.taboolib:$it:$taboolibVersion")
 }

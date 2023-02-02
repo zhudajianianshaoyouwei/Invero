@@ -12,6 +12,10 @@ subprojects {
         projectRepositories()
     }
 
+    dependencies {
+        compileOnly(kotlin("stdlib"))
+    }
+
     initSubProject {
         publishing { createPublish(project) }
     }
