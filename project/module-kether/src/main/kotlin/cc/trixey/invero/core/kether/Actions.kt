@@ -1,6 +1,7 @@
 package cc.trixey.invero.core.kether
 
 import cc.trixey.invero.common.adventure.parseAndSendMiniMessage
+import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.compat.bungeecord.Bungees
 import cc.trixey.invero.core.compat.eco.HookPlayerPoints
 import cc.trixey.invero.core.util.KetherHandler
@@ -31,16 +32,12 @@ internal fun actionMessage() = combinationParser {
         text(),
     ).apply(it) { message ->
         now {
-            val session = session()
-            if (session != null)
-                session.apply { viewer.get<Player>().sendMessage(parse(message, variableAs("@context"))) }
-            else {
-                val player = player()
-                KetherHandler
-                    .parseInline(message, player, variables().toMap())
-                    .replacePlaceholder(player)
-                    .parseAndSendMiniMessage(player)
-            }
+            val context = variableAs<Context?>("@context")?.variables ?: variables().toMap()
+            val player = player()
+            KetherHandler
+                .parseInline(message, player, context)
+                .replacePlaceholder(player)
+                .parseAndSendMiniMessage(player)
         }
     }
 }

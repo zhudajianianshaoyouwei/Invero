@@ -23,21 +23,21 @@ import java.util.concurrent.CompletableFuture
  */
 @Serializable
 class FunctionalActionCatcher(
-    @JsonNames("catch", "key")
-    val id: String,
+    val catch: String,
     val content: JsonElement?,
     @JsonNames("signIndex", "index", "line")
     val signLine: Int?,
     @Serializable(ListStringSerializer::class)
     val cancel: List<String>?,
     val beforeInput: Action?,
-    val afterInput: Action,
+    val afterInput: Action?,
     val onRepeat: Action?,
     val onCancel: Action?,
 ) : Action() {
 
     @Transient
-    private val inputCatcher = InputCatcher(id, content, signLine, cancel, beforeInput, afterInput, onRepeat, onCancel)
+    private val inputCatcher =
+        InputCatcher(catch, content, signLine, cancel, beforeInput, afterInput, onRepeat, onCancel)
 
     override fun run(context: Context): CompletableFuture<Boolean> {
         val session = context.session ?: error("FunctionalActionCatcher can only be used when there is a valid session")
@@ -48,9 +48,14 @@ class FunctionalActionCatcher(
         // input
         submitAsync(delay = 2L) {
             inputCatcher.run(player, context) {
-                if (menu != null) {
-                    Invero.api().getMenuManager().getMenu(menu)?.open(player, context.variables)
-                }
+                val pass = context.variables.filterNot { it.key.startsWith("@") }
+                if (menu != null)
+                    Invero
+                        .api()
+                        .getMenuManager()
+                        .getMenu(menu)
+                        ?.open(player, pass)
+
             }
         }
         return CompletableFuture.completedFuture(false)

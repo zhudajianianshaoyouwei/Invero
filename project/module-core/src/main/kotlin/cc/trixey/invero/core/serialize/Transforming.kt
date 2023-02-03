@@ -154,26 +154,31 @@ internal object IconHandlerSerializer : JsonTransformingSerializer<IconHandler>(
     override fun transformDeserialize(element: JsonElement): JsonElement {
         return when (element) {
             is JsonPrimitive, is JsonArray -> {
-                buildJsonObject { put("all", element) }
+                buildJsonObject { put("def", element) }
             }
 
             is JsonObject -> {
                 val jsonObject = element.jsonObject
+                // 结构动作关键词检测
                 if (SelectorAction.structuredKeys.any { it in jsonObject }) {
-                    return buildJsonObject { put("all", jsonObject) }
+                    return buildJsonObject { put("def", jsonObject) }
                 }
+                // 非结构动作
                 buildJsonObject {
-                    jsonObject["all"]?.let { put("all", it) }
+                    // typed - def
+                    jsonObject["def"]?.let { put("def", it) }
+                    jsonObject["default"]?.let { put("def", it) }
+                    // typed - others
                     buildJsonObject {
-                        jsonObject.keys.filterNot { it == "all" }.forEach { key ->
-                            val type =
-                                ClickType.values().find { it.name.equals(key, true) || it.bukkitId.equals(key, true) }
-                            val action = jsonObject[key]
-                            if (type != null && action != null) put(type.name, action)
-                        }
-                    }.let {
-                        put("typed", it)
-                    }
+                        jsonObject
+                            .keys
+                            .filterNot { it == "def" || it == "default" }
+                            .forEach { key ->
+                                val type = ClickType.find(key)
+                                val action = jsonObject[key]
+                                if (type != null && action != null) put(type.name, action)
+                            }
+                    }.let { put("typed", it) }
                 }
             }
         }

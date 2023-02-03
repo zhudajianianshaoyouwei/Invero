@@ -23,7 +23,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonNames
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submit
 import taboolib.common5.cbool
@@ -80,8 +79,6 @@ class PanelGenerator(
             onGenerate {
                 settings.output.invoke(session, this@PanelGenerator, this, (it as Object).variables)
             }
-
-            Bukkit.getWorlds().first()
 
             submit(delay = 1L) {
                 render()

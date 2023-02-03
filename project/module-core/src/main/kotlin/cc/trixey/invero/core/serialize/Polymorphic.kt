@@ -33,7 +33,7 @@ internal object SelectorAction : JsonContentPolymorphicSerializer<Action>(Action
         put(StructureActionNone.serializer(), setOf("none"))
         put(StructureActionWhen.serializer(), setOf("when", "case"))
         put(FunctionalActionCatchers.serializer(), setOf("catchers"))
-        put(FunctionalActionCatcher.serializer(), setOf("id", "afterInput"))
+        put(FunctionalActionCatcher.serializer(), setOf("catch", "afterInput"))
     }
 
     val structuredKeys = serializers.values.flatten()

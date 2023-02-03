@@ -26,23 +26,20 @@ import taboolib.platform.util.nextChat
  */
 @Serializable
 class InputCatcher(
-    @JsonNames("catch", "key")
-    val id: String,
+    val catch: String,
     val content: JsonElement?,
     @JsonNames("signIndex", "index", "line")
     val signLine: Int?,
     @Serializable(ListStringSerializer::class)
     val cancel: List<String>?,
     val beforeInput: Action?,
-    val afterInput: Action,
+    val afterInput: Action?,
     val onRepeat: Action?,
     val onCancel: Action?,
 ) {
 
     @Transient
-    val type =
-        if (content != null || signLine != null) SIGN
-        else CHAT
+    val type = if (signLine != null || content != null) SIGN else CHAT
 
     private val signContent by lazy {
         (if (type == SIGN) content?.jsonArray?.map { it.jsonPrimitive.content } else null)
@@ -59,7 +56,7 @@ class InputCatcher(
 
             SIGN -> player.inputSign(context.parse(signContent).toTypedArray()) {
                 val content = if (signLine == null || signLine < 0) {
-                    it.joinToString { line -> line }
+                    it.joinToString("") { line -> line }
                 } else {
                     it[signLine.coerceIn(0..it.lastIndex)]
                 }
@@ -75,9 +72,9 @@ class InputCatcher(
             return
         }
         // set variables
-        context.contextVariables[id] = this
+        context.contextVariables[catch] = this
         // run handler
-        val success = afterInput.run(context).getNow(true)
+        val success = afterInput?.run(context)?.getNow(true) ?: true
         if (!success) {
             onRepeat?.run(context)
             run(player, context, repeat = repeat + 1)

@@ -142,6 +142,10 @@ enum class ClickType(val mode: Mode, val button: Int, val slot: Int = -1, val bu
 
     companion object {
 
+        fun find(identifier: String): ClickType? {
+            return values().find { it.name.equals(identifier, true) || it.bukkitId.equals(identifier, true) }
+        }
+
         fun findBukkit(bukkitId: String, hotbar: Int): ClickType {
             return values().find {
                 it.bukkitId == bukkitId && if (bukkitId == "NUMBER_KEY") hotbar == it.button else true

@@ -61,7 +61,7 @@ object ActionIcon {
     }
 
 
-    private fun IconElement.handle(action: String, now: Boolean = false, delay: Long = 5L) =
+    private fun IconElement.handle(action: String, now: Boolean = false, delay: Long = 2L) =
         submitAsync(now = now, delay = delay) {
             when (action) {
                 "relocate" -> relocate()
