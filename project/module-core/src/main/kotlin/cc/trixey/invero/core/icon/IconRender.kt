@@ -4,7 +4,6 @@ package cc.trixey.invero.core.icon
 
 import cc.trixey.invero.common.adventure.isPrefixColored
 import cc.trixey.invero.common.api.InveroSettings
-import cc.trixey.invero.common.supplier.Object
 import cc.trixey.invero.common.util.*
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Session
@@ -41,7 +40,7 @@ fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
         }
     } else texture.generateItem(element.context) {
         val context = element.context
-        name?.let { postName(context.parse(name)) }
+        name?.let { postName(context.parse(name).defaultColored()) }
         lore?.let { postLore(context.parse(lore).defaultColored()) }
         damage?.let { durability = it }
         customModelData?.let { postModel(it) }
