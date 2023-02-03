@@ -2,9 +2,11 @@ package cc.trixey.invero.ui.bukkit.panel
 
 import cc.trixey.invero.ui.bukkit.BukkitPanel
 import cc.trixey.invero.ui.bukkit.PanelContainer
+import cc.trixey.invero.ui.bukkit.api.dsl.ruin
 import cc.trixey.invero.ui.bukkit.api.dsl.set
 import cc.trixey.invero.ui.bukkit.element.Clickable
 import cc.trixey.invero.ui.bukkit.element.item.BaseItem
+import cc.trixey.invero.ui.bukkit.util.proceed
 import cc.trixey.invero.ui.common.Elements
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
@@ -28,7 +30,9 @@ class PagedGeneratorPanel<T>(
     locate: Pos
 ) : BukkitPanel(parent, weight, scale, locate), PagedPanel, GeneratorPanel<T, BaseItem<*>> {
 
-    override var sourceElements: List<T> = emptyList()
+    override var generated: List<T> = emptyList()
+
+    override var currentSource: List<T> = emptyList()
 
     override var outputGenerator: (T) -> BaseItem<*>? = { null }
 
@@ -53,16 +57,21 @@ class PagedGeneratorPanel<T>(
 
     override fun reset() {
         outputElements.clear()
-        outputElements = ArrayList(arrayOfNulls<BaseItem<*>?>(sourceElements.size).toList())
+        outputElements = ArrayList(arrayOfNulls<BaseItem<*>?>(currentSource.size).toList())
+
+        elements.value.entries.removeIf {
+            it.value.values.any { pos -> pos in generatorPool }.proceed { it.key.ruin() }
+        }
+
         generatorPool = (scale.getArea() - elements.occupiedPositions()).sorted()
     }
 
     override fun render() {
         val fromIndex = pageIndex * generatorPool.size
-        val toIndex = (fromIndex + generatorPool.size).coerceAtMost(sourceElements.lastIndex)
-        maxPageIndex = sourceElements.size / generatorPool.size
+        val toIndex = (fromIndex + generatorPool.size).coerceAtMost(currentSource.lastIndex)
+        maxPageIndex = currentSource.size / generatorPool.size
 
-        if (sourceElements.size > fromIndex) {
+        if (currentSource.size > fromIndex) {
             val output = (fromIndex..toIndex).map { getOutput(it) }
 
             elements.apply {

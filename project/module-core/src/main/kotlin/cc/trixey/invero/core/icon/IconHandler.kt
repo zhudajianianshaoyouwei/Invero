@@ -23,6 +23,7 @@ class IconHandler(@JsonNames("def") val default: Action?, val typed: Map<ClickTy
     fun run(context: Context, clickType: ClickType) = submitAsync {
         letCatching {
             typed[clickType]?.run(context)?.get()
+            if (clickType.isNumberKeyClick) typed[ClickType.NUMBER_KEY]?.run(context)?.get()
             default?.run(context)?.get()
         }
     }

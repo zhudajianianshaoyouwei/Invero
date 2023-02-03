@@ -262,7 +262,7 @@ class DefaultMenManager : MenuManager {
         val settings = InveroSettings.workspaces
 
         return if (settings.isEmpty()) {
-            listOf(defaultWorkspace)
+            listOf(defaultWorkspace.also { it.mkdirs() })
         } else {
             settings.map { path -> File(path) }
         }.filter { it.isDirectory }

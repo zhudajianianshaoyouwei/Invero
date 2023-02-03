@@ -1,12 +1,12 @@
 package cc.trixey.invero.core.kether
 
+import cc.trixey.invero.common.supplier.Object
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.icon.IconElement
 import cc.trixey.invero.core.util.session
 import cc.trixey.invero.ui.bukkit.PanelContainer
 import cc.trixey.invero.ui.common.Panel
 import cc.trixey.invero.ui.common.panel.ElementalPanel
-import cc.trixey.invero.common.supplier.Object
 import cc.trixey.invero.ui.common.util.getSiblings
 import org.bukkit.entity.Player
 import taboolib.module.kether.ScriptFrame
@@ -54,25 +54,30 @@ fun ElementalPanel.findIconElement(byName: String?, bySlot: Int?): IconElement? 
 }
 
 fun ScriptFrame.selfIcon(): IconElement {
-    return variableAs<IconElement>("@icon") ?: error("Nulled icon context")
+    return contextVar<IconElement>("@icon") ?: error("Nulled icon context")
 }
 
 fun ScriptFrame.selfSourceObject(): Object {
-    return variableAs<Object>("@element") ?: error("Nulled sourceObject context")
+    return contextVar<Object>("@element") ?: error("Nulled sourceObject context")
 }
 
 inline fun <reified T : Panel> ScriptFrame.selfPanel(): T {
-    return variableAs<T>("@panel") ?: findNearstPanel() ?: error("Nulled panel context")
+    return contextVar<T>("@panel") ?: findNearstPanel() ?: error("Nulled panel context")
 }
 
 inline fun <reified T : Panel> ScriptFrame.findNearstPanel(): T? {
-    val siblings = variableAs<T>("@panel")?.getSiblings()
+    val siblings = contextVar<T>("@panel")?.getSiblings()
 
     return (siblings ?: session()?.window?.panels)?.filterIsInstance<T>()?.firstOrNull()
 }
 
-fun <T> ScriptFrame.variableAs(key: String): T? {
-    return variables().getOrNull<T>(key)
+fun <T> ScriptFrame.contextVar(key: String): T? {
+    @Suppress("UNCHECKED_CAST")
+    return session()?.getVariable(key) as? T ?: scriptVar(key)
+}
+
+fun <T> ScriptFrame.scriptVar(key: String): T? {
+    return variables()?.getOrNull<T>(key)
 }
 
 fun ScriptFrame.session(): Session? {

@@ -50,6 +50,7 @@ class PanelGenerator(
 ) : AgentPanel(), IconContainer {
 
     init {
+        registerIcon(settings.output, "output")
         registerIcons()
     }
 
@@ -74,12 +75,12 @@ class PanelGenerator(
             // 过滤元素
             if (settings.filter != null) {
                 filter(session, this@generatorPaged, settings.filter)
+                session.setVariable("@raw_filter", settings.filter)
             }
             // 生成输出
             onGenerate {
                 settings.output.invoke(session, this@PanelGenerator, this, (it as Object).variables)
             }
-
             submit(delay = 1L) {
                 render()
                 def.forEach {

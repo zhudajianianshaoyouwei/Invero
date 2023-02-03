@@ -25,6 +25,8 @@ enum class ClickType(val mode: Mode, val button: Int, val slot: Int = -1, val bu
 
     SHIFT_RIGHT_CLICK(QUICK_MOVE, 1, bukkitId = "SHIFT_RIGHT"),
 
+    NUMBER_KEY(SWAP, -1, bukkitId = "NUMBER_KEY"),
+
     NUMBER_KEY_1(SWAP, 0, bukkitId = "NUMBER_KEY"),
 
     NUMBER_KEY_2(SWAP, 1, bukkitId = "NUMBER_KEY"),

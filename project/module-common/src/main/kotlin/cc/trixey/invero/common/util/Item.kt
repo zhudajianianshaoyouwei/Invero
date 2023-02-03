@@ -1,6 +1,9 @@
 package cc.trixey.invero.common.util
 
+import org.bukkit.enchantments.Enchantment
+import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.EnchantmentStorageMeta
 
 /**
  * Invero
@@ -23,6 +26,19 @@ fun ItemStack.getLore(): List<String>? {
 
 fun ItemStack.hasLore(): Boolean {
     return itemMeta?.hasLore() == true
+}
+
+fun ItemStack.postShiny() = synchronized(this) {
+    val itemMeta = itemMeta
+
+    if (itemMeta is EnchantmentStorageMeta) {
+        itemMeta.addStoredEnchant(Enchantment.LURE, 1, true)
+    } else {
+        itemMeta.addEnchant(Enchantment.LURE, 1, true)
+    }
+    itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS)
+
+    this.itemMeta = itemMeta
 }
 
 fun ItemStack.postName(name: String) = synchronized(this) {

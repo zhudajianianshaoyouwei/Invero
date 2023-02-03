@@ -79,17 +79,14 @@ object ActionMenu {
                     reader.nextToken()
                     reader.nextParsedAction()
                 } else null
-
+                val pass = (if (reserveContext) session()?.getVariables() else null) ?: emptyMap()
                 if (player == null) {
-                    menu.open(player())
+                    menu.open(player(), pass)
                 } else {
                     newFrame(player).run<Any>().thenApply { playerId ->
                         onlinePlayers
                             .find { p -> p.name == playerId }
-                            ?.let { p ->
-                                val pass = (if (reserveContext) session()?.getVariables() else null) ?: emptyMap()
-                                menu.open(p, pass)
-                            }
+                            ?.let { p -> menu.open(p, pass) }
                     }
                 }
             }.get().let { future.complete(it) }

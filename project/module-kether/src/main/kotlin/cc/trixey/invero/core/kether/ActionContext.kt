@@ -32,7 +32,7 @@ object ActionContext {
                 when (action) {
                     "get" -> completedFuture(session()?.getVariable(key))
                     "has" -> completedFuture(session()?.hasVariable(key) == true)
-                    "without" -> completedFuture(session()?.hasVariable(key) == false)
+                    "no", "without" -> completedFuture(session()?.hasVariable(key) == false)
                     "rem", "del", "delete" -> {
                         variables().remove(key)
                         completedFuture(session()?.removeVariable(key))
@@ -44,7 +44,6 @@ object ActionContext {
                             session()?.setVariable(key, it)
                         }
                     }
-
                     "inc", "increase", "+=" -> {
                         (value ?: error("No valid value")).thenApply {
                             session()?.apply {

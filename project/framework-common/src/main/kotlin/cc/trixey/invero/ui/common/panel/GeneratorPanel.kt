@@ -11,7 +11,9 @@ import cc.trixey.invero.ui.common.Pos
  */
 interface GeneratorPanel<T, R : Any> : ElementalPanel {
 
-    var sourceElements: List<T>
+    var generated: List<T>
+
+    var currentSource: List<T>
 
     val outputElements: ArrayList<R?>
 
@@ -21,7 +23,7 @@ interface GeneratorPanel<T, R : Any> : ElementalPanel {
 
     fun getOutput(index: Int): R? {
         if (outputElements[index] == null) {
-            outputElements[index] = outputGenerator(sourceElements[index])
+            outputElements[index] = outputGenerator(currentSource[index])
         }
         return outputElements[index]
     }
@@ -29,17 +31,18 @@ interface GeneratorPanel<T, R : Any> : ElementalPanel {
     fun reset()
 
     fun filter(block: (T) -> Boolean) {
-        sourceElements = sourceElements.filter(block)
+        currentSource = generated.filter(block)
         reset()
     }
 
     fun <R : Comparable<R>> sortBy(block: (T) -> R) {
-        sourceElements = sourceElements.sortedBy(block)
+        currentSource = generated.sortedBy(block)
         reset()
     }
 
     fun generatorElements(block: () -> List<T>) {
-        sourceElements = block()
+        generated = block()
+        currentSource = generated
         reset()
     }
 

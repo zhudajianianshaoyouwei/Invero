@@ -32,7 +32,7 @@ object ActionPanel {
                 when (it.expects("at", "page", "icon")) {
                     "at" -> indexs += newFrame(it.nextParsedAction()).run<Any>().getNow(null).cint
                     "page" -> {
-                        ActionPage.parser(locatePanel(indexs)).reader.invoke(it)
+                        ActionPanelOperators.parser(locatePanel(indexs)).reader.invoke(it)
                         break
                     }
 

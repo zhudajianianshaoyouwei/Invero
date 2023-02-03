@@ -55,9 +55,6 @@ class Icon(
     var parent: AgentIcon? = null
 
     init {
-        require(arrayOf(defaultFrame.texture, frames).any { it != null }) {
-            "Valid texture(material) for this icon is required"
-        }
         condition?.default = false
     }
 

@@ -174,9 +174,14 @@ internal object IconHandlerSerializer : JsonTransformingSerializer<IconHandler>(
                             .keys
                             .filterNot { it == "def" || it == "default" }
                             .forEach { key ->
-                                val type = ClickType.find(key)
                                 val action = jsonObject[key]
-                                if (type != null && action != null) put(type.name, action)
+                                if (action != null)
+                                    key
+                                        .split(",")
+                                        .mapNotNull { ClickType.find(it) }
+                                        .forEach {
+                                            put(it.name, action)
+                                        }
                             }
                     }.let { put("typed", it) }
                 }

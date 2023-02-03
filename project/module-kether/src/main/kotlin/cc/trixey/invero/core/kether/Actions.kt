@@ -32,7 +32,7 @@ internal fun actionMessage() = combinationParser {
         text(),
     ).apply(it) { message ->
         now {
-            val context = variableAs<Context?>("@context")?.variables ?: variables().toMap()
+            val context = contextVar<Context?>("@context")?.variables ?: variables().toMap()
             val player = player()
             KetherHandler
                 .parseInline(message, player, context)

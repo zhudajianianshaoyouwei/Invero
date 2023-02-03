@@ -15,17 +15,19 @@ interface IconContainer {
     val icons: Map<String, Icon>
 
     fun registerIcons() {
-        icons.forEach { (name, icon) ->
-            if (icon.id == null) icon.id = name
-            icon.subIcons?.forEach {
-                it.parent = icon
-                it.id = icon.id
-                if (it.inherit != false) {
-                    it.defaultFrame.inheirt(icon.defaultFrame)
-                    if (it.frames == null) it.setProperty("frames", icon.frames)
-                    if (it.framesProperties == null) it.setProperty("framesProperties", icon.framesProperties)
-                    if (it.handler == null) it.setProperty("handler", icon.handler)
-                }
+        icons.forEach { (name, icon) -> registerIcon(icon, name) }
+    }
+
+    fun registerIcon(icon: Icon, name: String) {
+        if (icon.id == null) icon.id = name
+        icon.subIcons?.forEach {
+            it.parent = icon
+            it.id = icon.id
+            if (it.inherit != false) {
+                it.defaultFrame.inheirt(icon.defaultFrame)
+                if (it.frames == null) it.setProperty("frames", icon.frames)
+                if (it.framesProperties == null) it.setProperty("framesProperties", icon.framesProperties)
+                if (it.handler == null) it.setProperty("handler", icon.handler)
             }
         }
     }

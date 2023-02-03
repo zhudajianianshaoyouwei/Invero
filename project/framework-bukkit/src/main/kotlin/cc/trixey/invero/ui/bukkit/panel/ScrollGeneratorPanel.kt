@@ -21,7 +21,9 @@ class ScrollGeneratorPanel<T>(
     locate: Pos
 ) : ScrollStandardPanel(parent, weight, scale, locate), GeneratorPanel<T, BaseItem<*>> {
 
-    override var sourceElements: List<T> = emptyList()
+    override var generated: List<T> = emptyList()
+
+    override var currentSource: List<T> = emptyList()
 
     override var outputGenerator: (T) -> BaseItem<*>? = { null }
 
@@ -33,7 +35,7 @@ class ScrollGeneratorPanel<T>(
 
     override fun reset() {
         outputElements.clear()
-        outputElements = ArrayList(arrayOfNulls<BaseItem<*>?>(sourceElements.size).toList())
+        outputElements = ArrayList(arrayOfNulls<BaseItem<*>?>(currentSource.size).toList())
         generatorPool = (scale.getArea() - elements.occupiedPositions()).sorted()
         initialized = false
         resetColums()
@@ -43,13 +45,13 @@ class ScrollGeneratorPanel<T>(
     private fun initialize() {
         if (initialized) return
 
-        sourceElements
+        currentSource
             .windowed(columCapacity, columCapacity, true)
             .forEach { columElements ->
                 insertColum {
                     if (it in columElements.indices) {
                         val element = columElements[it]
-                        val index = sourceElements.indexOf(element)
+                        val index = currentSource.indexOf(element)
 
                         getOutput(index)
                     } else null

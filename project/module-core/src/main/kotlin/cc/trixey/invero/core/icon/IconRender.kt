@@ -14,6 +14,7 @@ import cc.trixey.invero.ui.bukkit.util.proceed
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import taboolib.module.nms.ItemTag
 import taboolib.module.nms.getItemTag
 
@@ -44,10 +45,7 @@ fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
         lore?.let { postLore(context.parse(lore).defaultColored()) }
         damage?.let { durability = it }
         customModelData?.let { postModel(it) }
-        glow?.proceed {
-            addEnchantment(Enchantment.values().random(), 1)
-            itemMeta = itemMeta?.also { it.addItemFlags(ItemFlag.HIDE_ENCHANTS) }
-        }
+        glow?.proceed { postShiny() }
         flags?.map { flag ->
             ItemFlag.values().find { it.name.equals(flag, true) }
         }?.let { flags ->

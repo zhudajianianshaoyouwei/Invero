@@ -1,18 +1,52 @@
 package cc.trixey.invero.core.kether
 
+import cc.trixey.invero.common.supplier.Object
+import cc.trixey.invero.core.util.KetherHandler
+import cc.trixey.invero.ui.common.panel.GeneratorPanel
 import cc.trixey.invero.ui.common.panel.PagedPanel
+import org.bukkit.entity.Player
+import taboolib.common5.cbool
 import taboolib.library.kether.ParsedAction
 import taboolib.module.kether.*
 import java.util.concurrent.CompletableFuture
 
 /**
  * Invero
- * cc.trixey.invero.expansion.kether.menu.ActionPage
+ * cc.trixey.invero.expansion.kether.menu.ActionPanelOperators
  *
  * @author Arasple
  * @since 2023/1/19 20:33
  */
-object ActionPage {
+object ActionPanelOperators {
+
+
+    // regenerate filter <filter> sort <sortby>
+    @KetherParser(["regenerate"], namespace = "invero", shared = true)
+    fun parserGenerator() = combinationParser {
+        it.group(
+            command("filter", then = text()).option(),
+            command("sort", then = text()).option()
+        ).apply(it) { filter, sort ->
+            now {
+                val session = session() ?: return@now
+                val viewer = session.viewer.get<Player>()
+                val panel = findNearstPanel<GeneratorPanel<Object, *>>() ?: return@now
+                val s = filter ?: contextVar<String>("@raw_filter")
+
+                if (s != null) {
+                    panel.filter { obj ->
+                        KetherHandler
+                            .invoke(s, viewer, session.getVariables(ext = obj.variables))
+                            .getNow(true).cbool
+                    }
+                }
+                if (sort != null) panel.sortBy { obj -> obj[sort].toString() }
+                if (panel is PagedPanel) panel.pageIndex = 0
+                panel.render()
+            }
+        }
+    }
+
 
     /*
     page isFirst
