@@ -11,43 +11,52 @@ import cc.trixey.invero.ui.common.Pos
  */
 interface GeneratorPanel<T, R : Any> : ElementalPanel {
 
-    var generated: List<T>
+    var generatorSource: () -> List<T>
 
-    var currentSource: List<T>
+    var generatorOutput: (T) -> R?
 
-    val outputElements: ArrayList<R?>
+    var filter: (T) -> Boolean
 
-    var outputGenerator: (T) -> R?
+    var comparator: Comparator<T>
 
-    val generatorPool: List<Pos>
-
-    fun getOutput(index: Int): R? {
-        if (outputElements[index] == null) {
-            outputElements[index] = outputGenerator(currentSource[index])
-        }
-        return outputElements[index]
+    /**
+     * 指定元素集合产生器
+     */
+    fun generatorSource(block: () -> List<T>) {
+        generatorSource = block
     }
 
+    /**
+     * 指定输出物品产生器
+     */
+    fun generatorOutput(block: (T) -> R?) {
+        generatorOutput = block
+    }
+
+    /**
+     * 指定排序比较器
+     */
+    fun sortWith(block: Comparator<T>) {
+        this.comparator = block
+    }
+
+    /**
+     * 指定过滤器
+     */
+    fun filterBy(block: (T) -> Boolean) {
+        filter = block
+    }
+
+    /**
+     * 取得有效的生成器区域
+     */
+    fun elementsPool(): List<Pos> {
+        return (scale.getArea() - elements.occupiedPositions()).sorted()
+    }
+
+    /*
+    重置缓存（二次修改过滤器/排序后需调用）
+     */
     fun reset()
-
-    fun filter(block: (T) -> Boolean) {
-        currentSource = generated.filter(block)
-        reset()
-    }
-
-    fun <R : Comparable<R>> sortBy(block: (T) -> R) {
-        currentSource = generated.sortedBy(block)
-        reset()
-    }
-
-    fun generatorElements(block: () -> List<T>) {
-        generated = block()
-        currentSource = generated
-        reset()
-    }
-
-    fun onGenerate(block: (T) -> R?) {
-        outputGenerator = block
-    }
 
 }

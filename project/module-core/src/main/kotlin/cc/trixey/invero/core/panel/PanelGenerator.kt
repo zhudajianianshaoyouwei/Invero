@@ -71,14 +71,14 @@ class PanelGenerator(
                 icon.invoke(session, this@PanelGenerator, this@generatorPaged, renderNow = false)
             }
             // 应用元素
-            generatorElements { genearte() }
+            generatorSource { genearte() }
             // 过滤元素
             if (settings.filter != null) {
                 filter(session, this@generatorPaged, settings.filter)
                 session.setVariable("@raw_filter", settings.filter)
             }
             // 生成输出
-            onGenerate {
+            generatorOutput {
                 settings.output.invoke(session, this@PanelGenerator, this, (it as Object).variables)
             }
             submit(delay = 1L) {
@@ -94,7 +94,7 @@ class PanelGenerator(
 
     fun filter(session: Session, panel: PagedGeneratorPanel<*>, filter: String) {
         val viewer = session.viewer.get<Player>()
-        panel.filter {
+        panel.filterBy {
             KetherHandler.invoke(
                 filter, viewer, session.getVariables(ext = (it as Object).variables)
             ).getNow(true).cbool

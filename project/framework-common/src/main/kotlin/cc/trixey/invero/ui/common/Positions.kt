@@ -12,6 +12,10 @@ value class Positions(val values: MutableSet<Pos> = mutableSetOf()) {
 
     constructor(values: Collection<Pos>) : this(values.toMutableSet())
 
+    fun add(pos: Pos) {
+        values += pos
+    }
+
     operator fun plusAssign(pos: Pos) {
         values += pos
     }

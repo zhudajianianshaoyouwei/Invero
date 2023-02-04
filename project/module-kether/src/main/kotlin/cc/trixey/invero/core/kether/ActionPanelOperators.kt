@@ -34,19 +34,20 @@ object ActionPanelOperators {
                 val s = filter ?: contextVar<String>("@raw_filter")
 
                 if (s != null) {
-                    panel.filter { obj ->
+                    panel.filterBy { obj ->
                         KetherHandler
                             .invoke(s, viewer, session.getVariables(ext = obj.variables))
                             .getNow(true).cbool
                     }
                 }
-                if (sort != null) panel.sortBy { obj -> obj[sort].toString() }
+                if (sort != null) panel.sortWith { o1, o2 -> o1[sort]!!.compareTo(o2[sort]!!) }
                 if (panel is PagedPanel) panel.pageIndex = 0
+
+                panel.reset()
                 panel.render()
             }
         }
     }
-
 
     /*
     page isFirst

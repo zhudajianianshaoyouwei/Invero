@@ -48,12 +48,12 @@ fun <T : Element> T.getPosition(): Positions? {
     return elements.locateElement(this)
 }
 
-fun <T : Element> T.ruin(): Boolean {
+fun <T : Element> T.ruin(wipe: Boolean = true): Boolean {
     val panel = panel as ElementalPanel
     val elements = panel.elements
 
     elements.locateElement(this)?.let {
-        panel.wipe(it.values)
+        if (wipe) panel.wipe(it.values)
         elements.removeElement(this)
         return true
     }

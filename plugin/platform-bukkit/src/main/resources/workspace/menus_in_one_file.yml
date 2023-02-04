@@ -1,9 +1,0 @@
-#
-# 单个文件自动序列化加载多个菜单实例
-#
-menus:
-  - id: '唯一标识符'
-    menu:
-      title: 'standard invero menu'
-  - id: '唯一标识符'
-    title: 'simple invero menu'

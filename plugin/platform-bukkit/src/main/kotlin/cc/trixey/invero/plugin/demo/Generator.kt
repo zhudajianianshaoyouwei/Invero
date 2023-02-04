@@ -25,27 +25,24 @@ fun showGeneratorPaged(player: Player, filter: String? = null) =
                 XSound.BLOCK_NOTE_BLOCK_PLING.play(viewer.get<Player>())
             }
 
-            generatorElements {
+            generatorSource {
                 Sound
                     .values()
                     .sortedBy { it.name }
                     .filter { filter == null || it.name.contains(filter.uppercase()) }
             }
 
-            onGenerate { sound ->
-
+            generatorOutput { sound ->
                 buildItem(randomMaterial()) {
                     modify {
                         name = sound.name
                     }
                     click { player.sendMessage(sound.name) }
                 }
-
             }
 
             pageController(this, -1, 0, Material.CYAN_STAINED_GLASS_PANE) { modify { name = "Preivous page" } }
             pageController(this, +1, 8, Material.LIME_STAINED_GLASS_PANE) { modify { name = "Next page" } }
-
         }
 
         open()
@@ -56,14 +53,14 @@ fun showGeneratorScroll(player: Player, filter: String? = null) = chestWindow(pl
 
     generatorScroll<Sound>(9 to 6) {
 
-        generatorElements {
+        generatorSource {
             Sound
                 .values()
                 .sortedBy { it.name }
                 .filter { filter == null || it.name.contains(filter.uppercase()) }
         }
 
-        onGenerate { sound ->
+        generatorOutput { sound ->
 
             buildItem(randomMaterial()) {
                 modify {

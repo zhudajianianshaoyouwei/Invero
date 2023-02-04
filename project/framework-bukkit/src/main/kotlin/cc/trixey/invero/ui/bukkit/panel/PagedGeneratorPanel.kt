@@ -30,16 +30,15 @@ class PagedGeneratorPanel<T>(
     locate: Pos
 ) : BukkitPanel(parent, weight, scale, locate), PagedPanel, GeneratorPanel<T, BaseItem<*>> {
 
-    override var generated: List<T> = emptyList()
+    override var generatorSource: () -> List<T> = { emptyList() }
+    override var generatorOutput: (T) -> BaseItem<*>? = { null }
+    override var filter: (T) -> Boolean = { true }
+    override var comparator: Comparator<T> = compareBy { 0 }
 
-    override var currentSource: List<T> = emptyList()
+    override val elements: Elements = Elements()
 
-    override var outputGenerator: (T) -> BaseItem<*>? = { null }
-
-    override var outputElements = arrayListOf<BaseItem<*>?>()
-
-    override var generatorPool = emptyList<Pos>()
-
+    override var maxPageIndex: Int = 0
+    override var pageChangeCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit = { _, _ -> }
     override var pageIndex: Int = 0
         set(value) {
             if (value < 0) error("Page index can not be a negative number")
@@ -49,45 +48,59 @@ class PagedGeneratorPanel<T>(
             render()
         }
 
-    override var maxPageIndex: Int = 0
-
-    override var pageChangeCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit = { _, _ -> }
-
-    override val elements = Elements()
+    private var lastGenerated: List<T>? = null
+    private var lastElements: Array<BaseItem<*>?> = arrayOfNulls(1)
 
     override fun reset() {
-        outputElements.clear()
-        outputElements = ArrayList(arrayOfNulls<BaseItem<*>?>(currentSource.size).toList())
+        pageIndex = 0
+        removeGeneratedElements()
+        lastGenerated = null
+        lastElements.forEach { it?.ruin(wipe = false) }
+    }
 
+    private fun removeGeneratedElements() {
         elements.value.entries.removeIf {
-            it.value.values.any { pos -> pos in generatorPool }.proceed { it.key.ruin() }
+            val element = it.key as BaseItem<*>
+            (element in lastElements).proceed { element.ruin(wipe = false) }
         }
-
-        generatorPool = (scale.getArea() - elements.occupiedPositions()).sorted()
     }
 
     override fun render() {
-        val fromIndex = pageIndex * generatorPool.size
-        val toIndex = (fromIndex + generatorPool.size).coerceAtMost(currentSource.lastIndex)
-        maxPageIndex = currentSource.size / generatorPool.size
+        // ruin previously generated elements
+        removeGeneratedElements()
+        // generator pool
+        val pool = elementsPool()
+        // re-generate & set max page
+        if (lastGenerated == null) {
+            lastGenerated = generatorSource().filter(filter).sortedWith(comparator).also {
+                maxPageIndex = it.size / pool.size
+                lastElements = arrayOfNulls<BaseItem<*>?>(it.size)
+            }
+        }
+        // page layouts
+        val generated = lastGenerated!!
+        val fromIndex = pageIndex * pool.size
+        val toIndex = (fromIndex + pool.lastIndex).coerceAtMost(generated.lastIndex)
 
-        if (currentSource.size > fromIndex) {
-            val output = (fromIndex..toIndex).map { getOutput(it) }
-
-            elements.apply {
-                generatorPool.forEachIndexed { index, pos ->
-                    removeElement(pos)
-                    if (index <= output.lastIndex) {
-                        output[index]?.set(pos)
-                    }
+        if (generated.size > fromIndex) {
+            // generate outputs
+            for (i in fromIndex..toIndex) {
+                val pos = pool[i - fromIndex]
+                lastElements[i] = generatorOutput(generated[i]).also {
+                    it?.set(pos)
                 }
-                generatorPool
-                    .filter { findElement(it) == null }
-                    .let { wipe(it) }
+            }
+            // clear unused slots
+            val last = toIndex - fromIndex
+            if (last < pool.lastIndex) {
+                (last + 1..pool.lastIndex)
+                    .map { pool[it] }
+                    .let { col -> wipe(col) }
             }
         }
 
-        return super.render()
+        // render default elements
+        super.render()
     }
 
     override fun handleClick(pos: Pos, clickType: ClickType, e: InventoryClickEvent?): Boolean {
