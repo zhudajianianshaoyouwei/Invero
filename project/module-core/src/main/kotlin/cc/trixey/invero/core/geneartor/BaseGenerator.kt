@@ -27,7 +27,7 @@ abstract class BaseGenerator : ElementGenerator {
         return this
     }
 
-    fun register(name: String? = null) = Invero.api().registerElementGenerator(
+    fun register(name: String? = null) = Invero.API.registerElementGenerator(
         name = name ?: this.javaClass.simpleName.lowercase().removeSuffix("s"),
         provider = this.javaClass.getConstructor().newInstance()
     )

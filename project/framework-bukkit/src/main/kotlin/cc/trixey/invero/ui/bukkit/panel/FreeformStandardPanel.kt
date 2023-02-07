@@ -27,7 +27,7 @@ open class FreeformStandardPanel(
     weight: PanelWeight,
     scale: Scale,
     locate: Pos
-) : cc.trixey.invero.ui.bukkit.BukkitPanel(parent, weight, scale, locate), ElementalPanel, FreeformPanel {
+) : BukkitPanel(parent, weight, scale, locate), ElementalPanel, FreeformPanel {
 
     override val elements = Elements()
 

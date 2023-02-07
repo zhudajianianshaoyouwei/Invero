@@ -16,11 +16,11 @@ fun String.retrievePlayer(): Player? {
 }
 
 fun String.retrieveMenu(): Menu? {
-    return Invero.api().getMenuManager().getMenu(this)
+    return Invero.API.getMenuManager().getMenu(this)
 }
 
 fun CommandComponentDynamic.suggestMenuIds(uncheck: Boolean = false) {
-    suggestion<CommandSender>(uncheck = uncheck) { _, _ -> Invero.api().getMenuManager().getMenus().map { it.id!! } }
+    suggestion<CommandSender>(uncheck = uncheck) { _, _ -> Invero.API.getMenuManager().getMenus().map { it.id!! } }
 }
 
 /**

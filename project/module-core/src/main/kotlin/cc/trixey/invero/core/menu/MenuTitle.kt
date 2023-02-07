@@ -30,13 +30,13 @@ class MenuTitle(
 ) {
 
     @Transient
-    val isSingle = value.size <= 1 || period == null || mode == null || period < 0
+    val isStatic = value.size <= 1 || ((period == null || period < 0) && mode == null)
 
     @Transient
     val default = value.getOrElse(0) { "Untitled" }
 
     fun invoke(session: Session) {
-        if (isSingle && !value.single().containsAnyPlaceholder() && period == null) {
+        if (isStatic && value.none { it.containsAnyPlaceholder() } && period == null) {
             return
         }
         val cyclic = value.toCyclic(mode ?: CycleMode.LOOP)

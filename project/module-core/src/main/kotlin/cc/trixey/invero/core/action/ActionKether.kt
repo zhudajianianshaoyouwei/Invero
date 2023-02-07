@@ -26,7 +26,7 @@ class ActionKether(val script: String) : Action() {
         return if (scripts.size <= 1) {
             KetherHandler.invoke(script, player, variables).thenApply { it.bool }
         } else {
-            // list of String kether
+            // list of String script
             // return TRUE
             submitAsync {
                 for (script in scripts) {

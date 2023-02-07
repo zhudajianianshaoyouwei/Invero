@@ -24,7 +24,7 @@ open class StandardPanel(
     weight: PanelWeight,
     scale: Scale,
     locate: Pos
-) : cc.trixey.invero.ui.bukkit.BukkitPanel(parent, weight, scale, locate), ElementalPanel {
+) : BukkitPanel(parent, weight, scale, locate), ElementalPanel {
 
     override val elements = Elements()
 

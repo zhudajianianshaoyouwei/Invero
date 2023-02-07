@@ -15,7 +15,7 @@ import taboolib.library.xseries.XMaterial
  * @since 2023/1/16 10:29
  */
 @Serializable(with = SelectorTexture::class)
-abstract class Texture {
+abstract class Texture : Cloneable {
 
     abstract val raw: String
 
@@ -27,6 +27,14 @@ abstract class Texture {
 
     fun isStatic(): Boolean {
         return lazyTexture != null
+    }
+
+    override fun toString(): String {
+        return javaClass.simpleName.removePrefix("Texture")
+    }
+
+    public override fun clone(): Any {
+        return super.clone()
     }
 
     companion object {

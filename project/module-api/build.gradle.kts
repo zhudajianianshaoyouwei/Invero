@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     compileTabooLib()
-    compileCore(11701)
+    compileCore(11903)
 
     compileModule("module-common")
     compileModule("module-core")

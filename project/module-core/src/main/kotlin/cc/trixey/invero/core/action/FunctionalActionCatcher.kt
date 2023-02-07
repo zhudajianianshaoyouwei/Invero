@@ -3,6 +3,7 @@
 package cc.trixey.invero.core.action
 
 import cc.trixey.invero.common.Invero
+import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.serialize.ListStringSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -51,7 +52,7 @@ class FunctionalActionCatcher(
                 val pass = context.variables.filterNot { it.key.startsWith("@") }
                 if (menu != null)
                     Invero
-                        .api()
+                        .API
                         .getMenuManager()
                         .getMenu(menu)
                         ?.open(player, pass)

@@ -1,6 +1,7 @@
 package cc.trixey.invero.core.action
 
 import cc.trixey.invero.common.Invero
+import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.Context
 import kotlinx.serialization.Serializable
 import org.bukkit.entity.Player
@@ -42,7 +43,7 @@ class FunctionalActionCatchers(val catchers: List<InputCatcher>) : Action() {
         // processor
         fun process(iterator: Iterator<InputCatcher>) {
             if (!iterator.hasNext()) {
-                if (menu != null) Invero.api().getMenuManager().getMenu(menu)?.open(player, context.variables)
+                if (menu != null) Invero.API.getMenuManager().getMenu(menu)?.open(player, context.variables)
                 return
             }
             iterator.next().run(player, context) { process(iterator) }

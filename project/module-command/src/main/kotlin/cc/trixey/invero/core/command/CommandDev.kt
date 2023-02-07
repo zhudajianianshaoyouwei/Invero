@@ -55,7 +55,7 @@ object CommandDev {
     val printSerailizedMenu = subCommand {
         execute<CommandSender> { _, _, argument ->
             val menuId = argument.split(" ").getOrNull(1) ?: return@execute
-            val menuManager = Invero.api().getMenuManager()
+            val menuManager = Invero.API.getMenuManager()
 
             menuManager.getMenu(menuId)?.let { println(menuManager.serializeToJson(it)) }
         }
@@ -78,7 +78,7 @@ object CommandDev {
     @CommandBody
     val printVariables = subCommand {
         execute<CommandSender> { _, _, argument ->
-            val globaldata = Invero.api().getDataManager().getGlobalData().source
+            val globaldata = Invero.API.getDataManager().getGlobalData().source
             println(
                 """
                     
@@ -91,7 +91,7 @@ object CommandDev {
             }
             onlinePlayers.forEach {
                 println("[I][PLAYER: ${it.name}] ------------------------------ [Player_Variables]")
-                Invero.api().getDataManager().getPlayerData(it).source.forEach { (key, value) ->
+                Invero.API.getDataManager().getPlayerData(it).source.forEach { (key, value) ->
                     println("- [${key.removePrefix("player@")}] : $value")
                 }
             }

@@ -6,7 +6,6 @@ import taboolib.common.platform.function.adaptPlayer
 import taboolib.common.platform.function.console
 import taboolib.module.kether.KetherFunction
 import taboolib.module.kether.KetherShell
-import java.util.concurrent.CompletableFuture
 
 /**
  * Invero
@@ -19,14 +18,12 @@ object KetherHandler {
 
     private val namespace = listOf("invero")
 
-    fun invoke(source: String, player: Player?, vars: Map<String, Any>): CompletableFuture<Any?> = letCatching {
-        KetherShell.eval(
-            source,
-            sender = if (player != null) adaptPlayer(player) else console(),
-            namespace = namespace,
-            vars = KetherShell.VariableMap(vars)
-        )
-    } ?: CompletableFuture.completedFuture(false)
+    fun invoke(source: String, player: Player?, vars: Map<String, Any>) = KetherShell.eval(
+        source,
+        sender = if (player != null) adaptPlayer(player) else console(),
+        namespace = namespace,
+        vars = KetherShell.VariableMap(vars)
+    )
 
     fun parseInline(source: String, player: Player?, vars: Map<String, Any>) = letCatching {
         KetherFunction.parse(

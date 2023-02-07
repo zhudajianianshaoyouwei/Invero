@@ -1,9 +1,8 @@
 package cc.trixey.invero.core.compat
 
 import org.bukkit.Bukkit
-import org.bukkit.command.CommandSender
 import taboolib.common.platform.function.console
-import taboolib.platform.util.sendLang
+import taboolib.module.lang.sendLang
 
 /**
  * Invero
@@ -21,12 +20,10 @@ abstract class PluginHook {
             val plugin = Bukkit.getPluginManager().getPlugin(pluginName!!)
             (plugin != null && plugin.isEnabled).also {
                 if (it) {
-                    console().cast<CommandSender>().sendLang("plugin-hooked", pluginName!!)
+                    console().sendLang("plugin-hooked", pluginName!!)
                 }
             }
-        } else {
-            true
-        }
+        } else false
     }
 
 }

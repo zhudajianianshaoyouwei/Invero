@@ -19,7 +19,13 @@ class InventoryPacket(override val window: BukkitWindow) : ProxyBukkitInventory 
     }
 
     private var closed: Boolean = true
-     val windowItems = arrayOfNulls<ItemStack?>(containerType.entireWindowSize)
+    private var clickCallback: (slot: Int, type: ClickType) -> Boolean = { _, _ -> true }
+    val windowItems = arrayOfNulls<ItemStack?>(containerType.entireWindowSize)
+
+    fun onClick(handler: (slot: Int, type: ClickType) -> Boolean): InventoryPacket {
+        clickCallback = handler
+        return this
+    }
 
     override fun clear(slots: Collection<Int>) {
         slots.forEach { set(it, null) }
@@ -61,6 +67,7 @@ class InventoryPacket(override val window: BukkitWindow) : ProxyBukkitInventory 
     }
 
     fun handleClickEvent(slot: Int, type: ClickType) {
+        if (!clickCallback(slot, type)) return
         val pos = window.scale.convertToPosition(slot)
 
         window.panels.sortedByDescending { it.weight }.forEach {

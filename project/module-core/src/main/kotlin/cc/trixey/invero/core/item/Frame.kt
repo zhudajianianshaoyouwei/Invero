@@ -108,7 +108,11 @@ class Frame(
         "nbt",
         "slot"
     ).forEach {
-        if (getProperty<Any?>(it) == null) setProperty(it, frame.getProperty(it))
+        if (getProperty<Any?>(it) == null) {
+            val copy = frame.getProperty<Any>(it)
+            if (copy is Texture) setProperty(it, copy.clone())
+            else setProperty(it, copy)
+        }
     }
 
 

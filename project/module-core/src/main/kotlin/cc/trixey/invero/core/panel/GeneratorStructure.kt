@@ -38,6 +38,6 @@ class GeneratorStructure(
             .let { Object(it) }
     }
 
-    fun create() = Invero.api().createElementGenerator(source ?: "custom")
+    fun create() = Invero.API.createElementGenerator(source ?: "custom")
 
 }

@@ -1,7 +1,7 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.ui.bukkit.util.requestHead
 import cc.trixey.invero.core.Context
+import cc.trixey.invero.ui.bukkit.util.requestHead
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
@@ -33,5 +33,7 @@ class TextureHead(@SerialName("head") override val raw: String) : Texture() {
             requestHead(parsed) { block(it.clone()) }
         }
     }
+
+    override fun clone() = TextureHead(raw)
 
 }

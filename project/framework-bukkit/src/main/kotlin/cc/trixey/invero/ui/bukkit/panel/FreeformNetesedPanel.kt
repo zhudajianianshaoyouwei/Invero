@@ -23,7 +23,7 @@ class FreeformNetesedPanel(
     weight: PanelWeight,
     scale: Scale,
     locate: Pos
-) : cc.trixey.invero.ui.bukkit.BukkitPanel(parent, weight, scale, locate), PanelContainer, FreeformPanel {
+) : BukkitPanel(parent, weight, scale, locate), PanelContainer, FreeformPanel {
 
     override val panels = arrayListOf<BukkitPanel>()
 

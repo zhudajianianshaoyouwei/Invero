@@ -2,6 +2,7 @@ package cc.trixey.invero.core.compat.item
 
 import cc.trixey.invero.common.supplier.ItemSourceProvider
 import cc.trixey.invero.core.Context
+import cc.trixey.invero.core.compat.DefItemProvider
 import cc.trixey.invero.core.util.KetherHandler
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -13,6 +14,7 @@ import org.bukkit.inventory.ItemStack
  * @author Arasple
  * @since 2023/2/2 14:00
  */
+@DefItemProvider(["script"])
 class ScriptItemProvider : ItemSourceProvider {
 
     override fun translateIdentifier(): Boolean {

@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  * @since 2023/1/20 14:15
  */
 abstract class BukkitPanel(
-    override val parent: cc.trixey.invero.ui.bukkit.PanelContainer,
+    override val parent: PanelContainer,
     override val weight: PanelWeight,
     scale: Scale,
     override val locate: Pos
@@ -34,7 +34,7 @@ abstract class BukkitPanel(
     // return Boolean ->> should continue to handle elemental click or not
     private val clickCallback = CopyOnWriteArrayList<(Pos, ClickType, InventoryClickEvent?) -> Boolean>()
 
-    fun onClick(handler: (Pos, ClickType, InventoryClickEvent?) -> Boolean): cc.trixey.invero.ui.bukkit.BukkitPanel {
+    fun onClick(handler: (Pos, ClickType, InventoryClickEvent?) -> Boolean): BukkitPanel {
         clickCallback += handler
         return this
     }

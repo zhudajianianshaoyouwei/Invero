@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack
 class TextureSource(val source: String, @SerialName("value") override val raw: String) : Texture() {
 
     private val provider by lazy {
-        Invero.api().getItemSourceProvider(source) ?: error("Invalid source provider: $source")
+        Invero.API.getItemSourceProvider(source) ?: error("Invalid source provider: $source")
     }
 
     @Transient
@@ -30,5 +30,11 @@ class TextureSource(val source: String, @SerialName("value") override val raw: S
     override fun generateItem(context: Context, block: (ItemStack) -> Unit) {
         block(lazyTexture ?: provider.getItem(context.parse(raw), context) ?: DEFAULT_TEXTURE)
     }
+
+    override fun toString(): String {
+        return super.toString() + " (${provider.javaClass.simpleName.removeSuffix("ItemProvider")})"
+    }
+
+    override fun clone() = TextureSource(source, raw)
 
 }

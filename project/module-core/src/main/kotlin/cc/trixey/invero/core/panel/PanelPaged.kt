@@ -30,7 +30,8 @@ class PanelPaged(
     override val scale: Scale,
     @Serializable(with = PosSerializer::class)
     override val locate: Pos?,
-    @SerialName("default-page") @JsonNames("default", "def-page")
+    @SerialName("default-page")
+    @JsonNames("default", "def-page")
     val defaultPage: Int = 0,
     @Serializable(with = ListAgentPanelSerializer::class)
     val pages: List<AgentPanel>

@@ -36,7 +36,7 @@ class ScriptKether(val script: String) : Condition {
 
         val player = context.player
 
-        // TODO Context compatible with kether
+        // TODO Context compatible with script
         return KetherHandler.invoke(script, player, context.variables)
     }
 

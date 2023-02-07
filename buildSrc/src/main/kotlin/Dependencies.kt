@@ -12,7 +12,7 @@ val rootVersion = "1.0.0-dev-8"
 
 val kotlinVersion = "1.8.0"
 val shadowJarVersion = "7.1.2"
-val taboolibVersion = "6.0.10-80"
+val taboolibVersion = "6.0.10-84"
 val taboolibPluginVersion = "1.56"
 
 val repoTabooProject = "https://repo.tabooproject.org/repository/releases"

@@ -8,6 +8,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import org.bukkit.event.inventory.InventoryType
+import taboolib.common5.Baffle
+import java.util.concurrent.TimeUnit
 
 /**
  * Invero
@@ -28,7 +30,13 @@ class MenuSettings(
     val overridePlayerInventory: Boolean = true,
     @SerialName("hide-player-storage")
     val hidePlayerStorage: Boolean = false,
+    @SerialName("min-interact-interval")
+    val minInteractInterval: Long = 2_00
 ) {
+
+    val interactBaffle by lazy {
+        Baffle.of(minInteractInterval, TimeUnit.MILLISECONDS)
+    }
 
     val containerType by lazy {
         if (type != InventoryType.CHEST) ContainerType.fromBukkitType(type.name)

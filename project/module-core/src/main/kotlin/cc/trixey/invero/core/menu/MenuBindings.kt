@@ -33,13 +33,13 @@ class MenuBindings(
 ) {
 
     @Transient
-    val inferItem = if (!item.isEmpty()) item.toInferItem() else null
+    val inferItem = if (item.isNotEmpty()) item.toInferItem() else null
 
     @Transient
     val registeredCommands = mutableSetOf<String>()
 
     fun register(menu: BaseMenu) {
-        Invero.api().getMenuManager().initMenuBindings(menu)
+        Invero.API.getMenuManager().initMenuBindings(menu)
 
         when (command) {
             is JsonPrimitive -> registerCommandLabel(menu, command)
@@ -61,7 +61,7 @@ class MenuBindings(
     }
 
     private fun registerCommandStructure(menu: BaseMenu, jsonObject: JsonObject) {
-        Invero.api().getMenuManager().getJsonSerializer<Json>().decodeFromJsonElement<CommandStructure>(jsonObject)
+        Invero.API.getMenuManager().getJsonSerializer<Json>().decodeFromJsonElement<CommandStructure>(jsonObject)
             .apply {
                 command(
                     name,
@@ -116,7 +116,7 @@ class MenuBindings(
     private fun registerCommandLabel(menu: BaseMenu, jsonPrimitive: JsonPrimitive) {
         val id = menu.id ?: return
         val content = jsonPrimitive.contentOrNull?.lowercase() ?: return
-        command(content) { execute<Player> { sender, _, _ -> Invero.api().getMenuManager().getMenu(id)?.open(sender) } }
+        command(content) { execute<Player> { sender, _, _ -> Invero.API.getMenuManager().getMenu(id)?.open(sender) } }
         registeredCommands += content
     }
 

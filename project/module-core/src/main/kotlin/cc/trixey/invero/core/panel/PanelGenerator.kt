@@ -95,9 +95,10 @@ class PanelGenerator(
     fun filter(session: Session, panel: PagedGeneratorPanel<*>, filter: String) {
         val viewer = session.viewer.get<Player>()
         panel.filterBy {
-            KetherHandler.invoke(
-                filter, viewer, session.getVariables(ext = (it as Object).variables)
-            ).getNow(true).cbool
+            KetherHandler
+                .invoke(filter, viewer, session.getVariables(ext = (it as Object).variables))
+                .getNow(true)
+                .cbool
         }
     }
 

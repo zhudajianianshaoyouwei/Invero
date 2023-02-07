@@ -46,7 +46,7 @@ class Session(
     }
 
     fun updateVariables() {
-        variables += Invero.api().getDataManager().getGlobalData().source
+        variables += Invero.API.getDataManager().getGlobalData().source
         variables += viewer.get<Player>().getDataContainer().source
     }
 
@@ -61,7 +61,7 @@ class Session(
     fun setVariable(key: String, value: Any) {
         // push to database
         when (key.varType) {
-            GLOBAL -> Invero.api().getDataManager().getGlobalData()[key] = value
+            GLOBAL -> Invero.API.getDataManager().getGlobalData()[key] = value
             PLAYER -> viewer.get<Player>().getDataContainer()[key] = value
             TEMP -> {}
         }
@@ -71,7 +71,7 @@ class Session(
     fun removeVariable(key: String) {
         // push to database
         when (key.varType) {
-            GLOBAL -> Invero.api().getDataManager().getGlobalData().source.remove(key)
+            GLOBAL -> Invero.API.getDataManager().getGlobalData().source.remove(key)
             PLAYER -> viewer.get<Player>().getDataContainer().source.remove(key)
             TEMP -> {}
         }

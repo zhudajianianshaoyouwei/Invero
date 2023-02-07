@@ -88,7 +88,7 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
         "itemsadder", "ia",
         "headdatabase", "hdb",
         "base64", "serialized",
-        "kether", "script"
+        "script", "script"
     )
 
     override fun transformDeserialize(element: JsonElement): JsonElement {

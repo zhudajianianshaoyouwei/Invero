@@ -59,12 +59,12 @@ class DefaultMenManager : MenuManager {
 
         polymorphic(Action::class) {
             subclass(ActionKether::class)
-            subclass(StructureActionIf::class)
-            subclass(StructureActionAll::class)
-            subclass(StructureActionAny::class)
-            subclass(StructureActionNone::class)
-            subclass(StructureActionIfNot::class)
-            subclass(StructureActionWhen::class)
+            subclass(ConditionIf::class)
+            subclass(ConditionAll::class)
+            subclass(ConditionAny::class)
+            subclass(ConditionNone::class)
+            subclass(ConditionIfNot::class)
+            subclass(ConditionCase::class)
             subclass(StructureActionKether::class)
             subclass(FunctionalActionCatcher::class)
             subclass(FunctionalActionCatchers::class)
@@ -82,15 +82,15 @@ class DefaultMenManager : MenuManager {
 
     private val defaultWorkspace = File(bukkitPlugin.dataFolder, "workspace")
 
-    private val menus = ConcurrentHashMap<String, Menu>()
+    private val menus = ConcurrentHashMap<String, BaseMenu>()
 
     private val bindings = ConcurrentHashMap<String, MenuBindings>()
 
-    override fun getMenu(id: String, ignoreCase: Boolean): Menu? {
+    override fun getMenu(id: String, ignoreCase: Boolean): BaseMenu? {
         return menus.entries.find { it.key.equals(id, ignoreCase) }?.value
     }
 
-    override fun getMenus(): List<Menu> {
+    override fun getMenus(): List<BaseMenu> {
         return menus.values.toList()
     }
 
@@ -188,7 +188,7 @@ class DefaultMenManager : MenuManager {
         }
     }
 
-    override fun findBound(itemStack: ItemStack): Menu? {
+    override fun findBound(itemStack: ItemStack): BaseMenu? {
         bindings
             .entries
             .find { it.value.inferItem?.isItem(itemStack) == true }
@@ -199,7 +199,7 @@ class DefaultMenManager : MenuManager {
         return null
     }
 
-    override fun findBound(chat: String): Menu? {
+    override fun findBound(chat: String): BaseMenu? {
         bindings
             .entries
             .find { entry -> entry.value.chat.any { chat == it } }
@@ -250,7 +250,7 @@ class DefaultMenManager : MenuManager {
     }
 
     override fun serializeToJson(menu: Menu): String {
-        return json.encodeToString(value = menu as BaseMenu)
+        return json.encodeToString(value = menu)
     }
 
     override fun <T> getJsonSerializer(): T {
@@ -279,7 +279,7 @@ class DefaultMenManager : MenuManager {
 
         @Awake(LifeCycle.ACTIVE)
         fun load() {
-            Invero.api().getMenuManager().reload()
+            Invero.API.getMenuManager().reload()
         }
 
     }

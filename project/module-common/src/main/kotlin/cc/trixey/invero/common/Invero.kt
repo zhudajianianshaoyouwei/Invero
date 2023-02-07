@@ -12,11 +12,6 @@ import taboolib.common.platform.PlatformFactory
  */
 object Invero {
 
-    private var api: InveroAPI? = null
-
-    fun api(): InveroAPI {
-        if (api == null) api = PlatformFactory.getAPI()
-        return api ?: error("InveroAPI is not initialized")
-    }
+    val API: InveroAPI by lazy { PlatformFactory.getAPI() }
 
 }

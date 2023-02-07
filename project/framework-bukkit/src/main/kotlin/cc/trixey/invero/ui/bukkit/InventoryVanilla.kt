@@ -26,6 +26,18 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     }
 
     private val storage = PlayerStorage(viewer)
+    private var clickCallback: (InventoryClickEvent) -> Boolean = { true }
+    private var dragCallback: (InventoryDragEvent) -> Boolean = { true }
+
+    fun onClick(handler: (InventoryClickEvent) -> Boolean): InventoryVanilla {
+        clickCallback = handler
+        return this
+    }
+
+    fun onDrag(handler: (InventoryDragEvent) -> Boolean): InventoryVanilla {
+        dragCallback = handler
+        return this
+    }
 
     val container = when {
         containerType.isOrdinaryChest -> Bukkit.createInventory(
@@ -74,6 +86,7 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     fun handleClick(e: InventoryClickEvent) {
         // 默认取消事件
         e.isCancelled = true
+        if (!clickCallback(e)) return
         // 点击的坐标
         val slot = e.rawSlot
         // 如果点击玩家背包容器
@@ -99,6 +112,7 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     fun handleDrag(e: InventoryDragEvent) {
         // 默认取消
         e.isCancelled = true
+        if (!dragCallback(e)) return
         // 寻找 Panel 交接
         val handler = window.panels.sortedBy { it.locate }.sortedByDescending { it.weight }.find {
             e.rawSlots.all { slot -> window.scale.convertToPosition(slot) in it.area }
@@ -113,6 +127,7 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     fun handleItemsMove(e: InventoryClickEvent) {
         // 默认取消
         e.isCancelled = true
+        if (!clickCallback(e)) return
 
         val slot = e.rawSlot
         // playerInventory -> IO Panel

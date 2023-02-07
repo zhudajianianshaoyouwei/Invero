@@ -33,7 +33,7 @@ object Listener {
         if (!baffle.hasNext(e.player.name)) return
         val item = e.item ?: return
 
-        Invero.api()
+        Invero.API
             .getMenuManager()
             .findBound(item)
             ?.let {
@@ -69,7 +69,7 @@ object Listener {
     }
 
     private fun runChatBindings(message: String): Menu? {
-        return Invero.api().getMenuManager().findBound(message)
+        return Invero.API.getMenuManager().findBound(message)
     }
 
 }

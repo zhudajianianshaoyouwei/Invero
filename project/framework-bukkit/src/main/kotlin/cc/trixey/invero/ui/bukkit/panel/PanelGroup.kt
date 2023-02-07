@@ -22,7 +22,7 @@ class PanelGroup(
     weight: PanelWeight,
     scale: Scale,
     locate: Pos
-) : cc.trixey.invero.ui.bukkit.BukkitPanel(parent, weight, scale, locate), PanelContainer {
+) : BukkitPanel(parent, weight, scale, locate), PanelContainer {
 
     override val panels = arrayListOf<BukkitPanel>()
 

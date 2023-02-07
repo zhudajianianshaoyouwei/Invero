@@ -10,6 +10,8 @@ import cc.trixey.invero.core.menu.MenuSettings
 import cc.trixey.invero.core.serialize.ListAgentPanelSerializer
 import cc.trixey.invero.core.util.session
 import cc.trixey.invero.core.util.unregisterSession
+import cc.trixey.invero.ui.bukkit.InventoryPacket
+import cc.trixey.invero.ui.bukkit.InventoryVanilla
 import cc.trixey.invero.ui.bukkit.PlayerViewer
 import cc.trixey.invero.ui.bukkit.api.dsl.chestWindow
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -34,6 +36,7 @@ class BaseMenu(
     val bindings: MenuBindings?,
     @JsonNames("event", "listener")
     val events: MenuEvents?,
+    @JsonNames("scripts")
     val scripts: Map<String, String>?,
     @Serializable(with = ListAgentPanelSerializer::class)
     @JsonNames("panel", "pane", "panes")
@@ -47,7 +50,7 @@ class BaseMenu(
     }
 
     override fun open(viewer: PlayerViewer, vars: Map<String, Any>) {
-        // Events_PreOpen
+        // 预开启动作
         if (events?.preOpen?.run(Context(viewer))?.get() == false) {
             return
         }
@@ -75,8 +78,14 @@ class BaseMenu(
         window.preOpen { panels.forEach { it.invoke(window, session) } }
         window.onOpen { updateTitle(session) }
         window.open()
+        // 频繁交互屏蔽
+        if (isVirtual())
+            (window.inventory as InventoryPacket).onClick { _, _ -> viewer.canInteract }
+        else
+            (window.inventory as InventoryVanilla).onClick { _ -> viewer.canInteract }
+        // 应用动态标题属性
         settings.title.invoke(session)
-        // Events_PostOpen
+        // 开启后事件动作
         events?.postOpen?.run(Context(viewer, session))
     }
 
@@ -108,5 +117,9 @@ class BaseMenu(
     override fun isVirtual(): Boolean {
         return settings.virtual && !panels.any { it.requireBukkitWindow() }
     }
+
+    val PlayerViewer.canInteract: Boolean
+        get() = settings.interactBaffle.hasNext(name)
+
 
 }

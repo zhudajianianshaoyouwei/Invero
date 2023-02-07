@@ -68,6 +68,6 @@ interface MenuManager {
      *
      * @return kotlinx.serialization.json
      */
-    fun <T> getJsonSerializer(): T
+    fun <R> getJsonSerializer(): R
 
 }

@@ -26,12 +26,12 @@ import kotlinx.serialization.json.*
 internal object SelectorAction : JsonContentPolymorphicSerializer<Action>(Action::class) {
 
     private val serializers = buildMap<DeserializationStrategy<out Action>, Set<String>> {
-        put(StructureActionIf.serializer(), setOf("if"))
-        put(StructureActionIfNot.serializer(), setOf("if not", "if_not"))
-        put(StructureActionAll.serializer(), setOf("all"))
-        put(StructureActionAny.serializer(), setOf("any"))
-        put(StructureActionNone.serializer(), setOf("none"))
-        put(StructureActionWhen.serializer(), setOf("when", "case"))
+        put(ConditionIf.serializer(), setOf("if"))
+        put(ConditionIfNot.serializer(), setOf("if not", "if_not"))
+        put(ConditionAll.serializer(), setOf("all"))
+        put(ConditionAny.serializer(), setOf("any"))
+        put(ConditionNone.serializer(), setOf("none"))
+        put(ConditionCase.serializer(), setOf("when", "case"))
         put(FunctionalActionCatchers.serializer(), setOf("catchers"))
         put(FunctionalActionCatcher.serializer(), setOf("catch", "afterInput"))
     }

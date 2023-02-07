@@ -12,6 +12,7 @@ import cc.trixey.invero.common.supplier.ItemSourceProvider
  */
 interface InveroAPI {
 
+
     /**
      * 取得菜单管理器
      */
