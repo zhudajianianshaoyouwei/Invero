@@ -20,6 +20,7 @@ import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.action.*
 import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.menu.MenuTitle
+import cc.trixey.invero.core.node.Node
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -44,6 +45,16 @@ import taboolib.common.env.RuntimeDependency
  */
 
 internal val listStringSerializer = ListSerializer(String.serializer())
+
+object NodeTypeSerializer : KSerializer<Node.Type> {
+
+    override val descriptor = PrimitiveSerialDescriptor("Node.Type", PrimitiveKind.STRING)
+
+    override fun deserialize(decoder: Decoder): Node.Type = decoder.decodeString().tolerantEnum(Node.Type.CONST)
+
+    override fun serialize(encoder: Encoder, value: Node.Type) = encoder.encodeString(value.name)
+
+}
 
 internal object ScaleSerializer : KSerializer<Scale> {
 

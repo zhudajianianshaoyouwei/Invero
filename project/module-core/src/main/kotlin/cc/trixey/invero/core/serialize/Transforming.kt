@@ -4,6 +4,7 @@ import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.icon.IconHandler
 import cc.trixey.invero.core.menu.CommandArgument
+import cc.trixey.invero.core.node.Node
 import cc.trixey.invero.ui.common.event.ClickType
 import kotlinx.serialization.json.*
 import kotlinx.serialization.serializer
@@ -15,6 +16,21 @@ import kotlinx.serialization.serializer
  * @author Arasple
  * @since 2023/1/29 13:43
  */
+object NodeSerializer : JsonTransformingSerializer<Node>(serializer()) {
+
+    override fun transformDeserialize(element: JsonElement) = when (element) {
+        is JsonPrimitive -> buildJsonObject {
+            put("type", "CONST")
+            put("value", element.jsonPrimitive.content)
+        }
+
+        is JsonObject -> element
+        is JsonArray -> error("Node can not be JsonArray")
+    }
+
+}
+
+
 object BaseMenuSerializer : JsonTransformingSerializer<BaseMenu>(serializer()) {
 
     private val menuKeys = arrayOf(

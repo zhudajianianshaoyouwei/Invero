@@ -7,7 +7,9 @@ import cc.trixey.invero.core.*
 import cc.trixey.invero.core.menu.MenuBindings
 import cc.trixey.invero.core.menu.MenuEvents
 import cc.trixey.invero.core.menu.MenuSettings
+import cc.trixey.invero.core.node.Node
 import cc.trixey.invero.core.serialize.ListAgentPanelSerializer
+import cc.trixey.invero.core.serialize.NodeSerializer
 import cc.trixey.invero.core.util.session
 import cc.trixey.invero.core.util.unregisterSession
 import cc.trixey.invero.ui.bukkit.InventoryPacket
@@ -36,8 +38,8 @@ class BaseMenu(
     val bindings: MenuBindings?,
     @JsonNames("event", "listener")
     val events: MenuEvents?,
-    @JsonNames("scripts")
-    val scripts: Map<String, String>?,
+    @JsonNames("node", "scripts")
+    val nodes: Map<String, @Serializable(with = NodeSerializer::class) Node>?,
     @Serializable(with = ListAgentPanelSerializer::class)
     @JsonNames("panel", "pane", "panes")
     val panels: List<AgentPanel>,

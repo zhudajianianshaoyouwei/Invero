@@ -23,6 +23,12 @@ interface InveroAPI {
      */
     fun getDataManager(): DataManager
 
+
+    /**
+     * 取得 JavaScript Handler
+     */
+    fun getJavaScriptHandler(): JavaScriptHandler
+
     /**
      * 注册一个类型的元素生成器
      */

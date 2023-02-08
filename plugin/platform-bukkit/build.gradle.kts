@@ -45,5 +45,4 @@ dependencies {
 tasks.jar {
     archiveBaseName.set(rootName)
     includeEmptyDirs = false
-    include("workspace", "lang", "cc", "net", "*.yml")
 }

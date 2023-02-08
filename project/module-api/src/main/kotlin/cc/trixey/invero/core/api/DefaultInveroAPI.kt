@@ -2,6 +2,7 @@ package cc.trixey.invero.core.api
 
 import cc.trixey.invero.common.api.DataManager
 import cc.trixey.invero.common.api.InveroAPI
+import cc.trixey.invero.common.api.JavaScriptHandler
 import cc.trixey.invero.common.api.MenuManager
 import cc.trixey.invero.common.supplier.ElementGenerator
 import cc.trixey.invero.common.supplier.ItemSourceProvider
@@ -26,6 +27,8 @@ class DefaultInveroAPI : InveroAPI {
     override fun getMenuManager() = PlatformFactory.getAPI<MenuManager>()
 
     override fun getDataManager() = PlatformFactory.getAPI<DataManager>()
+
+    override fun getJavaScriptHandler() = PlatformFactory.getAPI<JavaScriptHandler>()
 
     override fun registerElementGenerator(name: String, provider: ElementGenerator) {
         elementGenerators[name] = provider
