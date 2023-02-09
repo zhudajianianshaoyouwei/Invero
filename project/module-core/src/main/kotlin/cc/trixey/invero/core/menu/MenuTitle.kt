@@ -35,7 +35,7 @@ class MenuTitle(
     @Transient
     val default = value.getOrElse(0) { "Untitled" }
 
-    fun invoke(session: Session) {
+    fun submit(session: Session) {
         if (isStatic && value.none { it.containsAnyPlaceholder() } && period == null) {
             return
         }

@@ -13,10 +13,11 @@ import taboolib.module.lang.sendLang
  */
 abstract class PluginHook {
 
-   open val pluginName: String? = null
+    open val pluginName: String? = null
 
-    val isHooked: Boolean by lazy {
-        if (pluginName != null) {
+
+    val isHooked: Boolean
+        get() = if (pluginName != null) {
             val plugin = Bukkit.getPluginManager().getPlugin(pluginName!!)
             (plugin != null && plugin.isEnabled).also {
                 if (it) {
@@ -24,6 +25,5 @@ abstract class PluginHook {
                 }
             }
         } else false
-    }
 
 }

@@ -5,6 +5,8 @@ import cc.trixey.invero.core.action.ScriptKether
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.icon.Slot
 import cc.trixey.invero.core.menu.CommandArgument
+import cc.trixey.invero.core.menu.MenuTask
+import cc.trixey.invero.core.menu.NodeRunnable
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.MapSerializer
 import kotlinx.serialization.builtins.serializer
@@ -20,6 +22,18 @@ import kotlinx.serialization.json.jsonArray
  * @author Arasple
  * @since 2023/1/18 10:56
  */
+internal object ListMenuTaskSerializer :
+    JsonTransformingSerializer<List<MenuTask>>(ListSerializer(MenuTask.serializer())) {
+    override fun transformSerialize(element: JsonElement) = element.tolerantListSerialize()
+    override fun transformDeserialize(element: JsonElement) = element.tolerantListDeserialize()
+}
+
+internal object ListNodeSerializer :
+    JsonTransformingSerializer<List<NodeRunnable>>(ListSerializer(NodeSerializer)) {
+    override fun transformSerialize(element: JsonElement) = element.tolerantListSerialize()
+    override fun transformDeserialize(element: JsonElement) = element.tolerantListDeserialize()
+}
+
 internal object ListScriptKetherSerializer :
     JsonTransformingSerializer<List<ScriptKether>>(ListSerializer(ScriptKether.serializer())) {
     override fun transformSerialize(element: JsonElement) = element.tolerantListSerialize()

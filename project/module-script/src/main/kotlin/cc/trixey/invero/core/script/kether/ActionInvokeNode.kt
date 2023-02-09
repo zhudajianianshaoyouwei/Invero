@@ -1,9 +1,8 @@
 package cc.trixey.invero.core.script.kether
 
 import cc.trixey.invero.core.BaseMenu
-import cc.trixey.invero.core.node.Node.Type.TEXT
-import cc.trixey.invero.core.node.Node.Type.CONST
 import cc.trixey.invero.core.script.session
+import taboolib.common.platform.function.submitAsync
 import taboolib.module.kether.KetherParser
 import taboolib.module.kether.combinationParser
 import java.util.concurrent.CompletableFuture
@@ -17,8 +16,8 @@ import java.util.concurrent.CompletableFuture
  */
 object ActionInvokeNode {
 
-    @KetherParser(["invoke", "node"], namespace = "invero", shared = true)
-    fun parser() = combinationParser {
+    @KetherParser(["node"], namespace = "invero", shared = true)
+    fun node() = combinationParser {
         it.group(
             // 节点名称
             text(),
@@ -34,14 +33,32 @@ object ActionInvokeNode {
                     .let { strings -> mapOf("invokeArgs" to strings) }
                 val node = menu.nodes?.get(nodeName)
                     ?: return@future CompletableFuture.completedFuture("<NODE: $nodeName> ${menu.nodes?.keys}")
+                val result = node.invoke(session, params)
 
-                when (node.type) {
-                    CONST -> node.value
-                    TEXT -> session.parse(node.value)
-                    else -> node.invoke(session, params)
-                }.let {
-                    CompletableFuture.completedFuture(it)
-                }
+                CompletableFuture.completedFuture(result)
+            }
+        }
+    }
+
+    @KetherParser(["task"], namespace = "invero", shared = true)
+    fun task() = combinationParser {
+        it.group(
+            text(),
+            command("with", then = action()).option().defaultsTo(null)
+        ).apply(it) { name, with ->
+            future {
+                val session = session()
+                val menu = session?.menu as? BaseMenu ?: return@future CompletableFuture.completedFuture(false)
+                val params = with
+                    ?.let { w -> newFrame(w).run<Any>().getNow(null) }
+                    .toParameter()
+                    .let { strings -> mapOf("invokeArgs" to strings) }
+                val task = menu.tasks?.get(name)
+                    ?: return@future CompletableFuture.completedFuture("<TASK: $name> ${menu.nodes?.keys}")
+
+                CompletableFuture.completedFuture(submitAsync {
+                    task.run(session, params)
+                })
             }
         }
     }

@@ -30,6 +30,6 @@ class Compat : ClassVisitor(0) {
         super.visit(method, clazz, instance)
     }
 
-    override fun getLifeCycle() = LifeCycle.ACTIVE
+    override fun getLifeCycle() = LifeCycle.LOAD
 
 }

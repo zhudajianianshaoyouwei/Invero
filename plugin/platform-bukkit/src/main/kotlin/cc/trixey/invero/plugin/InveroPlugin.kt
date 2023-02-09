@@ -1,6 +1,8 @@
 package cc.trixey.invero.plugin
 
-import org.bukkit.Sound
+import cc.trixey.invero.common.adventure.parseMiniMessage
+import cc.trixey.invero.common.adventure.translateAmpersandColor
+import cc.trixey.invero.core.util.KetherHandler
 import taboolib.common.platform.Plugin
 import taboolib.common.platform.function.info
 
@@ -15,6 +17,13 @@ object InveroPlugin : Plugin() {
 
     override fun onLoad() {
         info("Loaded")
+
+        repeat(1000) {
+            KetherHandler
+                .parseInline("<red><gradient>{{text}}", null, emptyMap())
+                .parseMiniMessage()
+                .translateAmpersandColor()
+        }
     }
 
 }

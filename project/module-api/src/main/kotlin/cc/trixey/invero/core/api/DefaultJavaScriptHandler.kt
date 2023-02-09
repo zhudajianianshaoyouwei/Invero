@@ -1,6 +1,12 @@
 package cc.trixey.invero.core.api
 
+import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.api.JavaScriptHandler
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.*
+import taboolib.common.LifeCycle
+import taboolib.common.platform.Awake
+import taboolib.common.platform.PlatformFactory
 import taboolib.common.platform.function.server
 import taboolib.common5.compileJS
 import java.net.URL
@@ -64,6 +70,12 @@ class DefaultJavaScriptHandler : JavaScriptHandler {
      */
     class Helper {
 
+        private val serializer: Json
+            get() = Invero
+                .API
+                .getMenuManager()
+                .getJsonSerializer<Json>()
+
         /**
          * 读 URL 内容
          */
@@ -71,6 +83,24 @@ class DefaultJavaScriptHandler : JavaScriptHandler {
             String(URL(url).openStream().readBytes())
         } catch (t: Throwable) {
             "<ERROR: ${t.localizedMessage}>"
+        }
+
+        /**
+         * JSON 处理
+         */
+        fun asJsonElemenet(json: String): JsonElement = serializer.decodeFromString(json)
+
+        fun asJsonObject(json: String): JsonObject = serializer.decodeFromString(json)
+
+        fun asJsonArray(json: String): JsonArray = serializer.decodeFromString(json)
+
+    }
+
+    companion object {
+
+        @Awake(LifeCycle.INIT)
+        fun init() {
+            PlatformFactory.registerAPI<JavaScriptHandler>(DefaultJavaScriptHandler())
         }
 
     }

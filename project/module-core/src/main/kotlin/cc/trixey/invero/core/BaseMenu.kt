@@ -4,10 +4,7 @@ package cc.trixey.invero.core
 
 import cc.trixey.invero.common.Menu
 import cc.trixey.invero.core.*
-import cc.trixey.invero.core.menu.MenuBindings
-import cc.trixey.invero.core.menu.MenuEvents
-import cc.trixey.invero.core.menu.MenuSettings
-import cc.trixey.invero.core.node.Node
+import cc.trixey.invero.core.menu.*
 import cc.trixey.invero.core.serialize.ListAgentPanelSerializer
 import cc.trixey.invero.core.serialize.NodeSerializer
 import cc.trixey.invero.core.util.session
@@ -19,6 +16,7 @@ import cc.trixey.invero.ui.bukkit.api.dsl.chestWindow
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonNames
 import taboolib.common.platform.function.submitAsync
 
@@ -39,7 +37,9 @@ class BaseMenu(
     @JsonNames("event", "listener")
     val events: MenuEvents?,
     @JsonNames("node", "scripts")
-    val nodes: Map<String, @Serializable(with = NodeSerializer::class) Node>?,
+    val nodes: Map<String, @Serializable(with = NodeSerializer::class) NodeRunnable>?,
+    @JsonNames("task")
+    val tasks: Map<String, MenuTask>?,
     @Serializable(with = ListAgentPanelSerializer::class)
     @JsonNames("panel", "pane", "panes")
     val panels: List<AgentPanel>,
@@ -86,7 +86,9 @@ class BaseMenu(
         else
             (window.inventory as InventoryVanilla).onClick { _ -> viewer.canInteract }
         // 应用动态标题属性
-        settings.title.invoke(session)
+        settings.title.submit(session)
+        // 应用周期事件
+        tasks?.forEach { it.value.submit(session) }
         // 开启后事件动作
         events?.postOpen?.run(Context(viewer, session))
     }

@@ -15,6 +15,8 @@ import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.action.*
 import cc.trixey.invero.core.menu.MenuBindings
+import cc.trixey.invero.core.panel.PanelGenerator
+import cc.trixey.invero.core.panel.PanelPaged
 import cc.trixey.invero.core.panel.PanelStandard
 import cc.trixey.invero.core.serialize.BaseMenuSerializer
 import cc.trixey.invero.core.serialize.hocon.PatchedLoader
@@ -53,8 +55,14 @@ class DefaultMenManager : MenuManager {
 
     private val module = SerializersModule {
 
+        polymorphic(Menu::class) {
+            subclass(BaseMenu::class)
+        }
+
         polymorphic(AgentPanel::class) {
             subclass(PanelStandard::class)
+            subclass(PanelGenerator::class)
+            subclass(PanelPaged::class)
         }
 
         polymorphic(Action::class) {

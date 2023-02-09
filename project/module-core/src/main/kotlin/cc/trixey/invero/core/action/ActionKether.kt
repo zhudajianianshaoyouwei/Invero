@@ -16,15 +16,14 @@ import java.util.concurrent.CompletableFuture
  * @since 2023/1/18 11:30
  */
 @Serializable(with = ActionKetherSerializer::class)
-class ActionKether(val script: String) : Action() {
+class ActionKether(val scripts: List<String>) : Action() {
 
     override fun run(context: Context): CompletableFuture<Boolean> {
         val player = context.player
-        val scripts = script.split("\\n")
         val variables = context.variables
 
-        return if (scripts.size <= 1) {
-            KetherHandler.invoke(script, player, variables).thenApply { it.bool }
+        return if (scripts.size == 1) {
+            KetherHandler.invoke(scripts.single(), player, variables).thenApply { it.bool }
         } else {
             // list of String script
             // return TRUE

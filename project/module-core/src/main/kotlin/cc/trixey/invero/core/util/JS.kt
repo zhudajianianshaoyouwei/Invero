@@ -1,7 +1,9 @@
 package cc.trixey.invero.core.util
 
 import cc.trixey.invero.common.Invero
+import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.Session
+import cc.trixey.invero.core.action.ScriptKether
 import org.bukkit.entity.Player
 import java.util.concurrent.CompletableFuture
 import java.util.function.Function
@@ -25,8 +27,14 @@ fun runJS(script: String, session: Session?, variables: Map<String, Any?> = empt
     }
 
     Invero.API.getJavaScriptHandler().runScript(script.trimIndent(), bindings = bindings) {
-        registerFunction("parse") { param ->
-            session?.parse(param.toString()) ?: "<ERROR: NO SESSION>"
+        registerFunction("parse") { param -> session?.parse(param.toString()) ?: "<ERROR: NO SESSION>" }
+        registerFunction("println") { info -> println(info) }
+        registerFunction("print") { info -> print(info) }
+        registerFunction("shell") { script ->
+            ScriptKether(script.toString())
+                .invoke(context = Context(session?.viewer!!, session))
+                .getNow("<TIMEOUT>")
+                .toString()
         }
     }.let {
         return CompletableFuture.completedFuture(it)

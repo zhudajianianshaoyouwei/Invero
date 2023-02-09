@@ -11,10 +11,8 @@ import cc.trixey.invero.core.item.Frame
 import cc.trixey.invero.core.util.*
 import cc.trixey.invero.ui.bukkit.api.dsl.set
 import cc.trixey.invero.ui.bukkit.util.proceed
-import org.bukkit.enchantments.Enchantment
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import taboolib.module.nms.ItemTag
 import taboolib.module.nms.getItemTag
 
@@ -90,9 +88,16 @@ fun Frame.translateUpdate(session: Session, element: IconElement, defaultFrame: 
     }
 }
 
-fun List<String>.defaultColored() = map {
-    if (!it.isPrefixColored() && it.isNotBlank()) "${InveroSettings.defaultLoreColor}$it"
-    else it
+fun List<String>.defaultColored(): List<String> {
+    val iterator = iterator()
+
+    return buildList {
+        while (iterator.hasNext()) {
+            val it = iterator.next()
+            if (it.contains("\\n")) this += it.split("\\n").map { it.defaultColored() }
+            else this += it.defaultColored()
+        }
+    }
 }
 
 fun String.defaultColored() =

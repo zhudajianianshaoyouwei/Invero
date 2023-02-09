@@ -4,7 +4,7 @@ import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.icon.IconHandler
 import cc.trixey.invero.core.menu.CommandArgument
-import cc.trixey.invero.core.node.Node
+import cc.trixey.invero.core.menu.NodeRunnable
 import cc.trixey.invero.ui.common.event.ClickType
 import kotlinx.serialization.json.*
 import kotlinx.serialization.serializer
@@ -16,7 +16,7 @@ import kotlinx.serialization.serializer
  * @author Arasple
  * @since 2023/1/29 13:43
  */
-object NodeSerializer : JsonTransformingSerializer<Node>(serializer()) {
+object NodeSerializer : JsonTransformingSerializer<NodeRunnable>(serializer()) {
 
     override fun transformDeserialize(element: JsonElement) = when (element) {
         is JsonPrimitive -> buildJsonObject {
@@ -25,7 +25,7 @@ object NodeSerializer : JsonTransformingSerializer<Node>(serializer()) {
         }
 
         is JsonObject -> element
-        is JsonArray -> error("Node can not be JsonArray")
+        is JsonArray -> error("NodeRunnable can not be JsonArray")
     }
 
 }

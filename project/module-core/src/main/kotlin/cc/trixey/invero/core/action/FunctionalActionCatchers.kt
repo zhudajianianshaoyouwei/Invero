@@ -1,7 +1,6 @@
 package cc.trixey.invero.core.action
 
 import cc.trixey.invero.common.Invero
-import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.Context
 import kotlinx.serialization.Serializable
 import org.bukkit.entity.Player

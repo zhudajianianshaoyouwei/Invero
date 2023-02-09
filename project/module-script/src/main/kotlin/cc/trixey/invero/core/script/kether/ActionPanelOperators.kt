@@ -36,10 +36,10 @@ object ActionPanelOperators {
             command("sort", then = text()).option()
         ).apply(it) { filter, sort ->
             now {
-                val session = session() ?: return@now
+                val session = session() ?: return@now false
                 val viewer = session.viewer.get<Player>()
-                if (!regeneratorBaffle.hasNext(viewer.name)) return@now
-                val panel = findNearstPanel<GeneratorPanel<Object, *>>() ?: return@now
+                if (!regeneratorBaffle.hasNext(viewer.name)) return@now false
+                val panel = findNearstPanel<GeneratorPanel<Object, *>>() ?: return@now false
                 val s = filter ?: contextVar<String>("@raw_filter")
 
                 if (s != null) {
@@ -54,6 +54,8 @@ object ActionPanelOperators {
 
                 panel.reset()
                 panel.render()
+
+                return@now true
             }
         }
     }

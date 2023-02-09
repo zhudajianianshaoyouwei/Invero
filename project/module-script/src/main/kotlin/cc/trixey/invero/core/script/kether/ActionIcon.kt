@@ -54,7 +54,7 @@ object ActionIcon {
             now {
                 getRecursivePanels()
                     .filterIsInstance<ElementalPanel>()
-                    .flatMap { it -> it.elements.value.keys }
+                    .flatMap { it.elements.value.keys }
                     .forEach {
                         if (it is IconElement) it.handle(action, true, 0L)
                     }

@@ -20,7 +20,7 @@ import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.action.*
 import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.menu.MenuTitle
-import cc.trixey.invero.core.node.Node
+import cc.trixey.invero.core.menu.NodeRunnable
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -46,13 +46,13 @@ import taboolib.common.env.RuntimeDependency
 
 internal val listStringSerializer = ListSerializer(String.serializer())
 
-object NodeTypeSerializer : KSerializer<Node.Type> {
+object NodeTypeSerializer : KSerializer<NodeRunnable.Type> {
 
-    override val descriptor = PrimitiveSerialDescriptor("Node.Type", PrimitiveKind.STRING)
+    override val descriptor = PrimitiveSerialDescriptor("NodeRunnable.Type", PrimitiveKind.STRING)
 
-    override fun deserialize(decoder: Decoder): Node.Type = decoder.decodeString().tolerantEnum(Node.Type.CONST)
+    override fun deserialize(decoder: Decoder): NodeRunnable.Type = decoder.decodeString().tolerantEnum(NodeRunnable.Type.CONST)
 
-    override fun serialize(encoder: Encoder, value: Node.Type) = encoder.encodeString(value.name)
+    override fun serialize(encoder: Encoder, value: NodeRunnable.Type) = encoder.encodeString(value.name)
 
 }
 
@@ -137,19 +137,18 @@ internal object ActionKetherSerializer : KSerializer<ActionKether> {
     override fun deserialize(decoder: Decoder): ActionKether {
         val element = (decoder as JsonDecoder).decodeJsonElement()
         return when (element) {
-            is JsonArray -> element
-                .mapNotNull { it.jsonPrimitive.contentOrNull }
-                .joinToString("\\n") { it }
-
-            is JsonPrimitive -> element.contentOrNull
+            is JsonArray -> element.mapNotNull { it.jsonPrimitive.contentOrNull }
+            is JsonPrimitive -> listOf(element.content)
             is JsonObject -> error("ActionKetherSerializer does not support JsonObject")
-        }!!.let { ActionKether(it) }
+        }.let { ActionKether(it) }
     }
 
     override fun serialize(encoder: Encoder, value: ActionKether) {
-        val scripts = value.script.split("\\n")
+        val scripts = value.scripts
         scripts.singleOrNull()?.let { encoder.encodeString(it) }
-            ?: encoder.encodeSerializableValue(listStringSerializer, scripts)
+        if (scripts.size > 1) {
+            encoder.encodeSerializableValue(listStringSerializer, scripts)
+        }
     }
 
 }
