@@ -15,7 +15,6 @@ import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.ui.bukkit.PanelContainer
 import cc.trixey.invero.ui.bukkit.api.dsl.generatorPaged
 import cc.trixey.invero.ui.bukkit.panel.PagedGeneratorPanel
-import cc.trixey.invero.ui.common.Panel
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -43,7 +42,7 @@ class PanelGenerator(
     @Serializable(with = PosSerializer::class)
     override val locate: Pos?,
     @SerialName("generator")
-    val settings: GeneratorStructure,
+    val settings: StructureGenerator,
     @JsonNames("icon", "item", "items")
     @Serializable(with = MappedIconSerializer::class)
     override val icons: Map<String, Icon>
@@ -62,8 +61,8 @@ class PanelGenerator(
         } else _scale
     }
 
-    override fun invoke(parent: PanelContainer, session: Session): Panel {
-        return parent.generatorPaged(scale.raw, parent.locate()) {
+    override fun invoke(parent: PanelContainer, session: Session) {
+        parent.generatorPaged(scale.raw, parent.locate()) {
             skipRender = true
 
             // 生成默认图标
@@ -81,7 +80,8 @@ class PanelGenerator(
             generatorOutput {
                 settings.output.invoke(session, this@PanelGenerator, this, (it as Object).variables)
             }
-            submit(delay = 1L) {
+
+            submit(delay = 2L) {
                 render()
                 def.forEach {
                     it.relocate()

@@ -48,6 +48,7 @@ object BaseMenuSerializer : JsonTransformingSerializer<BaseMenu>(serializer()) {
         "scale",
         "pages",
         "generator",
+        "scroll",
         "items", "icons", "item", "icon"
     )
 

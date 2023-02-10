@@ -8,7 +8,6 @@ import cc.trixey.invero.core.serialize.PosSerializer
 import cc.trixey.invero.core.serialize.ScaleSerializer
 import cc.trixey.invero.ui.bukkit.PanelContainer
 import cc.trixey.invero.ui.bukkit.api.dsl.pagedNetesed
-import cc.trixey.invero.ui.bukkit.panel.PagedNetesedPanel
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -43,8 +42,8 @@ class PanelPaged(
         require(defaultPage in pages.indices) { "Default Page ($defaultPage) is out of indices ${pages.indices}" }
     }
 
-    override fun invoke(parent: PanelContainer, session: Session): PagedNetesedPanel {
-        return parent.pagedNetesed(scale.raw, parent.locate(), defaultPage = defaultPage) {
+    override fun invoke(parent: PanelContainer, session: Session) {
+        parent.pagedNetesed(scale.raw, parent.locate(), defaultPage = defaultPage) {
             pages.forEach { it.invoke(this, session) }
         }
     }

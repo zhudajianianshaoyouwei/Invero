@@ -12,13 +12,13 @@ import kotlinx.serialization.json.jsonPrimitive
 
 /**
  * Invero
- * cc.trixey.invero.core.panel.GeneratorStructure
+ * cc.trixey.invero.core.panel.StructureGenerator
  *
  * @author Arasple
  * @since 2023/1/29 22:23
  */
 @Serializable
-class GeneratorStructure(
+class StructureGenerator(
     @SerialName("source")
     val source: String?,
     val elements: List<JsonObject>?,

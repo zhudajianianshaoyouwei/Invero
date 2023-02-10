@@ -9,7 +9,6 @@ import cc.trixey.invero.core.serialize.PosSerializer
 import cc.trixey.invero.core.serialize.ScaleSerializer
 import cc.trixey.invero.ui.bukkit.PanelContainer
 import cc.trixey.invero.ui.bukkit.api.dsl.standard
-import cc.trixey.invero.ui.common.Panel
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -51,8 +50,8 @@ class PanelStandard(
         } else _scale
     }
 
-    override fun invoke(parent: PanelContainer, session: Session): Panel {
-        return parent.standard(scale.raw, parent.locate()) {
+    override fun invoke(parent: PanelContainer, session: Session) {
+        parent.standard(scale.raw, parent.locate()) {
             icons.forEach { (_, icon) -> icon.invoke(session, this@PanelStandard, this@standard) }
         }
     }

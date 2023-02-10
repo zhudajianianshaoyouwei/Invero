@@ -1,9 +1,10 @@
 package cc.trixey.invero.core
 
+import cc.trixey.invero.core.serialize.LayoutSerializer
+import cc.trixey.invero.core.util.SPECIAL_GROUP
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Positions
-import cc.trixey.invero.core.util.SPECIAL_GROUP
-import cc.trixey.invero.core.serialize.LayoutSerializer
+import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -24,13 +25,10 @@ class Layout(val raw: List<String>) {
 
     @Transient
     private val mapped = mutableMapOf<String, Positions>().apply {
-        raw.forEachIndexed { rows, line ->
-            if (line.isNotBlank()) {
-                split(line).forEachIndexed { index, key ->
-                    if (key.isNotBlank()) {
-                        computeIfAbsent(key) { Positions() } += Pos(index to rows)
-                    }
-                }
+        raw.forEachIndexed { rows, rawLine ->
+            val line = rawLine.ifBlank { buildString { repeat(scale.first) { append(' ') } } }
+            split(line).forEachIndexed { index, key ->
+                computeIfAbsent(key) { Positions() } += Pos(index to rows)
             }
         }
     }
@@ -43,6 +41,22 @@ class Layout(val raw: List<String>) {
     fun getScale(): Pair<Int, Int> {
         return scale
     }
+
+    fun findRectangle(search: String = " "): Pair<Pos, Scale>? {
+        mapped.forEach { (key, value) ->
+            if (key == search) {
+                val positions = value.values
+
+                val start = positions.min()
+                val width = positions.maxBy { it.x }.x - positions.minBy { it.x }.x + 1
+                val height = positions.max().y - positions.min().y + 1
+
+                return start to Scale(width to height)
+            }
+        }
+        return null
+    }
+
 
     fun getCoerecedScale(): Pair<Int, Int> {
         mapped.maxBy { it.value.values.maxBy { it.y } }

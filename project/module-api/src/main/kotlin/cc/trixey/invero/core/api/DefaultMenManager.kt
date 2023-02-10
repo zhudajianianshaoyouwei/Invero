@@ -17,6 +17,7 @@ import cc.trixey.invero.core.action.*
 import cc.trixey.invero.core.menu.MenuBindings
 import cc.trixey.invero.core.panel.PanelGenerator
 import cc.trixey.invero.core.panel.PanelPaged
+import cc.trixey.invero.core.panel.PanelScroll
 import cc.trixey.invero.core.panel.PanelStandard
 import cc.trixey.invero.core.serialize.BaseMenuSerializer
 import cc.trixey.invero.core.serialize.hocon.PatchedLoader
@@ -63,6 +64,7 @@ class DefaultMenManager : MenuManager {
             subclass(PanelStandard::class)
             subclass(PanelGenerator::class)
             subclass(PanelPaged::class)
+            subclass(PanelScroll::class)
         }
 
         polymorphic(Action::class) {
@@ -236,14 +238,14 @@ class DefaultMenManager : MenuManager {
                     menus[menuId]?.unregister()
                     menus[menuId] = loaded
                     letCatching { loaded.register() }
+                    console().sendLang("menu-loader-auto-reload-successed", menuId)
                     // auto open
                     onlinePlayers
                         .filter { it.session?.menu?.id == menuId }
-                        .also {
-                            if (it.isNotEmpty()) console().sendLang("menu-loader-auto-reload-successed", menuId)
-                        }
                         .forEach {
-                            loaded.open(player = it, vars = it.session?.getVariables() ?: emptyMap())
+                            submitAsync(delay = 5L) {
+                                loaded.open(player = it, vars = it.session?.getVariables() ?: emptyMap())
+                            }
                         }
                 }
             }

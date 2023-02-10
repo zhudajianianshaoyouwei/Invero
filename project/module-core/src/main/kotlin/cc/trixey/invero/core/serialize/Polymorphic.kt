@@ -10,6 +10,7 @@ import cc.trixey.invero.core.item.TextureMaterial
 import cc.trixey.invero.core.item.TextureSource
 import cc.trixey.invero.core.panel.PanelGenerator
 import cc.trixey.invero.core.panel.PanelPaged
+import cc.trixey.invero.core.panel.PanelScroll
 import cc.trixey.invero.core.panel.PanelStandard
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -81,6 +82,7 @@ internal object SelectorAgentPanel : JsonContentPolymorphicSerializer<AgentPanel
             // generator -> PanelGeneraotr... etc
             "pages" in keys -> PanelPaged.serializer()
             "generator" in keys -> PanelGenerator.serializer()
+            "scroll" in keys -> PanelScroll.serializer()
             else -> PanelStandard.serializer()
         }
     }
