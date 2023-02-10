@@ -89,12 +89,12 @@ object Listener {
                 val type = ClickType.find(mode, button, rawSlot) ?: return
                 val inventory = window.inventory as InventoryPacket
 
-                submit {
-                    if (rawSlot >= 0) {
-                        player.sendCancelCoursor()
-                        inventory.update(rawSlot)
-                    }
+                if (rawSlot >= 0) {
+                    player.sendCancelCoursor()
+                    inventory.update(rawSlot)
+                }
 
+                submit {
                     inventory.handleClickEvent(rawSlot, type)
                 }
             }

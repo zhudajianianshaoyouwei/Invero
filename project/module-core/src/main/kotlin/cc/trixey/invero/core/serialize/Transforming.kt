@@ -83,7 +83,7 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
     private val displayKeys = arrayOf(
         "material", "texture", "mat",
         "name",
-        "lore", "lores",
+        "lore", "lores", "enhancedLore",
         "amount", "count", "amt",
         "damage",
         "customModelData", "model",
@@ -92,7 +92,7 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
         "enchantments",
         "flags",
         "unbreakable",
-        "nbt"
+        "nbt",
     )
 
     private val textureKeysHead = arrayOf(

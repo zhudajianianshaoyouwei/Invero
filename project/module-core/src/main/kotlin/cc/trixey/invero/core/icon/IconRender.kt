@@ -39,8 +39,8 @@ fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
         }
     } else texture.generateItem(element.context) {
         val context = element.context
-        name?.let { postName(context.parse(name).defaultColored()) }
-        lore?.let { postLore(context.parse(lore).defaultColored()) }
+        name?.let { postName(context.parse(name).colored()) }
+        lore?.let { postLore(context.parse(lore).colored(enhancedLore)) }
         damage?.let { durability = it }
         customModelData?.let { postModel(it) }
         glow?.proceed { postShiny() }
@@ -75,8 +75,8 @@ fun Frame.translateUpdate(session: Session, element: IconElement, defaultFrame: 
         val basedLore = lore ?: defaultFrame.lore
         val context = element.context
 
-        if (basedName != null) postName(session.parse(basedName, context).defaultColored())
-        if (!basedLore.isNullOrEmpty()) postLore(session.parse(basedLore, context).defaultColored())
+        if (basedName != null) postName(session.parse(basedName, context).colored())
+        if (!basedLore.isNullOrEmpty()) postLore(session.parse(basedLore, context).colored(enhancedLore))
 
         return this
     }
@@ -88,18 +88,22 @@ fun Frame.translateUpdate(session: Session, element: IconElement, defaultFrame: 
     }
 }
 
-fun List<String>.defaultColored(): List<String> {
-    val iterator = iterator()
+fun List<String>.colored(enhanceProcess: Boolean?): List<String> {
+    return if (enhanceProcess != true) {
+        map { it.colored() }
+    } else {
+        val iterator = iterator()
 
-    return buildList {
-        while (iterator.hasNext()) {
-            val it = iterator.next()
-            if (it.contains("\\n")) this += it.split("\\n").map { it.defaultColored() }
-            else this += it.defaultColored()
+        buildList {
+            while (iterator.hasNext()) {
+                val it = iterator.next()
+                if (it.contains("\\n")) this += it.split("\\n").map { it.colored() }
+                else this += it.colored()
+            }
         }
     }
 }
 
-fun String.defaultColored() =
+fun String.colored() =
     if (!isPrefixColored() && isNotBlank()) "${InveroSettings.defaultNameColor}$this"
     else this

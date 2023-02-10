@@ -81,7 +81,7 @@ class PanelGenerator(
                 settings.output.invoke(session, this@PanelGenerator, this, (it as Object).variables)
             }
 
-            submit(delay = 2L) {
+            submit(delay = 1L) {
                 render()
                 def.forEach {
                     it.relocate()

@@ -52,6 +52,7 @@ class Frame(
     @Serializable(with = ListSlotSerializer::class)
     @JsonNames("slots", "pos", "position", "positions")
     val slot: List<Slot>?,
+    val enhancedLore: Boolean?
 ) {
 
     init {
@@ -106,7 +107,8 @@ class Frame(
         "flags",
         "unbreakable",
         "nbt",
-        "slot"
+        "slot",
+        "enhancedLore"
     ).forEach {
         if (getProperty<Any?>(it) == null) {
             val copy = frame.getProperty<Any>(it)
@@ -114,6 +116,5 @@ class Frame(
             else setProperty(it, copy)
         }
     }
-
 
 }

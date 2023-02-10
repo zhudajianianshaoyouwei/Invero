@@ -238,15 +238,15 @@ class DefaultMenManager : MenuManager {
                     menus[menuId]?.unregister()
                     menus[menuId] = loaded
                     letCatching { loaded.register() }
-                    console().sendLang("menu-loader-auto-reload-successed", menuId)
                     // auto open
-                    onlinePlayers
-                        .filter { it.session?.menu?.id == menuId }
-                        .forEach {
-                            submitAsync(delay = 5L) {
+                    submitAsync {
+                        console().sendLang("menu-loader-auto-reload-successed", menuId)
+                        onlinePlayers
+                            .filter { it.session?.menu?.id == menuId }
+                            .forEach {
                                 loaded.open(player = it, vars = it.session?.getVariables() ?: emptyMap())
                             }
-                        }
+                    }
                 }
             }
         }

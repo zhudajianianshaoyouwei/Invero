@@ -33,7 +33,12 @@ object ActionPanel {
                 when (it.expects("at", "page", "icon")) {
                     "at" -> indexs += newFrame(it.nextParsedAction()).run<Any>().getNow(null).cint
                     "page" -> {
-                        ActionPanelOperators.parser(locatePanel(indexs)).reader.invoke(it)
+                        ActionPage.parserPage(locatePanel(indexs)).reader.invoke(it)
+                        break
+                    }
+
+                    "scroll" -> {
+                        ActionScroll.parserScroll(locatePanel(indexs))
                         break
                     }
 

@@ -18,7 +18,7 @@ import kotlinx.serialization.Transient
 class StructureScroll(
     val tail: Int?,
     @SerialName("direction")
-    val _direction: String,
+    val _direction: String?,
     val colums: List<@Serializable(with = ListIconSerializer::class) List<Icon>>
 ) {
 

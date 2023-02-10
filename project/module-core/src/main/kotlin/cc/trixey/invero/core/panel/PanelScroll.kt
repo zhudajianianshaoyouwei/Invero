@@ -64,18 +64,18 @@ class PanelScroll(
     }
 
     override fun invoke(parent: PanelContainer, session: Session) {
-        val (locate, scale) = scrollDistribution
+        val (scrollLocate, scrollScale) = scrollDistribution
 
         // 背景
         parent.standard(scale.raw, parent.locate(), weight = PanelWeight.BACKGROUND) {
             icons.forEach { (_, icon) -> icon.invoke(session, this@PanelScroll, this@standard) }
         }
         // 滚动区域
-        parent.scroll(scale.raw, locate.value, direction = scroll.direction, tail = scroll.tail ?: -1) {
+        parent.scroll(scrollScale.raw, scrollLocate.value, direction = scroll.direction, tail = scroll.tail ?: -1) {
             scroll.colums.forEach { icons ->
                 insertColum {
                     if (it <= icons.lastIndex)
-                        icons[it].invoke(session, this@PanelScroll, this, renderNow = false)
+                        icons[it].invoke(session, this@PanelScroll, this)
                     else
                         null
                 }
