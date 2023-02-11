@@ -147,7 +147,7 @@ object CommandDev {
 
             fun dumpPanels(indent: String = " ", container: PanelContainer) {
                 container.panels.forEachIndexed { index, panel ->
-                    println(indent + "Panel#$index (${panel.scale} at ${panel.locate})")
+                    println(indent + "Panel#$index (${panel.scale} at ${panel.locate}) [${panel.javaClass.simpleName}]")
                     if (panel is PanelContainer) {
                         println("$indent  > __SUB PANELS__ (${panel.panels.size})")
                         dumpPanels("$indent  ", panel)

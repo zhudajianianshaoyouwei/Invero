@@ -14,22 +14,41 @@ import cc.trixey.invero.ui.common.ProxyInventory
  */
 interface IOPanel : ElementalPanel {
 
-    val insertable: ArrayList<Pos>
-
-    val retrievable: List<Pos>
-        get() = insertable
-
-    val locked: ArrayList<Pos>
+    val freeSlots: MutableSet<Int>
 
     val inventory: ProxyInventory
         get() = window.inventory
 
-    fun lock(pos: Pos)
+    var callback: () -> Unit
 
-    fun free(pos: Pos)
+    fun listener(block: () -> Unit) {
+        callback = block
+    }
+
+    fun runCallback() = callback()
+
+    fun delete(pos: Pos) = delete(pos.slot)
+
+    fun lock(pos: Pos) = lock(pos.slot)
+
+    fun free(pos: Pos) = free(pos.slot)
+
+    fun delete(slot: Int)
+
+
+    fun lock(slot: Int) {
+        freeSlots -= slot
+    }
+
+    fun free(slot: Int) {
+        freeSlots += slot
+    }
 
     fun renderStorage()
 
-    fun hasAvailableSlot(): Boolean
+    override fun render() {
+        super.render()
+        renderStorage()
+    }
 
 }

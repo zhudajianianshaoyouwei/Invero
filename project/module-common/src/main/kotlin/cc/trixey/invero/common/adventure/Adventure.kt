@@ -46,7 +46,7 @@ fun String.parseMiniMessageComponent(): Component {
 }
 
 fun String.parseAndSendMiniMessage(player: Player) {
-    bukkitAudiences.player(player).sendMessage(parseMiniMessageComponent())
+    bukkitAudiences.player(player).sendMessage(translateAmpersandColor().parseMiniMessageComponent())
 }
 
 fun String.translateAmpersandColor(): String {

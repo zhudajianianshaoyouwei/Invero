@@ -6,7 +6,6 @@ import cc.trixey.invero.ui.common.ContainerType
 import cc.trixey.invero.ui.common.StorageMode
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
 import org.bukkit.event.inventory.InventoryType
 import taboolib.common5.Baffle
 import java.util.concurrent.TimeUnit
@@ -28,8 +27,8 @@ class MenuSettings(
     val type: InventoryType = InventoryType.CHEST,
     @SerialName("override-player-inventory")
     val overridePlayerInventory: Boolean = true,
-    @SerialName("hide-player-storage")
-    val hidePlayerStorage: Boolean = false,
+    @SerialName("hide-player-inventory")
+    val hidePlayerInventory: Boolean = false,
     @SerialName("min-interact-interval")
     val minInteractInterval: Long = 2_00
 ) {
@@ -43,7 +42,8 @@ class MenuSettings(
         else ContainerType.ofRows(rows ?: 6)
     }
 
-    @Transient
-    val storageMode = StorageMode(overridePlayerInventory, hidePlayerStorage)
+    val storageMode by lazy {
+        StorageMode(overridePlayerInventory, hidePlayerInventory)
+    }
 
 }

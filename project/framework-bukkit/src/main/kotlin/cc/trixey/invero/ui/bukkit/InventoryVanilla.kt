@@ -1,8 +1,10 @@
 package cc.trixey.invero.ui.bukkit
 
 import cc.trixey.invero.ui.bukkit.api.isRegistered
-import cc.trixey.invero.ui.bukkit.panel.IOStoragePanel
-import cc.trixey.invero.ui.common.event.ClickType
+import cc.trixey.invero.ui.bukkit.panel.CraftingPanel
+import cc.trixey.invero.ui.bukkit.util.clickType
+import cc.trixey.invero.ui.common.panel.IOPanel
+import cc.trixey.invero.ui.common.util.anyInstancePanel
 import org.bukkit.Bukkit
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -80,7 +82,8 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         if (doCloseInventory && isViewing()) viewer.closeInventory()
         if (updateInventory) viewer.updateInventory()
 
-        storage.afterClose()
+        // 当前窗口若有 IOPanel，则关闭后不恢复背包存储
+        if (!window.anyInstancePanel<IOPanel>()) storage.afterClose()
     }
 
     fun handleClick(e: InventoryClickEvent) {
@@ -100,7 +103,7 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         val pos = window.scale.convertToPosition(slot)
         window.panels.sortedByDescending { it.weight }.forEach {
             if (pos in it.area) {
-                val converted = ClickType.findBukkit(e.click.name, e.hotbarButton)
+                val converted = e.clickType
                 if (it.runClickCallbacks(pos, converted, e)) {
                     it.handleClick(pos - it.locate, converted, e)
                 }
@@ -114,9 +117,13 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         e.isCancelled = true
         if (!dragCallback(e)) return
         // 寻找 Panel 交接
-        val handler = window.panels.sortedBy { it.locate }.sortedByDescending { it.weight }.find {
-            e.rawSlots.all { slot -> window.scale.convertToPosition(slot) in it.area }
-        }
+        val handler = window
+            .panels
+            .sortedBy { it.locate }
+            .sortedByDescending { it.weight }
+            .find {
+                e.rawSlots.all { slot -> window.scale.convertToPosition(slot) in it.area }
+            }
         // 传递给 Panel 处理
         if (handler != null) {
             val affected = e.rawSlots.map { window.scale.convertToPosition(it) }
@@ -135,13 +142,20 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
             if (window.storageMode.overridePlayerInventory) return
             val insertItem = e.currentItem?.clone() ?: return
 
-            window.getPanelsRecursively().filterIsInstance<IOStoragePanel>().sortedBy { it.locate }
-                .sortedByDescending { it.weight }.forEach {
+            window
+                .getPanelsRecursively()
+                .filterIsInstance<CraftingPanel>()
+                .sortedBy { it.locate }
+                .sortedByDescending { it.weight }
+                .forEach {
                     val previous = insertItem.amount
-                    val result = it.stackItemStack(insertItem.clone())
+                    val result = it.insert(insertItem.clone())
                     insertItem.amount = result
 
-                    if (previous != result) it.renderStorage()
+                    if (previous != result) {
+                        it.renderStorage()
+                        it.runCallback()
+                    }
                     if (result <= 0) return@forEach
                 }
 
@@ -151,8 +165,12 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         else if (!window.storageMode.overridePlayerInventory) {
             val clickedSlot = window.scale.convertToPosition(slot)
 
-            window.panels.sortedBy { it.locate }.sortedByDescending { it.weight }
-                .find { window.scale.convertToPosition(e.rawSlot) in it.area }?.handleItemsMove(clickedSlot, e)
+            window
+                .panels
+                .sortedBy { it.locate }
+                .sortedByDescending { it.weight }
+                .find { window.scale.convertToPosition(e.rawSlot) in it.area }
+                ?.handleItemsMove(clickedSlot, e)
         }
     }
 

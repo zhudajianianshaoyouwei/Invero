@@ -39,7 +39,7 @@ object BaseMenuSerializer : JsonTransformingSerializer<BaseMenu>(serializer()) {
         "virtual",
         "type",
         "override-player-inventory",
-        "hidePlayerStorage"
+        "hide-player-inventory"
     )
 
     private val panelKeys = arrayOf(
@@ -49,6 +49,7 @@ object BaseMenuSerializer : JsonTransformingSerializer<BaseMenu>(serializer()) {
         "pages",
         "generator",
         "scroll",
+        "crafting",
         "items", "icons", "item", "icon"
     )
 

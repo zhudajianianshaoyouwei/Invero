@@ -68,7 +68,7 @@ class InventoryPacket(override val window: BukkitWindow) : ProxyBukkitInventory 
 
     fun handleClickEvent(slot: Int, type: ClickType) {
         if (!clickCallback(slot, type)) return
-        if (slot >= containerSize) update()
+        if (type.isItemMoveable) update()
         val pos = window.scale.convertToPosition(slot)
 
         window.panels.sortedByDescending { it.weight }.forEach {

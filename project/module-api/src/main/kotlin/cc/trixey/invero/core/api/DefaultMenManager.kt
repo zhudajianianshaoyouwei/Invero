@@ -65,6 +65,7 @@ class DefaultMenManager : MenuManager {
             subclass(PanelGenerator::class)
             subclass(PanelPaged::class)
             subclass(PanelScroll::class)
+            subclass(PanelGenerator::class)
         }
 
         polymorphic(Action::class) {
@@ -234,18 +235,20 @@ class DefaultMenManager : MenuManager {
                     it.prettyPrint()
                     console().sendLang("menu-loader-auto-reload-errored", menuId)
                 }.getOrNull()?.let { loaded ->
+                    val viewers = onlinePlayers.filter { it.session?.menu?.id == menuId }
                     // replace in memory
-                    menus[menuId]?.unregister()
+                    menus[menuId]?.apply {
+                        viewers.forEach { close(it, false, closeInventory = false) }
+                        unregister()
+                    }
                     menus[menuId] = loaded
                     letCatching { loaded.register() }
                     // auto open
                     submitAsync {
                         console().sendLang("menu-loader-auto-reload-successed", menuId)
-                        onlinePlayers
-                            .filter { it.session?.menu?.id == menuId }
-                            .forEach {
-                                loaded.open(player = it, vars = it.session?.getVariables() ?: emptyMap())
-                            }
+                        viewers.forEach {
+                            loaded.open(player = it, vars = it.session?.getVariables() ?: emptyMap())
+                        }
                     }
                 }
             }

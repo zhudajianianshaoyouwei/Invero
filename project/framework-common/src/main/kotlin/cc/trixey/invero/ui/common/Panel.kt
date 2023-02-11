@@ -84,4 +84,10 @@ interface Panel : Gridable {
      */
     fun rerender() = wipe().also { render() }
 
+    /**
+     * Pos converter
+     */
+    val Pos.slot: Int
+        get() = convertToSlot(scale)
+
 }

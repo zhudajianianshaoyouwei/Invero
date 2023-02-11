@@ -6,16 +6,16 @@ import org.gradle.api.plugins.PluginAware
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.*
 
-val rootName = "Invero"
-val rootGroup = "cc.trixey.invero"
-val rootVersion = "1.0.0-dev-10"
+const val rootName = "Invero"
+const val rootGroup = "cc.trixey.invero"
+const val rootVersion = "1.0.0-dev-10"
 
-val kotlinVersion = "1.8.0"
-val shadowJarVersion = "7.1.2"
-val taboolibVersion = "6.0.10-84"
-val taboolibPluginVersion = "1.56"
+const val kotlinVersion = "1.8.0"
+const val shadowJarVersion = "7.1.2"
+const val taboolibPluginVersion = "1.56"
+val taboolibVersion = taboolibLatestVersion.also { println("Using taboolib-version = $it") }
 
-val repoTabooProject = "https://repo.tabooproject.org/repository/releases"
+const val repoTabooProject = "https://repo.tabooproject.org/repository/releases"
 
 val usedTaboolibModules = setOf(
     "common",

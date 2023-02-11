@@ -14,7 +14,9 @@ package cc.trixey.invero.ui.common
  * NOT USE (not restore, no exceed support, not clean)
  *
  */
-data class StorageMode(val overridePlayerInventory: Boolean = true, val alwaysClean: Boolean = true) {
+data class StorageMode(val overridePlayerInventory: Boolean, val alwaysClean: Boolean) {
+
+    constructor(both: Boolean = true) : this(both, both)
 
     val shouldClean: Boolean
         get() = overridePlayerInventory && alwaysClean

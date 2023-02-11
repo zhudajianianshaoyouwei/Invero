@@ -21,6 +21,8 @@ inline fun <reified P : Panel> TypedPanelContainer<*>.anyInstancePanel(): Boolea
  */
 fun Panel.locatingAbsoluteSlot(position: Pos) = locatingAbsoluteSlot(position, this)
 
+fun Panel.locatingAbsoluteSlot(relativeSlot: Int) = locatingAbsoluteSlot(scale.convertToPosition(relativeSlot), this)
+
 fun locatingAbsoluteSlot(position: Pos, panel: Panel): Int {
     val parent = panel.parent
     var pos = position
