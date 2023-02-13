@@ -41,14 +41,20 @@ object ActionStorage {
                     "get" -> panel.getStorageItem(slot)
                     "exist", "exists" -> panel.getStorageItem(slot).isNotAir()
                     "empty" -> panel.getStorageItem(slot).isAir
-                    "delete", "del" -> panel.delete(slot)
+                    "delete", "del" -> {
+                        panel.delete(slot)
+                        panel.runCallback()
+                    }
+
                     "set" -> {
                         if (value != null) {
                             val item = newFrame(value).run<ItemStack?>().getNow(null)
                             panel.set(slot, item)
+                            panel.runCallback()
                         } else "NULLED ITEM"
                     }
 
+                    "isFree" -> slot in panel.freeSlots
                     "isLocked" -> slot !in panel.freeSlots
                     "free" -> panel.free(slot)
                     "lock" -> panel.lock(slot)

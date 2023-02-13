@@ -22,6 +22,9 @@ object Comamnd {
     val dev = CommandDev
 
     @CommandBody
+    val item = CommandItem
+
+    @CommandBody
     val reload = subCommand { execute { sender, _, _ -> Invero.API.getMenuManager().reload(sender) } }
 
     /*

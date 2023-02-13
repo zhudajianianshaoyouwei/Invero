@@ -43,9 +43,8 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
 
     val container = when {
         containerType.isOrdinaryChest -> Bukkit.createInventory(
-            Holder(window), containerSize, inventoryTitle
+            Holder(window), containerType.containerSize, inventoryTitle
         )
-
         else -> error("Not supported type yet")
     }
 
@@ -190,12 +189,11 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
 
     class Holder(val window: BukkitWindow) : InventoryHolder {
 
-        override fun getInventory(): Inventory {
-            return getProxyInventory().container
-        }
+        internal val inventory: Inventory
+            get() = (window.inventory as InventoryVanilla).container
 
-        fun getProxyInventory(): InventoryVanilla {
-            return window.inventory as InventoryVanilla
+        override fun getInventory(): Inventory {
+            return inventory
         }
 
     }

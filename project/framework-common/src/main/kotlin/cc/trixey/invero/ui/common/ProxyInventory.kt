@@ -11,7 +11,7 @@ interface ProxyInventory {
 
     val window: Window
 
-    val containerType: cc.trixey.invero.ui.common.ContainerType
+    val containerType: ContainerType
         get() = window.type
 
     val containerSize: Int

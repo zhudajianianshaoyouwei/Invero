@@ -27,18 +27,11 @@ import taboolib.module.nms.getItemTag
 fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
     val frame = this@render
     val original = element.value
+    val context = element.context
 
-    if (texture == null) {
-        element.value = element.value.apply {
-            // 当前材质无名称，但之前有，则继承
-            if (name == null && original.hasName()) postName(original.getName()!!)
-            // 当前材质无Lore，但之前有，则继承
-            if (lore.isNullOrEmpty() && original.hasLore()) postLore(original.getLore()!!)
-            // 当前材质的数量继承
-            if (frame.amount == null && original.amount != 1) postAmount(original.amount)
-        }
-    } else texture.generateItem(element.context) {
-        val context = element.context
+    // TODO
+    // support for color,enchantments
+    fun ItemStack.frameApply(): ItemStack {
         name?.let { postName(context.parse(name).colored()) }
         lore?.let { postLore(context.parse(lore).colored(enhancedLore)) }
         damage?.let { durability = it }
@@ -50,20 +43,28 @@ fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
             itemMeta = itemMeta?.also { it.addItemFlags(*flags.toTypedArray()) }
         }
         unbreakable?.proceed { itemMeta = itemMeta?.also { it.isUnbreakable = true } }
-        nbtData?.let {
-            val raw = if (nbtDataDynamic) ItemTag.fromLegacyJson(session.parse(nbtData.toJson(), context)) else nbtData
-
+        nbt?.let {
             ItemTag().apply {
                 putAll(getItemTag())
-                putAll(raw)
-                saveTo(this@generateItem)
+                putAll(buildNBT { context.parse(it) })
+                saveTo(this@frameApply)
             }
         }
-        // TODO
-        // support for color,enchantments
         if (this@render.amount != null) amount = this@render.amount
-        element.value = this
+        return this
     }
+
+    if (texture == null) {
+        element.value = element.value.apply {
+            frameApply()
+            // 当前材质无名称，但之前有，则继承
+            if (name == null && original.hasName()) postName(original.getName()!!)
+            // 当前材质无Lore，但之前有，则继承
+            if (lore.isNullOrEmpty() && original.hasLore()) postLore(original.getLore()!!)
+            // 当前材质的数量继承
+            if (frame.amount == null && original.amount != 1) postAmount(original.amount)
+        }
+    } else texture.generateItem(element.context) { element.value = frameApply() }
 
     if (slot != null) element.set(slot.flatRelease(agent.scale))
 }

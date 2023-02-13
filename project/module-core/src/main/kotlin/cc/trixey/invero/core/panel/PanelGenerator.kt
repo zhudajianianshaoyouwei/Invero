@@ -61,7 +61,7 @@ class PanelGenerator(
         } else _scale
     }
 
-    override fun invoke(parent: PanelContainer, session: Session) {
+    override fun invoke(parent: PanelContainer, session: Session) =
         parent.generatorPaged(scale.raw, parent.locate()) {
             skipRender = true
 
@@ -90,7 +90,6 @@ class PanelGenerator(
                 (session.menu as BaseMenu).updateTitle(session)
             }
         }
-    }
 
     fun filter(session: Session, panel: PagedGeneratorPanel<*>, filter: String) {
         val viewer = session.viewer.get<Player>()

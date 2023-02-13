@@ -65,7 +65,9 @@ object BaseMenuSerializer : JsonTransformingSerializer<BaseMenu>(serializer()) {
         }
 
         if (
-            arrayOf("panel", "panels").none { it in struc.keys } && arrayOf("layout", "scale").any { it in struc.keys }
+            arrayOf("panel", "panels").none { it in struc.keys }
+            &&
+            arrayOf("layout", "scale", "rows").any { it in struc.keys }
         ) {
             struc["panel"] = buildJsonObject {
                 panelKeys.forEach { key ->
@@ -84,16 +86,17 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
     private val displayKeys = arrayOf(
         "material", "texture", "mat",
         "name",
-        "lore", "lores", "enhancedLore",
+        "lore", "lores",
         "amount", "count", "amt",
-        "damage",
+        "damage", "durability", "dur",
         "customModelData", "model",
         "color",
-        "glow",
-        "enchantments",
-        "flags",
+        "glow", "shiny",
+        "enchantments", "enchantment", "enchant",
+        "flags", "flag",
         "unbreakable",
         "nbt",
+        "enhancedLore",
     )
 
     private val textureKeysHead = arrayOf(
@@ -106,7 +109,7 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
         "itemsadder", "ia",
         "headdatabase", "hdb",
         "base64", "serialized",
-        "script", "script"
+        "kether"
     )
 
     override fun transformDeserialize(element: JsonElement): JsonElement {

@@ -39,7 +39,7 @@ fun <T : Panel> ScriptFrame.findPanelAt(indexs: List<Int>): T? {
 }
 
 fun ScriptFrame.iconElementBy(byName: String?, bySlot: Int?, referedPanel: ElementalPanel?): IconElement {
-    return (referedPanel ?: selfPanel()).findIconElement(byName, bySlot) ?: selfIcon()
+    return (referedPanel ?: findNearstPanelRecursively())?.findIconElement(byName, bySlot) ?: selfIcon()
 }
 
 fun ElementalPanel.findIconElement(byName: String?, bySlot: Int?): IconElement? {
@@ -66,9 +66,12 @@ inline fun <reified T : Panel> ScriptFrame.selfPanel(): T {
 }
 
 inline fun <reified T : Panel> ScriptFrame.findNearstPanel(): T? {
-    val siblings = contextVar<T>("@panel")?.getSiblings()
-
+    val siblings = contextVar<T>("@panel")?.getSiblings()?.toMutableList()
     return (siblings ?: session()?.window?.panels)?.filterIsInstance<T>()?.firstOrNull()
+}
+
+inline fun <reified T : Panel> ScriptFrame.findNearstPanelRecursively(): T? {
+    return contextVar<Panel>("@panel") as? T ?: getRecursivePanels().filterIsInstance<T>().firstOrNull()
 }
 
 fun <T> ScriptFrame.contextVar(key: String): T? {

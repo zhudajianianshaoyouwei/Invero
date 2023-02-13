@@ -2,7 +2,7 @@ package cc.trixey.invero.ui.common
 
 /**
  * Invero
- * cc.trixey.invero.ui.common.WindowType
+ * WindowType
  *
  * @author Arasple
  * @since 2022/10/20
@@ -155,69 +155,69 @@ enum class ContainerType(val vanillaId: String, val serialId: Int, slotsContaine
     }
 
     val isOrdinaryChest by lazy {
-        this == cc.trixey.invero.ui.common.ContainerType.GENERIC_9X1 || this == cc.trixey.invero.ui.common.ContainerType.GENERIC_9X2 || this == cc.trixey.invero.ui.common.ContainerType.GENERIC_9X3 || this == cc.trixey.invero.ui.common.ContainerType.GENERIC_9X4 || this == cc.trixey.invero.ui.common.ContainerType.GENERIC_9X5 || this == cc.trixey.invero.ui.common.ContainerType.GENERIC_9X6
+        this == GENERIC_9X1 || this == GENERIC_9X2 || this == GENERIC_9X3 || this == GENERIC_9X4 || this == GENERIC_9X5 || this == GENERIC_9X6
     }
 
     val rows: Int by lazy {
         when (this) {
-            cc.trixey.invero.ui.common.ContainerType.GENERIC_9X1 -> 1
-            cc.trixey.invero.ui.common.ContainerType.GENERIC_9X2 -> 2
-            cc.trixey.invero.ui.common.ContainerType.GENERIC_9X3 -> 3
-            cc.trixey.invero.ui.common.ContainerType.GENERIC_9X4 -> 4
-            cc.trixey.invero.ui.common.ContainerType.GENERIC_9X5 -> 5
-            cc.trixey.invero.ui.common.ContainerType.GENERIC_9X6 -> 6
-            cc.trixey.invero.ui.common.ContainerType.GENERIC_3X3 -> 3
-            cc.trixey.invero.ui.common.ContainerType.ANVIL -> 1
-            cc.trixey.invero.ui.common.ContainerType.BEACON -> TODO()
-            cc.trixey.invero.ui.common.ContainerType.BLAST_FURNACE -> TODO()
-            cc.trixey.invero.ui.common.ContainerType.BREWING_STAND -> TODO()
-            cc.trixey.invero.ui.common.ContainerType.CRAFTING -> TODO()
-            cc.trixey.invero.ui.common.ContainerType.ENCHANTMENT -> TODO()
-            cc.trixey.invero.ui.common.ContainerType.FURNACE -> TODO()
-            cc.trixey.invero.ui.common.ContainerType.GRINDSTONE -> TODO()
-            cc.trixey.invero.ui.common.ContainerType.HOPPER -> TODO()
-            cc.trixey.invero.ui.common.ContainerType.LOOM -> TODO()
-            cc.trixey.invero.ui.common.ContainerType.MERCHANT -> TODO()
-            cc.trixey.invero.ui.common.ContainerType.SHULKER_BOX -> TODO()
-            cc.trixey.invero.ui.common.ContainerType.SMOKER -> TODO()
-            cc.trixey.invero.ui.common.ContainerType.CARTOGRAPHY_TABLE -> TODO()
-            cc.trixey.invero.ui.common.ContainerType.STONECUTTER -> TODO()
+            GENERIC_9X1 -> 1
+            GENERIC_9X2 -> 2
+            GENERIC_9X3 -> 3
+            GENERIC_9X4 -> 4
+            GENERIC_9X5 -> 5
+            GENERIC_9X6 -> 6
+            GENERIC_3X3 -> 3
+            ANVIL -> 1
+            BEACON -> TODO()
+            BLAST_FURNACE -> TODO()
+            BREWING_STAND -> TODO()
+            CRAFTING -> TODO()
+            ENCHANTMENT -> TODO()
+            FURNACE -> TODO()
+            GRINDSTONE -> TODO()
+            HOPPER -> TODO()
+            LOOM -> TODO()
+            MERCHANT -> TODO()
+            SHULKER_BOX -> TODO()
+            SMOKER -> TODO()
+            CARTOGRAPHY_TABLE -> TODO()
+            STONECUTTER -> TODO()
         }
     }
 
     companion object {
 
-        fun ofRows(rows: Int): cc.trixey.invero.ui.common.ContainerType {
+        fun ofRows(rows: Int): ContainerType {
             return when (rows) {
-                1 -> cc.trixey.invero.ui.common.ContainerType.GENERIC_9X1
-                2 -> cc.trixey.invero.ui.common.ContainerType.GENERIC_9X2
-                3 -> cc.trixey.invero.ui.common.ContainerType.GENERIC_9X3
-                4 -> cc.trixey.invero.ui.common.ContainerType.GENERIC_9X4
-                5 -> cc.trixey.invero.ui.common.ContainerType.GENERIC_9X5
-                6 -> cc.trixey.invero.ui.common.ContainerType.GENERIC_9X6
+                1 -> GENERIC_9X1
+                2 -> GENERIC_9X2
+                3 -> GENERIC_9X3
+                4 -> GENERIC_9X4
+                5 -> GENERIC_9X5
+                6 -> GENERIC_9X6
                 else -> throw IllegalArgumentException("Rows for chest must be an integer between [1, 6]")
             }
         }
 
-        fun fromBukkitType(type: String): cc.trixey.invero.ui.common.ContainerType {
+        fun fromBukkitType(type: String): ContainerType {
             return when (type.uppercase()) {
-                "ENDER_CHEST", "BARREL" -> cc.trixey.invero.ui.common.ContainerType.GENERIC_9X3
-                "DISPENSER", "DROPPER" -> cc.trixey.invero.ui.common.ContainerType.GENERIC_3X3
-                "ANVIL" -> cc.trixey.invero.ui.common.ContainerType.ANVIL
-                "FURNACE" -> cc.trixey.invero.ui.common.ContainerType.FURNACE
-                "WORKBENCH", "CRAFTING" -> cc.trixey.invero.ui.common.ContainerType.CRAFTING
-                "ENCHANTING" -> cc.trixey.invero.ui.common.ContainerType.ENCHANTMENT
-                "BREWING" -> cc.trixey.invero.ui.common.ContainerType.BREWING_STAND
-                "MERCHANT" -> cc.trixey.invero.ui.common.ContainerType.MERCHANT
-                "BEACON" -> cc.trixey.invero.ui.common.ContainerType.BEACON
-                "HOPPER" -> cc.trixey.invero.ui.common.ContainerType.HOPPER
-                "SHULKER_BOX" -> cc.trixey.invero.ui.common.ContainerType.SHULKER_BOX
-                "BLAST_FURNACE" -> cc.trixey.invero.ui.common.ContainerType.BLAST_FURNACE
-                "SMOKER" -> cc.trixey.invero.ui.common.ContainerType.SMOKER
-                "LOOM" -> cc.trixey.invero.ui.common.ContainerType.LOOM
-                "CARTOGRAPHY" -> cc.trixey.invero.ui.common.ContainerType.CARTOGRAPHY_TABLE
-                "GRINDSTONE" -> cc.trixey.invero.ui.common.ContainerType.GRINDSTONE
-                "STONECUTTER" -> cc.trixey.invero.ui.common.ContainerType.STONECUTTER
+                "ENDER_CHEST", "BARREL" -> GENERIC_9X3
+                "DISPENSER", "DROPPER" -> GENERIC_3X3
+                "ANVIL" -> ANVIL
+                "FURNACE" -> FURNACE
+                "WORKBENCH", "CRAFTING" -> CRAFTING
+                "ENCHANTING" -> ENCHANTMENT
+                "BREWING" -> BREWING_STAND
+                "MERCHANT" -> MERCHANT
+                "BEACON" -> BEACON
+                "HOPPER" -> HOPPER
+                "SHULKER_BOX" -> SHULKER_BOX
+                "BLAST_FURNACE" -> BLAST_FURNACE
+                "SMOKER" -> SMOKER
+                "LOOM" -> LOOM
+                "CARTOGRAPHY" -> CARTOGRAPHY_TABLE
+                "GRINDSTONE" -> GRINDSTONE
+                "STONECUTTER" -> STONECUTTER
                 else -> throw IllegalArgumentException("Unsupported $this") // TODO 自定义容器
             }
         }

@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack
  * @author Arasple
  * @since 2023/2/2 14:00
  */
-@DefItemProvider(["script"])
+@DefItemProvider(["kether"])
 class ScriptItemProvider : ItemSourceProvider {
 
     override fun translateIdentifier(): Boolean {

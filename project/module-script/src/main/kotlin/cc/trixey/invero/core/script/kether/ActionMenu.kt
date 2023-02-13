@@ -42,7 +42,7 @@ object ActionMenu {
         when (it.expects("get", "set", "pause", "resume", "update")) {
             "get" -> actionNow { session()?.window?.title }
 
-            "set" -> {
+            "set", "to" -> {
                 val input = it.nextParsedAction()
                 actionFuture { future ->
                     val session = session()

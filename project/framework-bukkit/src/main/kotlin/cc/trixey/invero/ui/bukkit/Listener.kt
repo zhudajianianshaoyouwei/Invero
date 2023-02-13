@@ -61,7 +61,7 @@ object Listener {
     private fun InventoryEvent.delegatedEvent(block: InventoryVanilla.() -> Unit) = view.topInventory.let {
         val holder = it.holder
         if (holder is InventoryVanilla.Holder) {
-            holder.getProxyInventory().block()
+            (holder.window.inventory as InventoryVanilla).block()
         }
     }
 

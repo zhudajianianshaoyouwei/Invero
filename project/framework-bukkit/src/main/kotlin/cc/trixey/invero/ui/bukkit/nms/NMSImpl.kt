@@ -1,6 +1,5 @@
 package cc.trixey.invero.ui.bukkit.nms
 
-import cc.trixey.invero.ui.common.ContainerType
 import net.minecraft.server.v1_16_R3.*
 import net.minecraft.world.inventory.Containers
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer
@@ -55,8 +54,9 @@ class NMSImpl : NMS {
                     "a" to containerId,
                     "b" to type.bukkitId,
                     "c" to ChatComponentText(title),
-                    "d" to type.containerSize - 1 // Fixed ViaVersion can not view 6x9 menu bug.
+                    "d" to type.containerSize
                 )
+                // containerSize - 1 // Fixed ViaVersion can not view 6x9 menu bug.
             }
         }
     }

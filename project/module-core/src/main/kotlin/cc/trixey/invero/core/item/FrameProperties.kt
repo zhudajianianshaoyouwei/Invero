@@ -18,7 +18,7 @@ import kotlinx.serialization.json.JsonNames
 @Serializable
 class FrameProperties(
     @SerialName("delay")
-    @JsonNames("default-delay", "period")
+    @JsonNames("default-delay", "period", "last")
     val defaultDelay: Long = 20,
     @SerialName("mode")
     @JsonNames("type")

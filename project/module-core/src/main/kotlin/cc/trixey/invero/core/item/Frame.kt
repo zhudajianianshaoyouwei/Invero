@@ -12,9 +12,11 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonNames
+import kotlinx.serialization.json.JsonPrimitive
 import org.bukkit.inventory.ItemStack
 import taboolib.library.reflex.Reflex.Companion.getProperty
 import taboolib.library.reflex.Reflex.Companion.setProperty
+import taboolib.module.kether.inferType
 import taboolib.module.nms.ItemTag
 import taboolib.module.nms.ItemTagData
 
@@ -39,19 +41,21 @@ class Frame(
     val lore: List<String>?,
     @Serializable @JsonNames("count", "amt")
     val amount: Int?,
+    @JsonNames("durability", "dur")
     val damage: Short?,
     @JsonNames("model")
     val customModelData: Int?,
     val color: String?,
+    @JsonNames("shiny")
     val glow: Boolean?,
-    val enchantments: Map<String, Int>?,
+    @JsonNames("enchantment", "enchant") val enchantments: Map<String, Int>?,
     @Serializable(with = ListStringSerializer::class)
+    @JsonNames("flag")
     val flags: List<String>?,
     val unbreakable: Boolean?,
-    val nbt: Map<String, String>?,
+    val nbt: Map<String, JsonPrimitive>?,
     @Serializable(with = ListSlotSerializer::class)
-    @JsonNames("slots", "pos", "position", "positions")
-    val slot: List<Slot>?,
+    @JsonNames("slots", "pos", "position", "positions") val slot: List<Slot>?,
     val enhancedLore: Boolean?
 ) {
 
@@ -63,17 +67,23 @@ class Frame(
     }
 
     @Transient
-    val nbtData = run {
-        if (nbt == null) null
-        else {
-            val tag = ItemTag()
-            nbt.forEach { (key, value) -> tag[key] = ItemTagData.toNBT(value) }
-            tag
-        }
-    }
+    private val isNBTDynamic = nbt?.values?.any { it.content.containsAnyPlaceholder() } ?: false
 
     @Transient
-    val nbtDataDynamic = nbtData?.toJson()?.containsAnyPlaceholder() ?: false
+    private val lazyNBT =
+        if (nbt == null || isNBTDynamic) null
+        else {
+            val tag = ItemTag()
+            nbt.forEach { (key, value) -> tag[key] = ItemTagData.toNBT(value.content.inferType()) }
+            tag
+        }
+
+    fun buildNBT(translator: (String) -> String): ItemTag {
+        if (lazyNBT != null) return lazyNBT
+        val tag = ItemTag()
+        nbt!!.forEach { (key, value) -> tag[key] = ItemTagData.toNBT(translator(value.content).inferType()) }
+        return tag
+    }
 
     /*
     TODO properties support:

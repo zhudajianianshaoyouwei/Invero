@@ -51,7 +51,7 @@ class PanelCrafting(
         registerIcons()
     }
 
-    override fun invoke(parent: PanelContainer, session: Session) {
+    override fun invoke(parent: PanelContainer, session: Session) =
         parent.craftingIOPanel(scale.raw, parent.locate()) {
             // def icons
             icons.forEach { (_, icon) -> icon.invoke(session, this@PanelCrafting, this@craftingIOPanel) }
@@ -61,6 +61,5 @@ class PanelCrafting(
                 crafting.listener?.run(context = Context(session.viewer, session))
             }
         }
-    }
 
 }

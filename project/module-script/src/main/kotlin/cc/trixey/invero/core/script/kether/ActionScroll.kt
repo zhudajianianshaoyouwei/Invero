@@ -1,7 +1,6 @@
 package cc.trixey.invero.core.script.kether
 
-import cc.trixey.invero.core.script.findNearstPanel
-import cc.trixey.invero.core.script.selfPanel
+import cc.trixey.invero.core.script.findNearstPanelRecursively
 import cc.trixey.invero.ui.common.panel.ScrollPanel
 import taboolib.module.kether.KetherParser
 import taboolib.module.kether.ParserHolder
@@ -33,7 +32,7 @@ object ActionScroll {
 
     fun ParserHolder.runScroll(panel: ScrollPanel?, operator: String) =
         now {
-            val scroll = panel ?: findNearstPanel() ?: selfPanel() ?: return@now "<PANEL NOT FOUND>"
+            val scroll = panel ?: findNearstPanelRecursively() ?: return@now "<PANEL NOT FOUND>"
 
             when (operator.lowercase()) {
                 "index", "get" -> scroll.viewport.let { if (it.x > 0) it.x else it.y }

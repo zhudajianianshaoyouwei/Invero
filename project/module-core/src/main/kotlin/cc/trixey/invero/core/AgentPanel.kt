@@ -3,6 +3,7 @@ package cc.trixey.invero.core
 import cc.trixey.invero.core.serialize.SelectorAgentPanel
 import cc.trixey.invero.ui.bukkit.PanelContainer
 import cc.trixey.invero.ui.bukkit.api.dsl.firstAvailablePositionForPanel
+import cc.trixey.invero.ui.common.Panel
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.Serializable
@@ -23,7 +24,7 @@ abstract class AgentPanel {
 
     abstract val locate: Pos?
 
-    abstract fun invoke(parent: PanelContainer, session: Session)
+    abstract fun invoke(parent: PanelContainer, session: Session): Panel
 
     fun PanelContainer.locate(): Pair<Int, Int> {
         return locate?.value ?: firstAvailablePositionForPanel()

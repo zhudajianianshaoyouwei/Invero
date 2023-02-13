@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.script.kether
 
-import cc.trixey.invero.core.script.findNearstPanel
+import cc.trixey.invero.core.script.findNearstPanelRecursively
 import cc.trixey.invero.ui.common.panel.PagedPanel
 import taboolib.library.kether.ParsedAction
 import taboolib.module.kether.*
@@ -48,7 +48,7 @@ page set <value]
         value: ParsedAction<*>?,
         ref: PagedPanel?
     ): CompletableFuture<Any?> {
-        val panel = ref ?: frame.findNearstPanel() ?: return CompletableFuture.completedFuture(-1)
+        val panel = ref ?: frame.findNearstPanelRecursively() ?: return CompletableFuture.completedFuture(-1)
 
         // 输出 Page 值
         if (operator.isOutput()) {

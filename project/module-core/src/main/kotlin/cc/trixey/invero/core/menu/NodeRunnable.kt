@@ -11,6 +11,7 @@ import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.runJS
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 import org.bukkit.entity.Player
 
 /**
@@ -22,6 +23,7 @@ import org.bukkit.entity.Player
  */
 @Serializable
 class NodeRunnable(
+    @JsonNames("handler")
     val type: Type,
     val value: String,
     val throwable: Boolean?

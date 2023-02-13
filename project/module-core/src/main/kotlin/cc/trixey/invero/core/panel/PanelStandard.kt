@@ -50,10 +50,9 @@ class PanelStandard(
         } else _scale
     }
 
-    override fun invoke(parent: PanelContainer, session: Session) {
+    override fun invoke(parent: PanelContainer, session: Session) =
         parent.standard(scale.raw, parent.locate()) {
             icons.forEach { (_, icon) -> icon.invoke(session, this@PanelStandard, this@standard) }
         }
-    }
 
 }

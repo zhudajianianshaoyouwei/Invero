@@ -9,11 +9,9 @@ import cc.trixey.invero.ui.bukkit.PanelContainer
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import taboolib.common.platform.command.CommandBody
-import taboolib.common.platform.command.CommandHeader
-import taboolib.common.platform.command.mainCommand
-import taboolib.common.platform.command.subCommand
+import taboolib.common.platform.command.*
 import taboolib.common.platform.function.submitAsync
+import taboolib.common5.cint
 import taboolib.platform.util.bukkitPlugin
 import taboolib.platform.util.isAir
 import taboolib.platform.util.onlinePlayers
@@ -144,6 +142,11 @@ object CommandDev {
                     -->
                 """.trimIndent()
             )
+
+            if (!window.inventory.isVirtual()) {
+                val container = (window.inventory as InventoryVanilla).container
+                println("Container: ${container.type} // ${container.size}")
+            }
 
             fun dumpPanels(indent: String = " ", container: PanelContainer) {
                 container.panels.forEachIndexed { index, panel ->

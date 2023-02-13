@@ -42,7 +42,7 @@ open class PagedNetesedPanel(
 
     override var pageChangeCallback: PagedPanel.(fromPage: Int, toPage: Int) -> Unit = { _, _ -> }
 
-    private val currentPanel: BukkitPanel
+    val currentPanel: BukkitPanel
         get() = panels[pageIndex]
 
     override fun render() = currentPanel.rerender()

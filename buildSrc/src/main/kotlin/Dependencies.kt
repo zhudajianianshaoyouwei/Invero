@@ -8,7 +8,7 @@ import org.gradle.kotlin.dsl.*
 
 const val rootName = "Invero"
 const val rootGroup = "cc.trixey.invero"
-const val rootVersion = "1.0.0-dev-10"
+const val rootVersion = "1.0.0-canary-1"
 
 const val kotlinVersion = "1.8.0"
 const val shadowJarVersion = "7.1.2"

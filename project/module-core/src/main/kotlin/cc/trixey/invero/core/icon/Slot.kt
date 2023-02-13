@@ -4,6 +4,8 @@ import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.*
 import kotlinx.serialization.encoding.*
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonPrimitive
 import taboolib.common5.cint
 
 /**
@@ -25,14 +27,15 @@ class Slot(private val raw: String) {
 
     @Transient
     private val locations = raw.split(";").mapNotNull { str ->
-        if ('~' in str || '-' in str || ".." in str) {
-            val (from, to) = str.split("~", "-", "..")
+        val exp = str.replace(" ", "")
+        if ('~' in exp || '-' in exp || ".." in exp) {
+            val (from, to) = exp.split("~", "-", "..")
             uncalculatedSlots += (from.toInt()..to.toInt()).toList().filter { it >= 0 }
-        } else if ('x' in str || ',' in str) {
-            val (x, y) = str.split('x', ',')
+        } else if ('x' in exp || ',' in exp) {
+            val (x, y) = exp.split('x', ',')
             return@mapNotNull Pos(x.toInt() to y.toInt())
         } else {
-            (str.toIntOrNull() ?: -1).let { slot ->
+            (exp.toIntOrNull() ?: -1).let { slot ->
                 if (slot >= 0) uncalculatedSlots += slot
             }
         }
@@ -59,12 +62,11 @@ class Slot(private val raw: String) {
             }
         }
 
-        override fun deserialize(decoder: Decoder) = try {
-            decoder.decodeStructure(descriptor) {
-                Slot(decodeIntElement(descriptor, decodeElementIndex(descriptor)).toString())
+        override fun deserialize(decoder: Decoder): Slot {
+            return when (val element = (decoder as JsonDecoder).decodeJsonElement()) {
+                is JsonPrimitive -> Slot(element.content)
+                else -> error("Unsupported slot type: ${element.javaClass.simpleName}")
             }
-        } catch (e: Throwable) {
-            Slot(decoder.decodeString())
         }
 
     }

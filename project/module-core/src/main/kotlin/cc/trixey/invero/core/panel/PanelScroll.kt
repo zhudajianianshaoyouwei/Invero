@@ -12,6 +12,7 @@ import cc.trixey.invero.core.serialize.ScaleSerializer
 import cc.trixey.invero.ui.bukkit.PanelContainer
 import cc.trixey.invero.ui.bukkit.api.dsl.scroll
 import cc.trixey.invero.ui.bukkit.api.dsl.standard
+import cc.trixey.invero.ui.bukkit.panel.ScrollStandardPanel
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
 import cc.trixey.invero.ui.common.panel.PanelWeight
@@ -63,7 +64,7 @@ class PanelScroll(
         layout!!.findRectangle() ?: error("Can not find valid rectangle within the layout for scroll area")
     }
 
-    override fun invoke(parent: PanelContainer, session: Session) {
+    override fun invoke(parent: PanelContainer, session: Session): ScrollStandardPanel {
         val (scrollLocate, scrollScale) = scrollDistribution
 
         // 背景
@@ -71,7 +72,8 @@ class PanelScroll(
             icons.forEach { (_, icon) -> icon.invoke(session, this@PanelScroll, this@standard) }
         }
         // 滚动区域
-        parent.scroll(scrollScale.raw, scrollLocate.value, direction = scroll.direction, tail = scroll.tail ?: -1) {
+
+       return parent.scroll(scrollScale.raw, scrollLocate.value, direction = scroll.direction, tail = scroll.tail ?: -1) {
             scroll.colums.forEach { icons ->
                 insertColum {
                     if (it <= icons.lastIndex)
