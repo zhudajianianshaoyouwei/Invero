@@ -39,9 +39,8 @@ abstract class Texture : Cloneable {
 
     companion object {
 
-        val DEFAULT_TEXTURE by lazy {
-            XMaterial.BEDROCK.parseItem()!!
-        }
+        val DEFAULT_TEXTURE = XMaterial.BEDROCK.parseItem()!!
+            get() = field.clone()
 
     }
 
