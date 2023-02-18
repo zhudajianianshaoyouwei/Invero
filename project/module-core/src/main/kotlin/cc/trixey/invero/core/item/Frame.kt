@@ -68,7 +68,7 @@ class Frame(
     }
 
     @Transient
-    private val isNBTDynamic = nbt?.values?.any { it.content.containsAnyPlaceholder() } ?: false
+    private val isNBTDynamic = nbt?.values?.any { it.content.containsAnyPlaceholder } ?: false
 
     @Transient
     private val lazyNBT =

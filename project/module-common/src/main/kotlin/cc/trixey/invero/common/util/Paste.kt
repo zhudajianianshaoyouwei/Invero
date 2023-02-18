@@ -96,6 +96,9 @@ class PasteResult(val status: Status, val result: JsonObject?) {
 
     }
 
+    val anonymousLink: String
+        get() = "https://paste.gg/p/anonymous/${result?.get("id")}"
+
 }
 
 class PasteContent internal constructor(val name: String, val value: String, val highlightLanguage: String? = null)

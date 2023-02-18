@@ -2,6 +2,8 @@ package cc.trixey.invero.core.compat.item
 
 import cc.trixey.invero.common.supplier.ItemSourceProvider
 import cc.trixey.invero.core.compat.DefItemProvider
+import cc.trixey.invero.core.serialize.ItemStackJsonSerializer
+import cc.trixey.invero.core.util.standardJson
 import org.bukkit.inventory.ItemStack
 import taboolib.platform.util.deserializeToItemStack
 import java.util.concurrent.ConcurrentHashMap
@@ -13,14 +15,21 @@ import java.util.concurrent.ConcurrentHashMap
  * @author Arasple
  * @since 2023/1/29 15:45
  */
-@DefItemProvider(["base64", "serialized"])
+@DefItemProvider(["base64", "json", "serialized"])
 class SerializedItemProvider : ItemSourceProvider {
 
-    private val cache = ConcurrentHashMap<ByteArray, ItemStack>()
+    companion object {
+
+        private val cache = ConcurrentHashMap<String, ItemStack>()
+
+    }
 
     override fun getItem(identifier: String, context: Any?): ItemStack {
-        val id = identifier.toByteArray()
-        return cache.computeIfAbsent(id) { id.deserializeToItemStack() }
+        return cache.computeIfAbsent(identifier) {
+            if (identifier.startsWith("{"))
+                standardJson.decodeFromString(ItemStackJsonSerializer, identifier)
+            else identifier.toByteArray().deserializeToItemStack()
+        }
     }
 
 }

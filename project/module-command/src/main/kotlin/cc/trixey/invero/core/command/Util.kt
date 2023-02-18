@@ -6,18 +6,17 @@ import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import taboolib.common.platform.ProxyCommandSender
+import taboolib.common.platform.command.CommandContext
 import taboolib.common.platform.command.component.CommandComponent
 import taboolib.common.platform.command.component.CommandComponentDynamic
 import taboolib.common.platform.command.component.CommandComponentLiteral
 import taboolib.platform.util.asLangText
 
-fun String.retrievePlayer(): Player? {
-    return Bukkit.getPlayerExact(this)
-}
+val CommandContext<*>.menu: Menu?
+    get() = Invero.API.getMenuManager().getMenu(this["menu"], true)
 
-fun String.retrieveMenu(): Menu? {
-    return Invero.API.getMenuManager().getMenu(this)
-}
+val CommandContext<*>.player: Player?
+    get() = Bukkit.getPlayerExact(this["player"])
 
 fun CommandComponentDynamic.suggestMenuIds(uncheck: Boolean = false) {
     suggestion<CommandSender>(uncheck = uncheck) { _, _ -> Invero.API.getMenuManager().getMenus().map { it.id!! } }

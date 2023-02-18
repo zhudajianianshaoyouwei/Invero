@@ -19,7 +19,7 @@ abstract class Texture : Cloneable {
 
     abstract val raw: String
 
-    protected val containsPlaceholder by lazy { raw.containsAnyPlaceholder() }
+    protected val containsPlaceholder by lazy { raw.containsAnyPlaceholder }
 
     abstract val lazyTexture: ItemStack?
 

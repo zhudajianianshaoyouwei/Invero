@@ -28,13 +28,20 @@ import kotlinx.serialization.KSerializer
 import kotlinx.serialization.builtins.IntArraySerializer
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.*
+import org.bukkit.Material
 import org.bukkit.event.inventory.InventoryType
+import org.bukkit.inventory.ItemStack
 import taboolib.common.env.RuntimeDependencies
 import taboolib.common.env.RuntimeDependency
+import taboolib.common5.cint
+import taboolib.common5.cshort
+import taboolib.module.nms.ItemTag
+import taboolib.module.nms.getItemTag
 
 /**
  * Invero
@@ -46,11 +53,46 @@ import taboolib.common.env.RuntimeDependency
 
 internal val listStringSerializer = ListSerializer(String.serializer())
 
+
+@Suppress("DEPRECATION")
+object ItemStackJsonSerializer : KSerializer<ItemStack> {
+
+    override val descriptor = PrimitiveSerialDescriptor("ItemStack.Json", PrimitiveKind.STRING)
+
+    override fun deserialize(decoder: Decoder): ItemStack {
+        val itemObject = (decoder as JsonDecoder).decodeJsonElement().jsonObject
+
+        itemObject.apply {
+            val init = ItemStack(Material.valueOf(this["type"]?.jsonPrimitive?.content ?: "STONE"))
+            this["amount"]?.jsonPrimitive?.intOrNull?.let { init.amount = it.cint }
+            this["data"]?.jsonPrimitive?.let { init.durability = it.cshort }
+            this["meta"]?.jsonObject?.toString()?.let { ItemTag.fromLegacyJson(it).saveTo(init) }
+
+            return init
+        }
+    }
+
+    override fun serialize(encoder: Encoder, value: ItemStack) {
+        value.apply {
+            (encoder as JsonEncoder).encodeJsonElement(
+                buildJsonObject {
+                    put("type", type.name)
+                    if (amount > 1) put("amount", amount)
+                    put("data", data!!.data)
+                    put("meta", Json.decodeFromString(getItemTag().toJson()))
+                }
+            )
+        }
+    }
+
+}
+
 object NodeTypeSerializer : KSerializer<NodeRunnable.Type> {
 
     override val descriptor = PrimitiveSerialDescriptor("NodeRunnable.Type", PrimitiveKind.STRING)
 
-    override fun deserialize(decoder: Decoder): NodeRunnable.Type = decoder.decodeString().tolerantEnum(NodeRunnable.Type.CONST)
+    override fun deserialize(decoder: Decoder): NodeRunnable.Type =
+        decoder.decodeString().tolerantEnum(NodeRunnable.Type.CONST)
 
     override fun serialize(encoder: Encoder, value: NodeRunnable.Type) = encoder.encodeString(value.name)
 

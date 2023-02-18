@@ -56,7 +56,7 @@ fun showBasic(player: Player) = chestWindow(player, 6, "Hello InveroPlugin") {
     open()
 }
 
-fun showRunningItem(player: Player) = chestWindow(player, 6, "Running Paged Item") {
+fun showRunningItem(player: Player) = chestWindow(player, 6, "Running Paged CommandItem") {
 
     var itemAmount = 1
 

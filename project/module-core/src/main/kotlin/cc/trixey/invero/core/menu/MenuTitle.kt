@@ -36,7 +36,7 @@ class MenuTitle(
     val default = value.getOrElse(0) { "Untitled" }
 
     fun submit(session: Session) {
-        if (isStatic && value.none { it.containsAnyPlaceholder() } && period == null) {
+        if (isStatic && value.none { it.containsAnyPlaceholder } && period == null) {
             return
         }
         val cyclic = value.toCyclic(mode ?: CycleMode.LOOP)

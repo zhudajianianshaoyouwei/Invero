@@ -9,17 +9,12 @@ package cc.trixey.invero.core.util
  */
 val MATERIAL_ID = Regex("([0-9]+):?([0-9]+)?")
 
-val PLACEHOLDER_ANY = Regex("[%{](.+)[%}]")
+val PLACEHOLDER_ANY = Regex("(%|\\{\\{)(.+)(%|}})")
 
 val SPECIAL_GROUP = "`(.+?)`".toPattern()
 
-fun String.containsAnyPlaceholder(): Boolean {
-    return contains(PLACEHOLDER_ANY)
-}
-
-fun String.clearPlaceholders(): String {
-    return replace(PLACEHOLDER_ANY, "")
-}
+val String.containsAnyPlaceholder: Boolean
+    get() = contains(PLACEHOLDER_ANY)
 
 inline val Any?.bool: Boolean
     get() = this.bool()

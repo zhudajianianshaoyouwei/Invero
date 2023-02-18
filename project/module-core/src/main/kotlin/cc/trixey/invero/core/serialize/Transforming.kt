@@ -108,7 +108,7 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
         "oraxen",
         "itemsadder", "ia",
         "headdatabase", "hdb",
-        "base64", "serialized",
+        "base64", "json", "serialized",
         "kether"
     )
 
