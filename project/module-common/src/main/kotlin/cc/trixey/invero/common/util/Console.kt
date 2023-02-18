@@ -40,5 +40,11 @@ fun Throwable.prettyPrint() {
     println("§c$localizedMessage")
     stackTrace
         .filter { "taboolib" in it.toString() || "invero" in it.toString() }
-        .forEach { println(" §8${it.toString().split("//").getOrNull(1)}") }
+        .forEach {
+            val info =
+                it.toString().split("//").let { split ->
+                    split.getOrNull(1) ?: split.first()
+                }
+            println(" §8$info")
+        }
 }
