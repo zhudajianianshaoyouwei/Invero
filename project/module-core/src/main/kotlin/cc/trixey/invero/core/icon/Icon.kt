@@ -43,6 +43,7 @@ class Icon(
     val framesProperties: FrameProperties?,
     val frames: List<Frame>?,
     @SerialName("sub")
+    @JsonNames("icons")
     @Serializable(with = ListIconSerializer::class)
     val subIcons: List<Icon>?,
     @SerialName("action")

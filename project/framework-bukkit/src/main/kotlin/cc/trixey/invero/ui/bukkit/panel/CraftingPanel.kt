@@ -163,7 +163,7 @@ class CraftingPanel(
     /**
      * 取得储存物品（相对槽位）
      */
-    fun getStorageItem(slot: Int) = storage[slot]
+    fun getStorageItem(slot: Int) = storage.getOrDefault(slot, null)
 
     /**
      * 重新渲染存储空间的所有物品

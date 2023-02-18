@@ -37,7 +37,8 @@ interface IOPanel : ElementalPanel {
 
 
     fun lock(slot: Int) {
-        freeSlots -= slot
+        if (slot < 0) freeSlots.clear()
+        else freeSlots -= slot
     }
 
     fun free(slot: Int) {

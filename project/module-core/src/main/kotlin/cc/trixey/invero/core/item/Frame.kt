@@ -48,7 +48,8 @@ class Frame(
     val color: String?,
     @JsonNames("shiny")
     val glow: Boolean?,
-    @JsonNames("enchantment", "enchant") val enchantments: Map<String, Int>?,
+    @JsonNames("enchantment", "enchant")
+    val enchantments: Map<String, Int>?,
     @Serializable(with = ListStringSerializer::class)
     @JsonNames("flag")
     val flags: List<String>?,
