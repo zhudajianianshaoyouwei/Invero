@@ -65,6 +65,9 @@ class NMSImpl : NMS {
         player.postPacket(PacketPlayOutCloseWindow(containerId))
     }
 
+    private val fieldContainerID = if (majorLegacy >= 11700) "containerId" else "a"
+    private val fieldItems = if (majorLegacy >= 11700) "items" else "b"
+
     override fun sendWindowItems(player: Player, containerId: Int, itemStacks: List<ItemStack?>) {
         val instance = PacketPlayOutWindowItems::class.java.unsafeInstance()
         val items = itemStacks.asNMSCopy()
@@ -81,11 +84,12 @@ class NMSImpl : NMS {
             }
 
             else -> {
+                val valueItems: Any = if (majorLegacy >= 11000) items else items.toTypedArray()
+
                 player.postPacket(
                     instance,
-                    (if (majorLegacy >= 11700) "containerId" else "a") to containerId,
-                    if (majorLegacy >= 11000) "items" to items
-                    else "items" to items.toTypedArray()
+                    fieldContainerID to containerId,
+                    fieldItems to valueItems
                 )
             }
         }
