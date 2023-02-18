@@ -34,17 +34,17 @@ object CommandMenu {
 
         }
         // TODO
-        execute { sender, _, _ ->
-            Invero.API.getMenuManager().reload(sender)
+        execute<CommandSender> { sender, _, _ ->
+            sender.sendMessage("呜呜呜还没写")
         }
     }
 
     /*
-    open <menuId> [player] with []
+    open <menu> [player] with []
      */
     @CommandBody
     val open = subCommand {
-        dynamic("id") {
+        dynamic("menu") {
             suggestMenuIds()
 
             dynamic("player", optional = true) {

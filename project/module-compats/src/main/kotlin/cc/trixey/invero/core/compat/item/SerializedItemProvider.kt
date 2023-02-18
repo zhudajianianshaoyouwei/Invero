@@ -6,6 +6,7 @@ import cc.trixey.invero.core.serialize.ItemStackJsonSerializer
 import cc.trixey.invero.core.util.standardJson
 import org.bukkit.inventory.ItemStack
 import taboolib.platform.util.deserializeToItemStack
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -28,8 +29,9 @@ class SerializedItemProvider : ItemSourceProvider {
         return cache.computeIfAbsent(identifier) {
             if (identifier.startsWith("{"))
                 standardJson.decodeFromString(ItemStackJsonSerializer, identifier)
-            else identifier.toByteArray().deserializeToItemStack()
-        }
+            else
+                Base64.getDecoder().decode(identifier).deserializeToItemStack()
+        }.clone()
     }
 
 }

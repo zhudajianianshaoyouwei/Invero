@@ -39,7 +39,8 @@ abstract class BaseGenerator : ElementGenerator {
             Custom(),
             Players(),
             Sounds(),
-            Worlds()
+            Worlds(),
+            Menus()
         ).forEach { it.register() }
 
     }

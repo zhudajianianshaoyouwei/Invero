@@ -21,6 +21,7 @@ import cc.trixey.invero.core.action.*
 import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.menu.MenuTitle
 import cc.trixey.invero.core.menu.NodeRunnable
+import cc.trixey.invero.core.util.standardJson
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -64,9 +65,12 @@ object ItemStackJsonSerializer : KSerializer<ItemStack> {
 
         itemObject.apply {
             val init = ItemStack(Material.valueOf(this["type"]?.jsonPrimitive?.content ?: "STONE"))
+
             this["amount"]?.jsonPrimitive?.intOrNull?.let { init.amount = it.cint }
             this["data"]?.jsonPrimitive?.let { init.durability = it.cshort }
-            this["meta"]?.jsonObject?.toString()?.let { ItemTag.fromLegacyJson(it).saveTo(init) }
+            this["meta"]?.jsonObject?.let {
+                ItemTag.fromLegacyJson(it.toString()).saveTo(init)
+            }
 
             return init
         }
@@ -78,8 +82,9 @@ object ItemStackJsonSerializer : KSerializer<ItemStack> {
                 buildJsonObject {
                     put("type", type.name)
                     if (amount > 1) put("amount", amount)
-                    put("data", data!!.data)
-                    put("meta", Json.decodeFromString(getItemTag().toJson()))
+                    data!!.data.let { if (it > 0) put("data", it) }
+                    val meta = standardJson.decodeFromString<JsonObject>(getItemTag().toLegacyJson())
+                    if (meta.keys.isNotEmpty()) put("meta", meta)
                 }
             )
         }

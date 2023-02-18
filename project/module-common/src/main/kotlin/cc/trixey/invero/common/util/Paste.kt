@@ -1,25 +1,24 @@
-package cc.trixey.invero.common.util
-
-/**
- * Invero
- * cc.trixey.invero.common.util.Paste
- *
- * @author Arasple
- * @since 2023/2/13 22:18
- */
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
 import java.net.HttpURLConnection
 import java.net.URL
+import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
+/**
+ * Invero
+ * cc.trixey.invero.core.Paste
+ *
+ * @author Arasple
+ * @since 2023/2/13 20:45
+ */
 private const val BASE_URL = "https://api.paste.gg/v1"
 private val isoInstant = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
 
-fun createPaste(
+fun createContent(
     name: String,
     value: String,
     highlightLanguage: String? = null,
@@ -31,7 +30,6 @@ fun createPaste(
 fun paste(
     name: String,
     description: String,
-    visibility: PasteVisibility = PasteVisibility.UNLISTED,
     last: Long = -1,
     unit: TimeUnit = TimeUnit.MINUTES,
     vararg content: PasteContent
@@ -39,7 +37,7 @@ fun paste(
     val jsonInput = buildJsonObject {
         put("name", name)
         put("description", description)
-        put("visibility", visibility.tag)
+        put("visibility", "unlisted")
         if (last > 0) {
             val date = Date((System.currentTimeMillis() + unit.toMillis(last)))
             put("expires", isoInstant.format(date))
@@ -65,7 +63,7 @@ fun paste(
     conn.requestMethod = "POST"
     conn.doOutput = true
     conn.setRequestProperty("Content-Type", "application/json")
-    conn.outputStream.write(jsonInput.toByteArray())
+    conn.outputStream.write(jsonInput.toByteArray(StandardCharsets.UTF_8))
     val response = conn.inputStream.reader().readLines().joinToString("\n")
 
     Json.decodeFromString<JsonObject>(response).apply {
@@ -74,16 +72,6 @@ fun paste(
 
         return PasteResult(status, result)
     }
-}
-
-enum class PasteVisibility(val tag: String) {
-
-    PUBLIC("public"),
-
-    UNLISTED("*unlisted"),
-
-    PRIVATE("private")
-
 }
 
 class PasteResult(val status: Status, val result: JsonObject?) {
@@ -97,8 +85,17 @@ class PasteResult(val status: Status, val result: JsonObject?) {
     }
 
     val anonymousLink: String
-        get() = "https://paste.gg/p/anonymous/${result?.get("id")}"
+        get() = "https://paste.gg/p/anonymous/${result?.get("id")?.jsonPrimitive?.content}"
 
 }
 
-class PasteContent internal constructor(val name: String, val value: String, val highlightLanguage: String? = null)
+data class PasteContent internal constructor(
+    val name: String,
+    val value: String,
+    val highlightLanguage: String? = null
+) {
+
+    fun paste(description: String, last: Long = -1, unit: TimeUnit = TimeUnit.MINUTES) =
+        paste(name, description, last, unit)
+
+}

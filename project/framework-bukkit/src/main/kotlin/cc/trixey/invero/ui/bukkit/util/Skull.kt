@@ -52,8 +52,9 @@ private fun requestPlayerHead(name: String, response: (ItemStack) -> Unit) {
     } else {
         @Suppress("DEPRECATION")
         val player = Bukkit.getPlayerExact(name)
-        if (player != null) {
-            requestCustomTextureHead(player.getPlayerTexture()).also(response)
+        val playerTexture = player?.getPlayerTexture()
+        if (player != null && playerTexture != null) {
+            requestCustomTextureHead(playerTexture).also(response)
         } else {
             response(defaultHead.modifyMeta<ItemMeta> { setDisplayName("§8...") })
 
@@ -93,11 +94,12 @@ fun ItemStack.searchHeadTexture(): String? {
         ?.value
 }
 
-fun OfflinePlayer.getPlayerTexture(): String {
+fun OfflinePlayer.getPlayerTexture(): String? {
     return invokeMethod<GameProfile>("getProfile")
         ?.properties
         ?.get("textures")
-        ?.find { it.value != null }!!.value
+        ?.find { it.value != null }
+        ?.value
 }
 
 fun ItemStack.modifyHeadTexture(input: String): ItemStack {

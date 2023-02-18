@@ -41,11 +41,11 @@ class DefaultInveroAPI : InveroAPI {
         .javaClass.getConstructor().newInstance()
 
     override fun registerItemSourceProvider(name: String, provider: ItemSourceProvider) {
-        itemSourceProvider[name] = provider
+        itemSourceProvider[name.uppercase()] = provider
     }
 
     override fun getItemSourceProvider(name: String): ItemSourceProvider? {
-        return itemSourceProvider[name]
+        return itemSourceProvider[name.uppercase()]
     }
 
 

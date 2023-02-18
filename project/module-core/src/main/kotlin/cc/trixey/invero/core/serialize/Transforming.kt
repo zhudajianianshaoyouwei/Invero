@@ -128,7 +128,7 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
                 val source = textureSourcedKeys.any { key ->
                     val value = struc[key]
                     value?.let {
-                        put("source", key.uppercase())
+                        put("source", key)
                         put("value", value)
                     }
                     value != null
