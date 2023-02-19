@@ -38,7 +38,6 @@ object ActionContext {
                         variables().remove(key)
                         completedFuture(session()?.removeVariable(key))
                     }
-
                     "set" -> {
                         (value ?: error("No valid value")).thenApply {
                             variables().set(key, it)
