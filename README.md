@@ -1,8 +1,6 @@
-![logo](https://invero.trixey.cc/assets/images/invero_titled_logo-0bd435510007e09f3bdfad1bc6153eb7.png)
+![](https://invero.trixey.cc/assets/images/invero_titled_logo-97768921d9c0fbf87f1f53813ab7a427.png)
 
----
+# Invero
 
-## About
-
-Invero is a menu plugin for Bukkit servers.  
-It is designed to be versatile and simple to use.
+Invero 是代码开源的付费插件，我们不提供 JAR 文件  
+查看 [文档](https://invero.trixey.cc) 获取更多信息
