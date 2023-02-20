@@ -10,8 +10,11 @@ import cc.trixey.invero.core.serialize.NodeTypeSerializer
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.runJS
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonNames
+import kotlinx.serialization.json.JsonPrimitive
 import org.bukkit.entity.Player
 
 /**
@@ -25,9 +28,13 @@ import org.bukkit.entity.Player
 class NodeRunnable(
     @JsonNames("handler")
     val type: Type,
-    val value: String,
+    @SerialName("value")
+    val _value: JsonPrimitive,
     val throwable: Boolean?
 ) {
+
+    @Transient
+    val value = _value.content
 
     fun invoke(session: Session, variables: Map<String, Any>): String {
         val context = session.getVariable("@context") as? Context

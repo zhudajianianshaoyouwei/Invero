@@ -9,6 +9,8 @@ import cc.trixey.invero.core.script.player
 import cc.trixey.invero.core.script.session
 import cc.trixey.invero.core.util.KetherHandler
 import org.bukkit.entity.Player
+import taboolib.common5.cdouble
+import taboolib.common5.cint
 import taboolib.module.kether.KetherParser
 import taboolib.module.kether.combinationParser
 import taboolib.platform.compat.depositBalance
@@ -70,57 +72,42 @@ internal fun actionConnect() = combinationParser {
     }
 }
 
-/*
-vault/eco/money
-
-money
-money has <amount>
-money take <amount>
-money give <amount>
- */
 @KetherParser(["eco", "money", "vault"], namespace = "invero", shared = true)
 internal fun actionEco() = combinationParser {
     it.group(
         symbol().option(),
-        double().option()
-    ).apply(it) { method, money ->
-        if (money == null) {
-            return@apply now { player().getBalance() }
-        }
+        action().option()
+    ).apply(it) { method, action ->
 
-        when (method) {
-            null, "current", "get" -> now { player().getBalance() }
-            "take", "-=" -> now { player().withdrawBalance(money) }
-            "give", "+=" -> now { player().depositBalance(money) }
-            else -> error("Unknown eco method: $method")
+        now {
+            if (action == null) return@now player().getBalance()
+            val money = newFrame(action).run<Any>().get().cdouble
+            when (method) {
+                null, "current", "get" -> player().getBalance()
+                "take", "-=" -> player().withdrawBalance(money)
+                "give", "+=" -> player().depositBalance(money)
+                else -> error("Unknown eco method: $method")
+            }
         }
     }
 }
 
-
-/*
-playerpoints
-playerpoints has <amount>
-playerpoints take <amount>
-playerpoints give <amount>
-playerpoints set <amount>
- */
 @KetherParser(["playerpoints", "points"], namespace = "invero", shared = true)
 internal fun actionPoints() = combinationParser {
     it.group(
         symbol().option(),
-        int().option()
-    ).apply(it) { method, amount ->
-        if (amount == null) {
-            return@apply now { HookPlayerPoints.look(player()) }
-        }
-
-        when (method) {
-            null, "current", "get" -> now { HookPlayerPoints.look(player()) }
-            "take", "-=" -> now { HookPlayerPoints.take(player(), amount) }
-            "give", "+=" -> now { HookPlayerPoints.add(player(), amount) }
-            "set" -> now { HookPlayerPoints.set(player(), amount) }
-            else -> error("Unknown eco method: $method")
+        action().option()
+    ).apply(it) { method, action ->
+        now {
+            if (action == null) return@now HookPlayerPoints.look(player())
+            val amount = newFrame(action).run<Any>().get().cint
+            when (method) {
+                null, "current", "get" -> HookPlayerPoints.look(player())
+                "take", "-=" -> HookPlayerPoints.take(player(), amount)
+                "give", "+=" -> HookPlayerPoints.add(player(), amount)
+                "set" -> HookPlayerPoints.set(player(), amount)
+                else -> error("Unknown eco method: $method")
+            }
         }
     }
 }

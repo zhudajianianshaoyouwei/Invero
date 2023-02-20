@@ -22,7 +22,7 @@ import taboolib.module.kether.combinationParser
 object ActionItem {
 
     /*
-    item <text from action> amount <int> by <handler>
+    item <text from action> amount <int> by <handler> send
      */
     @KetherParser(["item", "itemstack"], namespace = "invero", shared = true)
     fun parser() = combinationParser {
@@ -30,8 +30,12 @@ object ActionItem {
             action(),
             command("source", "by", then = text()).option(),
             command("amt", "amount", then = any()).option().defaultsTo(1),
-        ).apply(it) { content, handler, amount ->
+            command("send", then = action().option()).option(),
+        ).apply(it) { content, handler, amount, send ->
             now {
+                if (send != null) {
+                    send
+                }
                 val item = newFrame(content).run<Any>().getNow("<TIMEOUT>")?.toString() ?: error("No item content")
                 when (val handle = handler?.lowercase()) {
                     null, "material" -> TextureMaterial(item).lazyTexture

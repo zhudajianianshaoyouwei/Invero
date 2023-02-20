@@ -59,7 +59,7 @@ data class InferItem(val items: List<Item>) {
                     // 附加值
                     "damage", "durability" -> it.check(item.durability.toInt())
                     // CMD
-                    "custom-model-data" -> it.check(meta?.customModelData ?: 0)
+                    "model", "custom-model-data" -> it.check(meta?.customModelData ?: 0)
                     // 附魔
                     "ench", "enchant", "enchants", "enchantment" -> meta?.enchants?.any { e -> it.check(e.key.name) }
                         ?: false
@@ -133,7 +133,7 @@ data class InferItem(val items: List<Item>) {
             val item = if (indexOfType in 0..(type.length - 2)) {
                 val item = when (val namespace = type.substring(0, indexOfType)) {
                     "material", "minecraft" -> Item::class.java
-                    else -> error("Unsupported namespace $namespace")
+                    else -> InferItemHookEvent(namespace, Item::class.java).apply { call() }.itemClass
                 }
                 type = type.substring(indexOfType + 1)
                 item

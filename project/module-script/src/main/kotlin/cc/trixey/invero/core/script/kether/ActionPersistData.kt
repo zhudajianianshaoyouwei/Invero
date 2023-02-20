@@ -16,9 +16,9 @@ import taboolib.module.kether.combinationParser
 object ActionPersistData {
 
     /*
-persist get <key> by global
-persist set <key> to <value> by global
- */
+    persist get <key> by global
+    persist set <key> to <value> by global
+     */
     @KetherParser(["persist"], namespace = "invero", shared = true)
     fun parserData() = combinationParser {
         it.group(
