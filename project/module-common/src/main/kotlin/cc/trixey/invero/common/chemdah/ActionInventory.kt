@@ -112,8 +112,9 @@ class ActionInventory {
                 }
 
                 "add" -> {
+                    val item = it.nextParsedAction()
                     actionFuture { future ->
-                        newFrame(it.nextParsedAction()).run<ItemStack>().thenApply { stack ->
+                        newFrame(item).run<ItemStack>().thenApply { stack ->
                             future.complete(getBukkitPlayer().giveItem(stack))
                         }
                     }

@@ -3,8 +3,6 @@ package cc.trixey.invero.ui.bukkit
 import cc.trixey.invero.ui.bukkit.api.isRegistered
 import cc.trixey.invero.ui.bukkit.panel.CraftingPanel
 import cc.trixey.invero.ui.bukkit.util.clickType
-import cc.trixey.invero.ui.common.panel.IOPanel
-import cc.trixey.invero.ui.common.util.anyInstancePanel
 import org.bukkit.Bukkit
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -82,7 +80,7 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         if (updateInventory) viewer.updateInventory()
 
         // 当前窗口若有 IOPanel，则关闭后不恢复背包存储
-        if (!window.anyInstancePanel<IOPanel>()) storage.afterClose()
+//        if (!window.anyInstancePanel<IOPanel>()) storage.afterClose()
     }
 
     fun handleClick(e: InventoryClickEvent) {

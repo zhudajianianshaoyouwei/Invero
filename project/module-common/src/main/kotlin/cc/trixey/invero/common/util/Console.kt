@@ -35,9 +35,12 @@ inline fun <R> printCatching(block: () -> R): Result<R> {
     }
 }
 
-fun Throwable.prettyPrint() {
-    println(console().cast<CommandSender>().asLangText("throwable-print"))
+fun Throwable.prettyPrint(head: Boolean = true) {
+    if (head) println(console().cast<CommandSender>().asLangText("throwable-print"))
+    println("§8${javaClass.name}")
     println("§c$localizedMessage")
+
+
     stackTrace
         .filter { "taboolib" in it.toString() || "invero" in it.toString() }
         .forEach {
@@ -47,4 +50,9 @@ fun Throwable.prettyPrint() {
                 }
             println(" §8$info")
         }
+
+    cause?.let {
+        println("§6Caused by: ")
+        it.prettyPrint(false)
+    }
 }

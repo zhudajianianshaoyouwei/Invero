@@ -9,9 +9,10 @@ import cc.trixey.invero.core.script.player
 import cc.trixey.invero.core.script.session
 import cc.trixey.invero.core.util.KetherHandler
 import org.bukkit.entity.Player
-import taboolib.common5.cdouble
-import taboolib.common5.cint
-import taboolib.module.kether.*
+import taboolib.module.kether.KetherParser
+import taboolib.module.kether.actionNow
+import taboolib.module.kether.combinationParser
+import taboolib.module.kether.scriptParser
 import taboolib.platform.compat.depositBalance
 import taboolib.platform.compat.getBalance
 import taboolib.platform.compat.replacePlaceholder
@@ -71,28 +72,25 @@ internal fun actionConnect() = combinationParser {
     }
 }
 
-/*
-eco get
-eco has 200
-eco set 200
-eco add 200
+/**
+ * eco
+ * eco get
+ * eco take 200
+ * eco give 200
+ * eco set 200
  */
 @KetherParser(["eco", "money", "vault"], namespace = "invero", shared = true)
 internal fun actionEco() = scriptParser {
     if (!it.hasNext()) actionNow { player().getBalance() }
-    else actionFuture { future ->
+    else {
         val method = it.nextToken()
-        val action = if (it.hasNext()) newFrame(it.nextParsedAction()).run<Any>() else null
-
-        if (action == null) future.complete(player().getBalance())
-
-        action?.thenApply { output ->
-            val money = output.cdouble
+        if (method == null || method == "get" || method == "balance") actionNow { player().getBalance() }
+        else {
+            val money = it.nextDouble()
             when (method) {
-                "get", "current" -> player().getBalance()
-                "has" -> player().getBalance() >= money
-                "rem", "take", "-=" -> player().withdrawBalance(money)
-                "add", "give", "+=" -> player().depositBalance(money)
+                "has" -> actionNow { player().getBalance() >= money }
+                "take" -> actionNow { player().withdrawBalance(money) }
+                "give" -> actionNow { player().depositBalance(money) }
                 else -> error("Unknown eco method: $method")
             }
         }
@@ -101,25 +99,20 @@ internal fun actionEco() = scriptParser {
 
 @KetherParser(["playerpoints", "points"], namespace = "invero", shared = true)
 internal fun actionPoints() = scriptParser {
-    if (!it.hasNext()) actionNow { player().getBalance() }
-    else actionFuture { future ->
+    if (!it.hasNext()) actionNow { HookPlayerPoints.look(player()) }
+    else {
         val method = it.nextToken()
-        val action = if (it.hasNext()) newFrame(it.nextParsedAction()).run<Any>() else null
-
-        if (action == null) future.complete(HookPlayerPoints.look(player()))
-
-
-        // copy above code but change to playerpoints
-        action?.thenApply { output ->
-            val points = output.cint
+        if (method == null || method == "get" || method == "balance") actionNow {
+            HookPlayerPoints.look(player()) ?: -1
+        }
+        else {
+            val points = it.nextInt()
             when (method) {
-                "get", "current" -> HookPlayerPoints.look(player())
-                "has" -> (HookPlayerPoints.look(player()) ?: 0) >= points
-                "rem", "take", "-=" -> HookPlayerPoints.take(player(), points)
-                "add", "give", "+=" -> HookPlayerPoints.add(player(), points)
-                else -> error("Unknown points method: $method")
+                "has" -> actionNow { (HookPlayerPoints.look(player()) ?: 0) >= points }
+                "take" -> actionNow { HookPlayerPoints.take(player(), points) }
+                "give" -> actionNow { HookPlayerPoints.add(player(), points) }
+                else -> error("Unknown playerpoints method: $method")
             }
         }
-
     }
 }

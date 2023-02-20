@@ -71,18 +71,19 @@ class PanelScroll(
         parent.standard(scale.raw, parent.locate(), weight = PanelWeight.BACKGROUND) {
             icons.forEach { (_, icon) -> icon.invoke(session, this@PanelScroll, this@standard) }
         }
-        // 滚动区域
 
+        // 滚动区域
        return parent.scroll(scrollScale.raw, scrollLocate.value, direction = scroll.direction, tail = scroll.tail ?: -1) {
-            scroll.colums.forEach { icons ->
-                insertColum {
-                    if (it <= icons.lastIndex)
-                        icons[it].invoke(session, this@PanelScroll, this)
-                    else
-                        null
-                }
-            }
-        }
+           scroll.colums.forEach { icons ->
+               insertColum {
+                   if (it <= icons.lastIndex)
+                       icons[it].invoke(session, this@PanelScroll, this)
+                   else
+                       null
+               }
+           }
+           scroll.defaultIndex?.let { shift(it, it) }
+       }
     }
 
 }

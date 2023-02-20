@@ -19,6 +19,8 @@ class StructureScroll(
     val tail: Int?,
     @SerialName("direction")
     val _direction: String?,
+    @SerialName("default-index")
+    val defaultIndex: Int?,
     val colums: List<@Serializable(with = ListIconSerializer::class) List<Icon>>
 ) {
 
