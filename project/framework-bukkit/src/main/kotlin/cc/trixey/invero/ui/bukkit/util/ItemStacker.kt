@@ -1,5 +1,6 @@
 package cc.trixey.invero.ui.bukkit.util
 
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
 /**
@@ -11,4 +12,9 @@ import org.bukkit.inventory.ItemStack
  */
 fun ItemStack.reachedMaxStackSize(): Boolean {
     return amount >= maxStackSize
+}
+
+fun Player.giveItem(itemStack: ItemStack) = inventory.addItem(itemStack).values.none { e ->
+    world.dropItem(location, e)
+    true
 }

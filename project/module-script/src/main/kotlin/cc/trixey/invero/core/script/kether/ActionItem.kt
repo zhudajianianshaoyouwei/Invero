@@ -30,18 +30,16 @@ object ActionItem {
             action(),
             command("source", "by", then = text()).option(),
             command("amt", "amount", then = any()).option().defaultsTo(1),
-            command("send", then = action().option()).option(),
-        ).apply(it) { content, handler, amount, send ->
+        ).apply(it) { content, handler, amount ->
             now {
-                if (send != null) {
-                    send
-                }
                 val item = newFrame(content).run<Any>().getNow("<TIMEOUT>")?.toString() ?: error("No item content")
                 when (val handle = handler?.lowercase()) {
                     null, "material" -> TextureMaterial(item).lazyTexture
                     "head" -> TextureHead(item).lazyTexture
                     else -> TextureSource(handle, item).lazyTexture
-                }?.apply { setAmount(amount.cint.coerceIn(0..64)) }
+                }
+                    ?.apply { setAmount(amount.cint.coerceIn(0..64)) }
+                    ?.clone()
             }
         }
     }

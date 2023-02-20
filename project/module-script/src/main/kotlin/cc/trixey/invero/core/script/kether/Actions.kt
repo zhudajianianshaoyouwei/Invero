@@ -11,8 +11,7 @@ import cc.trixey.invero.core.util.KetherHandler
 import org.bukkit.entity.Player
 import taboolib.common5.cdouble
 import taboolib.common5.cint
-import taboolib.module.kether.KetherParser
-import taboolib.module.kether.combinationParser
+import taboolib.module.kether.*
 import taboolib.platform.compat.depositBalance
 import taboolib.platform.compat.getBalance
 import taboolib.platform.compat.replacePlaceholder
@@ -72,20 +71,28 @@ internal fun actionConnect() = combinationParser {
     }
 }
 
+/*
+eco get
+eco has 200
+eco set 200
+eco add 200
+ */
 @KetherParser(["eco", "money", "vault"], namespace = "invero", shared = true)
-internal fun actionEco() = combinationParser {
-    it.group(
-        symbol().option(),
-        action().option()
-    ).apply(it) { method, action ->
+internal fun actionEco() = scriptParser {
+    if (!it.hasNext()) actionNow { player().getBalance() }
+    else actionFuture { future ->
+        val method = it.nextToken()
+        val action = if (it.hasNext()) newFrame(it.nextParsedAction()).run<Any>() else null
 
-        now {
-            if (action == null) return@now player().getBalance()
-            val money = newFrame(action).run<Any>().get().cdouble
+        if (action == null) future.complete(player().getBalance())
+
+        action?.thenApply { output ->
+            val money = output.cdouble
             when (method) {
-                null, "current", "get" -> player().getBalance()
-                "take", "-=" -> player().withdrawBalance(money)
-                "give", "+=" -> player().depositBalance(money)
+                "get", "current" -> player().getBalance()
+                "has" -> player().getBalance() >= money
+                "rem", "take", "-=" -> player().withdrawBalance(money)
+                "add", "give", "+=" -> player().depositBalance(money)
                 else -> error("Unknown eco method: $method")
             }
         }
@@ -93,21 +100,26 @@ internal fun actionEco() = combinationParser {
 }
 
 @KetherParser(["playerpoints", "points"], namespace = "invero", shared = true)
-internal fun actionPoints() = combinationParser {
-    it.group(
-        symbol().option(),
-        action().option()
-    ).apply(it) { method, action ->
-        now {
-            if (action == null) return@now HookPlayerPoints.look(player())
-            val amount = newFrame(action).run<Any>().get().cint
+internal fun actionPoints() = scriptParser {
+    if (!it.hasNext()) actionNow { player().getBalance() }
+    else actionFuture { future ->
+        val method = it.nextToken()
+        val action = if (it.hasNext()) newFrame(it.nextParsedAction()).run<Any>() else null
+
+        if (action == null) future.complete(HookPlayerPoints.look(player()))
+
+
+        // copy above code but change to playerpoints
+        action?.thenApply { output ->
+            val points = output.cint
             when (method) {
-                null, "current", "get" -> HookPlayerPoints.look(player())
-                "take", "-=" -> HookPlayerPoints.take(player(), amount)
-                "give", "+=" -> HookPlayerPoints.add(player(), amount)
-                "set" -> HookPlayerPoints.set(player(), amount)
-                else -> error("Unknown eco method: $method")
+                "get", "current" -> HookPlayerPoints.look(player())
+                "has" -> (HookPlayerPoints.look(player()) ?: 0) >= points
+                "rem", "take", "-=" -> HookPlayerPoints.take(player(), points)
+                "add", "give", "+=" -> HookPlayerPoints.add(player(), points)
+                else -> error("Unknown points method: $method")
             }
         }
+
     }
 }

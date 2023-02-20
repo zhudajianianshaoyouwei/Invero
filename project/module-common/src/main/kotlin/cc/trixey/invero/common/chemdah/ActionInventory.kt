@@ -2,9 +2,11 @@ package cc.trixey.invero.common.chemdah
 
 import cc.trixey.invero.common.chemdah.InferItem.Companion.toInferItem
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import taboolib.library.kether.ParsedAction
 import taboolib.library.kether.QuestReader
 import taboolib.module.kether.*
+import taboolib.platform.util.giveItem
 import taboolib.platform.util.isNotAir
 import taboolib.type.BukkitEquipment
 import java.util.concurrent.CompletableFuture
@@ -106,6 +108,14 @@ class ActionInventory {
                         it.reset()
                         val slot = it.nextParsedAction()
                         actionTake { run(slot).int { s -> getBukkitPlayer().inventory.getItem(s) } }
+                    }
+                }
+
+                "add" -> {
+                    actionFuture { future ->
+                        newFrame(it.nextParsedAction()).run<ItemStack>().thenApply { stack ->
+                            future.complete(getBukkitPlayer().giveItem(stack))
+                        }
                     }
                 }
 
