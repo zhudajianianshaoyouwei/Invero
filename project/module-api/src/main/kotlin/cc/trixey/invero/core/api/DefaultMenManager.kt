@@ -277,7 +277,7 @@ class DefaultMenManager : MenuManager {
         return if (settings.isEmpty()) {
             listOf(defaultWorkspace.also { it.mkdirs() })
         } else {
-            settings.map { path -> File(path) }
+            settings.map { path -> File(path).also { it.mkdirs() } }
         }.filter { it.isDirectory }
     }
 
