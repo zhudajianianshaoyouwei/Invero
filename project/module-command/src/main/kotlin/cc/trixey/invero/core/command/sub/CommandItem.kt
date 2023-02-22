@@ -64,9 +64,9 @@ object CommandItem {
             player.sendLang("paste-init")
 
             val serialized = Json.encodeToJsonElement(ItemStackJsonSerializer, this@postItemSerialization).jsonObject
-            val view = createContent("Structure View", prettyJson.encodeToString(serialized), "json")
+            val view = createContent("Structure View", prettyJson.encodeToString(serialized), "JSON")
             val base64 = createContent("Format Base64", Base64.getEncoder().encodeToString(serializeToByteArray()))
-            val json = createContent("Format Json", standardJson.encodeToString(serialized), "json")
+            val json = createContent("Format Json", standardJson.encodeToString(serialized), "JSON")
 
             paste(
                 "Invero Item Serialization",

@@ -13,7 +13,7 @@ import taboolib.common.platform.command.subCommand
  * @author Arasple
  * @since 2023/1/12 21:10
  */
-@CommandHeader(name = "idemo")
+@CommandHeader(name = "idemo", permission = "*")
 object UnitCommand {
 
     @CommandBody
