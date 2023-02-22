@@ -3,17 +3,14 @@ package cc.trixey.invero.core
 import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.Menu
 import cc.trixey.invero.common.TaskGroup
-import cc.trixey.invero.common.adventure.parseMiniMessage
-import cc.trixey.invero.common.adventure.translateAmpersandColor
 import cc.trixey.invero.core.Session.Companion.VarType.*
-import cc.trixey.invero.core.util.KetherHandler
+import cc.trixey.invero.core.util.fluentMessage
 import cc.trixey.invero.core.util.session
 import cc.trixey.invero.ui.bukkit.BukkitWindow
 import cc.trixey.invero.ui.bukkit.PlayerViewer
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submitAsync
 import taboolib.expansion.getDataContainer
-import taboolib.platform.compat.replacePlaceholder
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -83,14 +80,7 @@ class Session(
     }
 
     fun parse(input: String, context: Context? = null): String {
-        val player = viewer.get<Player>()
-
-        return if (input.isBlank()) input
-        else KetherHandler
-            .parseInline(input, player, context?.variables ?: variables)
-            .replacePlaceholder(player)
-            .parseMiniMessage()
-            .translateAmpersandColor()
+        return input.fluentMessage(viewer.get(), context?.variables ?: variables)
     }
 
     fun parse(input: List<String>, context: Context? = null): List<String> {

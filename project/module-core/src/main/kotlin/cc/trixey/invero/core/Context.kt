@@ -1,13 +1,10 @@
 package cc.trixey.invero.core
 
-import cc.trixey.invero.common.adventure.parseMiniMessage
-import cc.trixey.invero.common.adventure.translateAmpersandColor
 import cc.trixey.invero.core.icon.IconElement
-import cc.trixey.invero.core.util.KetherHandler
+import cc.trixey.invero.core.util.fluentMessage
 import cc.trixey.invero.ui.bukkit.PlayerViewer
 import cc.trixey.invero.ui.common.Panel
 import org.bukkit.entity.Player
-import taboolib.platform.compat.replacePlaceholder
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -25,11 +22,7 @@ class Context(
     val extVars: Map<String, Any> = emptyMap()
 ) {
 
-    fun parse(input: String) = session?.parse(input, this) ?: KetherHandler
-        .parseInline(input, player, variables)
-        .replacePlaceholder(player)
-        .parseMiniMessage()
-        .translateAmpersandColor()
+    fun parse(input: String) = session?.parse(input, this) ?: input.fluentMessage(player, variables)
 
     fun parse(input: List<String>): List<String> {
         return input.map { parse(it) }
