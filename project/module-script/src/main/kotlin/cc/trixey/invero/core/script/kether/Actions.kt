@@ -1,13 +1,12 @@
 package cc.trixey.invero.core.script.kether
 
-import cc.trixey.invero.common.adventure.parseAndSendMiniMessage
 import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.compat.bungeecord.Bungees
 import cc.trixey.invero.core.compat.eco.HookPlayerPoints
 import cc.trixey.invero.core.script.contextVar
 import cc.trixey.invero.core.script.player
 import cc.trixey.invero.core.script.session
-import cc.trixey.invero.core.util.KetherHandler
+import cc.trixey.invero.core.util.fluentMessageComponent
 import org.bukkit.entity.Player
 import taboolib.module.kether.KetherParser
 import taboolib.module.kether.actionNow
@@ -15,7 +14,6 @@ import taboolib.module.kether.combinationParser
 import taboolib.module.kether.scriptParser
 import taboolib.platform.compat.depositBalance
 import taboolib.platform.compat.getBalance
-import taboolib.platform.compat.replacePlaceholder
 import taboolib.platform.compat.withdrawBalance
 import taboolib.platform.util.onlinePlayers
 import java.util.concurrent.CompletableFuture
@@ -39,10 +37,24 @@ internal fun actionMessage() = combinationParser {
         now {
             val context = contextVar<Context?>("@context")?.variables ?: variables().toMap()
             val player = player()
-            KetherHandler
-                .parseInline(message, player, context)
-                .replacePlaceholder(player)
-                .parseAndSendMiniMessage(player)
+
+            message.fluentMessageComponent(player, context, send = true)
+        }
+    }
+}
+
+@KetherParser(["parse"], namespace = "invero", shared = true)
+internal fun actionParse() = combinationParser {
+    it.group(
+        text(),
+    ).apply(it) { message ->
+        now {
+            val context = contextVar<Context?>("@context")?.variables ?: variables().toMap()
+            val player = player()
+
+            message
+                .fluentMessageComponent(player, context)
+                .toLegacyText()
         }
     }
 }

@@ -2,6 +2,7 @@ package cc.trixey.invero.core.util
 
 import cc.trixey.invero.common.adventure.parseMiniMessage
 import org.bukkit.entity.Player
+import taboolib.common.platform.function.adaptPlayer
 import taboolib.module.chat.ComponentText
 import taboolib.module.chat.TextTransfer
 import taboolib.module.chat.component
@@ -37,7 +38,11 @@ fun String.fluentMessage(player: Player, variables: Map<String, Any> = emptyMap(
     return fluentMessageComponent(player, variables).toLegacyText()
 }
 
-fun String.fluentMessageComponent(player: Player, variables: Map<String, Any> = emptyMap()): ComponentText {
+fun String.fluentMessageComponent(
+    player: Player,
+    variables: Map<String, Any> = emptyMap(),
+    send: Boolean = false
+): ComponentText {
     val component = component()
     if (isBlank()) return component.build()
 
@@ -53,6 +58,8 @@ fun String.fluentMessageComponent(player: Player, variables: Map<String, Any> = 
         colored()
         // restore def color
         defColor(this@fluentMessageComponent)
+    }.also {
+        if (send) it.sendTo(adaptPlayer(player))
     }
 }
 
