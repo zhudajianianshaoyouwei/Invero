@@ -57,6 +57,3 @@ fun String.translateLegacyColor(): String {
     return replace(SECTION_CHAR, AMPERSAND_CHAR)
 }
 
-fun String.isPrefixColored(): Boolean {
-    return startsWith(SECTION_CHAR)
-}

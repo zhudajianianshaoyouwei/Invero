@@ -14,7 +14,3 @@ Database:
     password: root
     database: test
     table: invero_data
-
-Menu:
-  default-name-color: "§7"
-  default-lore-color: "§7"

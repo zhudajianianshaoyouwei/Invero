@@ -2,8 +2,6 @@
 
 package cc.trixey.invero.core.icon
 
-import cc.trixey.invero.common.adventure.isPrefixColored
-import cc.trixey.invero.common.api.InveroSettings
 import cc.trixey.invero.common.util.*
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.Session
@@ -106,5 +104,5 @@ fun List<String>.colored(enhanceProcess: Boolean?): List<String> {
 }
 
 fun String.colored() =
-    if (!isPrefixColored() && isNotBlank()) "${InveroSettings.defaultNameColor}$this"
+    if (!isPrefixColored() && isNotBlank()) "§7$this"
     else this

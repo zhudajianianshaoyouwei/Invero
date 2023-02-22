@@ -2,6 +2,7 @@ package cc.trixey.invero.core.command
 
 import cc.trixey.invero.common.Invero
 import cc.trixey.invero.core.util.KetherHandler
+import cc.trixey.invero.core.util.fluentMessageComponent
 import cc.trixey.invero.core.util.session
 import cc.trixey.invero.ui.bukkit.InventoryPacket
 import cc.trixey.invero.ui.bukkit.InventoryVanilla
@@ -9,9 +10,12 @@ import cc.trixey.invero.ui.bukkit.PanelContainer
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import taboolib.common.platform.command.*
+import taboolib.common.platform.command.CommandBody
+import taboolib.common.platform.command.CommandHeader
+import taboolib.common.platform.command.mainCommand
+import taboolib.common.platform.command.subCommand
+import taboolib.common.platform.function.getProxyPlayer
 import taboolib.common.platform.function.submitAsync
-import taboolib.common5.cint
 import taboolib.platform.util.bukkitPlugin
 import taboolib.platform.util.isAir
 import taboolib.platform.util.onlinePlayers
@@ -46,6 +50,28 @@ object CommandDev {
                     )
                 }.get()
             }
+        }
+    }
+
+    @CommandBody
+    val parseMessage = subCommand {
+        execute<CommandSender> { sender, _, argument ->
+            val player = if (sender is Player) sender else onlinePlayers.random()
+            val message = argument.removePrefix("parseMessage ")
+
+            val component = message.fluentMessageComponent(player)
+
+            component
+                .sendTo(getProxyPlayer(sender.name)!!)
+
+            println(
+                """
+                    FROM: $message
+                    Legacy: ${component.toLegacyText()}
+                    Plain: ${component.toPlainText()}
+                    TO Raw: ${component.toRawMessage()}
+                """.trimIndent()
+            )
         }
     }
 
@@ -169,5 +195,4 @@ object CommandDev {
             }
         }
     }
-
 }

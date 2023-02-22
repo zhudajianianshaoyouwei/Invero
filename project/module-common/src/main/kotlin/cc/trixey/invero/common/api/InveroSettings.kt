@@ -52,18 +52,4 @@ object InveroSettings {
     var fileFilter = "^(?![#!]).*\\.(?i)(conf|hocon|yaml|yml|json)\$"
         private set
 
-    /**
-     * 物品默认名称的颜色
-     */
-    @ConfigNode("Menu.default-name-color")
-    var defaultNameColor = "§7"
-        private set
-
-    /**
-     * 物品默认描述的颜色
-     */
-    @ConfigNode("Menu.default-lore-color")
-    var defaultLoreColor = "§7"
-        private set
-
 }
