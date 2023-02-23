@@ -1,6 +1,7 @@
 package cc.trixey.invero.core.command
 
 import cc.trixey.invero.common.Invero
+import cc.trixey.invero.common.adventure.parseAndSendMiniMessage
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.fluentMessageComponent
 import cc.trixey.invero.core.util.session
@@ -14,8 +15,10 @@ import taboolib.common.platform.command.CommandBody
 import taboolib.common.platform.command.CommandHeader
 import taboolib.common.platform.command.mainCommand
 import taboolib.common.platform.command.subCommand
+import taboolib.common.platform.function.adaptCommandSender
 import taboolib.common.platform.function.getProxyPlayer
 import taboolib.common.platform.function.submitAsync
+import taboolib.module.chat.component
 import taboolib.platform.util.bukkitPlugin
 import taboolib.platform.util.isAir
 import taboolib.platform.util.onlinePlayers
@@ -50,6 +53,36 @@ object CommandDev {
                     )
                 }.get()
             }
+        }
+    }
+
+
+    @CommandBody
+    val testMiniMessage = subCommand {
+        execute<Player> { sender, _, argument ->
+            val message = argument.split(" ", limit = 2)[1]
+            message.parseAndSendMiniMessage(sender)
+        }
+    }
+
+
+    @CommandBody
+    val testComponent = subCommand {
+        execute<CommandSender> { sender, _, argument ->
+            val message = argument.split(" ", limit = 2)[1]
+
+            message
+                .component()
+                .build { colored() }
+                .also {
+                    it.toLegacyText()
+                    println(
+                        """
+                            Component:: ${it.toLegacyText().replace('§', '&')}
+                        """.trimIndent()
+                    )
+                }
+                .sendTo(adaptCommandSender(sender))
         }
     }
 

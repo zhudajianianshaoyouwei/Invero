@@ -1,16 +1,16 @@
 package cc.trixey.invero.core.command.sub
 
-import PasteResult.Status.ERROR
-import PasteResult.Status.SUCCESS
 import cc.trixey.invero.common.Invero
+import cc.trixey.invero.common.util.PasteResult.Status.ERROR
+import cc.trixey.invero.common.util.PasteResult.Status.SUCCESS
+import cc.trixey.invero.common.util.createContent
+import cc.trixey.invero.common.util.paste
 import cc.trixey.invero.core.command.createHelper
 import cc.trixey.invero.core.command.menu
 import cc.trixey.invero.core.command.player
 import cc.trixey.invero.core.command.suggestMenuIds
-import createContent
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
-import paste
 import taboolib.common.platform.command.*
 import taboolib.common.platform.function.submitAsync
 import taboolib.platform.util.sendLang

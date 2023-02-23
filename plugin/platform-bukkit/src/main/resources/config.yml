@@ -1,5 +1,5 @@
 Workspaces:
-  filter: '^(?![#!]).*\.(?i)(conf|hocon|yaml|yml|json)$'
+  filter: '^(?![#!]).*\.(?i)(conf|hocon|yaml|yml|toml|json)$'
   paths:
     - 'plugins/Invero/workspace'
 

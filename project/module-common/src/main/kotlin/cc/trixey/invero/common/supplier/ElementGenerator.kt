@@ -11,7 +11,7 @@ interface ElementGenerator {
 
     var generated: List<Object>?
 
-    fun generate(): List<Object>
+    fun generate(context: Any? = null)
 
     fun filter(block: (Object) -> Boolean): ElementGenerator
 

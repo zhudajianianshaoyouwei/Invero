@@ -8,7 +8,7 @@ import org.gradle.kotlin.dsl.*
 
 const val rootName = "Invero"
 const val rootGroup = "cc.trixey.invero"
-const val rootVersion = "1.0.0-canary-6"
+const val rootVersion = "1.0.0-canary-7"
 
 const val kotlinVersion = "1.8.0"
 const val shadowJarVersion = "7.1.2"
@@ -57,7 +57,7 @@ fun Project.initSubProject(publish: Project.() -> Unit) {
     if (parent?.name != "plugin") {
         buildDirClean()
     }
-    if (parent != rootProject && name.startsWith("framework")) {
+    if (project.parent?.name == "project") {
         publish()
     }
 }

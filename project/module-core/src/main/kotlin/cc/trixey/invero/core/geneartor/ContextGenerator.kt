@@ -3,23 +3,22 @@ package cc.trixey.invero.core.geneartor
 import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.supplier.ElementGenerator
 import cc.trixey.invero.common.supplier.Object
-import taboolib.common.LifeCycle
-import taboolib.common.platform.Awake
+import cc.trixey.invero.core.Context
 
 /**
  * Invero
- * cc.trixey.invero.core.geneartor.BaseGenerator
+ * cc.trixey.invero.core.geneartor.ContextGenerator
  *
  * @author Arasple
- * @since 2023/2/2 14:39
+ * @since 2023/2/23 9:27
  */
-abstract class BaseGenerator : ElementGenerator {
+abstract class ContextGenerator : ElementGenerator {
 
     override var generated: List<Object>? = null
 
-    override fun generate(context: Any?) = this.generate()
+    override fun generate(context: Any?) = this.generate(context as Context)
 
-    abstract fun generate()
+    abstract fun generate(context: Context)
 
     override fun filter(block: (Object) -> Boolean): ElementGenerator {
         generated = generated?.filter(block)
@@ -35,18 +34,5 @@ abstract class BaseGenerator : ElementGenerator {
         name = name ?: this.javaClass.simpleName.lowercase().removeSuffix("s"),
         provider = this.javaClass.getConstructor().newInstance()
     )
-
-    companion object {
-
-        @Awake(LifeCycle.INIT)
-        internal fun default() = setOf(
-            GeneratorEmpty(),
-            GeneratorPlayers(),
-            GeneratorSounds(),
-            GeneratorWorlds(),
-            GeneratorMenus()
-        ).forEach { it.register() }
-
-    }
 
 }

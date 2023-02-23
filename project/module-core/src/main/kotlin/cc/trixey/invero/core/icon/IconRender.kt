@@ -104,5 +104,5 @@ fun List<String>.colored(enhanceProcess: Boolean?): List<String> {
 }
 
 fun String.colored() =
-    if (!isPrefixColored() && isNotBlank()) "§7$this"
+    if (!startsWith("§") && isNotBlank()) "§7$this"
     else this

@@ -30,7 +30,7 @@ fun runJS(script: String, session: Session?, variables: Map<String, Any?> = empt
         registerFunction("parse") { param -> session?.parse(param.toString()) ?: "<ERROR: NO SESSION>" }
         registerFunction("println") { info -> println(info) }
         registerFunction("print") { info -> print(info) }
-        registerFunction("shell") { script ->
+        registerFunction("kether", "shell") { script ->
             ScriptKether(script.toString())
                 .invoke(context = Context(session?.viewer!!, session))
                 .getNow("<TIMEOUT>")
@@ -41,8 +41,8 @@ fun runJS(script: String, session: Session?, variables: Map<String, Any?> = empt
     }
 }
 
-private fun SimpleScriptContext.registerFunction(name: String, block: (Any) -> Any) {
-    setAttribute(name, Function<Any, Any> {
+private fun SimpleScriptContext.registerFunction(vararg names: String, block: (Any) -> Any) = names.forEach { label ->
+    setAttribute(label, Function<Any, Any> {
         block(it)
     }, ScriptContext.ENGINE_SCOPE)
 }

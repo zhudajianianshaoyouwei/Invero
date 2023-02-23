@@ -21,7 +21,6 @@ object InveroPlugin : Plugin() {
 
     override fun onLoad() {
         info("Loaded")
-
         repeat(1000) { hot() }
     }
 

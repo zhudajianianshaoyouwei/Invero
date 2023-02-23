@@ -1,19 +1,18 @@
 package cc.trixey.invero.core.geneartor
 
-import cc.trixey.invero.common.supplier.Object
 import cc.trixey.invero.common.supplier.sourceObject
 import org.bukkit.Bukkit
 
 /**
  * Invero
- * cc.trixey.invero.core.geneartor.Worlds
+ * cc.trixey.invero.core.geneartor.GeneratorWorlds
  *
  * @author Arasple
  * @since 2023/2/2 14:34
  */
-class Worlds : BaseGenerator() {
+class GeneratorWorlds : BaseGenerator() {
 
-    override fun generate(): List<Object> {
+    override fun generate() {
         generated = Bukkit.getWorlds().map {
             sourceObject {
                 put("name", it.name)
@@ -28,7 +27,6 @@ class Worlds : BaseGenerator() {
                 put("time", it.time)
             }
         }
-        return generated!!
     }
 
 }

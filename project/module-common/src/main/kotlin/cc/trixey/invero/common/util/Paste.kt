@@ -1,3 +1,5 @@
+package  cc.trixey.invero.common.util
+
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*

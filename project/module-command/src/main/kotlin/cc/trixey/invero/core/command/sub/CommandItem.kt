@@ -1,17 +1,17 @@
 package cc.trixey.invero.core.command.sub
 
-import PasteResult.Status.ERROR
-import PasteResult.Status.SUCCESS
+import cc.trixey.invero.common.util.PasteResult.Status.ERROR
+import cc.trixey.invero.common.util.PasteResult.Status.SUCCESS
+import cc.trixey.invero.common.util.createContent
+import cc.trixey.invero.common.util.paste
 import cc.trixey.invero.core.serialize.ItemStackJsonSerializer
 import cc.trixey.invero.core.util.prettyJson
 import cc.trixey.invero.core.util.standardJson
-import createContent
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import paste
 import taboolib.common.platform.command.CommandBody
 import taboolib.common.platform.command.CommandHeader
 import taboolib.common.platform.command.subCommand

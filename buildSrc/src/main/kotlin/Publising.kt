@@ -10,7 +10,7 @@ fun PublishingExtension.createPublish(project: Project) {
     repositories {
         maven(repoTabooProject) {
             credentials {
-                username = project.findProperty("taboolibUserName").toString()
+                username = project.findProperty("taboolibUsername").toString()
                 password = project.findProperty("taboolibPassword").toString()
             }
             authentication { create<BasicAuthentication>("basic") }

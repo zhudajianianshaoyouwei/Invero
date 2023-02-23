@@ -4,7 +4,7 @@ import cc.trixey.invero.common.adventure.parseMiniMessage
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.adaptPlayer
 import taboolib.module.chat.ComponentText
-import taboolib.module.chat.TextTransfer
+import taboolib.module.chat.colored
 import taboolib.module.chat.component
 import taboolib.platform.compat.replacePlaceholder
 
@@ -15,18 +15,8 @@ import taboolib.platform.compat.replacePlaceholder
  * @author Arasple
  * @since 2023/2/22 13:06
  */
-
-private const val SECTION_CHAR = '§'
-
-private const val AMPERSAND_CHAR = '&'
-
-fun String.isPrefixColored(): Boolean {
-    return startsWith(SECTION_CHAR)
-}
-
 fun String.fluentMessage(): String {
     if (isBlank()) return this
-
     return component().build {
         transform { KetherHandler.parseInline(it, null, emptyMap()) }
         transform { it.parseMiniMessage() }
@@ -35,7 +25,12 @@ fun String.fluentMessage(): String {
 }
 
 fun String.fluentMessage(player: Player, variables: Map<String, Any> = emptyMap()): String {
-    return fluentMessageComponent(player, variables).toLegacyText()
+    return KetherHandler
+        .parseInline(this, player, variables)
+        .replacePlaceholder(player)
+        .parseMiniMessage()
+        .colored()
+//    return fluentMessageComponent(player, variables).toLegacyText()
 }
 
 fun String.fluentMessageComponent(
@@ -56,18 +51,7 @@ fun String.fluentMessageComponent(
         transform { it.parseMiniMessage() }
         // taboolib color
         colored()
-        // restore def color
-        defColor(this@fluentMessageComponent)
     }.also {
         if (send) it.sendTo(adaptPlayer(player))
-    }
-}
-
-fun TextTransfer.defColor(defString: String) {
-    if (defString.startsWith(SECTION_CHAR) || defString.startsWith(AMPERSAND_CHAR)) {
-        transform {
-            if (it.startsWith(SECTION_CHAR)) it.removeRange(0..1)
-            else it
-        }
     }
 }
