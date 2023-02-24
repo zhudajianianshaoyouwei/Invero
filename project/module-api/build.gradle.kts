@@ -6,8 +6,8 @@ dependencies {
     compileTabooLib()
     compileCore(11903)
     framework()
+    serialization()
 
     compileModule("module-common")
     compileModule("module-core")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 }

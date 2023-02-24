@@ -10,6 +10,8 @@ import cc.trixey.invero.ui.bukkit.util.synced
 import cc.trixey.invero.ui.common.Scale
 import cc.trixey.invero.ui.common.StorageMode
 import cc.trixey.invero.ui.common.Window
+import cc.trixey.invero.ui.common.util.locatingAbsoluteSlot
+import org.bukkit.entity.Player
 import taboolib.common.platform.function.submit
 
 /**
@@ -32,7 +34,7 @@ abstract class BukkitWindow(
             updateTitle(value)
         }
 
-    override val panels = arrayListOf<BukkitPanel>()
+    final override val panels = arrayListOf<BukkitPanel>()
 
     override val scale: Scale by lazy { Scale(9 to 6) }
 
@@ -47,6 +49,12 @@ abstract class BukkitWindow(
     private var preRenderCallback: (BukkitWindow) -> Unit = { _ -> }
 
     abstract override val inventory: ProxyBukkitInventory
+
+    val isPlayerInventoryUsed by lazy {
+        panels.any { panel ->
+            panel.area.any { panel.locatingAbsoluteSlot(it) >= inventory.containerSize }
+        }
+    }
 
     fun onClose(block: (BukkitWindow) -> Unit): BukkitWindow {
         closeCallback = block
@@ -74,8 +82,14 @@ abstract class BukkitWindow(
     }
 
     override fun open() {
+        val player = viewer.get<Player>()
+
         // 如果被取消
         if (preOpenCallback(this) == false) return
+        // 当前未备份物品，则说明是首次打开容器，进行备份
+        if (!player.isCurrentlyStored()) {
+            player.storePlayerInventory(wipe = storageMode.alwaysClean)
+        }
         // 正在查看一个 Window，则伪关闭
         findWindow(viewer.name)?.unregisterWindow()
         // 注册窗口
@@ -94,7 +108,6 @@ abstract class BukkitWindow(
 
     override fun close(doCloseInventory: Boolean, updateInventory: Boolean) {
         require(isRegistered()) { "Can not close an unregistered window" }
-
         preCloseCallback(this)
         unregisterWindow()
         synced { inventory.close(doCloseInventory, updateInventory) }

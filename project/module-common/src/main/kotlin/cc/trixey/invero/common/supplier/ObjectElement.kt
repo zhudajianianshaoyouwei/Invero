@@ -7,9 +7,9 @@ package cc.trixey.invero.common.supplier
  * @author Arasple
  * @since 2023/2/1 16:46
  */
-class Object(val content: Map<String, String>) {
+class Object(val content: Map<String, Any>) {
 
-    operator fun get(key: String): String? {
+    operator fun get(key: String): Any? {
         return content[key]
     }
 
@@ -21,11 +21,8 @@ class Object(val content: Map<String, String>) {
 
 }
 
-inline fun sourceObject(block: MutableMap<String, Any?>.() -> Unit): Object = mutableMapOf<String, Any?>()
-    .let { mutableMap ->
-        block(mutableMap)
-        return mutableMap
-            .map { entry -> entry.key to entry.value.toString() }
-            .toMap()
-            .let { Object(it) }
+inline fun sourceObject(block: MutableMap<String, Any?>.() -> Unit): Object = buildMap {
+    mutableMapOf<String, Any?>().also(block).forEach { (key, value) ->
+        if (value != null) put(key, value)
     }
+}.let { Object(it) }

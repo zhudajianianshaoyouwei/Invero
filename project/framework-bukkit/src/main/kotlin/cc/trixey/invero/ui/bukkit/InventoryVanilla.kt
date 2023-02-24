@@ -5,13 +5,12 @@ import cc.trixey.invero.ui.bukkit.panel.CraftingPanel
 import cc.trixey.invero.ui.bukkit.util.clickType
 import cc.trixey.invero.ui.bukkit.util.synced
 import org.bukkit.Bukkit
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryCloseEvent
-import org.bukkit.event.inventory.InventoryDragEvent
-import org.bukkit.event.inventory.InventoryOpenEvent
+import org.bukkit.entity.Player
+import org.bukkit.event.inventory.*
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
+import taboolib.common.platform.function.submit
 
 /**
  * Invero
@@ -22,11 +21,18 @@ import org.bukkit.inventory.ItemStack
  */
 class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory {
 
+    val container = if (containerType.isOrdinaryChest)
+        Bukkit.createInventory(Holder(window), containerType.containerSize, inventoryTitle)
+    else try {
+        Bukkit.createInventory(Holder(window), InventoryType.valueOf(containerType.bukkitType), inventoryTitle)
+    } catch (e: Throwable) {
+        error("Not supported inventory type (${containerType.bukkitType}) yet")
+    }
+
     override fun isVirtual(): Boolean {
         return false
     }
 
-    private val storage = PlayerStorage(viewer)
     private var clickCallback: (InventoryClickEvent) -> Boolean = { true }
     private var dragCallback: (InventoryDragEvent) -> Boolean = { true }
 
@@ -38,13 +44,6 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     fun onDrag(handler: (InventoryDragEvent) -> Boolean): InventoryVanilla {
         dragCallback = handler
         return this
-    }
-
-    val container = when {
-        containerType.isOrdinaryChest -> Bukkit.createInventory(
-            Holder(window), containerType.containerSize, inventoryTitle
-        )
-        else -> error("Not supported type yet")
     }
 
     override fun clear(slots: Collection<Int>) {
@@ -74,16 +73,12 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     }
 
     override fun open() {
-        storage.beforeOpen(window.storageMode)
         viewer.openInventory(container)
     }
 
     override fun close(doCloseInventory: Boolean, updateInventory: Boolean) {
         if (doCloseInventory && isViewing()) viewer.closeInventory()
         if (updateInventory) viewer.updateInventory()
-
-        // 当前窗口若有 IOPanel，则关闭后不恢复背包存储
-//        if (!window.anyInstancePanel<IOPanel>()) storage.afterClose()
     }
 
     fun handleClick(e: InventoryClickEvent) {
@@ -183,8 +178,10 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     fun handleOpen(e: InventoryOpenEvent) {}
 
     fun handleClose(e: InventoryCloseEvent) {
+        // 传递 Bukkit 关闭事件
         if (window.isRegistered()) {
             window.close(doCloseInventory = false, updateInventory = false)
+            submit(delay = 2L) { (e.player as Player).restorePlayerInventory() }
         }
     }
 

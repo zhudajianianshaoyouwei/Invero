@@ -55,17 +55,12 @@ interface NMS {
      * @param slot The slot that should be updated
      * @param itemStack The to update chemdah stack
      */
-    fun sendWindowSetSlot(
-        player: Player, containerId: Int, slot: Int, itemStack: ItemStack? = null, stateId: Int = 1
-    )
+    fun sendWindowSetSlot(player: Player, containerId: Int, slot: Int, itemStack: ItemStack? = null, stateId: Int = 1)
 
     /**
-     * https://wiki.vg/Protocol#Window_Property
-     *
-     * TODO("This packet is used to inform the client that part of a GUI window should be updated.")
-     * TODO("完善此结构可以实现信标，熔炉等虚拟UI页面的客户端动效")
+     * This packet is used to inform the client that part of a GUI window should be updated.
      */
-    fun sendWindowUpdateData(player: Player, containerId: Int, property: Int, value: Int)
+    fun sendWindowUpdateData(player: Player, containerId: Int, property: WindowProperty, value: Int)
 
     fun asCraftMirror(itemStack: Any): Any
 

@@ -13,7 +13,7 @@ import taboolib.common.platform.function.submit
  * @author Arasple
  * @since 2022/12/29 13:08
  */
-fun showBasic(player: Player) = chestWindow(player, 6, "Hello InveroPlugin") {
+fun showBasic(player: Player) = chestWindow(player.viewer, 6, "Hello InveroPlugin") {
 
     var count = 1
 
@@ -56,7 +56,7 @@ fun showBasic(player: Player) = chestWindow(player, 6, "Hello InveroPlugin") {
     open()
 }
 
-fun showRunningItem(player: Player) = chestWindow(player, 6, "Running Paged CommandItem") {
+fun showRunningItem(player: Player) = chestWindow(player.viewer, 6, "Running Paged CommandItem") {
 
     var itemAmount = 1
 
@@ -89,7 +89,7 @@ fun showRunningItem(player: Player) = chestWindow(player, 6, "Running Paged Comm
     open()
 }
 
-fun showDynamicTitle(player: Player) = chestWindow(player, 3, "_") {
+fun showDynamicTitle(player: Player) = chestWindow(player.viewer, 3, "_") {
 
     standard(9 to 3) {
         getUnoccupiedPositions().let { posSet ->

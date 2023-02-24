@@ -6,9 +6,9 @@ repositories {
 dependencies {
     compileTabooLib()
     compileCore(11903)
-    compileLocal(project = project, "libs")
     serialization()
     framework()
+    compileLocal(project, "libs")
 
     compileModule("module-common")
     compileModule("module-core")

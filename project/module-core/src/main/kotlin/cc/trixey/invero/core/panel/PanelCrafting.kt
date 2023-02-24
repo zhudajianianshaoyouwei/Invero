@@ -44,7 +44,7 @@ class PanelCrafting(
     @Transient
     override val scale = run {
         require(layout != null) { "PanelScroll must specifiy a layout" }
-        _scale ?: Scale(layout.getScale())
+        _scale ?: layout.getScale()
     }
 
     init {

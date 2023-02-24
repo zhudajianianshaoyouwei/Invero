@@ -19,9 +19,6 @@ import taboolib.module.nms.sendPacketBlocking
  *
  * @author Arasple
  * @since 2022/10/20
- *
- * 总感觉他妈的发包容器轻飘飘的还迟钝 ??????????
- * TODO 究竟是什么发包问题
  */
 class NMSImpl : NMS {
 
@@ -106,29 +103,27 @@ class NMSImpl : NMS {
                     "stateId" to stateId,
                 )
             }
+
             else -> {
                 player.sendPacketBlocking(PacketPlayOutSetSlot(containerId, slot, itemStack.asNMSCopy()))
             }
         }
     }
 
-    override fun sendWindowUpdateData(player: Player, containerId: Int, property: Int, value: Int) {
-        TODO("Not yet implemented")
+    override fun sendWindowUpdateData(player: Player, containerId: Int, property: WindowProperty, value: Int) {
+        PacketPlayOutWindowData(containerId, property.index, value).let {
+            player.sendPacketBlocking(it)
+        }
     }
 
     override fun asCraftMirror(itemStack: Any): ItemStack {
         return CraftItemStack.asCraftMirror(itemStack as net.minecraft.server.v1_16_R3.ItemStack?) as ItemStack
     }
 
-    // TODO
     override fun getContainerId(player: Player): Int {
         player as CraftPlayer
 
         return if (isUniversal) {
-            // 这里 NMS 翻译遇到些问题
-//            Caused by: java.lang.NoSuchFieldError: containerMenu
-//            player as org.bukkit.craftbukkit.v1_19_R1.entity.CraftPlayer
-//            player.handle.containerMenu.containerId
             player.handle.getProperty<Container>("containerMenu")!!.getProperty<Int>("containerId")!!
         } else {
             player.handle.activeContainer.windowId

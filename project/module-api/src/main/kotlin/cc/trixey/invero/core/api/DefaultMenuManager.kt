@@ -47,12 +47,12 @@ import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Invero
- * cc.trixey.invero.core.api.DefaultMenManager
+ * cc.trixey.invero.core.api.DefaultMenuManager
  *
  * @author Arasple
  * @since 2023/2/1 17:17
  */
-class DefaultMenManager : MenuManager {
+class DefaultMenuManager : MenuManager {
 
     private val module = SerializersModule {
 
@@ -287,7 +287,7 @@ class DefaultMenManager : MenuManager {
 
         @Awake(LifeCycle.INIT)
         fun init() {
-            PlatformFactory.registerAPI<MenuManager>(DefaultMenManager())
+            PlatformFactory.registerAPI<MenuManager>(DefaultMenuManager())
         }
 
         @Awake(LifeCycle.ACTIVE)

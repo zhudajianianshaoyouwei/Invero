@@ -31,13 +31,14 @@ interface InveroAPI {
 
     /**
      * 注册一个类型的元素生成器
+     * 引用方式 namespace:id
      */
-    fun registerElementGenerator(name: String, provider: ElementGenerator)
+    fun registerElementGenerator(namespace: String, id: String, provider: ElementGenerator)
 
     /**
      * 根据名称引用创建一个元素生成器
      */
-    fun createElementGenerator(name: String): ElementGenerator
+    fun createElementGenerator(identifier: String): ElementGenerator?
 
     /**
      * 注册一个物品源提供器

@@ -4,9 +4,13 @@ import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.util.MATERIAL_ID
 import kotlinx.serialization.*
 import kotlinx.serialization.encoding.*
+import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import taboolib.common.util.Strings
+import taboolib.common5.cshort
+import taboolib.library.reflex.Reflex.Companion.invokeMethod
 import taboolib.library.xseries.XMaterial
+import taboolib.module.nms.MinecraftVersion
 import kotlin.jvm.optionals.getOrElse
 import kotlin.jvm.optionals.getOrNull
 
@@ -38,7 +42,16 @@ class TextureMaterial(override val raw: String) : Texture() {
                 val id = it.groupValues[1].toIntOrNull() ?: 1
                 val data = it.groupValues.getOrNull(2)?.toByteOrNull() ?: 0
 
-                return XMaterial.matchXMaterial(id, data).getOrNull()?.parseItem()
+                Material::javaClass.invokeMethod<Material>("getMaterial", id)?.let { mat ->
+                }
+
+
+                return if (MinecraftVersion.majorLegacy < 11300)
+                    Material::javaClass.invokeMethod<Material>("getMaterial", id)
+                        ?.let { mat ->
+                            ItemStack(mat, 1, data.cshort)
+                        }
+                else XMaterial.matchXMaterial(id, data).getOrNull()?.parseItem()
             }
 
         // 1.13+
@@ -47,7 +60,7 @@ class TextureMaterial(override val raw: String) : Texture() {
             .replace(" +".toRegex(), "_")
             .replace('-', '_')
 
-        return XMaterial.matchXMaterial(cleanForm).getOrElse {
+        return Material.getMaterial(cleanForm)?.let { ItemStack(it) } ?: XMaterial.matchXMaterial(cleanForm).getOrElse {
             XMaterial.values().maxByOrNull { Strings.similarDegree(it.name, cleanForm) }
         }?.parseItem()
     }

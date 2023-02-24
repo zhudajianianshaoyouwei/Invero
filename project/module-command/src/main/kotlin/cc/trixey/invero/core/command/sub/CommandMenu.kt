@@ -5,6 +5,7 @@ import cc.trixey.invero.common.util.PasteResult.Status.ERROR
 import cc.trixey.invero.common.util.PasteResult.Status.SUCCESS
 import cc.trixey.invero.common.util.createContent
 import cc.trixey.invero.common.util.paste
+import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.command.createHelper
 import cc.trixey.invero.core.command.menu
 import cc.trixey.invero.core.command.player
@@ -30,19 +31,58 @@ object CommandMenu {
     val main = mainCommand { createHelper() }
 
     @CommandBody
-    val reload = subCommand { execute { sender, _, _ -> Invero.API.getMenuManager().reload(sender) } }
+    val reload = subCommand {
+        execute { sender, _, _ ->
+            submitAsync { Invero.API.getMenuManager().reload(sender) }
+        }
+    }
 
     /*
     list [filter]
      */
     @CommandBody
     val list = subCommand {
-        dynamic("filter") {
+        dynamic("filter", optional = true) {
+            suggestUncheck {
+                val tags = hashMapOf<String, Int>()
+                Invero.API.getMenuManager().getMenus().forEach {
+                    val tag = it.id!!.split("-", "_")[0].lowercase()
+                    tags[tag] = tags.computeIfAbsent(tag) { 0 } + 1
+                }
 
+                tags.filterValues { it >= 2 }.keys.toList()
+            }
+
+            execute<CommandSender> { sender, ctx, _ ->
+                submitAsync { sender.notifyMenus(ctx.getOrNull("filter")?.lowercase()) }
+            }
         }
-        // TODO
+
         execute<CommandSender> { sender, _, _ ->
-            sender.sendMessage("呜呜呜还没写")
+            submitAsync { sender.notifyMenus() }
+        }
+    }
+
+    private fun CommandSender.notifyMenus(filter: String? = null) {
+        val menus = Invero.API
+            .getMenuManager()
+            .getMenus()
+            .filter { filter == null || filter in it.id!!.lowercase() }
+
+        if (menus.isEmpty()) return sendLang("menu-list-empty", filter ?: "NULL")
+
+        sendLang("menu-list-header", menus.size)
+        val stripTitleBy = Regex("(%|<|\\[|\\{\\{)(.+)(%|}}|]|>)")
+
+        menus.forEach {
+            it as BaseMenu
+
+            sendLang(
+                "menu-list-item",
+                it.id ?: "NULL",
+                it.settings.rows ?: -1,
+                it.settings.title.default.replace(stripTitleBy, "")
+            )
         }
     }
 

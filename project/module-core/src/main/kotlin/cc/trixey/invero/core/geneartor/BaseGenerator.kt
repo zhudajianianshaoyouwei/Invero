@@ -1,10 +1,7 @@
 package cc.trixey.invero.core.geneartor
 
-import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.supplier.ElementGenerator
 import cc.trixey.invero.common.supplier.Object
-import taboolib.common.LifeCycle
-import taboolib.common.platform.Awake
 
 /**
  * Invero
@@ -29,24 +26,6 @@ abstract class BaseGenerator : ElementGenerator {
     override fun <R : Comparable<R>> sortBy(block: (Object) -> R): ElementGenerator {
         generated = generated?.sortedBy(block)
         return this
-    }
-
-    fun register(name: String? = null) = Invero.API.registerElementGenerator(
-        name = name ?: this.javaClass.simpleName.lowercase().removeSuffix("s"),
-        provider = this.javaClass.getConstructor().newInstance()
-    )
-
-    companion object {
-
-        @Awake(LifeCycle.INIT)
-        internal fun default() = setOf(
-            GeneratorEmpty(),
-            GeneratorPlayers(),
-            GeneratorSounds(),
-            GeneratorWorlds(),
-            GeneratorMenus()
-        ).forEach { it.register() }
-
     }
 
 }

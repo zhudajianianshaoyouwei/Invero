@@ -42,7 +42,7 @@ class PanelGenerator(
     val settings: StructureGenerator,
     @JsonNames("icon", "item", "items")
     @Serializable(with = MappedIconSerializer::class)
-    override val icons: Map<String, Icon>
+    override val icons: Map<String, Icon> = emptyMap()
 ) : AgentPanel(), IconContainer {
 
     init {
@@ -51,12 +51,7 @@ class PanelGenerator(
     }
 
     @Transient
-    override val scale = run {
-        if (_scale == null) {
-            require(layout != null) { "Both scale and layout of this panel is null" }
-            Scale(layout.getScale())
-        } else _scale
-    }
+    override val scale = _scale ?: layout?.getScale() ?: Scale(9 to 1)
 
     override fun invoke(parent: PanelContainer, session: Session) =
         parent.generatorPaged(scale.raw, parent.locate()) {

@@ -13,7 +13,7 @@ import taboolib.common.platform.function.submit
  * @author Arasple
  * @since 2023/1/10 22:05
  */
-fun showFreeformNetesed(player: Player) = chestWindow(player, 6, "FreeformNetesed") {
+fun showFreeformNetesed(player: Player) = chestWindow(player.viewer, 6, "FreeformNetesed") {
 
     freeformNetesed(9 to 6) {
 

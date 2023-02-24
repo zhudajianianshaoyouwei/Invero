@@ -38,9 +38,7 @@ class Layout(val raw: List<String>) {
         posList.maxBy { it.x }.x + 1 to posList.maxBy { it.y }.y + 1
     }
 
-    fun getScale(): Pair<Int, Int> {
-        return scale
-    }
+    fun getScale() = Scale(scale)
 
     fun findRectangle(search: String = " "): Pair<Pos, Scale>? {
         mapped.forEach { (key, value) ->

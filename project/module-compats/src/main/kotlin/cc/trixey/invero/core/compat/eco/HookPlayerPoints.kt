@@ -15,7 +15,7 @@ object HookPlayerPoints : PluginHook() {
 
     override val pluginName = "PlayerPoints"
 
-    private val playerPointsAPI = if (isHooked) PlayerPoints.getInstance().api else null
+    private val playerPointsAPI = PlayerPoints.getInstance().api
 
     fun look(player: Player): Int? {
         return playerPointsAPI?.look(player.uniqueId)

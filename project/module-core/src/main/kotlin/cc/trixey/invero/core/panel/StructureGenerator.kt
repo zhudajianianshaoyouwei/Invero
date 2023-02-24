@@ -1,12 +1,16 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package cc.trixey.invero.core.panel
 
 import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.supplier.Object
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.serialize.IconSerializer
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlinx.serialization.json.JsonNames
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
@@ -27,6 +31,7 @@ class StructureGenerator(
     @SerialName("extension")
     val extenedProperties: Map<String, String>?,
     @Serializable(with = IconSerializer::class)
+    @JsonNames("template")
     val output: Icon,
 ) {
 
@@ -38,6 +43,7 @@ class StructureGenerator(
             .let { Object(it) }
     }
 
-    fun create() = Invero.API.createElementGenerator(source ?: "custom")
+    fun create() =
+        Invero.API.createElementGenerator(source ?: "custom") ?: error("Unregistered generator source [$source]")
 
 }

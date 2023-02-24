@@ -14,7 +14,7 @@ import cc.trixey.invero.core.util.unregisterSession
 import cc.trixey.invero.ui.bukkit.InventoryPacket
 import cc.trixey.invero.ui.bukkit.InventoryVanilla
 import cc.trixey.invero.ui.bukkit.PlayerViewer
-import cc.trixey.invero.ui.bukkit.api.dsl.chestWindow
+import cc.trixey.invero.ui.bukkit.api.dsl.commonWindow
 import cc.trixey.invero.ui.bukkit.panel.CraftingPanel
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
@@ -53,7 +53,10 @@ class BaseMenu(
     init {
         // auto-rows
         if (settings.rows == null)
-            settings.rows = panels.maxBy { it.scale.height }.scale.height.coerceIn(1..6)
+            settings.rows = panels
+                .maxBy { it.scale?.height ?: 0 }
+                .scale
+                ?.height?.coerceIn(1..6) ?: 3
         // auto-override
         if (panels.any { it is PanelCrafting }) {
             settings.setProperty("overridePlayerInventory", false)
@@ -68,19 +71,15 @@ class BaseMenu(
         // 注销原有菜单会话
         if (viewer.session != null) {
             val session = viewer.session
-            if (session != null && session.elapsed() < 2_00) {
-                return
-            } else {
-                viewer.unregisterSession()
-            }
+            if (session != null && session.elapsed() < 2_00) return
+            else viewer.unregisterSession()
         }
         // 新建 Window
-        val window = chestWindow(
+        val window = commonWindow(
             viewer,
-            settings.containerType.rows,
-            "",
-            settings.storageMode,
-            isVirtual(),
+            virtual = isVirtual(),
+            type = settings.containerType,
+            storageMode = settings.storageMode
         ).onClose {
             // restore collection
             val player = viewer.get<Player>()

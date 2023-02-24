@@ -15,15 +15,11 @@ abstract class PluginHook {
 
     open val pluginName: String? = null
 
-
-    val isHooked: Boolean
-        get() = if (pluginName != null) {
-            val plugin = Bukkit.getPluginManager().getPlugin(pluginName!!)
-            (plugin != null && plugin.isEnabled).also {
-                if (it) {
-                    console().sendLang("plugin-hooked", pluginName!!)
-                }
-            }
+    val isHooked: Boolean by lazy {
+        if (pluginName != null && Bukkit.getPluginManager().getPlugin(pluginName!!) != null) {
+            console().sendLang("plugin-hooked", pluginName!!)
+            true
         } else false
+    }
 
 }
