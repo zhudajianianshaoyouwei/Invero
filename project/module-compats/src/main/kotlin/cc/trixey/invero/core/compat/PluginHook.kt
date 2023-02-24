@@ -19,7 +19,9 @@ abstract class PluginHook {
     val isHooked: Boolean
         get() = if (pluginName != null) {
             val plugin = Bukkit.getPluginManager().getPlugin(pluginName!!)
-            (plugin != null && plugin.isEnabled).also {
+            // 加载PluginHook的时候各个插件还没Enable呢
+            // (plugin != null && plugin.isEnabled).also {
+            (plugin != null).also {
                 if (it) {
                     console().sendLang("plugin-hooked", pluginName!!)
                 }

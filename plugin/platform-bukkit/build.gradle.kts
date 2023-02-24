@@ -16,6 +16,7 @@ taboolib {
 
         dependencies {
             name("PlaceholderAPI").optional(true)
+            name("NeigeItems").optional(true)
             name("Zaphkiel").optional(true)
             name("HeadDatabase").optional(true)
             name("Oraxen").optional(true)
