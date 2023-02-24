@@ -7,6 +7,8 @@ taboolib {
 
     usedTaboolibModules.forEach { install(it) }
 
+    relocate("net.kyori.adventure","cc.trixey.invero.net.kyori.adventure")
+
     description {
         name = rootName
 
