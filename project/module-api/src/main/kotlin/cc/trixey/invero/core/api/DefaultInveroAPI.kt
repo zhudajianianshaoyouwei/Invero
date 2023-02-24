@@ -1,5 +1,6 @@
 package cc.trixey.invero.core.api
 
+import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.api.DataManager
 import cc.trixey.invero.common.api.InveroAPI
 import cc.trixey.invero.common.api.JavaScriptHandler
@@ -9,7 +10,7 @@ import cc.trixey.invero.common.supplier.ItemSourceProvider
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 import taboolib.common.platform.PlatformFactory
-import taboolib.common.util.Strings
+import taboolib.platform.util.bukkitPlugin
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -30,15 +31,20 @@ class DefaultInveroAPI : InveroAPI {
 
     override fun getJavaScriptHandler() = PlatformFactory.getAPI<JavaScriptHandler>()
 
-    override fun registerElementGenerator(name: String, provider: ElementGenerator) {
-        elementGenerators[name] = provider
+    override fun registerElementGenerator(namespace: String, id: String, provider: ElementGenerator) {
+        val identifier = if (namespace == bukkitPlugin.name) id else "$namespace:$id"
+        elementGenerators[identifier] = provider
     }
 
-    override fun createElementGenerator(name: String): ElementGenerator = elementGenerators
-        .entries
-        .maxBy { Strings.similarDegree(it.key.lowercase(), name.lowercase()) }
-        .value
-        .javaClass.getConstructor().newInstance()
+    override fun createElementGenerator(identifier: String): ElementGenerator? =
+        elementGenerators.entries
+            .find {
+                it.key.equals(identifier, true) || it.key.removeSuffix("s").equals(identifier, true)
+            }
+            ?.value
+            ?.javaClass
+            ?.getConstructor()
+            ?.newInstance()
 
     override fun registerItemSourceProvider(name: String, provider: ItemSourceProvider) {
         itemSourceProvider[name.uppercase()] = provider

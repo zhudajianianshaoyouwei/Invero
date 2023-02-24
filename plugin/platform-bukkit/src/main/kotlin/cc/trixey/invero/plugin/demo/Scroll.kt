@@ -14,7 +14,7 @@ import org.bukkit.entity.Player
  * @since 2023/1/11 14:36
  */
 
-fun showScroll2(player: Player) = chestWindow(player, 6, "Loop Scroll (horizontally)") {
+fun showScroll2(player: Player) = chestWindow(player.viewer, 6, "Loop Scroll (horizontally)") {
 
     scroll(9 to 5, direction = ScrollDirection.HORIZONTAL, tail = -1) {
 
@@ -44,7 +44,7 @@ fun showScroll2(player: Player) = chestWindow(player, 6, "Loop Scroll (horizonta
     open()
 }
 
-fun showScrollStandard(player: Player) = chestWindow(player, 6, "Scroll_Standard") {
+fun showScrollStandard(player: Player) = chestWindow(player.viewer, 6, "Scroll_Standard") {
 
     scroll(9 to 6, tail = -1) {
         for (colum in 0 until 20) {

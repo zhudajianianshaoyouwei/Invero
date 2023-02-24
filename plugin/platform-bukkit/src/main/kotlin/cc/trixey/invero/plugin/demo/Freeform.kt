@@ -15,7 +15,7 @@ import taboolib.common.platform.function.submit
  * @author Arasple
  * @since 2023/1/6 14:45
  */
-fun showFreeformStandard(player: Player) = chestWindow(player, 6, "FreeformPanel Standard") {
+fun showFreeformStandard(player: Player) = chestWindow(player.viewer, 6, "FreeformPanel Standard") {
 
     freeformPanel(9 to 6) {
 

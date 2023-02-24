@@ -1,8 +1,6 @@
 package cc.trixey.invero.core.script.kether
 
-import cc.trixey.invero.core.script.player
 import cc.trixey.invero.core.script.selfSourceObject
-import cc.trixey.invero.core.util.KetherHandler
 import taboolib.module.kether.KetherParser
 import taboolib.module.kether.combinationParser
 
@@ -18,15 +16,7 @@ object ActionSource {
     @KetherParser(["element"], namespace = "invero", shared = true)
     fun parser() = combinationParser {
         it.group(text()).apply(it) { key ->
-            now {
-                val value = selfSourceObject()[key]
-                if (value?.startsWith("ext@") == true) {
-                    val source = value.removePrefix("ext@")
-                    KetherHandler.invoke(source, player(), variables().toMap()).getNow("<TIMEOUT>").toString()
-                } else {
-                    value
-                }
-            }
+            now { selfSourceObject()[key] }
         }
     }
 

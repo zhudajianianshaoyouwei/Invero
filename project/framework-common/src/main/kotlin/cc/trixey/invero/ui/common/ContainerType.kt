@@ -168,20 +168,20 @@ enum class ContainerType(val vanillaId: String, val serialId: Int, slotsContaine
             GENERIC_9X6 -> 6
             GENERIC_3X3 -> 3
             ANVIL -> 1
-            BEACON -> TODO()
-            BLAST_FURNACE -> TODO()
-            BREWING_STAND -> TODO()
-            CRAFTING -> TODO()
-            ENCHANTMENT -> TODO()
-            FURNACE -> TODO()
-            GRINDSTONE -> TODO()
-            HOPPER -> TODO()
-            LOOM -> TODO()
-            MERCHANT -> TODO()
-            SHULKER_BOX -> TODO()
-            SMOKER -> TODO()
-            CARTOGRAPHY_TABLE -> TODO()
-            STONECUTTER -> TODO()
+            BEACON -> 1
+            BLAST_FURNACE -> 1
+            BREWING_STAND -> 1
+            CRAFTING -> 2
+            ENCHANTMENT -> 1
+            FURNACE -> 1
+            GRINDSTONE -> 1
+            HOPPER -> 1
+            LOOM -> 1
+            MERCHANT -> 1
+            SHULKER_BOX -> 3
+            SMOKER -> 1
+            CARTOGRAPHY_TABLE -> 1
+            STONECUTTER -> 1
         }
     }
 

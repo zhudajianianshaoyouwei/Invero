@@ -1,15 +1,18 @@
-package cc.trixey.invero.core.geneartor
+package cc.trixey.invero.core.compat.generator
 
 import cc.trixey.invero.common.supplier.sourceObject
+import cc.trixey.invero.core.compat.DefGeneratorProvider
+import cc.trixey.invero.core.geneartor.BaseGenerator
 import org.bukkit.Bukkit
 
 /**
  * Invero
- * cc.trixey.invero.core.geneartor.GeneratorWorlds
+ * cc.trixey.invero.core.compat.generator.GeneratorWorlds
  *
  * @author Arasple
  * @since 2023/2/2 14:34
  */
+@DefGeneratorProvider("world")
 class GeneratorWorlds : BaseGenerator() {
 
     override fun generate() {

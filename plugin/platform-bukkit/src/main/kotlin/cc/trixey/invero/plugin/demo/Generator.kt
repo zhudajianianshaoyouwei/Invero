@@ -16,7 +16,7 @@ import taboolib.library.xseries.XSound
  * @since 2023/1/11 16:16
  */
 fun showGeneratorPaged(player: Player, filter: String? = null) =
-    chestWindow(player, 6, "Generator_Paged (filtered: $filter)") {
+    chestWindow(player.viewer, 6, "Generator_Paged (filtered: $filter)") {
 
         generatorPaged<Sound>(9 to 6) {
 
@@ -49,7 +49,7 @@ fun showGeneratorPaged(player: Player, filter: String? = null) =
 
     }
 
-fun showGeneratorScroll(player: Player, filter: String? = null) = chestWindow(player, 6, "Generator_Paged") {
+fun showGeneratorScroll(player: Player, filter: String? = null) = chestWindow(player.viewer, 6, "Generator_Paged") {
 
     generatorScroll<Sound>(9 to 6) {
 

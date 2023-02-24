@@ -1,8 +1,9 @@
 package cc.trixey.invero.ui.bukkit
 
-import cc.trixey.invero.ui.common.StorageMode
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Invero
@@ -11,23 +12,25 @@ import org.bukkit.inventory.ItemStack
  * @author Arasple
  * @since 2023/1/20 17:16
  */
-class PlayerStorage(val player: Player, var storage: Array<ItemStack?> = arrayOfNulls(36)) {
+val storageMap = ConcurrentHashMap<UUID, Storage>()
 
-    fun beforeOpen(storageMode: StorageMode) {
-        backup(storageMode.shouldClean)
-    }
+fun Player.isCurrentlyStored(): Boolean {
+    return storageMap.containsKey(this.uniqueId)
+}
 
-    fun afterClose() {
-        restore()
-    }
+fun Player.storePlayerInventory(wipe: Boolean = false) {
+    storageMap[uniqueId] = Storage(this)
+}
 
-    fun backup(clean: Boolean = false) {
-        storage = player.inventory.storageContents
-        if (clean) for (i in 0..35) player.inventory.storageContents[i] = null
+fun Player.restorePlayerInventory() {
+    storageMap[uniqueId]?.let {
+        inventory.storageContents = it.storage
     }
+    storageMap.remove(uniqueId)
+}
 
-    fun restore() {
-        player.inventory.storageContents = storage
-    }
+class Storage(var storage: Array<ItemStack?> = arrayOfNulls(36)) {
+
+    constructor(player: Player) : this(player.inventory.storageContents.clone())
 
 }

@@ -10,7 +10,8 @@ import cc.trixey.invero.ui.common.panel.PagedPanel
 import org.bukkit.entity.Player
 import taboolib.common5.Baffle
 import taboolib.common5.cbool
-import taboolib.module.kether.*
+import taboolib.module.kether.KetherParser
+import taboolib.module.kether.combinationParser
 import java.util.concurrent.TimeUnit
 
 /**
@@ -47,7 +48,7 @@ object ActionRegenerate {
                             .getNow(true).cbool
                     }
                 }
-                if (sort != null) panel.sortWith { o1, o2 -> o1[sort]!!.compareTo(o2[sort]!!) }
+                if (sort != null) panel.sortWith { o1, o2 -> o1[sort].toString().compareTo(o2[sort].toString()) }
                 if (panel is PagedPanel) panel.pageIndex = 0
 
                 panel.reset()

@@ -26,9 +26,6 @@ import java.util.concurrent.CompletableFuture
  * @since 2023/1/24 22:51
  */
 
-/*
-msg <action>
- */
 @KetherParser(["message", "msg"], namespace = "invero", shared = true)
 internal fun actionMessage() = combinationParser {
     it.group(

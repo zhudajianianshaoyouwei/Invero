@@ -2,10 +2,10 @@ package cc.trixey.invero.core.compat
 
 import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.supplier.ItemSourceProvider
+import cc.trixey.invero.core.geneartor.BaseGenerator
 import taboolib.common.LifeCycle
 import taboolib.common.inject.ClassVisitor
 import taboolib.common.platform.Awake
-import taboolib.library.reflex.ClassMethod
 import java.util.function.Supplier
 
 /**
@@ -18,18 +18,23 @@ import java.util.function.Supplier
 @Awake
 class Compat : ClassVisitor(0) {
 
-    override fun visit(method: ClassMethod, clazz: Class<*>, instance: Supplier<*>?) {
+    override fun visitEnd(clazz: Class<*>, instance: Supplier<*>?) {
         if (clazz.isAnnotationPresent(DefItemProvider::class.java)) {
             val annotation = clazz.getAnnotation(DefItemProvider::class.java)
-            val provider = clazz.getConstructor().newInstance() as ItemSourceProvider
+            val provider = (instance?.get() ?: clazz.getConstructor().newInstance()) as ItemSourceProvider
             if (provider is PluginHook && !provider.isHooked) return
-            annotation.namespaces.forEach {
-                Invero.API.registerItemSourceProvider(it, provider)
-            }
+
+            annotation.namespaces.forEach { Invero.API.registerItemSourceProvider(it, provider) }
+        } else if (clazz.isAnnotationPresent(DefGeneratorProvider::class.java)) {
+            val annotation = clazz.getAnnotation(DefGeneratorProvider::class.java)
+            val generator = clazz.getConstructor().newInstance() as BaseGenerator
+            val namespace = annotation.namespace
+            val id = annotation.id
+
+            Invero.API.registerElementGenerator(namespace, id, generator)
         }
-        super.visit(method, clazz, instance)
     }
 
-    override fun getLifeCycle() = LifeCycle.LOAD
+    override fun getLifeCycle() = LifeCycle.ACTIVE
 
 }

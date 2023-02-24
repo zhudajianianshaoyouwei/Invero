@@ -1,36 +1,11 @@
 import org.gradle.api.JavaVersion
 import org.gradle.api.Project
+import org.gradle.api.artifacts.dsl.DependencyHandler
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.plugins.PluginAware
 import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.kotlin.dsl.*
-
-const val rootName = "Invero"
-const val rootGroup = "cc.trixey.invero"
-const val rootVersion = "1.0.0-canary-7"
-
-const val kotlinVersion = "1.8.0"
-const val shadowJarVersion = "7.1.2"
-const val taboolibPluginVersion = "1.56"
-val taboolibVersion = taboolibLatestVersion.also { println("Using taboolib-version = $it") }
-
-const val repoTabooProject = "https://repo.tabooproject.org/repository/releases"
-
-val usedTaboolibModules = setOf(
-    "common",
-    "common-5",
-    "platform-bukkit",
-    "module-nms",
-    "module-nms-util",
-    "module-kether",
-    "module-configuration",
-    "module-lang",
-    "module-chat",
-    "module-database",
-    "expansion-javascript",
-    "expansion-player-database",
-)
 
 fun PluginAware.applyPlugins() {
     apply(plugin = "maven-publish")
@@ -57,7 +32,7 @@ fun Project.initSubProject(publish: Project.() -> Unit) {
     if (parent?.name != "plugin") {
         buildDirClean()
     }
-    if (project.parent?.name == "project") {
+    if (project.parent?.name == "project" || project.name == "project") {
         publish()
     }
 }
@@ -65,4 +40,51 @@ fun Project.initSubProject(publish: Project.() -> Unit) {
 fun RepositoryHandler.projectRepositories() {
     maven(repoTabooProject)
     mavenCentral()
+}
+
+fun DependencyHandler.`framework`() {
+    compileModule("framework-common", "framework-bukkit")
+}
+
+fun DependencyHandler.`serialization`() {
+    add("compileOnly", "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0-RC")
+}
+
+fun DependencyHandler.`compileLocal`(project: Project, vararg dir: String) {
+    dir.forEach { add("compileOnly", project.fileTree(it)) }
+}
+
+fun DependencyHandler.`compileModule`(vararg name: String) {
+    name.forEach { add("compileOnly", project(":project:$it")) }
+}
+
+fun DependencyHandler.`implementateModule`(vararg name: String) {
+    name.forEach { add("implementation", project(":project:$it")) }
+}
+
+fun DependencyHandler.`compileNMS`() {
+    add("compileOnly", "ink.ptms:nms-all:1.0.0")
+}
+
+fun DependencyHandler.`compileCore`(
+    version: Int,
+    minimize: Boolean = true,
+    mapped: Boolean = false,
+    complete: Boolean = false,
+) {
+    val notation =
+        "ink.ptms.core:v$version:$version${if (!complete && minimize) "-minimize" else ""}${if (complete) "" else if (mapped) ":mapped" else ":universal"}"
+    add("compileOnly", notation)
+}
+
+fun DependencyHandler.compileTabooLib() {
+    usedTaboolibModules.forEach { installTaboo(it) }
+}
+
+fun DependencyHandler.installTaboo(vararg module: String) = module.forEach {
+    add("compileOnly", "io.izzel.taboolib:$it:$taboolibVersion")
+}
+
+fun DependencyHandler.shadowTaboo(vararg module: String) = module.forEach {
+    add("implementation", "io.izzel.taboolib:$it:$taboolibVersion")
 }

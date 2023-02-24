@@ -47,7 +47,7 @@ class PanelPaged(
 
     override fun invoke(parent: PanelContainer, session: Session) =
         parent.pagedNetesed(scale.raw, parent.locate(), defaultPage = defaultPage) {
-            val panels = pages.map { it.invoke(this, session) }
+            pages.map { it.invoke(this, session) }
 
             // 临时补丁：页码变量初始化
             submitAsync {

@@ -1,6 +1,5 @@
 package cc.trixey.invero.core.geneartor
 
-import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.supplier.ElementGenerator
 import cc.trixey.invero.common.supplier.Object
 import cc.trixey.invero.core.Context
@@ -29,10 +28,5 @@ abstract class ContextGenerator : ElementGenerator {
         generated = generated?.sortedBy(block)
         return this
     }
-
-    fun register(name: String? = null) = Invero.API.registerElementGenerator(
-        name = name ?: this.javaClass.simpleName.lowercase().removeSuffix("s"),
-        provider = this.javaClass.getConstructor().newInstance()
-    )
 
 }

@@ -30,7 +30,7 @@ import kotlinx.serialization.json.JsonNames
 class Icon(
     @JsonNames("key")
     override var id: String?,
-    @JsonNames("if")
+    @JsonNames("if", "rule")
     val condition: ScriptKether?,
     val inherit: Boolean?,
     @SerialName("update")
