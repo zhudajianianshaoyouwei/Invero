@@ -7,6 +7,8 @@ taboolib {
 
     usedTaboolibModules.forEach { install(it) }
 
+    relocate("net.kyori.adventure","cc.trixey.invero.net.kyori.adventure")
+
     description {
         name = rootName
 
@@ -16,6 +18,7 @@ taboolib {
 
         dependencies {
             name("PlaceholderAPI").optional(true)
+            name("NeigeItems").optional(true)
             name("Zaphkiel").optional(true)
             name("HeadDatabase").optional(true)
             name("Oraxen").optional(true)
