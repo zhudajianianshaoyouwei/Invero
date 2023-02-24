@@ -54,9 +54,10 @@ class BaseMenu(
         // auto-rows
         if (settings.rows == null)
             settings.rows = panels
-                .maxBy { it.scale?.height ?: 0 }
+                .maxBy { it.scale.height }
                 .scale
-                ?.height?.coerceIn(1..6) ?: 3
+                .height
+                .coerceIn(1..6)
         // auto-override
         if (panels.any { it is PanelCrafting }) {
             settings.setProperty("overridePlayerInventory", false)

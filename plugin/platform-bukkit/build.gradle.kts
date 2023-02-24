@@ -7,8 +7,6 @@ taboolib {
 
     usedTaboolibModules.forEach { install(it) }
 
-    relocate("net.kyori.adventure","cc.trixey.invero.net.kyori.adventure")
-
     description {
         name = rootName
 
@@ -27,8 +25,7 @@ taboolib {
 
     }
 
-    relocate("kotlinx.serialization", "kotlinx_1_4_1.serialization")
-    relocate("kotlinx.coroutines", "kotlinx_1_6_4.coroutines")
+    relocate("kotlinx.serialization", "kotlinx_1_5_0_RC.serialization")
     relocate("org.bstats", "$rootGroup.core.metrics.bstats")
 
     classifier = null
