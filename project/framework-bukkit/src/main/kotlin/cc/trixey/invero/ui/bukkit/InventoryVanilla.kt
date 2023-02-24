@@ -3,6 +3,7 @@ package cc.trixey.invero.ui.bukkit
 import cc.trixey.invero.ui.bukkit.api.isRegistered
 import cc.trixey.invero.ui.bukkit.panel.CraftingPanel
 import cc.trixey.invero.ui.bukkit.util.clickType
+import cc.trixey.invero.ui.bukkit.util.synced
 import org.bukkit.Bukkit
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
@@ -59,10 +60,12 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     }
 
     override fun set(slot: Int, itemStack: ItemStack?) {
-        if (slot + 1 > containerSize) {
-            getPlayerInventory().setItem(slot.outflowCorrect(), itemStack)
-        } else {
-            container.setItem(slot, itemStack)
+        synced {
+            if (slot + 1 > containerSize) {
+                getPlayerInventory().setItem(slot.outflowCorrect(), itemStack)
+            } else {
+                container.setItem(slot, itemStack)
+            }
         }
     }
 

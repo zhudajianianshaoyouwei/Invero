@@ -3,10 +3,7 @@
 package cc.trixey.invero.core.panel
 
 import cc.trixey.invero.common.supplier.Object
-import cc.trixey.invero.core.AgentPanel
-import cc.trixey.invero.core.BaseMenu
-import cc.trixey.invero.core.Layout
-import cc.trixey.invero.core.Session
+import cc.trixey.invero.core.*
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.serialize.MappedIconSerializer
 import cc.trixey.invero.core.serialize.PosSerializer
@@ -70,7 +67,7 @@ class PanelGenerator(
                 icon.invoke(session, this@PanelGenerator, this@generatorPaged, renderNow = false)
             }
             // 应用元素
-            generatorSource { genearte() }
+            generatorSource { genearte(session) }
             // 过滤元素
             if (settings.filter != null) {
                 filter(session, this@generatorPaged, settings.filter)
@@ -101,9 +98,9 @@ class PanelGenerator(
         }
     }
 
-    private fun genearte(): List<Object> {
+    private fun genearte(session: Session): List<Object> {
         val created = settings.create().apply {
-            generate()
+            generate(Context(session))
             if (settings.extenedObjects != null) {
                 generated = generated!! + settings.extenedObjects
             }

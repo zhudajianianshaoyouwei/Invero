@@ -106,7 +106,6 @@ class NMSImpl : NMS {
                     "stateId" to stateId,
                 )
             }
-
             else -> {
                 player.sendPacketBlocking(PacketPlayOutSetSlot(containerId, slot, itemStack.asNMSCopy()))
             }

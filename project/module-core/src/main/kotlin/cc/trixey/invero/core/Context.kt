@@ -22,6 +22,8 @@ class Context(
     val extVars: Map<String, Any> = emptyMap()
 ) {
 
+    constructor(session: Session) : this(session.viewer, session)
+
     fun parse(input: String) = session?.parse(input, this) ?: input.fluentMessage(player, variables)
 
     fun parse(input: List<String>): List<String> {

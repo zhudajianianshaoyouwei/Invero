@@ -15,6 +15,7 @@ import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import org.bukkit.entity.Player
 import taboolib.module.nms.inputSign
+import taboolib.platform.util.cancelNextChat
 import taboolib.platform.util.nextChat
 
 /**
@@ -49,6 +50,7 @@ class InputCatcher(
     fun run(player: Player, context: Context, repeat: Int = 0, onComplete: () -> Unit = {}) {
         if (repeat == 0) beforeInput?.run(context)
 
+        player.cancelNextChat()
         when (type) {
             CHAT -> player.nextChat {
                 it.contentResponse(player, context, repeat, onComplete)
