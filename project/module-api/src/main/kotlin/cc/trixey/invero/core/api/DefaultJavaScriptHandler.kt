@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.api
 
-import cc.trixey.invero.common.api.JavaScriptHandler
+import cc.trixey.invero.common.api.InveroJavaScriptHandler
 import kotlinx.serialization.json.*
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
@@ -21,7 +21,7 @@ import javax.script.SimpleScriptContext
  * @author Arasple
  * @since 2023/2/8 10:57
  */
-class DefaultJavaScriptHandler : JavaScriptHandler {
+class DefaultJavaScriptHandler : InveroJavaScriptHandler {
 
     private val cacheCompiled = ConcurrentHashMap<String, CompiledScript>()
     private val persistBindings = ConcurrentHashMap<String, Any>(
@@ -66,7 +66,7 @@ class DefaultJavaScriptHandler : JavaScriptHandler {
 
         @Awake(LifeCycle.INIT)
         fun init() {
-            PlatformFactory.registerAPI<JavaScriptHandler>(DefaultJavaScriptHandler())
+            PlatformFactory.registerAPI<InveroJavaScriptHandler>(DefaultJavaScriptHandler())
         }
 
     }

@@ -5,12 +5,12 @@ import javax.script.SimpleScriptContext
 
 /**
  * Invero
- * cc.trixey.invero.common.api.JavaScriptHandler
+ * cc.trixey.invero.common.api.InveroJavaScriptHandler
  *
  * @author Arasple
  * @since 2023/2/8 10:53
  */
-interface JavaScriptHandler {
+interface InveroJavaScriptHandler {
 
     /**
      * 运行脚本

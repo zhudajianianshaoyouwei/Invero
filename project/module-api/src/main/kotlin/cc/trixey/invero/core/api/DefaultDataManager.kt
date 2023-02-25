@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.api
 
-import cc.trixey.invero.common.api.DataManager
+import cc.trixey.invero.common.api.InveroDataManager
 import cc.trixey.invero.common.api.InveroSettings
 import cc.trixey.invero.common.util.prettyPrint
 import org.bukkit.entity.Player
@@ -23,7 +23,7 @@ import java.util.*
  * @author Arasple
  * @since 2023/2/1 17:20
  */
-class DefaultDataManager : DataManager {
+class DefaultDataManager : InveroDataManager {
 
     private val globalDataDatabase by lazy {
         val randUUID = UUID.randomUUID()
@@ -32,19 +32,19 @@ class DefaultDataManager : DataManager {
     }
 
     private val type by lazy {
-        DataManager.Type
+        InveroDataManager.Type
             .values()
-            .find { it.name.equals(InveroSettings.databaseType, true) } ?: DataManager.Type.SQLITE
+            .find { it.name.equals(InveroSettings.databaseType, true) } ?: InveroDataManager.Type.SQLITE
     }
 
     init {
         runCatching {
             when (type) {
-                DataManager.Type.SQLITE -> setupPlayerDatabase(
+                InveroDataManager.Type.SQLITE -> setupPlayerDatabase(
                     File(InveroSettings.pluginFolder, "data/invero_data.db")
                 )
 
-                DataManager.Type.SQL -> setupPlayerDatabase(
+                InveroDataManager.Type.SQL -> setupPlayerDatabase(
                     InveroSettings.sqlSection ?: error("No valid sql section configurated")
                 )
             }
@@ -56,7 +56,7 @@ class DefaultDataManager : DataManager {
         }.getOrNull()
     }
 
-    override fun getDatabaseType(): DataManager.Type {
+    override fun getDatabaseType(): InveroDataManager.Type {
         return type
     }
 
@@ -73,7 +73,7 @@ class DefaultDataManager : DataManager {
 
         @Awake(LifeCycle.ACTIVE)
         fun init() {
-            PlatformFactory.registerAPI<DataManager>(DefaultDataManager())
+            PlatformFactory.registerAPI<InveroDataManager>(DefaultDataManager())
         }
 
         @SubscribeEvent

@@ -4,7 +4,6 @@ import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.action.ScriptKether
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.icon.Slot
-import cc.trixey.invero.core.menu.CommandArgument
 import cc.trixey.invero.core.menu.MenuTask
 import cc.trixey.invero.core.menu.NodeRunnable
 import kotlinx.serialization.builtins.ListSerializer
@@ -51,12 +50,6 @@ internal object MappedIconSerializer :
 
 internal object ListIconSerializer :
     JsonTransformingSerializer<List<Icon>>(ListSerializer(IconSerializer)) {
-    override fun transformSerialize(element: JsonElement) = element.tolerantListSerialize()
-    override fun transformDeserialize(element: JsonElement) = element.tolerantListDeserialize()
-}
-
-internal object ListCommandArgumentSerializer :
-    JsonTransformingSerializer<List<CommandArgument>>(ListSerializer(CommandArgumentSerailizer)) {
     override fun transformSerialize(element: JsonElement) = element.tolerantListSerialize()
     override fun transformDeserialize(element: JsonElement) = element.tolerantListDeserialize()
 }

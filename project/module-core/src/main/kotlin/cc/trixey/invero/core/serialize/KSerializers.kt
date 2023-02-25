@@ -13,12 +13,12 @@
 
 package cc.trixey.invero.core.serialize
 
+import cc.trixey.invero.common.util.standardJson
 import cc.trixey.invero.core.Layout
 import cc.trixey.invero.core.action.*
 import cc.trixey.invero.core.animation.CycleMode
 import cc.trixey.invero.core.menu.MenuTitle
 import cc.trixey.invero.core.menu.NodeRunnable
-import cc.trixey.invero.core.util.standardJson
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -51,8 +51,6 @@ import taboolib.module.nms.getItemTag
 
 internal val listStringSerializer = ListSerializer(String.serializer())
 
-
-@Suppress("DEPRECATION")
 object ItemStackJsonSerializer : KSerializer<ItemStack> {
 
     override val descriptor = PrimitiveSerialDescriptor("ItemStack.Json", PrimitiveKind.STRING)

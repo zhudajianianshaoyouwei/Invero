@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.script.kether
 
-import cc.trixey.invero.common.supplier.Object
+import cc.trixey.invero.common.Object
 import cc.trixey.invero.core.script.contextVar
 import cc.trixey.invero.core.script.findNearstPanel
 import cc.trixey.invero.core.script.session

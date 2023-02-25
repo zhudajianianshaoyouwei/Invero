@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.compat.generator
 
-import cc.trixey.invero.common.supplier.Object
+import cc.trixey.invero.common.Object
 import cc.trixey.invero.core.compat.DefGeneratorProvider
 import cc.trixey.invero.core.geneartor.BaseGenerator
 

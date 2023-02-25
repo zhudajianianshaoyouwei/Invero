@@ -4,8 +4,8 @@ package cc.trixey.invero.core.api
 
 import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.Menu
+import cc.trixey.invero.common.api.InveroMenuManager
 import cc.trixey.invero.common.api.InveroSettings
-import cc.trixey.invero.common.api.MenuManager
 import cc.trixey.invero.common.api.SerializeResult
 import cc.trixey.invero.common.api.SerializeResult.State.*
 import cc.trixey.invero.common.util.letCatching
@@ -14,7 +14,6 @@ import cc.trixey.invero.common.util.prettyPrint
 import cc.trixey.invero.core.AgentPanel
 import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.action.*
-import cc.trixey.invero.core.menu.MenuBindings
 import cc.trixey.invero.core.panel.PanelGenerator
 import cc.trixey.invero.core.panel.PanelPaged
 import cc.trixey.invero.core.panel.PanelScroll
@@ -29,11 +28,11 @@ import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
 import kotlinx.serialization.modules.subclass
 import org.bukkit.command.CommandSender
-import org.bukkit.inventory.ItemStack
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 import taboolib.common.platform.PlatformFactory
 import taboolib.common.platform.function.console
+import taboolib.common.platform.function.submit
 import taboolib.common.platform.function.submitAsync
 import taboolib.common5.FileWatcher
 import taboolib.module.configuration.Configuration
@@ -52,7 +51,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @author Arasple
  * @since 2023/2/1 17:17
  */
-class DefaultMenuManager : MenuManager {
+class DefaultMenuManager : InveroMenuManager {
 
     private val module = SerializersModule {
 
@@ -94,8 +93,6 @@ class DefaultMenuManager : MenuManager {
     private val defaultWorkspace = File(bukkitPlugin.dataFolder, "workspace")
 
     private val menus = ConcurrentHashMap<String, BaseMenu>()
-
-    private val bindings = ConcurrentHashMap<String, MenuBindings>()
 
     override fun getMenu(id: String, ignoreCase: Boolean): BaseMenu? {
         return menus.entries.find { it.key.equals(id, ignoreCase) }?.value
@@ -193,34 +190,6 @@ class DefaultMenuManager : MenuManager {
         }
     }
 
-    override fun initMenuBindings(menu: Menu) {
-        (menu as BaseMenu).bindings?.let {
-            bindings[menu.id!!] = it
-        }
-    }
-
-    override fun findBound(itemStack: ItemStack): BaseMenu? {
-        bindings
-            .entries
-            .find { it.value.inferItem?.isItem(itemStack) == true }
-            ?.key
-            ?.let {
-                return getMenu(it)
-            }
-        return null
-    }
-
-    override fun findBound(chat: String): BaseMenu? {
-        bindings
-            .entries
-            .find { entry -> entry.value.chat.any { chat == it } }
-            ?.key
-            ?.let {
-                return getMenu(it)
-            }
-        return null
-    }
-
     private fun registerListener(file: File, menu: BaseMenu) {
         val menuId = menu.id!!
 
@@ -285,13 +254,9 @@ class DefaultMenuManager : MenuManager {
 
     companion object {
 
-        @Awake(LifeCycle.INIT)
-        fun init() {
-            PlatformFactory.registerAPI<MenuManager>(DefaultMenuManager())
-        }
-
         @Awake(LifeCycle.ACTIVE)
-        fun load() {
+        fun init() = submit(delay = 15L) {
+            PlatformFactory.registerAPI<InveroMenuManager>(DefaultMenuManager())
             Invero.API.getMenuManager().reload()
         }
 

@@ -1,4 +1,4 @@
-package cc.trixey.invero.common.supplier
+package cc.trixey.invero.common
 
 /**
  * Invero

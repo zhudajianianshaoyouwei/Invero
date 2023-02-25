@@ -81,10 +81,10 @@ fun DependencyHandler.compileTabooLib() {
     usedTaboolibModules.forEach { installTaboo(it) }
 }
 
-fun DependencyHandler.installTaboo(vararg module: String) = module.forEach {
-    add("compileOnly", "io.izzel.taboolib:$it:$taboolibVersion")
+fun DependencyHandler.installTaboo(vararg module: String, version: String = taboolibVersion) = module.forEach {
+    add("compileOnly", "io.izzel.taboolib:$it:$version")
 }
 
-fun DependencyHandler.shadowTaboo(vararg module: String) = module.forEach {
-    add("implementation", "io.izzel.taboolib:$it:$taboolibVersion")
+fun DependencyHandler.shadowTaboo(vararg module: String, version: String = taboolibVersion) = module.forEach {
+    add("implementation", "io.izzel.taboolib:$it:$version")
 }

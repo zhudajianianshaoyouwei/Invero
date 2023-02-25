@@ -5,8 +5,8 @@ import cc.trixey.invero.common.util.PasteResult.Status.SUCCESS
 import cc.trixey.invero.common.util.createContent
 import cc.trixey.invero.common.util.paste
 import cc.trixey.invero.core.serialize.ItemStackJsonSerializer
-import cc.trixey.invero.core.util.prettyJson
-import cc.trixey.invero.core.util.standardJson
+import cc.trixey.invero.common.util.prettyJson
+import cc.trixey.invero.common.util.standardJson
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject

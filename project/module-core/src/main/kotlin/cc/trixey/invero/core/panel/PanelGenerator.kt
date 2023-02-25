@@ -2,7 +2,7 @@
 
 package cc.trixey.invero.core.panel
 
-import cc.trixey.invero.common.supplier.Object
+import cc.trixey.invero.common.Object
 import cc.trixey.invero.core.*
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.serialize.MappedIconSerializer

@@ -2,7 +2,9 @@
 
 package cc.trixey.invero.core
 
+import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.Menu
+import cc.trixey.invero.common.MenuActivator
 import cc.trixey.invero.common.util.prettyPrint
 import cc.trixey.invero.core.*
 import cc.trixey.invero.core.menu.*
@@ -19,11 +21,14 @@ import cc.trixey.invero.ui.bukkit.panel.CraftingPanel
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonNames
+import kotlinx.serialization.json.JsonObject
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submitAsync
 import taboolib.library.reflex.Reflex.Companion.setProperty
 import taboolib.platform.util.giveItem
+import java.util.*
 
 /**
  * Invero
@@ -37,8 +42,8 @@ class BaseMenu(
     override var id: String?,
     @SerialName("menu")
     val settings: MenuSettings,
-    @JsonNames("binding", "activator", "activators")
-    val bindings: MenuBindings?,
+    @JsonNames("bindings", "binding", "activator", "activators")
+    val bindings: JsonObject?,
     @JsonNames("event", "listener")
     val events: MenuEvents?,
     @JsonNames("node", "scripts")
@@ -49,6 +54,9 @@ class BaseMenu(
     @JsonNames("panel", "pane", "panes")
     val panels: List<AgentPanel>,
 ) : Menu {
+
+    @Transient
+    val activators: LinkedHashMap<String, MenuActivator<*>> = LinkedHashMap()
 
     init {
         // auto-rows
@@ -129,11 +137,16 @@ class BaseMenu(
     }
 
     override fun register() {
-        bindings?.register(this)
+        bindings?.forEach { key, value ->
+            Invero.API
+                .getRegistry()
+                .createActivator(this, key, value)
+                ?.let { activators[key.lowercase()] = it }
+        }
     }
 
     override fun unregister() {
-        bindings?.unregister()
+        activators.forEach { (_, value) -> value.unregister() }
     }
 
     fun updateTitle(session: Session) {

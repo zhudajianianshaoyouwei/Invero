@@ -1,3 +1,7 @@
+plugins {
+    kotlin("plugin.serialization") version "1.7.21"
+}
+
 repositories {
     maven("https://jitpack.io")
     maven("https://repo.rosewooddev.io/repository/public/")
@@ -15,5 +19,7 @@ dependencies {
 
     compileOnly("com.github.oraxen:oraxen:-SNAPSHOT")
     compileOnly("ink.ptms:Zaphkiel:1.6.0")
+    compileOnly("ink.ptms.adyeshach:all:2.0.0-snapshot-12")
+
     compileOnly("org.black_ixx:playerpoints:3.1.1")
 }

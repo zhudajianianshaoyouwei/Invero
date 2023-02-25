@@ -1,10 +1,10 @@
-package cc.trixey.invero.common.supplier
+package cc.trixey.invero.common
 
 import org.bukkit.inventory.ItemStack
 
 /**
  * Invero
- * cc.trixey.invero.common.supplier.ItemSourceProvider
+ * cc.trixey.invero.common.ItemSourceProvider
  *
  * @author Arasple
  * @since 2023/2/1 16:42

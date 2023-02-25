@@ -1,8 +1,8 @@
-package cc.trixey.invero.common.supplier
+package cc.trixey.invero.common
 
 /**
  * Invero
- * cc.trixey.invero.common.supplier.ElementGenerator
+ * cc.trixey.invero.common.ElementGenerator
  *
  * @author Arasple
  * @since 2023/2/1 16:45

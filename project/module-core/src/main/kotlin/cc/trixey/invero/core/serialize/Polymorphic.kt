@@ -23,7 +23,7 @@ import kotlinx.serialization.json.*
  */
 internal object SelectorAction : JsonContentPolymorphicSerializer<Action>(Action::class) {
 
-    private val serializers = buildMap<DeserializationStrategy<out Action>, Set<String>> {
+    private val serializers = buildMap<DeserializationStrategy<Action>, Set<String>> {
         put(ConditionIf.serializer(), setOf("if"))
         put(ConditionIfNot.serializer(), setOf("if not", "if_not"))
         put(ConditionAll.serializer(), setOf("all"))
@@ -36,7 +36,7 @@ internal object SelectorAction : JsonContentPolymorphicSerializer<Action>(Action
 
     val structuredKeys = serializers.values.flatten()
 
-    override fun selectDeserializer(element: JsonElement): DeserializationStrategy<out Action> {
+    override fun selectDeserializer(element: JsonElement): DeserializationStrategy<Action> {
         return if (element is JsonPrimitive) {
             ActionKether.serializer()
         } else if (element is JsonArray) {
@@ -47,7 +47,7 @@ internal object SelectorAction : JsonContentPolymorphicSerializer<Action>(Action
             serializers
                 .entries
                 .find { it.value.any { it in keys } }
-                ?.key ?: error("unregonized action [$keys]")
+                ?.key ?: error("Unregonized action [$keys]")
         }
     }
 

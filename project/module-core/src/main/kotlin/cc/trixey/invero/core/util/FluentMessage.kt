@@ -30,7 +30,10 @@ fun String.fluentMessage(player: Player, variables: Map<String, Any> = emptyMap(
         .replacePlaceholder(player)
         .parseMiniMessage()
         .colored()
-//    return fluentMessageComponent(player, variables).toLegacyText()
+//    return fluentMessageComponent(player, variables)
+//        .toLegacyText()
+//        .parseMiniMessage()
+//        .colored()
 }
 
 fun String.fluentMessageComponent(
@@ -47,10 +50,6 @@ fun String.fluentMessageComponent(
         transform { KetherHandler.parseInline(it, player, variables) }
         // placeholder API
         transform { it.replacePlaceholder(player) }
-        // miniMessage
-        transform { it.parseMiniMessage() }
-        // taboolib color
-        colored()
     }.also {
         if (send) it.sendTo(adaptPlayer(player))
     }

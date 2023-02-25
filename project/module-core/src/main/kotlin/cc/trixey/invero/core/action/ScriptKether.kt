@@ -33,10 +33,8 @@ class ScriptKether(val script: String) : Condition {
 
     override fun invoke(context: Context): CompletableFuture<Any?> {
         if (staticCondition.first) return staticCondition.second
-
         val player = context.player
 
-        // TODO Context compatible with script
         return KetherHandler.invoke(script, player, context.variables)
     }
 

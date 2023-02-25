@@ -3,7 +3,7 @@
 package cc.trixey.invero.core.panel
 
 import cc.trixey.invero.common.Invero
-import cc.trixey.invero.common.supplier.Object
+import cc.trixey.invero.common.Object
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.serialize.IconSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -44,6 +44,6 @@ class StructureGenerator(
     }
 
     fun create() =
-        Invero.API.createElementGenerator(source ?: "custom") ?: error("Unregistered generator source [$source]")
+        Invero.API.getRegistry().createElementGenerator(source ?: "custom") ?: error("Unregistered generator source [$source]")
 
 }

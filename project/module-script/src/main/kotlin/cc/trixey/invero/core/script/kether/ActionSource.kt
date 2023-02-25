@@ -15,8 +15,15 @@ object ActionSource {
 
     @KetherParser(["element"], namespace = "invero", shared = true)
     fun parser() = combinationParser {
-        it.group(text()).apply(it) { key ->
-            now { selfSourceObject()[key] }
+        it.group(
+            text().option()
+        ).apply(it) { key ->
+            now {
+                selfSourceObject().let { obj ->
+                    if (key != null) obj[key]
+                    else obj.content
+                }
+            }
         }
     }
 

@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack
 class TextureSource(val source: String, @SerialName("value") override val raw: String) : Texture() {
 
     private val provider by lazy {
-        Invero.API.getItemSourceProvider(source) ?: error("Invalid source provider: $source")
+        Invero.API.getRegistry().getItemSourceProvider(source) ?: error("Invalid source provider: $source")
     }
 
     @Transient

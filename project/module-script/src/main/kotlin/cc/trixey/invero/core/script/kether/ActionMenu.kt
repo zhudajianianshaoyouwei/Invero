@@ -1,12 +1,14 @@
 package cc.trixey.invero.core.script.kether
 
 import cc.trixey.invero.common.Invero
+import cc.trixey.invero.common.util.parseMappedArguments
 import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.script.player
 import cc.trixey.invero.core.script.session
+import org.bukkit.Bukkit
+import taboolib.library.kether.ParsedAction
 import taboolib.library.kether.QuestReader
 import taboolib.module.kether.*
-import taboolib.platform.util.onlinePlayers
 
 /**
  * Invero
@@ -23,10 +25,9 @@ object ActionMenu {
     - menu title resume
     - menu title update
     - menu close
-    - menu open [menuId] for [player]
+    - menu open [menuId] for [player] with [customArguments]
     - menu switch [menuId] for [player]
      */
-
     @KetherParser(["menu"], namespace = "invero", shared = true)
     fun parserMenu() = scriptParser {
         when (it.expects("title", "close", "open", "open_ctx", "switch")) {
@@ -69,28 +70,43 @@ object ActionMenu {
         }
 
 
+    /*
+    menu open <menuId> for [player] with [customArguments]
+     */
     private fun handlerMenuOpen(reader: QuestReader, reserveContext: Boolean = false): ScriptAction<Any?> {
-        val input = reader.nextParsedAction()
+        val menuId = reader.nextParsedAction()
+        var player: ParsedAction<*>? = null
+        var customArguments: ParsedAction<*>? = null
+
+        repeat(2) {
+            reader.mark()
+            try {
+                when (reader.expects("for", "with")) {
+                    "for" -> player = reader.nextParsedAction()
+                    "with" -> customArguments = reader.nextParsedAction()
+                }
+            } catch (_: Throwable) {
+                reader.reset()
+            }
+        }
 
         return actionFuture { future ->
-            newFrame(input).run<Any>().thenApply {
-                val id = it.toString()
-                val menu = Invero.API.getMenuManager().getMenu(id) ?: error("Not found menu with id $id")
-                val player = if (reader.hasNext()) {
-                    reader.expect("for")
-                    reader.nextToken()
-                    reader.nextParsedAction()
-                } else null
-                val pass = (if (reserveContext) session()?.getVariables() else null) ?: emptyMap()
-                if (player == null) {
-                    menu.open(player(), pass)
-                } else {
-                    newFrame(player).run<Any>().thenApply { playerId ->
-                        onlinePlayers
-                            .find { p -> p.name == playerId }
-                            ?.let { p -> menu.open(p, pass) }
+            newFrame(menuId).run<Any>().thenApply { id ->
+                val menu = Invero.API.getMenuManager().getMenu(id.toString()) ?: error("Not found menu with id $id")
+                val viewer = player?.let {
+                    newFrame(it).run<Any>().getNow(null)
+                        ?.let { Bukkit.getPlayerExact(it.toString()) }
+                } ?: player()
+                val arguments = buildMap {
+                    if (reserveContext) session()?.getVariables()?.let {
+                        putAll(it)
+                    }
+                    customArguments?.let {
+                        putAll(newFrame(it).run<Any>().getNow("").toString().parseMappedArguments())
                     }
                 }
+
+                menu.open(viewer, arguments)
             }.get().let { future.complete(it) }
         }
     }

@@ -1,8 +1,5 @@
 package cc.trixey.invero.common.api
 
-import cc.trixey.invero.common.supplier.ElementGenerator
-import cc.trixey.invero.common.supplier.ItemSourceProvider
-
 /**
  * Invero
  * cc.trixey.invero.common.api.InveroAPI
@@ -12,42 +9,30 @@ import cc.trixey.invero.common.supplier.ItemSourceProvider
  */
 interface InveroAPI {
 
+    /**
+     * Access to the MenuManager API
+     */
+    fun getMenuManager(): InveroMenuManager
 
     /**
-     * 取得菜单管理器
+     * Access to the DataManager API
+     * Related to global context & player data
      */
-    fun getMenuManager(): MenuManager
+    fun getDataManager(): InveroDataManager
 
     /**
-     * 取得数据管理器
+     * Access to the JavaScript handler
      */
-    fun getDataManager(): DataManager
-
-
-    /**
-     * 取得 JavaScript Handler
-     */
-    fun getJavaScriptHandler(): JavaScriptHandler
+    fun getJavaScriptHandler(): InveroJavaScriptHandler
 
     /**
-     * 注册一个类型的元素生成器
-     * 引用方式 namespace:id
+     * Access to the Kether handler
      */
-    fun registerElementGenerator(namespace: String, id: String, provider: ElementGenerator)
+    fun getKetherHandler(): InveroKetherHandler
 
     /**
-     * 根据名称引用创建一个元素生成器
+     * Access to the Invero registry
      */
-    fun createElementGenerator(identifier: String): ElementGenerator?
-
-    /**
-     * 注册一个物品源提供器
-     */
-    fun registerItemSourceProvider(name: String, provider: ItemSourceProvider)
-
-    /**
-     * 取得物品源提高器
-     */
-    fun getItemSourceProvider(name: String): ItemSourceProvider?
+    fun getRegistry(): InveroRegistry
 
 }

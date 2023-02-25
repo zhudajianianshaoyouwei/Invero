@@ -1,15 +1,9 @@
-@file:OptIn(ExperimentalSerializationApi::class)
-
-package cc.trixey.invero.core.menu
+package cc.trixey.invero.core.compat.activators
 
 import cc.trixey.invero.common.Invero
-import cc.trixey.invero.common.chemdah.InferItem.Companion.toInferItem
-import cc.trixey.invero.core.BaseMenu
-import cc.trixey.invero.core.menu.CommandArgument.Type.*
-import cc.trixey.invero.core.serialize.ListStringSerializer
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.Transient
+import cc.trixey.invero.common.Menu
+import cc.trixey.invero.common.MenuActivator
+import cc.trixey.invero.core.compat.DefActivator
 import kotlinx.serialization.json.*
 import org.bukkit.entity.Player
 import taboolib.common.platform.command.*
@@ -18,28 +12,20 @@ import taboolib.common.platform.function.unregisterCommand
 
 /**
  * Invero
- * cc.trixey.invero.core.menu.MenuBindings
+ * cc.trixey.invero.core.compat.activators.ActivatorCommand
  *
  * @author Arasple
- * @since 2023/1/25 11:30
+ * @since 2023/2/25 15:03
  */
-@Serializable
-class MenuBindings(
-    @Serializable(with = ListStringSerializer::class)
-    @JsonNames("items")
-    private val item: List<String> = emptyList(),
-    @Serializable(with = ListStringSerializer::class) val chat: List<String> = emptyList(),
-    @JsonNames("commands", "cmd", "cmds") private val command: JsonElement? = null
-) {
+@DefActivator(["command", "commands", "cmd", "cmds"])
+class ActivatorCommand(val command: JsonElement) : MenuActivator<ActivatorCommand>() {
 
-    @Transient
-    val inferItem = if (item.isNotEmpty()) item.toInferItem() else null
+    constructor() : this(JsonPrimitive(0))
 
-    @Transient
-    val registeredCommands = mutableSetOf<String>()
+    private val registeredCommands = mutableSetOf<String>()
 
-    fun register(menu: BaseMenu) {
-        Invero.API.getMenuManager().initMenuBindings(menu)
+    override fun setActivatorMenu(menu: Menu) {
+        super.setActivatorMenu(menu)
 
         when (command) {
             is JsonPrimitive -> registerCommandLabel(menu, command)
@@ -51,17 +37,21 @@ class MenuBindings(
                     command.forEach { registerCommandStructure(menu, it as JsonObject) }
                 }
             }
-
-            null -> {}
         }
     }
 
-    fun unregister() {
+    override fun unregister() {
         registeredCommands.forEach { unregisterCommand(it) }
+        registeredCommands.clear()
+        super.unregister()
     }
 
-    private fun registerCommandStructure(menu: BaseMenu, jsonObject: JsonObject) {
-        Invero.API.getMenuManager().getJsonSerializer<Json>().decodeFromJsonElement<CommandStructure>(jsonObject)
+    private fun registerCommandStructure(menu: Menu, jsonObject: JsonObject) {
+        Invero
+            .API
+            .getMenuManager()
+            .getJsonSerializer<Json>()
+            .decodeFromJsonElement<CommandStructure>(jsonObject)
             .apply {
                 command(
                     name,
@@ -82,7 +72,7 @@ class MenuBindings(
                     // 遍历参数实现
                     arguments?.forEach { argument ->
                         val id = argument.id.also { impl += it }
-                        val type = argument.type ?: ANY
+                        val type = argument.type ?: CommandArgument.Type.ANY
                         val default = argument.default
                         val restrict = argument.restrict
                         val suggest = argument.suggest ?: emptyList()
@@ -98,12 +88,12 @@ class MenuBindings(
                                 menu.open(sender, variables)
                             }
                             when (type) {
-                                ANY -> suggestion<Player>(!restrict) { _, _ -> suggest }
-                                DECIMAL -> restrictDouble()
-                                INTEGER -> restrictInt()
-                                BOOLEAN -> restrictBoolean()
-                                PLAYER -> suggestPlayers(suggest)
-                                WORLD -> suggestWorlds(suggest)
+                                CommandArgument.Type.ANY -> suggestion<Player>(!restrict) { _, _ -> suggest }
+                                CommandArgument.Type.DECIMAL -> restrictDouble()
+                                CommandArgument.Type.INTEGER -> restrictInt()
+                                CommandArgument.Type.BOOLEAN -> restrictBoolean()
+                                CommandArgument.Type.PLAYER -> suggestPlayers(suggest)
+                                CommandArgument.Type.WORLD -> suggestWorlds(suggest)
                             }
                         }.also { layer = it }
                     }
@@ -113,11 +103,18 @@ class MenuBindings(
             }
     }
 
-    private fun registerCommandLabel(menu: BaseMenu, jsonPrimitive: JsonPrimitive) {
+    private fun registerCommandLabel(menu: Menu, jsonPrimitive: JsonPrimitive) {
         val id = menu.id ?: return
         val content = jsonPrimitive.contentOrNull?.lowercase() ?: return
+
         command(content) { execute<Player> { sender, _, _ -> Invero.API.getMenuManager().getMenu(id)?.open(sender) } }
         registeredCommands += content
     }
+
+    override fun deserialize(element: JsonElement): ActivatorCommand {
+        return ActivatorCommand(element)
+    }
+
+    override fun serialize(activator: ActivatorCommand) = activator.command
 
 }

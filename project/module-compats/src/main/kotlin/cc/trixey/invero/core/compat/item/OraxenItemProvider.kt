@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.compat.item
 
-import cc.trixey.invero.common.supplier.ItemSourceProvider
+import cc.trixey.invero.common.ItemSourceProvider
 import cc.trixey.invero.core.compat.DefItemProvider
 import cc.trixey.invero.core.compat.PluginHook
 import io.th0rgal.oraxen.api.OraxenItems

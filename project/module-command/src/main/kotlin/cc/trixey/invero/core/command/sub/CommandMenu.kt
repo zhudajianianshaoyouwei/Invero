@@ -4,6 +4,7 @@ import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.util.PasteResult.Status.ERROR
 import cc.trixey.invero.common.util.PasteResult.Status.SUCCESS
 import cc.trixey.invero.common.util.createContent
+import cc.trixey.invero.common.util.parseMappedArguments
 import cc.trixey.invero.common.util.paste
 import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.command.createHelper
@@ -117,7 +118,7 @@ object CommandMenu {
     }
 
     /*
-    open <menu> [player] with []
+    open <menu> [player] [arguments]
      */
     @CommandBody
     val open = subCommand {
@@ -127,20 +128,13 @@ object CommandMenu {
             dynamic("player", optional = true) {
                 suggestPlayers()
                 execute<CommandSender> { _, ctx, _ -> ctx.player?.let { ctx.menu?.open(it) } }
-            }
 
-            literal("with", optional = true) {
-                dynamic("args") {
-                    suggestPlayers()
-                    execute<CommandSender> { _, ctx, args ->
-                        val player = ctx.player ?: ctx.player().cast()
-                        args.removePrefix("with ")
-                        // TODO args
-                        player.let { ctx.menu?.open(it) }
+                dynamic("arguments", optional = true) {
+                    execute<CommandSender> { _, ctx, content ->
+                        ctx.player?.let { ctx.menu?.open(it, content.parseMappedArguments()) }
                     }
                 }
             }
-
             execute<Player> { player, ctx, _ -> ctx.menu?.open(player) }
         }
     }

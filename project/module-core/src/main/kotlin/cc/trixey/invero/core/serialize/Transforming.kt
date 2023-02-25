@@ -3,7 +3,6 @@ package cc.trixey.invero.core.serialize
 import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.icon.Icon
 import cc.trixey.invero.core.icon.IconHandler
-import cc.trixey.invero.core.menu.CommandArgument
 import cc.trixey.invero.core.menu.NodeRunnable
 import cc.trixey.invero.ui.common.event.ClickType
 import kotlinx.serialization.json.*
@@ -150,21 +149,6 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
         }
         struc.remove("display")
         return JsonObject(struc)
-    }
-
-}
-
-internal object CommandArgumentSerailizer : JsonTransformingSerializer<CommandArgument>(serializer()) {
-
-    override fun transformDeserialize(element: JsonElement): JsonElement {
-        return if (element is JsonPrimitive) {
-            buildJsonObject {
-                put("id", element.content)
-                put("type", "ANY")
-            }
-        } else {
-            element
-        }
     }
 
 }

@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.script
 
-import cc.trixey.invero.common.supplier.Object
+import cc.trixey.invero.common.Object
 import cc.trixey.invero.core.Session
 import cc.trixey.invero.core.icon.IconElement
 import cc.trixey.invero.core.util.session

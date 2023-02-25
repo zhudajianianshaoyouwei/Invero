@@ -3,7 +3,6 @@ package cc.trixey.invero.common.adventure
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
-import net.kyori.adventure.text.minimessage.internal.parser.ParsingExceptionImpl
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.entity.Player
 import taboolib.module.nms.MinecraftVersion
@@ -35,7 +34,7 @@ private val legacyComponentSerializer by lazy {
 fun String.parseMiniMessage(): String {
     val component = try {
         parseMiniMessageComponent()
-    } catch (e: ParsingExceptionImpl) {
+    } catch (e: Throwable) {
         return translateLegacyColor().parseMiniMessage()
     }
     return legacyComponentSerializer.serialize(component)

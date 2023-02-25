@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.compat.generator
 
-import cc.trixey.invero.common.supplier.sourceObject
+import cc.trixey.invero.common.sourceObject
 import cc.trixey.invero.core.compat.DefGeneratorProvider
 import cc.trixey.invero.core.geneartor.BaseGenerator
 import org.bukkit.Bukkit

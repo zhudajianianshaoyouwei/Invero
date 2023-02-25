@@ -1,10 +1,10 @@
-package cc.trixey.invero.core.util
+package cc.trixey.invero.common.util
 
 import kotlinx.serialization.json.Json
 
 /**
  * Invero
- * cc.trixey.invero.core.util.Json
+ * cc.trixey.invero.common.util.Json
  *
  * @author Arasple
  * @since 2023/2/18 13:55

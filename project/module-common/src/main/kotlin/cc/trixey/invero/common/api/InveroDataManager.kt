@@ -5,12 +5,12 @@ import taboolib.expansion.DataContainer
 
 /**
  * Invero
- * cc.trixey.invero.common.api.DataManager
+ * cc.trixey.invero.common.api.InveroDataManager
  *
  * @author Arasple
  * @since 2023/2/1 17:08
  */
-interface DataManager {
+interface InveroDataManager {
 
     fun getDatabaseType(): Type
 
