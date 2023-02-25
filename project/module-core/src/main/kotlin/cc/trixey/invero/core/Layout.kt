@@ -24,7 +24,7 @@ class Layout(val raw: List<String>) {
     }
 
     @Transient
-    private val mapped = mutableMapOf<String, Positions>().apply {
+    internal val mapped = mutableMapOf<String, Positions>().apply {
         raw.forEachIndexed { rows, rawLine ->
             val line = rawLine.ifBlank { buildString { repeat(scale.first) { append(' ') } } }
             split(line).forEachIndexed { index, key ->

@@ -1,5 +1,6 @@
 package cc.trixey.invero.core.icon
 
+import cc.trixey.invero.core.Layout
 import cc.trixey.invero.ui.common.Pos
 import cc.trixey.invero.ui.common.Scale
 import kotlinx.serialization.*
@@ -15,9 +16,7 @@ import taboolib.common5.cint
  * @author Arasple
  * @since 2023/1/16 10:49
  *
- * RANGE: 1~10; 2..15
- * SLOT: 1;2;3;4;5
- * POS: 0x2;0x3;0x4
+
  */
 @Serializable
 class Slot(private val raw: String) {
@@ -26,20 +25,38 @@ class Slot(private val raw: String) {
     private val uncalculatedSlots = mutableSetOf<Int>()
 
     @Transient
-    private val locations = raw.split(";").mapNotNull { str ->
-        val exp = str.replace(" ", "")
-        if ('~' in exp || '-' in exp || ".." in exp) {
-            val (from, to) = exp.split("~", "-", "..")
-            uncalculatedSlots += (from.toInt()..to.toInt()).toList().filter { it >= 0 }
-        } else if ('x' in exp || ',' in exp) {
-            val (x, y) = exp.split('x', ',')
-            return@mapNotNull Pos(x.toInt() to y.toInt())
-        } else {
-            (exp.toIntOrNull() ?: -1).let { slot ->
-                if (slot >= 0) uncalculatedSlots += slot
-            }
+    private val locations = run {
+
+        /*
+        Layout in SLOT
+         */
+        if ("\n" in raw) {
+            return@run Layout(raw.split("\n"))
+                .mapped
+                .minBy { it.value.values.size }
+                .value
+                .values.toList()
         }
-        return@mapNotNull null
+
+        /*
+        RANGE: 1~10   2..15
+        SLOT: 1 ; 2 ; 3 ; 4
+        POS: 0x2 ; 3,4
+         */
+        raw.split(";").mapNotNull { str ->
+            val exp = str.replace(" ", "")
+            if ('~' in exp || '-' in exp || ".." in exp) {
+                val (from, to) = exp.split("~", "-", "..")
+                uncalculatedSlots += (from.toInt()..to.toInt()).toList().filter { it >= 0 }
+            } else if ('x' in exp || ',' in exp) {
+                val (x, y) = exp.split('x', ',')
+                return@mapNotNull Pos(x.toInt() to y.toInt())
+            } else {
+                (exp.toIntOrNull() ?: -1).let { slot -> if (slot >= 0) uncalculatedSlots += slot }
+            }
+            return@mapNotNull null
+        }
+
     }
 
     fun release(scale: Scale): List<Pos> {
