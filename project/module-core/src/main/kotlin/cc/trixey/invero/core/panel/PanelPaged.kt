@@ -46,7 +46,7 @@ class PanelPaged(
     }
 
     override fun invoke(parent: PanelContainer, session: Session) =
-        parent.pagedNetesed(scale.raw, parent.locate(), defaultPage = defaultPage) {
+        parent.pagedNetesed(scale.pair, parent.locate(), defaultPage = defaultPage) {
             pages.map { it.invoke(this, session) }
 
             // 临时补丁：页码变量初始化

@@ -22,7 +22,7 @@ import taboolib.module.nms.getItemTag
  * @since 2023/1/16 16:06
  */
 
-fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
+fun Frame.render(agent: AgentPanel, element: IconElement) {
     val frame = this@render
     val original = element.value
     val context = element.context
@@ -64,7 +64,9 @@ fun Frame.render(session: Session, agent: AgentPanel, element: IconElement) {
         }
     } else texture.generateItem(element.context) { element.value = frameApply() }
 
-    if (slot != null) element.set(slot.flatRelease(agent.scale))
+    if (slot != null) {
+        element.set(slot.flatRelease(agent.scale))
+    }
 }
 
 fun Frame.translateUpdate(session: Session, element: IconElement, defaultFrame: Frame) {

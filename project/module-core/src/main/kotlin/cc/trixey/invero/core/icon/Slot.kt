@@ -19,7 +19,7 @@ import taboolib.common5.cint
 
  */
 @Serializable
-class Slot(private val raw: String) {
+data class Slot(private val raw: String) {
 
     @Transient
     private val uncalculatedSlots = mutableSetOf<Int>()
@@ -33,6 +33,7 @@ class Slot(private val raw: String) {
         if ("\n" in raw) {
             return@run Layout(raw.split("\n"))
                 .mapped
+                .filter { it.key.isNotBlank() }
                 .minBy { it.value.values.size }
                 .value
                 .values.toList()

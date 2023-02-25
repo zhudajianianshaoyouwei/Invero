@@ -34,7 +34,7 @@ open class IconElement(
 
     private var frame: Frame? = null
         set(value) {
-            value?.render(session, agent, this)
+            value?.render(agent, this)
             field = value
         }
 

@@ -66,6 +66,9 @@ class BaseMenu(
                 .scale
                 .height
                 .coerceIn(1..6)
+        panels.forEach {
+            if (it.scale.height < 0) it.scale.height = settings.rows ?: 1
+        }
         // auto-override
         if (panels.any { it is PanelCrafting }) {
             settings.setProperty("overridePlayerInventory", false)

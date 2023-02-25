@@ -52,7 +52,7 @@ class PanelCrafting(
     }
 
     override fun invoke(parent: PanelContainer, session: Session) =
-        parent.craftingIOPanel(scale.raw, parent.locate()) {
+        parent.craftingIOPanel(scale.pair, parent.locate()) {
             // def icons
             icons.forEach { (_, icon) -> icon.invoke(session, this@PanelCrafting, this@craftingIOPanel) }
             layout?.search(" ")?.forEach { free(it.slot) }

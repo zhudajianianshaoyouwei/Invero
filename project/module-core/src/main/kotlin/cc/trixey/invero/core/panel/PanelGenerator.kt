@@ -51,10 +51,10 @@ class PanelGenerator(
     }
 
     @Transient
-    override val scale = _scale ?: layout?.getScale() ?: Scale(9 to 1)
+    override val scale = _scale ?: layout?.getScale() ?: Scale(9 to -1)
 
     override fun invoke(parent: PanelContainer, session: Session) =
-        parent.generatorPaged(scale.raw, parent.locate()) {
+        parent.generatorPaged(scale.pair, parent.locate()) {
             skipRender = true
 
             // 生成默认图标

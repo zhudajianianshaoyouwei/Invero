@@ -4,6 +4,8 @@ import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.util.MATERIAL_ID
 import kotlinx.serialization.*
 import kotlinx.serialization.encoding.*
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.jsonPrimitive
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 import taboolib.common.util.Strings
@@ -42,15 +44,12 @@ class TextureMaterial(override val raw: String) : Texture() {
                 val id = it.groupValues[1].toIntOrNull() ?: 1
                 val data = it.groupValues.getOrNull(2)?.toByteOrNull() ?: 0
 
-                Material::javaClass.invokeMethod<Material>("getMaterial", id)?.let { mat ->
-                }
-
-
                 return if (MinecraftVersion.majorLegacy < 11300)
-                    Material::javaClass.invokeMethod<Material>("getMaterial", id)
-                        ?.let { mat ->
-                            ItemStack(mat, 1, data.cshort)
-                        }
+                    Material::class.java.invokeMethod<Material>(
+                        "getMaterial",
+                        id,
+                        isStatic = true,
+                    )?.let { mat -> ItemStack(mat, 1, data.cshort) }
                 else XMaterial.matchXMaterial(id, data).getOrNull()?.parseItem()
             }
 
@@ -74,7 +73,8 @@ class TextureMaterial(override val raw: String) : Texture() {
         }
 
         override fun deserialize(decoder: Decoder): TextureMaterial {
-            return TextureMaterial(decoder.decodeString())
+            decoder as JsonDecoder
+            return TextureMaterial(decoder.decodeJsonElement().jsonPrimitive.content)
         }
 
     }

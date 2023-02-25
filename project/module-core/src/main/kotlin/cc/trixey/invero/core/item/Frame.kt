@@ -56,7 +56,8 @@ class Frame(
     val unbreakable: Boolean?,
     val nbt: Map<String, JsonPrimitive>?,
     @Serializable(with = ListSlotSerializer::class)
-    @JsonNames("slots", "pos", "position", "positions") val slot: List<Slot>?,
+    @JsonNames("slots", "pos", "position", "positions")
+    val slot: List<Slot>?,
     val enhancedLore: Boolean?
 ) {
 
@@ -91,7 +92,6 @@ class Frame(
 
      - banner
      */
-
     fun generateItem(context: Context, callback: (ItemStack) -> Unit) = texture?.generateItem(context) {
         val meta = itemMeta
         name?.let { postName(context.parse(it)) }

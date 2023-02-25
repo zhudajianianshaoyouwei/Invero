@@ -25,7 +25,7 @@ fun PanelContainer.firstAvailablePositionForPanel(): Pair<Int, Int> {
 }
 
 fun PanelContainer.inheritParentScale(): Pair<Int, Int> {
-    return scale.raw
+    return scale.pair
 }
 
 fun ElementalPanel.firstAvailablePositionForElement(): Pair<Int, Int> {

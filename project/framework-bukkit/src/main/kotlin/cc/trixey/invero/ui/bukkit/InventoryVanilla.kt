@@ -4,6 +4,8 @@ import cc.trixey.invero.ui.bukkit.api.isRegistered
 import cc.trixey.invero.ui.bukkit.panel.CraftingPanel
 import cc.trixey.invero.ui.bukkit.util.clickType
 import cc.trixey.invero.ui.bukkit.util.synced
+import cc.trixey.invero.ui.common.panel.IOPanel
+import cc.trixey.invero.ui.common.util.anyInstancePanel
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.*
@@ -181,7 +183,9 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         // 传递 Bukkit 关闭事件
         if (window.isRegistered()) {
             window.close(doCloseInventory = false, updateInventory = false)
-            submit(delay = 2L) { (e.player as Player).restorePlayerInventory() }
+            if (!window.anyInstancePanel<IOPanel>()) submit(delay = 2L) {
+                (e.player as Player).restorePlayerInventory()
+            }
         }
     }
 

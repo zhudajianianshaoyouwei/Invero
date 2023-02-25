@@ -95,6 +95,7 @@ internal object IconSerializer : JsonTransformingSerializer<Icon>(serializer()) 
         "unbreakable",
         "nbt",
         "enhancedLore",
+        "slot", "slots", "pos", "position", "positions"
     )
 
     private val textureKeysHead = arrayOf(

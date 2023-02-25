@@ -50,6 +50,9 @@ fun String.fluentMessageComponent(
         transform { KetherHandler.parseInline(it, player, variables) }
         // placeholder API
         transform { it.replacePlaceholder(player) }
+        // miniMessage
+        transform { it.parseMiniMessage() }
+        colored()
     }.also {
         if (send) it.sendTo(adaptPlayer(player))
     }

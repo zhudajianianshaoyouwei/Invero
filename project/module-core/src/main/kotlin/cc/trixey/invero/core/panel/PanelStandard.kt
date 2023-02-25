@@ -43,10 +43,10 @@ class PanelStandard(
     }
 
     @Transient
-    override val scale = _scale ?: layout?.getScale() ?: Scale(9 to 1)
+    override val scale = _scale ?: layout?.getScale() ?: Scale(9 to -1)
 
     override fun invoke(parent: PanelContainer, session: Session) =
-        parent.standard((scale ?: parent.scale).raw, parent.locate()) {
+        parent.standard(scale.pair, parent.locate()) {
             icons.forEach { (_, icon) -> icon.invoke(session, this@PanelStandard, this@standard) }
         }
 

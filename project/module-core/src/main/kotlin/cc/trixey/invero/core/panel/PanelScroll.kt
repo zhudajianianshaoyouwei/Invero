@@ -68,12 +68,12 @@ class PanelScroll(
         val (scrollLocate, scrollScale) = scrollDistribution
 
         // 背景
-        parent.standard(scale.raw, parent.locate(), weight = PanelWeight.BACKGROUND) {
+        parent.standard(scale.pair, parent.locate(), weight = PanelWeight.BACKGROUND) {
             icons.forEach { (_, icon) -> icon.invoke(session, this@PanelScroll, this@standard) }
         }
 
         // 滚动区域
-       return parent.scroll(scrollScale.raw, scrollLocate.value, direction = scroll.direction, tail = scroll.tail ?: -1) {
+       return parent.scroll(scrollScale.pair, scrollLocate.value, direction = scroll.direction, tail = scroll.tail ?: -1) {
            scroll.colums.forEach { icons ->
                insertColum {
                    if (it <= icons.lastIndex)

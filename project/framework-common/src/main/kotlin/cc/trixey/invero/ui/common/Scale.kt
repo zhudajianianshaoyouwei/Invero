@@ -7,14 +7,12 @@ package cc.trixey.invero.ui.common
  * @author Arasple
  * @since 2023/1/4 22:41
  */
-@JvmInline
-value class Scale(val raw: Pair<Int, Int>) {
+class Scale(var width: Int, var height: Int) {
 
-    val width: Int
-        get() = raw.first
+    constructor(pair: Pair<Int, Int>) : this(pair.first, pair.second)
 
-    val height: Int
-        get() = raw.second
+    val pair: Pair<Int, Int>
+        get() = width to height
 
     val size: Int
         get() = width * height
