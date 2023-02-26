@@ -2,5 +2,7 @@
 
 # Invero
 
-Invero 是代码开源的付费插件，我们不提供 JAR 文件  
-查看 [文档](https://invero.trixey.cc) 获取更多信息
+English-version is still under preparation  
+Please be patient
+
+Invero 是代码开源的付费插件 ，请联系作者购买
