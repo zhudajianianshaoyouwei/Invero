@@ -46,6 +46,12 @@ fun DependencyHandler.`framework`() {
     compileModule("framework-common", "framework-bukkit")
 }
 
+fun DependencyHandler.`adventure`() {
+    usedAdventureModules.forEach {
+        add("compileOnly", it)
+    }
+}
+
 fun DependencyHandler.`serialization`() {
     add("compileOnly", "org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0-RC")
 }

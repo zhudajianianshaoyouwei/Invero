@@ -31,6 +31,7 @@ class NodeRunnable(
     @SerialName("value")
     @JsonNames("runnable", "run", "script")
     val _value: JsonPrimitive,
+    @JsonNames("throwError")
     val throwable: Boolean?
 ) {
 

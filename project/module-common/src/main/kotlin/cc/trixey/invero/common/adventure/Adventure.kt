@@ -1,58 +1,38 @@
 package cc.trixey.invero.common.adventure
 
-import net.kyori.adventure.platform.bukkit.BukkitAudiences
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.minimessage.MiniMessage
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
-import org.bukkit.entity.Player
-import taboolib.module.nms.MinecraftVersion
-import taboolib.platform.util.bukkitPlugin
+import taboolib.common.LifeCycle
+import taboolib.common.platform.Awake
+import taboolib.common.platform.function.info
 
 /**
  * Invero
- * cc.trixey.invero.common.Adventure
+ * cc.trixey.invero.common.adventure.Adventure 🤡
  *
  * @author Arasple
- * @since 2023/1/16 18:27
+ * @since 2023/2/26 12:58
  */
-private const val SECTION_CHAR = '§'
+object Adventure {
 
-private const val AMPERSAND_CHAR = '&'
+    private var PLATFORM: AdventurePlatform? = null
 
-private val bukkitAudiences by lazy { BukkitAudiences.create(bukkitPlugin) }
+    val isSupported: Boolean
+        get() = PLATFORM != null
 
-private val legacyComponentSerializer by lazy {
-    LegacyComponentSerializer.builder().apply {
-        if (MinecraftVersion.majorLegacy >= 11600) {
-            hexColors()
-            useUnusualXRepeatedCharacterHexFormat()
-        }
-    }.build()
-}
-
-
-fun String.parseMiniMessage(): String {
-    val component = try {
-        parseMiniMessageComponent()
-    } catch (e: Throwable) {
-        return translateLegacyColor().parseMiniMessage()
+    fun parse(content: String): String {
+        return PLATFORM?.parseMiniMessage(content) ?: content
     }
-    return legacyComponentSerializer.serialize(component)
-}
 
-fun String.parseMiniMessageComponent(): Component {
-    return MiniMessage.miniMessage().deserialize(this)
-}
+    @Awake(LifeCycle.LOAD)
+    internal fun init() {
+        runCatching {
+            PLATFORM = AdventurePlatform()
+            PLATFORM?.parseMiniMessage("<red>adventure = 🤡")
+        }.onSuccess {
+            info("Successfully loaded Adventure support.")
+        }.onFailure {
+            it.printStackTrace()
+            info("Not find Adventure support.")
+        }
+    }
 
-fun String.parseAndSendMiniMessage(player: Player) {
-    bukkitAudiences.player(player).sendMessage(translateAmpersandColor().parseMiniMessageComponent())
 }
-
-fun String.translateAmpersandColor(): String {
-    return replace(AMPERSAND_CHAR, SECTION_CHAR)
-}
-
-fun String.translateLegacyColor(): String {
-    return replace(SECTION_CHAR, AMPERSAND_CHAR)
-}
-

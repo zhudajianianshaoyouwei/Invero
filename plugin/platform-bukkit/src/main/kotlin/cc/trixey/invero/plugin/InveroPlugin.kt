@@ -2,7 +2,6 @@ package cc.trixey.invero.plugin
 
 import cc.trixey.invero.core.util.fluentMessage
 import taboolib.common.platform.Plugin
-import taboolib.common.platform.function.info
 import taboolib.library.xseries.XMaterial
 import taboolib.module.nms.ItemTag
 import taboolib.module.nms.ItemTagData
@@ -20,11 +19,10 @@ import taboolib.platform.util.modifyLore
 object InveroPlugin : Plugin() {
 
     override fun onLoad() {
-        info("Loaded")
         repeat(1000) { hot() }
     }
 
-    fun hot() {
+    private fun hot() {
         val item = buildItem(XMaterial.PLAYER_HEAD) {
             repeat(10) { lore += "<red><gradient>{{text}}" }
         }

@@ -1,7 +1,6 @@
 package cc.trixey.invero.core.command
 
 import cc.trixey.invero.common.Invero
-import cc.trixey.invero.common.adventure.parseAndSendMiniMessage
 import cc.trixey.invero.core.util.KetherHandler
 import cc.trixey.invero.core.util.fluentMessageComponent
 import cc.trixey.invero.core.util.session
@@ -16,7 +15,7 @@ import taboolib.common.platform.command.CommandHeader
 import taboolib.common.platform.command.mainCommand
 import taboolib.common.platform.command.subCommand
 import taboolib.common.platform.function.adaptCommandSender
-import taboolib.common.platform.function.getProxyPlayer
+import taboolib.common.platform.function.adaptPlayer
 import taboolib.common.platform.function.submitAsync
 import taboolib.module.chat.component
 import taboolib.platform.util.bukkitPlugin
@@ -56,16 +55,6 @@ object CommandDev {
         }
     }
 
-
-    @CommandBody
-    val testMiniMessage = subCommand {
-        execute<Player> { sender, _, argument ->
-            val message = argument.split(" ", limit = 2)[1]
-            message.parseAndSendMiniMessage(sender)
-        }
-    }
-
-
     @CommandBody
     val testComponent = subCommand {
         execute<CommandSender> { sender, _, argument ->
@@ -90,17 +79,17 @@ object CommandDev {
     val parseMessage = subCommand {
         execute<CommandSender> { sender, _, argument ->
             val player = if (sender is Player) sender else onlinePlayers.random()
-            val message = argument.removePrefix("parseMessage ")
-
+            val message = argument.split(" ", limit = 2)[1]
             val component = message.fluentMessageComponent(player)
 
-            component
-                .sendTo(getProxyPlayer(sender.name)!!)
+            println("parsing:: $message")
+
+            component.sendTo(adaptPlayer(player))
 
             println(
                 """
-                    FROM: $message
-                    Legacy: ${component.toLegacyText()}
+                    Result ----------------->
+                    Legacy: ${component.toLegacyText().replace('§', '&')}
                     Plain: ${component.toPlainText()}
                     TO Raw: ${component.toRawMessage()}
                 """.trimIndent()

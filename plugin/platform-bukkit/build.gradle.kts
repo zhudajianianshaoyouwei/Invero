@@ -23,6 +23,14 @@ taboolib {
             name("ItemsAdder").optional(true)
         }
 
+        bukkitNodes = HashMap<String, Any>().apply {
+            put("api-version", 1.13)
+            put("built-date", currentISODate)
+            put("built-by", systemUserName)
+            put("built-os", systemOS)
+            put("built-ip", systemIP)
+        }
+
     }
 
     relocate("kotlinx.serialization", "kotlinx_1_5_0_RC.serialization")
@@ -33,13 +41,6 @@ taboolib {
 
 dependencies {
     compileCore(11903)
-
-    taboo("net.kyori:adventure-api:4.12.0")
-    taboo("net.kyori:adventure-text-minimessage:4.12.0")
-    taboo("net.kyori:adventure-text-serializer-bungeecord:4.2.0")
-    taboo("net.kyori:adventure-text-serializer-legacy:4.2.0")
-    taboo("net.kyori:adventure-platform-api:4.2.0")
-    taboo("net.kyori:adventure-platform-bukkit:4.2.0")
 
     rootProject
         .childProjects["project"]!!

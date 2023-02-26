@@ -36,10 +36,22 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     }
 
     private var clickCallback: (InventoryClickEvent) -> Boolean = { true }
+    private var moveCallback: (InventoryClickEvent) -> Boolean = { true }
+    private var collectCallback: (InventoryClickEvent) -> Boolean = { true }
     private var dragCallback: (InventoryDragEvent) -> Boolean = { true }
 
     fun onClick(handler: (InventoryClickEvent) -> Boolean): InventoryVanilla {
         clickCallback = handler
+        return this
+    }
+
+    fun onItemsMove(handler: (InventoryClickEvent) -> Boolean): InventoryVanilla {
+        moveCallback = handler
+        return this
+    }
+
+    fun onItemsCollect(handler: (InventoryClickEvent) -> Boolean): InventoryVanilla {
+        collectCallback = handler
         return this
     }
 
@@ -98,15 +110,19 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         }
         // 转化为 x,y 定位
         val pos = window.scale.convertToPosition(slot)
-        window.panels.sortedByDescending { it.weight }.forEach {
-            if (pos in it.area) {
-                val converted = e.clickType
-                if (it.runClickCallbacks(pos, converted, e)) {
-                    it.handleClick(pos - it.locate, converted, e)
+        // 查找有效面板
+        window
+            .panels
+            .sortedByDescending { it.weight }
+            .forEach {
+                if (pos in it.area) {
+                    val converted = e.clickType
+                    if (it.runClickCallbacks(pos, converted, e)) {
+                        it.handleClick(pos - it.locate, converted, e)
+                    }
+                    return
                 }
-                return
             }
-        }
     }
 
     fun handleDrag(e: InventoryDragEvent) {
@@ -131,19 +147,22 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     fun handleItemsMove(e: InventoryClickEvent) {
         // 默认取消
         e.isCancelled = true
-        if (!clickCallback(e)) return
+        if (!moveCallback(e)) return
 
         val slot = e.rawSlot
         // playerInventory -> IO Panel
         if (slot > window.type.slotsContainer.last) {
-            if (window.storageMode.overridePlayerInventory) return
-            val insertItem = e.currentItem?.clone() ?: return
-
+            if (window.storageMode.overridePlayerInventory) return handleClick(e)
+            val insertItem = e.currentItem?.clone() ?: return handleClick(e)
             window
                 .getPanelsRecursively()
                 .filterIsInstance<CraftingPanel>()
                 .sortedBy { it.locate }
                 .sortedByDescending { it.weight }
+                .also {
+                    println("3 ${it.isEmpty()}")
+                    if (it.isEmpty()) return handleClick(e)
+                }
                 .forEach {
                     val previous = insertItem.amount
                     val result = it.insert(insertItem.clone())
@@ -156,6 +175,7 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
                     if (result <= 0) return@forEach
                 }
 
+            println(4)
             e.currentItem?.amount = insertItem.amount
         }
         // IO Panel -> playerInventory
@@ -166,15 +186,23 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
                 .panels
                 .sortedBy { it.locate }
                 .sortedByDescending { it.weight }
-                .find { window.scale.convertToPosition(e.rawSlot) in it.area }
+                .find { it is CraftingPanel && window.scale.convertToPosition(e.rawSlot) in it.area }
                 ?.handleItemsMove(clickedSlot, e)
+                .let {
+                    println("6 $it")
+                    if (it == null) return handleClick(e)
+                }
+        } else {
+            return handleClick(e)
         }
     }
 
     fun handleItemsCollect(e: InventoryClickEvent) {
         // 默认取消
         e.isCancelled = true
+        if (!collectCallback(e)) return
         // 暂时未写双击收集物品的逻辑...
+        return handleClick(e)
     }
 
     fun handleOpen(e: InventoryOpenEvent) {}

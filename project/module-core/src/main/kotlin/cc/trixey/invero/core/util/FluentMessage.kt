@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.util
 
-import cc.trixey.invero.common.adventure.parseMiniMessage
+import cc.trixey.invero.common.adventure.Adventure
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.adaptPlayer
 import taboolib.module.chat.ComponentText
@@ -18,8 +18,11 @@ import taboolib.platform.compat.replacePlaceholder
 fun String.fluentMessage(): String {
     if (isBlank()) return this
     return component().build {
+        // kether parser
         transform { KetherHandler.parseInline(it, null, emptyMap()) }
-        transform { it.parseMiniMessage() }
+        // miniMessage
+        if (Adventure.isSupported) transform { Adventure.parse(it) }
+        // taboo message
         colored()
     }.toLegacyText()
 }
@@ -28,11 +31,11 @@ fun String.fluentMessage(player: Player, variables: Map<String, Any> = emptyMap(
     return KetherHandler
         .parseInline(this, player, variables)
         .replacePlaceholder(player)
-        .parseMiniMessage()
+        .let { if (Adventure.isSupported) Adventure.parse(it) else it }
         .colored()
+
 //    return fluentMessageComponent(player, variables)
 //        .toLegacyText()
-//        .parseMiniMessage()
 //        .colored()
 }
 
@@ -41,19 +44,15 @@ fun String.fluentMessageComponent(
     variables: Map<String, Any> = emptyMap(),
     send: Boolean = false
 ): ComponentText {
-    val component = component()
+    val component = KetherHandler
+        .parseInline(this, player, variables)
+        .replacePlaceholder(player)
+        .let { if (Adventure.isSupported) Adventure.parse(it) else it }
+        .component()
+
     if (isBlank()) return component.build()
 
-    return component.build {
-        startsWith("&")
-        // kether parser
-        transform { KetherHandler.parseInline(it, player, variables) }
-        // placeholder API
-        transform { it.replacePlaceholder(player) }
-        // miniMessage
-        transform { it.parseMiniMessage() }
-        colored()
-    }.also {
+    return component.build { colored() }.also {
         if (send) it.sendTo(adaptPlayer(player))
     }
 }

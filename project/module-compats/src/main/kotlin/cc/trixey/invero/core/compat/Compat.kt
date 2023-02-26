@@ -36,9 +36,11 @@ class Compat : ClassVisitor(0) {
 
             registry.registerElementGenerator(namespace, id, generator)
         } else if (clazz.isAnnotationPresent(DefActivator::class.java)) {
-            val annotation = clazz.getAnnotation(DefActivator::class.java)
-            val activator = (instance?.get() ?: clazz.getConstructor().newInstance()) as MenuActivator<*>
-            annotation.names.forEach { Invero.API.getRegistry().registerActivator(it, activator) }
+            runCatching {
+                val annotation = clazz.getAnnotation(DefActivator::class.java)
+                val activator = (instance?.get() ?: clazz.getConstructor().newInstance()) as MenuActivator<*>
+                annotation.names.forEach { Invero.API.getRegistry().registerActivator(it, activator) }
+            }.getOrNull()
         }
     }
 

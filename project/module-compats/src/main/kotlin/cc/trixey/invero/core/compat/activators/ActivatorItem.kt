@@ -44,14 +44,12 @@ class ActivatorItem(private val inferItem: InferItem, private val raw: JsonEleme
 
     override fun call(player: Player, vararg params: Any): Boolean {
         val itemStack = params[0] as ItemStack
-        println("ITEMSTACK: $itemStack \n $inferItem")
         if (inferItem.isItem(itemStack)) {
             activate(player, buildMap {
                 put("activator_item", itemStack)
             })
             return true
         }
-        println("FALSE__")
         return false
     }
 

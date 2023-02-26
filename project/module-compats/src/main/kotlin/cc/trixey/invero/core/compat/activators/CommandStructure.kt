@@ -22,7 +22,7 @@ class CommandStructure(
     val permission: String?,
     val permissionMessage: String?,
     @JsonNames("argument", "args")
-    val arguments: List<CommandArgument>?
+    val arguments: List<@Serializable(with = CommandArgumentSerailizer::class) CommandArgument>?
 ) {
 
     @Transient
@@ -69,7 +69,7 @@ internal object CommandArgumentSerailizer : JsonTransformingSerializer<CommandAr
         return if (element is JsonPrimitive) {
             buildJsonObject {
                 put("id", element.content)
-                put("type", "STRING")
+                put("type", "ANY")
             }
         } else {
             element

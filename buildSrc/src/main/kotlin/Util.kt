@@ -6,6 +6,15 @@ import java.net.URL
 val currentISODate: String
     get() = isoInstantFormat.format(System.currentTimeMillis())
 
+val systemUserName: String
+    get() = System.getProperty("user.name")
+
+val systemOS: String
+    get() = System.getProperty("os.name").toLowerCase()
+
+val systemIP: String
+    get() = URL("http://ipinfo.io/ip").readText()
+
 fun getLatestRelease(repoOwner: String, repoName: String): String {
     val url = URL("https://api.github.com/repos/$repoOwner/$repoName/releases/latest")
     val connection = url.openConnection() as HttpURLConnection
