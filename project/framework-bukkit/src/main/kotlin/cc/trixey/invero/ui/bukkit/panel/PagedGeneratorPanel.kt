@@ -73,7 +73,7 @@ class PagedGeneratorPanel<T>(
         // re-generate & set max page
         if (lastGenerated == null) {
             lastGenerated = generatorSource().filter(filter).sortedWith(comparator).also {
-                maxPageIndex = it.size / pool.size
+                maxPageIndex = (it.size - 1) / pool.size
                 lastElements = arrayOfNulls<BaseItem<*>?>(it.size)
             }
         }

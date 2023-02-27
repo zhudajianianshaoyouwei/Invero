@@ -5,6 +5,8 @@ package cc.trixey.invero.core
 import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.Menu
 import cc.trixey.invero.common.MenuActivator
+import cc.trixey.invero.common.events.MenuCloseEvent
+import cc.trixey.invero.common.events.MenuOpenEvent
 import cc.trixey.invero.common.util.prettyPrint
 import cc.trixey.invero.core.*
 import cc.trixey.invero.core.menu.*
@@ -59,7 +61,7 @@ class BaseMenu(
     val activators: LinkedHashMap<String, MenuActivator<*>> = LinkedHashMap()
 
     init {
-        // auto-rows
+        // 一些情况下的菜单和面板尺寸的自动化实现
         if (settings.rows == null)
             settings.rows = panels
                 .maxBy { it.scale.height }
@@ -69,24 +71,24 @@ class BaseMenu(
         panels.forEach {
             if (it.scale.height < 0) it.scale.height = settings.rows ?: 1
         }
-        // auto-override
+        // 如果包含任意一个涉及物品交互的面板，则禁用菜单对玩家背包的覆盖
         if (panels.any { it is PanelCrafting }) {
             settings.setProperty("overridePlayerInventory", false)
         }
     }
 
+    /**
+     * 菜单开启
+     *
+     * @param viewer 玩家
+     * @param vars 会话变量
+     */
     override fun open(viewer: PlayerViewer, vars: Map<String, Any>) {
-        // 预开启动作
+        // 执行预置开启动作，检查是否被取消
         if (events?.preOpen?.run(Context(viewer))?.get() == false) {
             return
         }
-        // 注销原有菜单会话
-        if (viewer.session != null) {
-            val session = viewer.session
-            if (session != null && session.elapsed() < 2_00) return
-            else viewer.unregisterSession()
-        }
-        // 新建 Window
+        // 创建 UI Window
         val window = commonWindow(
             viewer,
             virtual = isVirtual(),
@@ -101,15 +103,26 @@ class BaseMenu(
             // close callback (internal)
             close(viewer, closeWindow = false, closeInventory = false)
         }
-        // 注册会话
+        // 创建菜单开启事件
+        val event = MenuOpenEvent(viewer.get(), this, window, vars).also { it.call() }
+        if (event.isCancelled) return
+
+        // 注销原有菜单会话
+        if (viewer.session != null) {
+            val session = viewer.session
+            if (session != null && session.elapsed() < 2_00) return
+            else viewer.unregisterSession()
+        }
+        // 注册菜单会话
         val session = Session.register(viewer, this, window, vars)
-        try {
+        // 开始处理窗口开启
+        runCatching {
             // 开启 Window
             // 其本身会检查是否已经打开任何 Window，并自动关闭等效旧菜单的 Window
             window.preOpen { panels.forEach { it.invoke(window, session) } }
             window.onOpen { updateTitle(session) }
             window.open()
-            // 频繁交互屏蔽
+            // 屏蔽掉频繁的交互
             if (isVirtual())
                 (window.inventory as InventoryPacket).onClick { _, _ -> viewer.canInteract }
             else
@@ -120,8 +133,8 @@ class BaseMenu(
             tasks?.forEach { it.value.submit(session) }
             // 开启后事件动作
             events?.postOpen?.run(Context(viewer, session))
-        } catch (e: Throwable) {
-            e.prettyPrint()
+        }.onFailure {
+            it.prettyPrint()
             Session.unregister(session)
         }
     }
@@ -130,6 +143,7 @@ class BaseMenu(
         val session = viewer.session ?: return
         if (session.menu != this) return
         viewer.unregisterSession { if (closeWindow) it.close(true, closeInventory) }
+        MenuCloseEvent(viewer.get(), this, session.window).also { it.call() }
 
         // Events_Close
         if (events?.close?.run(Context(viewer, session))?.get() == false) {

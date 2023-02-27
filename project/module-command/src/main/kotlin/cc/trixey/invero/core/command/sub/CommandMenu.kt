@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit
  * @author Arasple
  * @since 2023/2/18 13:03
  */
-@CommandHeader(name = "menu")
+@CommandHeader(name = "menu", aliases = ["m"], permission = "invero.command.menu", description = "Manage menus")
 object CommandMenu {
 
     @CommandBody
