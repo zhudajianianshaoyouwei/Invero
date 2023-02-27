@@ -9,6 +9,7 @@ import cc.trixey.invero.core.animation.Cyclic
 import cc.trixey.invero.core.animation.toCyclic
 import cc.trixey.invero.core.item.Frame
 import cc.trixey.invero.core.item.FrameProperties
+import cc.trixey.invero.core.serialize.FrameSerializer
 import cc.trixey.invero.core.serialize.IconHandlerSerializer
 import cc.trixey.invero.core.serialize.ListIconSerializer
 import cc.trixey.invero.ui.common.Panel
@@ -41,7 +42,7 @@ class Icon(
     val defaultFrame: Frame,
     @JsonNames("frames-properties", "frames-prop", "prop")
     val framesProperties: FrameProperties?,
-    val frames: List<Frame>?,
+    val frames: List<@Serializable(with = FrameSerializer::class) Frame>?,
     @SerialName("sub")
     @JsonNames("icons")
     @Serializable(with = ListIconSerializer::class)

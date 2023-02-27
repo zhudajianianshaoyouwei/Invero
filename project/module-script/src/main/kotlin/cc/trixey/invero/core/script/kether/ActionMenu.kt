@@ -26,7 +26,7 @@ object ActionMenu {
     - menu title update
     - menu close
     - menu open [menuId] for [player] with [customArguments]
-    - menu switch [menuId] for [player]
+    - menu switch [menuId] for [player] with [customArguments]
      */
     @KetherParser(["menu"], namespace = "invero", shared = true)
     fun parserMenu() = scriptParser {

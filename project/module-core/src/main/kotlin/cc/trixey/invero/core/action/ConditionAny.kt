@@ -1,9 +1,14 @@
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package cc.trixey.invero.core.action
 
 import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.serialize.ListScriptKetherSerializer
+import cc.trixey.invero.ui.bukkit.util.proceed
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 import java.util.concurrent.CompletableFuture
 
 /**
@@ -18,6 +23,8 @@ class ConditionAny(
     @SerialName("any")
     @Serializable(with = ListScriptKetherSerializer::class)
     override val conditions: List<ScriptKether>,
+    @JsonNames("amount", "at_least")
+    private val atLeast: Int = 1,
     override val then: Action?,
     override val `else`: Action?
 ) : ActionTernary, Action() {
@@ -26,11 +33,13 @@ class ConditionAny(
         require(then != null || `else` != null) { "At least one type of response is required for IF structure" }
     }
 
-    override fun run(context: Context): CompletableFuture<Boolean> = CompletableFuture
-        .completedFuture(
-            conditions.any {
-                it.evalInstant(context, false)
-            }
-        )
+    override fun run(context: Context): CompletableFuture<Boolean> {
+        var amount = 0
+        return conditions.any {
+            it.evalInstant(context, false).proceed { amount++ } || amount >= atLeast
+        }.let {
+            CompletableFuture.completedFuture(it)
+        }
+    }
 
 }

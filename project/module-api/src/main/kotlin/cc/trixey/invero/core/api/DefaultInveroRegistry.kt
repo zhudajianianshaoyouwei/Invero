@@ -63,7 +63,7 @@ class DefaultInveroRegistry : InveroRegistry {
 
     override fun createElementGenerator(identifier: String): ElementGenerator? {
         return elementGenerators.entries.find {
-            it.key.equals(identifier, true) || it.key.removeSuffix("s").equals(identifier, true)
+            it.key.equals(identifier, true) || identifier.removeSuffix("s").equals(it.key.removeSuffix("s"), true)
         }?.value?.javaClass?.getConstructor()?.newInstance()
     }
 

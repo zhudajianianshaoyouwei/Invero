@@ -1,7 +1,6 @@
 package cc.trixey.invero.ui.bukkit.util
 
 import org.bukkit.Material
-import org.bukkit.NamespacedKey
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.ItemMeta
 import org.bukkit.persistence.PersistentDataType
@@ -9,10 +8,7 @@ import taboolib.module.nms.ItemTag
 import taboolib.module.nms.MinecraftVersion
 import taboolib.module.nms.getItemTag
 import taboolib.module.nms.setItemTag
-import taboolib.platform.BukkitPlugin
 import taboolib.platform.util.*
-
-private val namespacedKey = NamespacedKey(BukkitPlugin.getInstance(), "invero")
 
 fun ItemStack.copyMarked(viewer: String, slot: Int): ItemStack {
     if (isAir) return this

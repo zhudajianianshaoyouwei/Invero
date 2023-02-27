@@ -1,9 +1,9 @@
 package cc.trixey.invero.core.compat
 
+import cc.trixey.invero.common.ElementGenerator
 import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.ItemSourceProvider
 import cc.trixey.invero.common.MenuActivator
-import cc.trixey.invero.core.geneartor.BaseGenerator
 import taboolib.common.LifeCycle
 import taboolib.common.inject.ClassVisitor
 import taboolib.common.platform.Awake
@@ -30,7 +30,7 @@ class Compat : ClassVisitor(0) {
             annotation.namespaces.forEach { registry.registerItemSourceProvider(it, provider) }
         } else if (clazz.isAnnotationPresent(DefGeneratorProvider::class.java)) {
             val annotation = clazz.getAnnotation(DefGeneratorProvider::class.java)
-            val generator = clazz.getConstructor().newInstance() as BaseGenerator
+            val generator = clazz.getConstructor().newInstance() as ElementGenerator
             val namespace = annotation.namespace
             val id = annotation.id
 

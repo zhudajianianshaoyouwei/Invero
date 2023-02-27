@@ -15,15 +15,6 @@ import java.util.concurrent.CompletableFuture
  */
 object ActionPage {
 
-    /*
-page isFirst
-page isLast
-page get
-page max
-page next by [value]
-page previous by [value]
-page set <value]
- */
     @KetherParser(["page"], namespace = "invero", shared = true)
     fun parserPage() = parserPage(null)
 

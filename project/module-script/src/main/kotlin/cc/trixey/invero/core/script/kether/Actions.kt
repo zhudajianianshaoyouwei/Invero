@@ -8,10 +8,7 @@ import cc.trixey.invero.core.script.player
 import cc.trixey.invero.core.script.session
 import cc.trixey.invero.core.util.fluentMessageComponent
 import org.bukkit.entity.Player
-import taboolib.module.kether.KetherParser
-import taboolib.module.kether.actionNow
-import taboolib.module.kether.combinationParser
-import taboolib.module.kether.scriptParser
+import taboolib.module.kether.*
 import taboolib.platform.compat.depositBalance
 import taboolib.platform.compat.getBalance
 import taboolib.platform.compat.withdrawBalance
@@ -41,17 +38,14 @@ internal fun actionMessage() = combinationParser {
 }
 
 @KetherParser(["parse"], namespace = "invero", shared = true)
-internal fun actionParse() = combinationParser {
-    it.group(
-        text(),
-    ).apply(it) { message ->
-        now {
+internal fun actionParser() = scriptParser {
+    val str = it.nextParsedAction()
+    actionTake {
+        run(str).str { s ->
             val context = contextVar<Context?>("@context")?.variables ?: variables().toMap()
             val player = player()
 
-            message
-                .fluentMessageComponent(player, context)
-                .toLegacyText()
+            s.fluentMessageComponent(player, context).toLegacyText()
         }
     }
 }
