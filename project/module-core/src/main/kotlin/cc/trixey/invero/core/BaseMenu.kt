@@ -57,9 +57,9 @@ class BaseMenu(
     val panels: List<AgentPanel>,
 ) : Menu {
 
-    @Transient
-    val activators: LinkedHashMap<String, MenuActivator<*>> = LinkedHashMap()
-
+    /**
+     * 菜单初始化
+     */
     init {
         // 一些情况下的菜单和面板尺寸的自动化实现
         if (settings.rows == null)
@@ -76,6 +76,12 @@ class BaseMenu(
             settings.setProperty("overridePlayerInventory", false)
         }
     }
+
+    /**
+     * 已读取、注册的菜单激活器
+     */
+    @Transient
+    val activators: LinkedHashMap<String, MenuActivator<*>> = LinkedHashMap()
 
     /**
      * 菜单开启
@@ -139,6 +145,14 @@ class BaseMenu(
         }
     }
 
+    /**
+     * 菜单关闭
+     *
+     * @param viewer 玩家
+     * @param closeWindow 是否关闭窗口
+     * @param closeInventory 是否关闭背包
+     *
+     */
     override fun close(viewer: PlayerViewer, closeWindow: Boolean, closeInventory: Boolean) {
         val session = viewer.session ?: return
         if (session.menu != this) return
@@ -153,6 +167,9 @@ class BaseMenu(
         }
     }
 
+    /**
+     * 注册此菜单附带产物
+     */
     override fun register() {
         bindings?.forEach { key, value ->
             Invero.API
@@ -162,19 +179,28 @@ class BaseMenu(
         }
     }
 
+    /**
+     * 注销此菜单附带产物
+     */
     override fun unregister() {
         activators.forEach { (_, value) -> value.unregister() }
     }
 
+    /**
+     * 为一个会话更新容器标题
+     */
     fun updateTitle(session: Session) {
         session.window.title = session.parse(settings.title.default)
     }
 
+    /**
+     * 本菜单是否为虚拟容器
+     */
     override fun isVirtual(): Boolean {
         return settings.virtual && !panels.any { it.requireBukkitWindow() }
     }
 
-    val PlayerViewer.canInteract: Boolean
+    private val PlayerViewer.canInteract: Boolean
         get() = settings.interactBaffle.hasNext(name)
 
 
