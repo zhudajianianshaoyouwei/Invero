@@ -15,6 +15,8 @@ interface Viewer {
 
     fun <T> get(): T
 
+    fun <T> getSafely(): T?
+
     fun <T : Viewer> cast(): T {
         @Suppress("UNCHECKED_CAST")
         return this as T

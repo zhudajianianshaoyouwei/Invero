@@ -1,0 +1,16 @@
+actions:
+  # tell parse "Hello World!"
+  - tell: "Hello World!"
+
+  # if chance by 20 then sleep 1s for i in range 1..3 then tell parse "Hello World!"
+  - tell: "Hello World!"
+    delay: 20
+    chance: 20
+    repeat: 3
+
+  # title "Hello World!" "This is a subtitle" 1s 1s 1s
+  - title: "Hello World!"
+    subtitle: "This is a subtitle"
+    fadein: 20
+    stay: 20
+    fadeout: 20

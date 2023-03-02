@@ -177,6 +177,7 @@ object CommandDev {
                 println("No session valid")
                 return@execute
             }
+            val player = session.viewer.get<Player>()
             val window = session.window
             val inventory = window.inventory
 
@@ -184,6 +185,7 @@ object CommandDev {
                 """
                     
                     [I][Print] ------------------------------ [WINDOW]
+                    Bukkit Type: ${player.openInventory.topInventory.type} (${player.openInventory.topInventory.javaClass.simpleName})
                     Object: $window (${window.type.name})
                     Virtualized: ${window.inventory.isVirtual()}
                     Hosted Panels: ${window.panels.size}

@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.icon
 
-import cc.trixey.invero.common.util.letCatching
+import cc.trixey.invero.common.util.alert
 import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.action.Action
 import cc.trixey.invero.ui.common.event.ClickType
@@ -21,7 +21,9 @@ import taboolib.common.platform.function.submitAsync
 class IconHandler(@JsonNames("def") val default: Action?, val typed: Map<ClickType, Action> = mapOf()) {
 
     fun run(context: Context, clickType: ClickType) = submitAsync {
-        letCatching {
+        // 临时暂停动态标题
+        context.session?.pauseAnimatedTitle(5L)
+        alert {
             typed[clickType]?.run(context)?.get()
             if (clickType.isNumberKeyClick) typed[ClickType.NUMBER_KEY]?.run(context)?.get()
             default?.run(context)?.get()

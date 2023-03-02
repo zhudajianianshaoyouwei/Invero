@@ -54,17 +54,9 @@ object ActionMenu {
                 }
             }
 
-            "pause" -> actionNow {
-                session()?.setVariable("title_task_running", false)
-            }
-
-            "resume" -> actionNow {
-                session()?.removeVariable("title_task_running")
-            }
-
-            "update" -> actionNow {
-                session()?.apply { (menu as BaseMenu).updateTitle(this) }
-            }
+            "pause" -> actionNow { session()?.pauseAnimatedTitle() }
+            "resume" -> actionNow { session()?.resumeAnimatedTitle() }
+            "update" -> actionNow { session()?.apply { (menu as BaseMenu).updateTitle(this) } }
 
             else -> error("Unknown case")
         }

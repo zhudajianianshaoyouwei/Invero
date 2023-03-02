@@ -6,6 +6,7 @@ import cc.trixey.invero.ui.bukkit.PlayerViewer
 import cc.trixey.invero.ui.bukkit.api.notViewingWindow
 import io.netty.util.internal.ConcurrentSet
 import org.bukkit.entity.Player
+import org.bukkit.event.inventory.InventoryType
 import taboolib.common.platform.function.submitAsync
 import taboolib.common.util.unsafeLazy
 import taboolib.library.reflex.Reflex.Companion.setProperty
@@ -54,7 +55,11 @@ fun BukkitWindow.updateTitle(title: String, updateInventory: Boolean = true) {
     else if (updateInventory) player.updateInventory()
 
     // 补刀
-    submitAsync(delay = 2L) { if (viewer.notViewingWindow()) handler.sendWindowClose(player, id) }
+    submitAsync(delay = 2L) {
+        if (viewer.notViewingWindow() && player.openInventory.topInventory.type == InventoryType.CRAFTING) {
+            handler.sendWindowClose(player, id)
+        }
+    }
 
     viewer.setTitleUpdating(true)
 }

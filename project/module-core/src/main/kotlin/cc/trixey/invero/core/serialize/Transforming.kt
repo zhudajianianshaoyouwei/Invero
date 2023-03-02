@@ -101,7 +101,7 @@ internal object FrameSerializer : JsonTransformingSerializer<Frame>(serializer()
                     }
                 }
             }
-            struc["texture"] = texture
+            if (!texture.isEmpty()) struc["texture"] = texture
         }
 
         return JsonObject(struc)

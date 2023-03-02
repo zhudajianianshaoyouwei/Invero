@@ -94,7 +94,7 @@ object CommandMenu {
     val dump = subCommand {
         dynamic("menu") {
             suggestMenuIds()
-            execute<Player> { player, ctx, _ ->
+            execute<CommandSender> { player, ctx, _ ->
                 val menu = ctx.menu ?: return@execute
                 submitAsync {
                     val serialized = Invero.API.getMenuManager().serializeToJson(menu)

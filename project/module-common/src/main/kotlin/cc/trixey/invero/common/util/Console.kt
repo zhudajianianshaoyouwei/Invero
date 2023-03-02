@@ -22,11 +22,11 @@ fun debug(message: String) {
         println("§c[Invero] §7${message.replace('&', '§')}")
 }
 
-inline fun <T, R> T.letCatching(block: (T) -> R): R? {
-    return printCatching { block(this) }.getOrNull()
+inline fun <T, R> T.alert(block: (T) -> R): R? {
+    return alertBlock { block(this) }.getOrNull()
 }
 
-inline fun <R> printCatching(block: () -> R): Result<R> {
+inline fun <R> alertBlock(block: () -> R): Result<R> {
     return try {
         Result.success(block())
     } catch (e: Throwable) {

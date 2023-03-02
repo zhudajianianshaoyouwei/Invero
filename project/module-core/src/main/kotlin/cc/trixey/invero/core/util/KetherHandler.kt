@@ -1,6 +1,6 @@
 package cc.trixey.invero.core.util
 
-import cc.trixey.invero.common.util.letCatching
+import cc.trixey.invero.common.util.alert
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.adaptPlayer
 import taboolib.common.platform.function.console
@@ -19,7 +19,7 @@ object KetherHandler {
 
     private val namespace = listOf("invero")
 
-    fun invoke(source: String, player: Player?, vars: Map<String, Any>): CompletableFuture<Any?> = letCatching {
+    fun invoke(source: String, player: Player?, vars: Map<String, Any>): CompletableFuture<Any?> = alert {
         KetherShell.eval(
             source,
             sender = if (player != null) adaptPlayer(player) else console(),
@@ -28,7 +28,7 @@ object KetherHandler {
         )
     } ?: CompletableFuture.completedFuture(null)
 
-    fun parseInline(source: String, player: Player?, vars: Map<String, Any>) = letCatching {
+    fun parseInline(source: String, player: Player?, vars: Map<String, Any>) = alert {
         KetherFunction.parse(
             source,
             sender = if (player != null) adaptPlayer(player) else console(),

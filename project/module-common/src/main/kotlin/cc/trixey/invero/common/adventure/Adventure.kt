@@ -30,7 +30,7 @@ object Adventure {
         }.onSuccess {
             info("Successfully loaded Adventure support.")
         }.onFailure {
-            it.printStackTrace()
+            PLATFORM = null
             info("Not find Adventure support.")
         }
     }

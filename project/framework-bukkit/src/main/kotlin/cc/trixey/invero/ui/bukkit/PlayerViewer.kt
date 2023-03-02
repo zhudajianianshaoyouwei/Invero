@@ -16,11 +16,15 @@ class PlayerViewer(override val name: String) : Viewer {
     constructor(player: Player) : this(player.name)
 
     override fun isAvailable(): Boolean {
-        return get<Player>().isOnline
+        return getSafely<Player>()?.isOnline == true
+    }
+
+    override fun <T> getSafely(): T? {
+        return getProxyPlayer(name)?.cast()
     }
 
     override fun <T> get(): T {
-        return getProxyPlayer(name)?.cast() ?: error("Not found available player for viewer named $name")
+        return getSafely() ?: error("Not found available player for viewer named $name")
     }
 
 }

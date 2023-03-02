@@ -8,7 +8,7 @@ import cc.trixey.invero.common.api.InveroMenuManager
 import cc.trixey.invero.common.api.InveroSettings
 import cc.trixey.invero.common.api.SerializeResult
 import cc.trixey.invero.common.api.SerializeResult.State.*
-import cc.trixey.invero.common.util.letCatching
+import cc.trixey.invero.common.util.alert
 import cc.trixey.invero.common.util.listRecursively
 import cc.trixey.invero.common.util.prettyPrint
 import cc.trixey.invero.core.AgentPanel
@@ -211,7 +211,7 @@ class DefaultMenuManager : InveroMenuManager {
                         unregister()
                     }
                     menus[menuId] = loaded
-                    letCatching { loaded.register() }
+                    alert { loaded.register() }
                     // auto open
                     submitAsync {
                         console().sendLang("menu-loader-auto-reload-successed", menuId)

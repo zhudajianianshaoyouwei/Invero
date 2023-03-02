@@ -9,6 +9,7 @@ import cc.trixey.invero.core.util.session
 import cc.trixey.invero.ui.bukkit.BukkitWindow
 import cc.trixey.invero.ui.bukkit.PlayerViewer
 import org.bukkit.entity.Player
+import taboolib.common.platform.function.submit
 import taboolib.common.platform.function.submitAsync
 import taboolib.expansion.getDataContainer
 import java.util.concurrent.ConcurrentHashMap
@@ -86,6 +87,13 @@ class Session(
     fun parse(input: List<String>, context: Context? = null): List<String> {
         return input.map { parse(it, context) }
     }
+
+    fun pauseAnimatedTitle(last: Long = -1L) {
+        setVariable("title_task_running", false)
+        if (last > 0) submit(delay = last) { resumeAnimatedTitle() }
+    }
+
+    fun resumeAnimatedTitle() = removeVariable("title_task_running")
 
     companion object {
 

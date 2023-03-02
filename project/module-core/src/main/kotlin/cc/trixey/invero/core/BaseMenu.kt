@@ -91,7 +91,7 @@ class BaseMenu(
      */
     override fun open(viewer: PlayerViewer, vars: Map<String, Any>) {
         // 执行预置开启动作，检查是否被取消
-        if (events?.preOpen?.run(Context(viewer))?.get() == false) {
+        if (events?.preOpen(viewer) == false) {
             return
         }
         // 创建 UI Window
@@ -138,7 +138,7 @@ class BaseMenu(
             // 应用周期事件
             tasks?.forEach { it.value.submit(session) }
             // 开启后事件动作
-            events?.postOpen?.run(Context(viewer, session))
+            events?.postOpen(session)
         }.onFailure {
             it.prettyPrint()
             Session.unregister(session)
@@ -159,12 +159,7 @@ class BaseMenu(
         viewer.unregisterSession { if (closeWindow) it.close(true, closeInventory) }
         MenuCloseEvent(viewer.get(), this, session.window).also { it.call() }
 
-        // Events_Close
-        if (events?.close?.run(Context(viewer, session))?.get() == false) {
-            // Unclosable menu
-            // Not recommended
-            submitAsync { open(viewer) }
-        }
+        submitAsync { events?.close(session) }
     }
 
     /**
