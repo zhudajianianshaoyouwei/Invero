@@ -109,8 +109,11 @@ abstract class BukkitWindow(
     override fun close(doCloseInventory: Boolean, updateInventory: Boolean) {
         require(isRegistered()) { "Can not close an unregistered window" }
         preCloseCallback(this)
-        unregisterWindow()
-        synced { inventory.close(doCloseInventory, updateInventory) }
+
+        synced {
+            inventory.close(doCloseInventory, updateInventory)
+        }
+
         closeCallback(this)
     }
 

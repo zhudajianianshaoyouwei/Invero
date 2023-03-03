@@ -1,13 +1,14 @@
 package cc.trixey.invero.ui.bukkit
 
+import cc.trixey.invero.ui.bukkit.api.findWindow
 import cc.trixey.invero.ui.bukkit.api.isRegistered
+import cc.trixey.invero.ui.bukkit.api.unregisterWindow
 import cc.trixey.invero.ui.bukkit.panel.CraftingPanel
 import cc.trixey.invero.ui.bukkit.util.clickType
 import cc.trixey.invero.ui.bukkit.util.synced
 import cc.trixey.invero.ui.common.panel.IOPanel
 import cc.trixey.invero.ui.common.util.anyInstancePanel
 import org.bukkit.Bukkit
-import org.bukkit.entity.Player
 import org.bukkit.event.inventory.*
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
@@ -91,8 +92,21 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     }
 
     override fun close(doCloseInventory: Boolean, updateInventory: Boolean) {
+        window.unregisterWindow()
+
         if (doCloseInventory && isViewing()) viewer.closeInventory()
         if (updateInventory) viewer.updateInventory()
+
+        val containsIOPanel = window.anyInstancePanel<IOPanel>()
+
+        submit(delay = 2L) {
+            if (findWindow(viewer.name) != null) return@submit
+            if (containsIOPanel) {
+                storageMap.remove(viewer.uniqueId)
+            } else {
+                viewer.restorePlayerInventory()
+            }
+        }
     }
 
     fun handleClick(e: InventoryClickEvent) {
@@ -205,17 +219,12 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         return handleClick(e)
     }
 
-    fun handleOpen(e: InventoryOpenEvent) {}
+    fun handleOpenEvent(e: InventoryOpenEvent) {}
 
-    fun handleClose(e: InventoryCloseEvent) {
-        // 传递 Bukkit 关闭事件
-        if (window.isRegistered()) {
-            window.close(doCloseInventory = false, updateInventory = false)
-            if (!window.anyInstancePanel<IOPanel>()) submit(delay = 2L) {
-                (e.player as Player).restorePlayerInventory()
-            }
-        }
+    fun handleCloseEvent(e: InventoryCloseEvent) {
+        if (window.isRegistered()) window.close(doCloseInventory = false, updateInventory = false)
     }
+
 
     class Holder(val window: BukkitWindow) : InventoryHolder {
 

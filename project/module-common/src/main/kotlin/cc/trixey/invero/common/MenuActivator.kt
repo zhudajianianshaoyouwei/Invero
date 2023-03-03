@@ -11,7 +11,7 @@ import org.bukkit.entity.Player
  */
 abstract class MenuActivator<T> : CustomSerializable<T> {
 
-    protected var menuId: String? = null
+    private var menuId: String? = null
 
     open fun setActivatorMenu(menu: Menu) {
         menuId = menu.id

@@ -53,10 +53,10 @@ object Listener {
     fun e(e: InventoryDragEvent) = e.delegatedEvent { handleDrag(e) }
 
     @SubscribeEvent
-    fun e(e: InventoryOpenEvent) = e.delegatedEvent { handleOpen(e) }
+    fun e(e: InventoryOpenEvent) = e.delegatedEvent { handleOpenEvent(e) }
 
     @SubscribeEvent
-    fun e(e: InventoryCloseEvent) = e.delegatedEvent { handleClose(e) }
+    fun e(e: InventoryCloseEvent) = e.delegatedEvent { handleCloseEvent(e) }
 
     private fun InventoryEvent.delegatedEvent(block: InventoryVanilla.() -> Unit) = view.topInventory.let {
         val holder = it.holder

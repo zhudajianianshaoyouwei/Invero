@@ -15,6 +15,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import taboolib.common.platform.command.*
 import taboolib.common.platform.function.submitAsync
+import taboolib.module.chat.uncolored
 import taboolib.platform.util.sendLang
 import java.util.concurrent.TimeUnit
 
@@ -82,7 +83,7 @@ object CommandMenu {
                 "menu-list-item",
                 it.id ?: "NULL",
                 it.settings.rows ?: -1,
-                it.settings.title.default.replace(stripTitleBy, "")
+                it.settings.title.default.replace(stripTitleBy, "").uncolored()
             )
         }
     }
