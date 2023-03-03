@@ -1,9 +1,9 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
 import cc.trixey.invero.core.BaseMenu
 import cc.trixey.invero.core.script.session
 import taboolib.common.platform.function.submitAsync
-import taboolib.module.kether.KetherParser
+import cc.trixey.invero.core.script.loader.InveroKetherParser
 import taboolib.module.kether.combinationParser
 import java.util.concurrent.CompletableFuture
 
@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture
  */
 object ActionInvokeNode {
 
-    @KetherParser(["node"], namespace = "invero", shared = true)
+    @InveroKetherParser(["node"])
     fun node() = combinationParser {
         it.group(
             // 节点名称
@@ -40,7 +40,7 @@ object ActionInvokeNode {
         }
     }
 
-    @KetherParser(["task"], namespace = "invero", shared = true)
+    @InveroKetherParser(["task"])
     fun task() = combinationParser {
         it.group(
             text(),

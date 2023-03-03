@@ -1,9 +1,8 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
-import cc.trixey.invero.core.script.findNearstPanelRecursively
+import cc.trixey.invero.core.script.loader.InveroKetherParser
 import cc.trixey.invero.ui.common.panel.FreeformPanel
 import cc.trixey.invero.ui.common.panel.ScrollPanel
-import taboolib.module.kether.KetherParser
 import taboolib.module.kether.ParserHolder
 import taboolib.module.kether.combinationParser
 
@@ -16,7 +15,7 @@ import taboolib.module.kether.combinationParser
  */
 object ActionScroll {
 
-    @KetherParser(["shift"], namespace = "invero", shared = true)
+    @InveroKetherParser(["shift"])
     fun shift() = combinationParser {
         it.group(
             command("by", "with", then = int().and(int())).option().defaultsTo(0 to 0)
@@ -36,7 +35,7 @@ object ActionScroll {
     scroll previous | left | up
     scroll reset
      */
-    @KetherParser(["scroll"], namespace = "invero", shared = true)
+    @InveroKetherParser(["scroll"])
     fun parserScroll() = parserScroll(null)
 
     fun parserScroll(ref: ScrollPanel?) = combinationParser {
@@ -45,7 +44,7 @@ object ActionScroll {
         }
     }
 
-    fun ParserHolder.runScroll(panel: ScrollPanel?, operator: String) =
+    private fun ParserHolder.runScroll(panel: ScrollPanel?, operator: String) =
         now {
             val scroll = panel ?: findNearstPanelRecursively() ?: return@now "<PANEL NOT FOUND>"
 

@@ -2,7 +2,7 @@ import java.text.SimpleDateFormat
 
 const val rootName = "Invero"
 const val rootGroup = "cc.trixey.invero"
-const val rootVersion = "1.0.0-snapshot-6"
+const val rootVersion = "1.0.0-snapshot-7-dev"
 
 const val kotlinVersion = "1.8.10"
 const val shadowJarVersion = "7.1.2"

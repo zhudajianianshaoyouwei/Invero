@@ -1,7 +1,7 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
 import cc.trixey.invero.core.script.selfSourceObject
-import taboolib.module.kether.KetherParser
+import cc.trixey.invero.core.script.loader.InveroKetherParser
 import taboolib.module.kether.combinationParser
 
 /**
@@ -13,7 +13,7 @@ import taboolib.module.kether.combinationParser
  */
 object ActionSource {
 
-    @KetherParser(["element"], namespace = "invero", shared = true)
+    @InveroKetherParser(["element"])
     fun parser() = combinationParser {
         it.group(
             text().option()

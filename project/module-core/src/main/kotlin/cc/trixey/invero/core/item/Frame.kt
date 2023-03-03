@@ -1,9 +1,5 @@
 package cc.trixey.invero.core.item
 
-import cc.trixey.invero.common.util.postAmount
-import cc.trixey.invero.common.util.postLore
-import cc.trixey.invero.common.util.postName
-import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.icon.Slot
 import cc.trixey.invero.core.serialize.ListSlotSerializer
 import cc.trixey.invero.core.serialize.ListStringSerializer
@@ -13,7 +9,9 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import kotlinx.serialization.json.JsonNames
 import kotlinx.serialization.json.JsonPrimitive
-import org.bukkit.inventory.ItemStack
+import kotlinx.serialization.json.booleanOrNull
+import kotlinx.serialization.json.intOrNull
+import taboolib.common5.cshort
 import taboolib.library.reflex.Reflex.Companion.getProperty
 import taboolib.library.reflex.Reflex.Companion.setProperty
 import taboolib.module.kether.inferType
@@ -40,14 +38,14 @@ class Frame(
     @JsonNames("lores")
     val lore: List<String>?,
     @Serializable @JsonNames("count", "amt")
-    val amount: Int?,
+    val amount: JsonPrimitive?,
     @JsonNames("durability", "dur")
-    val damage: Short?,
+    val damage: JsonPrimitive?,
     @JsonNames("model")
-    val customModelData: Int?,
+    val customModelData: JsonPrimitive?,
     val color: String?,
     @JsonNames("shiny")
-    val glow: Boolean?,
+    val glow: JsonPrimitive?,
     @JsonNames("enchantment", "enchant")
     val enchantments: Map<String, Int>?,
     @Serializable(with = ListStringSerializer::class)
@@ -69,11 +67,20 @@ class Frame(
     }
 
     @Transient
-    private val isNBTDynamic = nbt?.values?.any { it.content.containsAnyPlaceholder } ?: false
+    internal val staticAmount = amount?.intOrNull
 
     @Transient
-    private val lazyNBT =
-        if (nbt == null || isNBTDynamic) null
+    internal val staticDamage = damage?.intOrNull?.cshort
+
+    @Transient
+    internal val staticCustomModelData = customModelData?.intOrNull
+
+    @Transient
+    internal val staticGlow = glow?.booleanOrNull
+
+    @Transient
+    internal val staticNBT =
+        if (nbt == null || nbt.values.any { it.content.containsAnyPlaceholder }) null
         else {
             val tag = ItemTag()
             nbt.forEach { (key, value) -> tag[key] = ItemTagData.toNBT(value.content.inferType()) }
@@ -81,28 +88,10 @@ class Frame(
         }
 
     fun buildNBT(translator: (String) -> String): ItemTag {
-        if (lazyNBT != null) return lazyNBT
+        if (staticNBT != null) return staticNBT
         val tag = ItemTag()
         nbt!!.forEach { (key, value) -> tag[key] = ItemTagData.toNBT(translator(value.content).inferType()) }
         return tag
-    }
-
-    /*
-    TODO properties support:
-
-     - banner
-     */
-    fun generateItem(context: Context, callback: (ItemStack) -> Unit) = texture?.generateItem(context) {
-        val meta = itemMeta
-        name?.let { postName(context.parse(it)) }
-        lore?.let { postLore(context.parse(lore)) }
-        damage?.let { durability = it }
-        customModelData?.let { meta?.setCustomModelData(it) }
-        // No more properties are supported
-        postAmount(amount)
-        itemMeta = meta
-
-        callback(this)
     }
 
     fun inheirt(frame: Frame) = arrayOf(

@@ -1,4 +1,4 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
 import cc.trixey.invero.core.item.TextureHead
 import cc.trixey.invero.core.item.TextureMaterial
@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack
 import taboolib.common.OpenResult
 import taboolib.common5.Coerce
 import taboolib.common5.cint
-import taboolib.module.kether.KetherParser
+import cc.trixey.invero.core.script.loader.InveroKetherParser
 import taboolib.module.kether.KetherProperty
 import taboolib.module.kether.ScriptProperty
 import taboolib.module.kether.combinationParser
@@ -24,7 +24,7 @@ object ActionItem {
     /*
     item <text from action> amount <int> by <handler> send
      */
-    @KetherParser(["item", "itemstack"], namespace = "invero", shared = true)
+    @InveroKetherParser(["item", "itemstack"])
     fun parser() = combinationParser {
         it.group(
             action(),

@@ -1,8 +1,8 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
 import cc.trixey.invero.core.script.session
 import cc.trixey.invero.core.util.runJS
-import taboolib.module.kether.KetherParser
+import cc.trixey.invero.core.script.loader.InveroKetherParser
 import taboolib.module.kether.combinationParser
 import taboolib.module.kether.deepVars
 
@@ -15,7 +15,7 @@ import taboolib.module.kether.deepVars
  */
 object ActionJS {
 
-    @KetherParser(["$", "js", "javascript"], namespace = "invero", shared = true)
+    @InveroKetherParser(["$", "js", "javascript"])
     fun parser() = combinationParser {
         it.group(symbol()).apply(it) { script ->
             future { runJS(script, session(), deepVars().filterNot { v -> v.key.startsWith("@") }) }

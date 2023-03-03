@@ -9,8 +9,12 @@ import cc.trixey.invero.core.item.Frame
 import cc.trixey.invero.core.util.*
 import cc.trixey.invero.ui.bukkit.api.dsl.set
 import cc.trixey.invero.ui.bukkit.util.proceed
+import kotlinx.serialization.json.contentOrNull
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
+import taboolib.common5.cbool
+import taboolib.common5.cint
+import taboolib.common5.cshort
 import taboolib.module.nms.ItemTag
 import taboolib.module.nms.getItemTag
 
@@ -30,17 +34,35 @@ fun Frame.render(agent: AgentPanel, element: IconElement) {
     // TODO
     // support for color,enchantments
     fun ItemStack.frameApply(): ItemStack {
-        name?.let { postName(context.parse(name).colored()) }
-        lore?.let { postLore(context.parse(lore).colored(enhancedLore)) }
-        damage?.let { durability = it }
-        customModelData?.let { postModel(it) }
-        glow?.proceed { postShiny() }
+
+        name?.let {
+            postName(context.parse(name).colored())
+        }
+        lore?.let {
+            postLore(context.parse(lore).colored(enhancedLore))
+        }
+        damage?.let {
+            durability = staticDamage ?: it.content.let { s -> context.parse(s) }.cshort
+        }
+        customModelData?.let {
+            val model = staticCustomModelData ?: it.content.let { s -> context.parse(s) }.toIntOrNull() ?: 0
+            postModel(model)
+        }
+        glow?.let {
+            if (staticGlow == true || context.parse(it.content).cbool) {
+                postShiny(context.parse(it.content).cbool ?: false)
+            }
+        }
         flags?.map { flag ->
             ItemFlag.values().find { it.name.equals(flag, true) }
         }?.let { flags ->
             itemMeta = itemMeta?.also { it.addItemFlags(*flags.toTypedArray()) }
         }
-        unbreakable?.proceed { itemMeta = itemMeta?.also { it.isUnbreakable = true } }
+
+        unbreakable?.proceed {
+            itemMeta = itemMeta?.also { it.isUnbreakable = true }
+        }
+
         nbt?.let {
             ItemTag().apply {
                 putAll(getItemTag())
@@ -48,7 +70,11 @@ fun Frame.render(agent: AgentPanel, element: IconElement) {
                 saveTo(this@frameApply)
             }
         }
-        if (this@render.amount != null) amount = this@render.amount
+
+        this@render.amount?.let {
+            postAmount(staticAmount ?: context.parse(it.content).toIntOrNull() ?: 1)
+        }
+
         return this
     }
 
@@ -78,6 +104,11 @@ fun Frame.translateUpdate(session: Session, element: IconElement, defaultFrame: 
 
         if (basedName != null) postName(session.parse(basedName, context).colored())
         if (!basedLore.isNullOrEmpty()) postLore(session.parse(basedLore, context).colored(enhancedLore))
+
+        if (staticDamage == null) damage?.let { durability = session.parse(it.content).cshort }
+        if (staticAmount == null) postAmount(session.parse(this@translateUpdate.amount?.contentOrNull ?: "1").cint)
+        if (staticCustomModelData == null) customModelData?.let { postModel(session.parse(it.content).cint) }
+        if (staticGlow == null) glow?.let { postShiny(session.parse(it.content).cbool) }
 
         return this
     }

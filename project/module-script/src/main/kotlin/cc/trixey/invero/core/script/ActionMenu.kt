@@ -1,10 +1,9 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
 import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.util.parseMappedArguments
 import cc.trixey.invero.core.BaseMenu
-import cc.trixey.invero.core.script.player
-import cc.trixey.invero.core.script.session
+import cc.trixey.invero.core.script.loader.InveroKetherParser
 import org.bukkit.Bukkit
 import taboolib.library.kether.ParsedAction
 import taboolib.library.kether.QuestReader
@@ -28,7 +27,7 @@ object ActionMenu {
     - menu open [menuId] for [player] with [customArguments]
     - menu switch [menuId] for [player] with [customArguments]
      */
-    @KetherParser(["menu"], namespace = "invero", shared = true)
+    @InveroKetherParser(["menu"])
     fun parserMenu() = scriptParser {
         when (it.expects("title", "close", "open", "open_ctx", "switch")) {
             "title" -> handlerMenuTitle(it)

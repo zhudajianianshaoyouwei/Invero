@@ -1,11 +1,11 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
 import cc.trixey.invero.core.icon.IconElement
 import cc.trixey.invero.core.script.getRecursivePanels
 import cc.trixey.invero.core.script.iconElementBy
 import cc.trixey.invero.ui.common.panel.ElementalPanel
 import taboolib.common.platform.function.submitAsync
-import taboolib.module.kether.KetherParser
+import cc.trixey.invero.core.script.loader.InveroKetherParser
 import taboolib.module.kether.combinationParser
 
 /**
@@ -30,7 +30,7 @@ object ActionIcon {
     resume_frames
      */
 
-    @KetherParser(["icon"], namespace = "invero", shared = true)
+    @InveroKetherParser(["icon"])
     fun parser() = parser(null)
 
     fun parser(ref: ElementalPanel? = null) = combinationParser {
@@ -48,7 +48,7 @@ object ActionIcon {
         }
     }
 
-    @KetherParser(["icons"], namespace = "invero", shared = true)
+    @InveroKetherParser(["icons"])
     fun parserIcons() = combinationParser { it ->
         it.group(symbol()).apply(it) { action ->
             now {

@@ -86,3 +86,5 @@ fun <T> ScriptFrame.scriptVar(key: String): T? {
 fun ScriptFrame.session(): Session? {
     return player().session
 }
+
+fun ScriptFrame.parse(string: String) = session()?.parse(string) ?: string

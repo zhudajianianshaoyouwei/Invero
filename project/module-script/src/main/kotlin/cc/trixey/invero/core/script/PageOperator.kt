@@ -1,4 +1,4 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
 import cc.trixey.invero.ui.common.panel.PagedPanel
 

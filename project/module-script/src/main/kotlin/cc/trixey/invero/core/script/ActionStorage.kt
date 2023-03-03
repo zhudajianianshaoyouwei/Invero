@@ -1,10 +1,10 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
 import cc.trixey.invero.core.script.findNearstPanel
 import cc.trixey.invero.core.script.selfPanel
 import cc.trixey.invero.ui.bukkit.panel.CraftingPanel
 import org.bukkit.inventory.ItemStack
-import taboolib.module.kether.KetherParser
+import cc.trixey.invero.core.script.loader.InveroKetherParser
 import taboolib.module.kether.combinationParser
 import taboolib.platform.util.isAir
 import taboolib.platform.util.isNotAir
@@ -28,7 +28,7 @@ object ActionStorage {
     storage at 6 free
     storage at 6 lock
      */
-    @KetherParser(["storage", "crafting"], namespace = "invero", shared = true)
+    @InveroKetherParser(["storage", "crafting"])
     fun parser() = combinationParser {
         it.group(
             command("at", "by", then = int()), symbol(), command("to", then = action()).option().defaultsTo(null)

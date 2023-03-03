@@ -1,9 +1,9 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
 import cc.trixey.invero.common.Invero
 import cc.trixey.invero.core.script.player
 import org.bukkit.Bukkit
-import taboolib.module.kether.KetherParser
+import cc.trixey.invero.core.script.loader.InveroKetherParser
 import taboolib.module.kether.combinationParser
 
 /**
@@ -19,7 +19,7 @@ object ActionPersistData {
     persist get <key> by global
     persist set <key> to <value> by global
      */
-    @KetherParser(["persist"], namespace = "invero", shared = true)
+    @InveroKetherParser(["persist"])
     fun parserData() = combinationParser {
         it.group(
             // get/set/del

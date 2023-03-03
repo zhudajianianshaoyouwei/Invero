@@ -1,6 +1,6 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
-import cc.trixey.invero.core.script.findPanelAt
+import cc.trixey.invero.core.script.loader.InveroKetherParser
 import cc.trixey.invero.ui.common.Panel
 import taboolib.common5.cint
 import taboolib.module.kether.*
@@ -24,7 +24,7 @@ object ActionPanel {
     - filter
     - icon
      */
-    @KetherParser(["panel"], namespace = "invero", shared = true)
+    @InveroKetherParser(["panel"])
     fun parser() = scriptParser {
         val indexs = mutableListOf<Int>()
 

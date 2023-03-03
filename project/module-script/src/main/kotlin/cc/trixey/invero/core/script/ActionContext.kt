@@ -1,8 +1,8 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
 import cc.trixey.invero.core.script.session
 import taboolib.common5.cdouble
-import taboolib.module.kether.KetherParser
+import cc.trixey.invero.core.script.loader.InveroKetherParser
 import taboolib.module.kether.combinationParser
 
 /**
@@ -14,7 +14,7 @@ import taboolib.module.kether.combinationParser
  */
 object ActionContext {
 
-    @KetherParser(["context", "ctx"], namespace = "invero", shared = true)
+    @InveroKetherParser(["context", "ctx"])
     fun parser() = combinationParser {
         it.group(
             // get, has, set, del, inc, dec

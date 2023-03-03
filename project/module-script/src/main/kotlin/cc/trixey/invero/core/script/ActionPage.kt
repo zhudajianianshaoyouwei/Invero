@@ -1,6 +1,6 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
-import cc.trixey.invero.core.script.findNearstPanelRecursively
+import cc.trixey.invero.core.script.loader.InveroKetherParser
 import cc.trixey.invero.ui.common.panel.PagedPanel
 import taboolib.library.kether.ParsedAction
 import taboolib.module.kether.*
@@ -15,7 +15,7 @@ import java.util.concurrent.CompletableFuture
  */
 object ActionPage {
 
-    @KetherParser(["page"], namespace = "invero", shared = true)
+    @InveroKetherParser(["page"])
     fun parserPage() = parserPage(null)
 
     internal fun parserPage(ref: PagedPanel?) = combinationParser {

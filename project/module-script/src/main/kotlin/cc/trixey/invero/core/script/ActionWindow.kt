@@ -1,8 +1,8 @@
-package cc.trixey.invero.core.script.kether
+package cc.trixey.invero.core.script
 
 import cc.trixey.invero.core.script.session
 import cc.trixey.invero.ui.bukkit.WindowAnvil
-import taboolib.module.kether.KetherParser
+import cc.trixey.invero.core.script.loader.InveroKetherParser
 import taboolib.module.kether.combinationParser
 
 /**
@@ -17,7 +17,7 @@ object ActionWindow {
     /*
     window repairCost 1
      */
-    @KetherParser(["window"], namespace = "invero", shared = true)
+    @InveroKetherParser(["window"])
     fun parser() = combinationParser {
         it.group(
             symbol(),

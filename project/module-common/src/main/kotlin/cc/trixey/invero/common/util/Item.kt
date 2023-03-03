@@ -28,7 +28,9 @@ fun ItemStack.hasLore(): Boolean {
     return itemMeta?.hasLore() == true
 }
 
-fun ItemStack.postShiny() = synchronized(this) {
+fun ItemStack.postShiny(shiny: Boolean) = synchronized(this) {
+    if (!shiny) return@synchronized
+
     val itemMeta = itemMeta
 
     if (itemMeta is EnchantmentStorageMeta) {
