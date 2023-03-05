@@ -2,15 +2,17 @@ package cc.trixey.invero.ui.bukkit
 
 import cc.trixey.invero.ui.bukkit.api.dsl.viewer
 import cc.trixey.invero.ui.bukkit.api.findWindow
+import cc.trixey.invero.ui.bukkit.api.registeredWindows
 import cc.trixey.invero.ui.bukkit.nms.persistContainerId
 import cc.trixey.invero.ui.bukkit.nms.sendCancelCoursor
-import cc.trixey.invero.ui.bukkit.util.copyMarked
+import cc.trixey.invero.ui.bukkit.util.copyUIMarked
 import cc.trixey.invero.ui.common.event.ClickType
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.*
 import org.bukkit.event.player.PlayerChangedWorldEvent
+import org.bukkit.event.player.PlayerPickupItemEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.ItemStack
 import taboolib.common.LifeCycle
@@ -37,7 +39,7 @@ object Listener {
     @Awake(LifeCycle.ACTIVE)
     fun init() {
         // init NBT handle
-        ItemStack(Material.DIAMOND).copyMarked("Invero", 0)
+        ItemStack(Material.DIAMOND).copyUIMarked("Invero", 0)
     }
 
     @SubscribeEvent
@@ -75,14 +77,14 @@ object Listener {
             "PacketPlayInCloseWindow" -> {
                 val id = packet.read<Int>(FIELD_CONTAINER_ID) ?: return
                 if (id == persistContainerId) {
-                    val window = viewer.viewingWindow() ?: return
+                    val window = viewer.viewingPacketWindow() ?: return
                     submit { window.close(doCloseInventory = false, updateInventory = true) }
                 }
             }
 
             "PacketPlayInWindowClick" -> {
                 packet.read<Int>(FILEDS_WINDOW_CLICK[0]).let { if (it != persistContainerId) return }
-                val window = viewer.viewingWindow() ?: return
+                val window = viewer.viewingPacketWindow() ?: return
                 val rawSlot = packet.read<Int>(FILEDS_WINDOW_CLICK[1]) ?: return
                 val button = packet.read<Int>(FILEDS_WINDOW_CLICK[2]) ?: return
                 val mode = ClickType.Mode.valueOf(packet.read<Any>(FILEDS_WINDOW_CLICK[3]).toString())
@@ -113,7 +115,15 @@ object Listener {
     @SubscribeEvent
     fun e(e: PlayerQuitEvent) = e.player.windowClosure()
 
-    private fun PlayerViewer.viewingWindow(): BukkitWindow? {
+    @Suppress("DEPRECATION", "For better compatibility")
+    @SubscribeEvent
+    fun e(e: PlayerPickupItemEvent) {
+        if (findWindow(e.player.name) != null) {
+            e.isCancelled = true
+        }
+    }
+
+    private fun PlayerViewer.viewingPacketWindow(): BukkitWindow? {
         return findWindow(name)?.let { if (it.inventory is InventoryPacket) it else null }
     }
 

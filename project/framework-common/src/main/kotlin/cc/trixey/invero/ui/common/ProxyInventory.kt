@@ -23,9 +23,7 @@ interface ProxyInventory {
     fun isViewing(): Boolean
 
     fun open()
-
-    fun close(doCloseInventory: Boolean, updateInventory: Boolean)
-
+    
     fun clear(slots: Collection<Int>)
 
 }

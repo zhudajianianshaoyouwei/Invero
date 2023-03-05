@@ -73,7 +73,7 @@ class BaseMenu(
         }
         // 如果包含任意一个涉及物品交互的面板，则禁用菜单对玩家背包的覆盖
         if (panels.any { it is PanelCrafting }) {
-            settings.setProperty("overridePlayerInventory", false)
+            settings.setProperty("hidePlayerInventory", false)
         }
     }
 
@@ -99,7 +99,7 @@ class BaseMenu(
             viewer,
             virtual = isVirtual(),
             type = settings.containerType,
-            storageMode = settings.storageMode
+            hidePlayerInventory = settings.hidePlayerInventory
         ).onClose {
             // restore collection
             val player = viewer.get<Player>()

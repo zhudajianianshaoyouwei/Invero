@@ -3,7 +3,6 @@ package cc.trixey.invero.core.menu
 import cc.trixey.invero.core.serialize.InventoryTypeSerializer
 import cc.trixey.invero.core.serialize.MenuTitleSerializer
 import cc.trixey.invero.ui.common.ContainerType
-import cc.trixey.invero.ui.common.StorageMode
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.bukkit.event.inventory.InventoryType
@@ -25,8 +24,6 @@ class MenuSettings(
     val virtual: Boolean = false,
     @Serializable(with = InventoryTypeSerializer::class)
     val type: InventoryType = InventoryType.CHEST,
-    @SerialName("override-player-inventory")
-    val overridePlayerInventory: Boolean = true,
     @SerialName("hide-player-inventory")
     val hidePlayerInventory: Boolean = false,
     @SerialName("min-interact-interval")
@@ -40,10 +37,6 @@ class MenuSettings(
     val containerType by lazy {
         if (type != InventoryType.CHEST) ContainerType.fromBukkitType(type.name)
         else ContainerType.ofRows(rows ?: 6)
-    }
-
-    val storageMode by lazy {
-        StorageMode(overridePlayerInventory, hidePlayerInventory)
     }
 
 }

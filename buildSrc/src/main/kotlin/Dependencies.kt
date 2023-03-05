@@ -38,7 +38,9 @@ fun Project.initSubProject(publish: Project.() -> Unit) {
 }
 
 fun RepositoryHandler.projectRepositories() {
-    maven(repoTabooProject)
+    maven(repoTabooProject) {
+        setAllowInsecureProtocol(true)
+    }
     mavenCentral()
 }
 

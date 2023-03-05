@@ -17,6 +17,8 @@ interface ProxyBukkitInventory : ProxyInventory {
     val viewer: Player
         get() = window.viewer.get()
 
+    val hidePlayerInventory: Boolean
+
     fun getPlayerInventory(): PlayerInventory {
         return viewer.inventory
     }

@@ -18,8 +18,7 @@ dependencies {
     compileModule("module-core")
 
     compileOnly("com.github.oraxen:oraxen:-SNAPSHOT")
-    compileOnly("ink.ptms:Zaphkiel:1.6.0")
     compileOnly("ink.ptms.adyeshach:all:2.0.0-snapshot-12")
-
+    compileOnly("ink.ptms:Zaphkiel:2.0.14")
     compileOnly("org.black_ixx:playerpoints:3.1.1")
 }

@@ -3,7 +3,6 @@ package cc.trixey.invero.ui.bukkit.api.dsl
 import cc.trixey.invero.ui.bukkit.*
 import cc.trixey.invero.ui.common.ContainerType
 import cc.trixey.invero.ui.common.ContainerType.ANVIL
-import cc.trixey.invero.ui.common.StorageMode
 import taboolib.common.platform.function.warning
 
 /**
@@ -15,17 +14,18 @@ import taboolib.common.platform.function.warning
  */
 inline fun commonWindow(
     viewer: PlayerViewer,
-    title: String = "Untitled",
-    storageMode: StorageMode = StorageMode(),
-    virtual: Boolean = true,
     type: ContainerType,
+    title: String = "Untitled",
+    hidePlayerInventory: Boolean=true,
+    virtual: Boolean = true,
     block: BukkitWindow.() -> Unit = {}
 ): BukkitWindow {
+
     return if (type.isOrdinaryChest) {
-        chestWindow(viewer, type.rows, title, storageMode, virtual, block)
+        chestWindow(viewer, type.rows, title, hidePlayerInventory, virtual, block)
     } else when (type) {
-        ANVIL -> WindowAnvil(viewer, title, storageMode, virtual).also(block)
-        else -> WindowDefault(viewer, type, title, storageMode, virtual).also(block).also {
+        ANVIL -> WindowAnvil(title, viewer, hidePlayerInventory, virtual).also(block)
+        else -> WindowDefault(type, title, viewer, hidePlayerInventory, virtual).also(block).also {
             warning("You are using an unfully supported window type: $type")
         }
     }
@@ -35,9 +35,9 @@ inline fun chestWindow(
     viewer: PlayerViewer,
     rows: Int,
     title: String = "Untitled",
-    storageMode: StorageMode = StorageMode(),
+    hidePlayerInventory: Boolean=true,
     virtual: Boolean = true,
     block: WindowChest.() -> Unit = {}
 ): WindowChest {
-    return WindowChest(viewer, rows, title, storageMode, virtual).also(block)
+    return WindowChest(rows, title, viewer, hidePlayerInventory, virtual).also(block)
 }

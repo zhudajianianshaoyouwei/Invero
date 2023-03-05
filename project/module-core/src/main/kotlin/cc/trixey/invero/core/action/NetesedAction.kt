@@ -19,6 +19,7 @@ class NetesedAction(val actions: List<Action>) : Action() {
 
     override fun run(context: Context): CompletableFuture<Boolean> {
         val future = CompletableFuture<Boolean>()
+
         submit(async = !isPrimaryThread) {
             for (index in actions.indices) {
                 val action = actions[index]
@@ -31,6 +32,7 @@ class NetesedAction(val actions: List<Action>) : Action() {
                 }
             }
         }
+
         return future
     }
 

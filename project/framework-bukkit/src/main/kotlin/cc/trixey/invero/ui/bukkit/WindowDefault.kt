@@ -2,7 +2,6 @@ package cc.trixey.invero.ui.bukkit
 
 import cc.trixey.invero.ui.common.ContainerType
 import cc.trixey.invero.ui.common.Scale
-import cc.trixey.invero.ui.common.StorageMode
 
 /**
  * Invero
@@ -15,14 +14,14 @@ import cc.trixey.invero.ui.common.StorageMode
  * 请注意，无法操作容器的特殊属性
  */
 open class WindowDefault(
-    viewer: PlayerViewer,
     final override val type: ContainerType,
-    title: String,
-    storageMode: StorageMode,
-    val virtual: Boolean,
-) : BukkitWindow(viewer, type, title, storageMode) {
+    override var title: String,
+    viewer: PlayerViewer,
+    final override val hidePlayerInventory: Boolean,
+    virtual: Boolean
+) : BukkitWindow(type, title, viewer, hidePlayerInventory, virtual) {
 
-    override val scale = Scale(9 to type.rows + if (storageMode.overridePlayerInventory) 4 else 0)
+    override val scale = Scale(9 to type.rows + if (hidePlayerInventory) 4 else 0)
 
     override val inventory: ProxyBukkitInventory by lazy {
         if (virtual) InventoryPacket(this)

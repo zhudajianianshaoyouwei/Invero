@@ -4,13 +4,14 @@ import cc.trixey.invero.ui.bukkit.api.findWindow
 import cc.trixey.invero.ui.bukkit.api.isRegistered
 import cc.trixey.invero.ui.bukkit.api.registerWindow
 import cc.trixey.invero.ui.bukkit.api.unregisterWindow
+import cc.trixey.invero.ui.bukkit.nms.handler
 import cc.trixey.invero.ui.bukkit.nms.isTitleUpdating
+import cc.trixey.invero.ui.bukkit.nms.persistContainerId
 import cc.trixey.invero.ui.bukkit.nms.updateTitle
 import cc.trixey.invero.ui.bukkit.util.synced
-import cc.trixey.invero.ui.common.Scale
-import cc.trixey.invero.ui.common.StorageMode
-import cc.trixey.invero.ui.common.Window
-import cc.trixey.invero.ui.common.util.locatingAbsoluteSlot
+import cc.trixey.invero.ui.common.*
+import cc.trixey.invero.ui.common.panel.IOPanel
+import cc.trixey.invero.ui.common.util.anyInstancePanel
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.submit
 
@@ -22,10 +23,11 @@ import taboolib.common.platform.function.submit
  * @since 2023/1/20 12:15
  */
 abstract class BukkitWindow(
-    override val viewer: PlayerViewer,
-    override val type: cc.trixey.invero.ui.common.ContainerType,
+    override val type: ContainerType,
     title: String = "Invero_Untitled",
-    override val storageMode: StorageMode
+    override val viewer: PlayerViewer,
+    override val hidePlayerInventory: Boolean,
+    val virtual: Boolean,
 ) : Window, PanelContainer {
 
     override var title: String = title
@@ -35,6 +37,8 @@ abstract class BukkitWindow(
         }
 
     final override val panels = arrayListOf<BukkitPanel>()
+
+    val anyIOPanel: Boolean by lazy { anyInstancePanel<IOPanel>() }
 
     override val scale: Scale by lazy { Scale(9 to 6) }
 
@@ -49,12 +53,6 @@ abstract class BukkitWindow(
     private var preRenderCallback: (BukkitWindow) -> Unit = { _ -> }
 
     abstract override val inventory: ProxyBukkitInventory
-
-    val isPlayerInventoryUsed by lazy {
-        panels.any { panel ->
-            panel.area.any { panel.locatingAbsoluteSlot(it) >= inventory.containerSize }
-        }
-    }
 
     fun onClose(block: (BukkitWindow) -> Unit): BukkitWindow {
         closeCallback = block
@@ -88,7 +86,11 @@ abstract class BukkitWindow(
         if (preOpenCallback(this) == false) return
         // 当前未备份物品，则说明是首次打开容器，进行备份
         if (!player.isCurrentlyStored()) {
-            player.storePlayerInventory(wipe = storageMode.alwaysClean)
+            player.storePlayerInventory()
+
+            if (hidePlayerInventory) {
+                player.inventory.storageContents = arrayOfNulls(36)
+            }
         }
         // 正在查看一个 Window，则伪关闭
         findWindow(viewer.name)?.unregisterWindow()
@@ -108,10 +110,28 @@ abstract class BukkitWindow(
 
     override fun close(doCloseInventory: Boolean, updateInventory: Boolean) {
         require(isRegistered()) { "Can not close an unregistered window" }
+
         preCloseCallback(this)
+        unregisterWindow()
 
         synced {
-            inventory.close(doCloseInventory, updateInventory)
+            val player = viewer.get<Player>()
+
+            if (doCloseInventory && isViewing()) {
+                if (virtual) handler.sendWindowClose(player, persistContainerId)
+                else player.closeInventory()
+            }
+            if (updateInventory) player.updateInventory()
+
+            submit(delay = 2L) {
+                if (findWindow(player.name) != null) return@submit
+
+                if (anyIOPanel) {
+                    storageMap.remove(player.uniqueId)
+                } else {
+                    player.restorePlayerInventory()
+                }
+            }
         }
 
         closeCallback(this)

@@ -1,7 +1,6 @@
 package cc.trixey.invero.ui.bukkit
 
 import cc.trixey.invero.ui.common.ContainerType
-import cc.trixey.invero.ui.common.StorageMode
 
 /**
  * Invero
@@ -11,9 +10,9 @@ import cc.trixey.invero.ui.common.StorageMode
  * @since 2023/1/20 13:13
  */
 class WindowChest(
-    viewer: PlayerViewer,
     rows: Int = 6,
-    title: String = "Untitled_Chest",
-    storageMode: StorageMode = StorageMode(),
+    title: String,
+    viewer: PlayerViewer,
+    hidePlayerInventory: Boolean,
     virtual: Boolean = true
-) : WindowDefault(viewer, ContainerType.ofRows(rows), title, storageMode, virtual)
+) : WindowDefault(ContainerType.ofRows(rows), title, viewer, hidePlayerInventory, virtual)

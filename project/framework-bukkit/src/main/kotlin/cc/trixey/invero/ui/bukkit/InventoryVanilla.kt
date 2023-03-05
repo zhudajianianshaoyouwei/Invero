@@ -1,8 +1,6 @@
 package cc.trixey.invero.ui.bukkit
 
-import cc.trixey.invero.ui.bukkit.api.findWindow
 import cc.trixey.invero.ui.bukkit.api.isRegistered
-import cc.trixey.invero.ui.bukkit.api.unregisterWindow
 import cc.trixey.invero.ui.bukkit.panel.CraftingPanel
 import cc.trixey.invero.ui.bukkit.util.clickType
 import cc.trixey.invero.ui.bukkit.util.synced
@@ -13,7 +11,6 @@ import org.bukkit.event.inventory.*
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
 import org.bukkit.inventory.ItemStack
-import taboolib.common.platform.function.submit
 
 /**
  * Invero
@@ -31,6 +28,9 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
     } catch (e: Throwable) {
         error("Not supported inventory type (${containerType.bukkitType}) yet")
     }
+
+    override val hidePlayerInventory: Boolean
+        get() = window.hidePlayerInventory
 
     override fun isVirtual(): Boolean {
         return false
@@ -91,24 +91,6 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         viewer.openInventory(container)
     }
 
-    override fun close(doCloseInventory: Boolean, updateInventory: Boolean) {
-        window.unregisterWindow()
-
-        if (doCloseInventory && isViewing()) viewer.closeInventory()
-        if (updateInventory) viewer.updateInventory()
-
-        val containsIOPanel = window.anyInstancePanel<IOPanel>()
-
-        submit(delay = 2L) {
-            if (findWindow(viewer.name) != null) return@submit
-            if (containsIOPanel) {
-                storageMap.remove(viewer.uniqueId)
-            } else {
-                viewer.restorePlayerInventory()
-            }
-        }
-    }
-
     fun handleClick(e: InventoryClickEvent) {
         // 默认取消事件
         e.isCancelled = true
@@ -117,7 +99,8 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         val slot = e.rawSlot
         // 如果点击玩家背包容器
         if (slot > window.type.slotsContainer.last) {
-            if (!window.storageMode.overridePlayerInventory) {
+            if (!hidePlayerInventory && window.anyIOPanel) {
+
                 e.isCancelled = false
                 return
             }
@@ -166,7 +149,7 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         val slot = e.rawSlot
         // playerInventory -> IO Panel
         if (slot > window.type.slotsContainer.last) {
-            if (window.storageMode.overridePlayerInventory) return handleClick(e)
+            if (hidePlayerInventory || !window.anyIOPanel) return handleClick(e)
             val insertItem = e.currentItem?.clone() ?: return handleClick(e)
             window
                 .getPanelsRecursively()
@@ -193,7 +176,7 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
             e.currentItem?.amount = insertItem.amount
         }
         // IO Panel -> playerInventory
-        else if (!window.storageMode.overridePlayerInventory) {
+        else if (!hidePlayerInventory && window.anyIOPanel) {
             val clickedSlot = window.scale.convertToPosition(slot)
 
             window
@@ -202,10 +185,7 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
                 .sortedByDescending { it.weight }
                 .find { it is CraftingPanel && window.scale.convertToPosition(e.rawSlot) in it.area }
                 ?.handleItemsMove(clickedSlot, e)
-                .let {
-                    println("6 $it")
-                    if (it == null) return handleClick(e)
-                }
+                .let { if (it == null) return handleClick(e) }
         } else {
             return handleClick(e)
         }
@@ -219,10 +199,14 @@ class InventoryVanilla(override val window: BukkitWindow) : ProxyBukkitInventory
         return handleClick(e)
     }
 
-    fun handleOpenEvent(e: InventoryOpenEvent) {}
+    fun handleOpenEvent(e: InventoryOpenEvent) {
+
+    }
 
     fun handleCloseEvent(e: InventoryCloseEvent) {
-        if (window.isRegistered()) window.close(doCloseInventory = false, updateInventory = false)
+        if (window.isRegistered()) {
+            window.close(doCloseInventory = false, updateInventory = false)
+        }
     }
 
 

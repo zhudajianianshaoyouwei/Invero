@@ -4,7 +4,6 @@ import cc.trixey.invero.ui.bukkit.nms.WindowProperty
 import cc.trixey.invero.ui.bukkit.nms.handler
 import cc.trixey.invero.ui.bukkit.nms.persistContainerId
 import cc.trixey.invero.ui.common.ContainerType
-import cc.trixey.invero.ui.common.StorageMode
 
 /**
  * Invero
@@ -21,11 +20,11 @@ import cc.trixey.invero.ui.common.StorageMode
  * 30–38	hotbar
  */
 class WindowAnvil(
+    title: String,
     viewer: PlayerViewer,
-    title: String = "Untitled_Anvil",
-    storageMode: StorageMode = StorageMode(),
+    hidePlayerInventory: Boolean,
     virtual: Boolean = true
-) : WindowDefault(viewer, ContainerType.ANVIL, title, storageMode, virtual) {
+) : WindowDefault(ContainerType.ANVIL, title, viewer, hidePlayerInventory, virtual) {
 
     fun setRepairCost(value: Int) = handler
         .sendWindowUpdateData(viewer.get(), persistContainerId, WindowProperty.ANVIL_REPAIR_COST, value)

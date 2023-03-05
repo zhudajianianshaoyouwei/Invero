@@ -10,7 +10,19 @@ import taboolib.module.nms.getItemTag
 import taboolib.module.nms.setItemTag
 import taboolib.platform.util.*
 
-fun ItemStack.copyMarked(viewer: String, slot: Int): ItemStack {
+fun ItemStack.isUIMarked(): Boolean {
+    var isMarked = false
+    if (MinecraftVersion.majorLegacy > 11400) {
+        modifyMeta<ItemMeta> {
+            isMarked = persistentDataContainer.get(namespacedKey, PersistentDataType.STRING) != null
+        }
+    } else {
+        isMarked = getItemTag().containsKey("invero")
+    }
+    return isMarked
+}
+
+fun ItemStack.copyUIMarked(viewer: String, slot: Int): ItemStack {
     if (isAir) return this
     val modified = clone()
     val mark = "$viewer:$slot"

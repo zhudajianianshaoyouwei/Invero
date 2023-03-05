@@ -3,7 +3,6 @@ package cc.trixey.invero.plugin.demo
 import cc.trixey.invero.ui.bukkit.WindowChest
 import cc.trixey.invero.ui.bukkit.api.dsl.*
 import cc.trixey.invero.ui.common.Pos
-import cc.trixey.invero.ui.common.StorageMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
@@ -18,7 +17,7 @@ private var persistWindow: WindowChest? = null
 
 fun showIOStoragePanel(player: Player) {
     if (persistWindow == null) {
-        persistWindow = chestWindow(player.viewer, 6, "IO_Storage", StorageMode(false), virtual = false) {
+        persistWindow = chestWindow(player.viewer, 6, "IO_Storage", false, virtual = false) {
             craftingIOPanel(5 to 5, 0 to 0) {
                 val border = area
                     .filter { it.x == 0 || it.y == 0 || it.x == 4 || it.y == 4 }

@@ -14,6 +14,9 @@ import org.bukkit.inventory.ItemStack
  */
 class InventoryPacket(override val window: BukkitWindow) : ProxyBukkitInventory {
 
+    override val hidePlayerInventory: Boolean
+        get() = window.hidePlayerInventory
+
     override fun isVirtual(): Boolean {
         return true
     }
@@ -58,12 +61,6 @@ class InventoryPacket(override val window: BukkitWindow) : ProxyBukkitInventory 
         closed = false
         handler.sendWindowOpen(viewer, persistContainerId, containerType, inventoryTitle)
         update()
-    }
-
-    override fun close(doCloseInventory: Boolean, updateInventory: Boolean) {
-        closed = true
-        if (doCloseInventory) handler.sendWindowClose(viewer, persistContainerId)
-        if (updateInventory) viewer.updateInventory()
     }
 
     fun handleClickEvent(slot: Int, type: ClickType) {

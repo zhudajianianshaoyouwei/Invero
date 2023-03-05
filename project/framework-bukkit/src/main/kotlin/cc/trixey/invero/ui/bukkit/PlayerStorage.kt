@@ -1,7 +1,10 @@
 package cc.trixey.invero.ui.bukkit
 
+import cc.trixey.invero.ui.bukkit.util.isUIMarked
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import taboolib.platform.util.isAir
+import taboolib.platform.util.isNotAir
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -18,13 +21,25 @@ fun Player.isCurrentlyStored(): Boolean {
     return storageMap.containsKey(this.uniqueId)
 }
 
-fun Player.storePlayerInventory(wipe: Boolean = false) {
+fun Player.storePlayerInventory() {
+    if (storageMap.containsKey(uniqueId)) error("Player ${name} is already stored!")
+
     storageMap[uniqueId] = Storage(this)
 }
 
 fun Player.restorePlayerInventory() {
-    storageMap[uniqueId]?.let {
-        inventory.storageContents = it.storage
+    storageMap[uniqueId]?.let { backup ->
+        inventory.storageContents.mapIndexed { index, itemStack ->
+            if (itemStack.isNotAir()
+                && !itemStack.isUIMarked()
+                && backup.storage[index].isAir()
+                && backup.storage.none { it?.isSimilar(itemStack) == true }
+            ) {
+                backup.storage[index] = itemStack
+            }
+        }
+
+        inventory.storageContents = backup.storage
     }
     storageMap.remove(uniqueId)
 }
