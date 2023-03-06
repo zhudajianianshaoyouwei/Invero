@@ -89,7 +89,7 @@ abstract class BukkitWindow(
         if (preOpenCallback(this) == false) return
         // 当前未备份物品，则说明是首次打开容器，进行备份
         if (!player.isCurrentlyStored()) {
-            player.storePlayerInventory()
+            player.storePlayerInventory(hidePlayerInventory)
 
             if (hidePlayerInventory) {
                 player.inventory.storageContents = arrayOfNulls(36)

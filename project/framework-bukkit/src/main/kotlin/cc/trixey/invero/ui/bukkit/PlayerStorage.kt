@@ -20,24 +20,26 @@ fun Player.isCurrentlyStored(): Boolean {
     return storageMap.containsKey(this.uniqueId)
 }
 
-fun Player.storePlayerInventory() {
-    if (storageMap.containsKey(uniqueId)) error("Player ${name} is already stored!")
+fun Player.storePlayerInventory(hidePlayerInventory: Boolean) {
+    if (storageMap.containsKey(uniqueId)) error("Player $name is already stored!")
 
-    storageMap[uniqueId] = Storage(this)
+    storageMap[uniqueId] = Storage(hidePlayerInventory, this)
 }
 
 fun Player.restorePlayerInventory() = storageMap[uniqueId]?.let { backup ->
 
-    for (i in 0..35) {
-        val currentSlot = inventory.storageContents.getOrNull(i)
-        val previousSlot = backup.storage.getOrNull(i)
+    if (!backup.isPlayerInventoryHided) {
+        for (i in 0..35) {
+            val currentSlot = inventory.storageContents.getOrNull(i)
+            val previousSlot = backup.storage.getOrNull(i)
 
-        // 当前背包槽位不为 UI 图标 时
-        if (currentSlot?.isUIMarked() != true) {
-            if (currentSlot.isNotAir()) {
-                backup.storage[i] = currentSlot
-            } else if (previousSlot.isNotAir()) {
-                backup.storage[i] = null
+            // 当前背包槽位不为 UI 图标 时
+            if (currentSlot?.isUIMarked() != true) {
+                if (currentSlot.isNotAir()) {
+                    backup.storage[i] = currentSlot
+                } else if (previousSlot.isNotAir()) {
+                    backup.storage[i] = null
+                }
             }
         }
     }
@@ -46,8 +48,11 @@ fun Player.restorePlayerInventory() = storageMap[uniqueId]?.let { backup ->
     storageMap.remove(uniqueId)
 }
 
-class Storage(var storage: Array<ItemStack?> = arrayOfNulls(36)) {
+class Storage(val isPlayerInventoryHided: Boolean, var storage: Array<ItemStack?> = arrayOfNulls(36)) {
 
-    constructor(player: Player) : this(player.inventory.storageContents.clone())
+    constructor(hidePlayerInventory: Boolean, player: Player) : this(
+        hidePlayerInventory,
+        player.inventory.storageContents.clone()
+    )
 
 }
