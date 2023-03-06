@@ -5,7 +5,8 @@ import cc.trixey.invero.core.script.contextVar
 import cc.trixey.invero.core.script.loader.InveroKetherParser
 import cc.trixey.invero.core.script.parse
 import cc.trixey.invero.core.script.player
-import cc.trixey.invero.core.util.fluentMessageComponent
+import cc.trixey.invero.core.util.sendFormattedComponent
+import cc.trixey.invero.core.util.sendFormattedTabooComponent
 import taboolib.common.platform.function.onlinePlayers
 import taboolib.module.kether.combinationParser
 import taboolib.platform.util.sendActionBar
@@ -26,10 +27,26 @@ fun actionTell() = combinationParser {
             val context = contextVar<Context?>("@context")?.variables ?: variables().toMap()
             val player = player()
 
-            message.fluentMessageComponent(player, context, send = true)
+            message.sendFormattedComponent(player, context)
         }
     }
 }
+
+
+@InveroKetherParser(["fluentmessage", "fmessage", "fmsg"])
+fun actionTellMiniMessage() = combinationParser {
+    it.group(
+        text(),
+    ).apply(it) { message ->
+        now {
+            val context = contextVar<Context?>("@context")?.variables ?: variables().toMap()
+            val player = player()
+
+            message.sendFormattedTabooComponent(player, context)
+        }
+    }
+}
+
 
 @InveroKetherParser(["actionbar"])
 fun actionActionBar() = combinationParser {

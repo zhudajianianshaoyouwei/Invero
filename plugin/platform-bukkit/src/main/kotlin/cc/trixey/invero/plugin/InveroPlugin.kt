@@ -1,6 +1,6 @@
 package cc.trixey.invero.plugin
 
-import cc.trixey.invero.core.util.fluentMessage
+import cc.trixey.invero.core.util.translateFormattedMessage
 import taboolib.common.platform.Plugin
 import taboolib.library.xseries.XMaterial
 import taboolib.module.nms.ItemTag
@@ -30,8 +30,6 @@ object InveroPlugin : Plugin() {
         tag["SkullOwner"] = ItemTagData.toNBT("Arasple")
         tag.putAll(item.getItemTag())
         tag.saveTo(item)
-
-        item.modifyLore { replaceAll { it.fluentMessage() } }
     }
 
 }

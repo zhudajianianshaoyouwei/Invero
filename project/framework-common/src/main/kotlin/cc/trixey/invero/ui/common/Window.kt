@@ -17,6 +17,8 @@ interface Window : Gridable {
 
     val inventory: ProxyInventory
 
+    val overridePlayerInventory: Boolean
+
     val hidePlayerInventory: Boolean
 
     fun open()

@@ -23,8 +23,9 @@ class WindowAnvil(
     title: String,
     viewer: PlayerViewer,
     hidePlayerInventory: Boolean,
+    overridePlayerInventory: Boolean,
     virtual: Boolean = true
-) : WindowDefault(ContainerType.ANVIL, title, viewer, hidePlayerInventory, virtual) {
+) : WindowDefault(ContainerType.ANVIL, title, viewer, hidePlayerInventory, overridePlayerInventory, virtual) {
 
     fun setRepairCost(value: Int) = handler
         .sendWindowUpdateData(viewer.get(), persistContainerId, WindowProperty.ANVIL_REPAIR_COST, value)

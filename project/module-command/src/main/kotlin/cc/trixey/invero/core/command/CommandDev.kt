@@ -2,7 +2,6 @@ package cc.trixey.invero.core.command
 
 import cc.trixey.invero.common.Invero
 import cc.trixey.invero.core.util.KetherHandler
-import cc.trixey.invero.core.util.fluentMessageComponent
 import cc.trixey.invero.core.util.session
 import cc.trixey.invero.ui.bukkit.InventoryPacket
 import cc.trixey.invero.ui.bukkit.InventoryVanilla
@@ -72,28 +71,6 @@ object CommandDev {
                     )
                 }
                 .sendTo(adaptCommandSender(sender))
-        }
-    }
-
-    @CommandBody
-    val parseMessage = subCommand {
-        execute<CommandSender> { sender, _, argument ->
-            val player = if (sender is Player) sender else onlinePlayers.random()
-            val message = argument.split(" ", limit = 2)[1]
-            val component = message.fluentMessageComponent(player)
-
-            println("parsing:: $message")
-
-            component.sendTo(adaptPlayer(player))
-
-            println(
-                """
-                    Result ----------------->
-                    Legacy: ${component.toLegacyText().replace('§', '&')}
-                    Plain: ${component.toPlainText()}
-                    TO Raw: ${component.toRawMessage()}
-                """.trimIndent()
-            )
         }
     }
 

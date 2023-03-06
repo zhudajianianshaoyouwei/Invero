@@ -1,5 +1,6 @@
 package cc.trixey.invero.common.adventure
 
+import org.bukkit.entity.Player
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 import taboolib.common.platform.function.info
@@ -20,6 +21,10 @@ object Adventure {
 
     fun parse(content: String): String {
         return PLATFORM?.parseMiniMessage(content) ?: content
+    }
+
+    fun parseAndSend(content: String, player: Player) {
+        PLATFORM?.parseMiniMessageAndSend(content, player)
     }
 
     @Awake(LifeCycle.LOAD)

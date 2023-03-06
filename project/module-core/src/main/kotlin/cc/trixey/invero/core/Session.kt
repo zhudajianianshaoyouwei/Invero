@@ -4,8 +4,8 @@ import cc.trixey.invero.common.Invero
 import cc.trixey.invero.common.Menu
 import cc.trixey.invero.common.TaskGroup
 import cc.trixey.invero.core.Session.Companion.VarType.*
-import cc.trixey.invero.core.util.fluentMessage
 import cc.trixey.invero.core.util.session
+import cc.trixey.invero.core.util.translateFormattedMessage
 import cc.trixey.invero.ui.bukkit.BukkitWindow
 import cc.trixey.invero.ui.bukkit.PlayerViewer
 import org.bukkit.entity.Player
@@ -81,7 +81,7 @@ class Session(
     }
 
     fun parse(input: String, context: Context? = null): String {
-        return input.fluentMessage(viewer.get(), context?.variables ?: variables)
+        return input.translateFormattedMessage(viewer.get(), context?.variables ?: variables)
     }
 
     fun parse(input: List<String>, context: Context? = null): List<String> {

@@ -26,6 +26,8 @@ class MenuSettings(
     val type: InventoryType = InventoryType.CHEST,
     @SerialName("hide-player-inventory")
     val hidePlayerInventory: Boolean = false,
+    @SerialName("override-player-inventory")
+    val overridePlayerInventory: Boolean = true,
     @SerialName("min-interact-interval")
     val minInteractInterval: Long = 2_00
 ) {

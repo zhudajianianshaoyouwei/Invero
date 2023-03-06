@@ -14,5 +14,6 @@ class WindowChest(
     title: String,
     viewer: PlayerViewer,
     hidePlayerInventory: Boolean,
+    overridePlayerInventory: Boolean,
     virtual: Boolean = true
-) : WindowDefault(ContainerType.ofRows(rows), title, viewer, hidePlayerInventory, virtual)
+) : WindowDefault(ContainerType.ofRows(rows), title, viewer, hidePlayerInventory, overridePlayerInventory, virtual)

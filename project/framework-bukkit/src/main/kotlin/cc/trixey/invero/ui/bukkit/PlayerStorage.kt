@@ -3,7 +3,6 @@ package cc.trixey.invero.ui.bukkit
 import cc.trixey.invero.ui.bukkit.util.isUIMarked
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import taboolib.platform.util.isAir
 import taboolib.platform.util.isNotAir
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
@@ -27,20 +26,23 @@ fun Player.storePlayerInventory() {
     storageMap[uniqueId] = Storage(this)
 }
 
-fun Player.restorePlayerInventory() {
-    storageMap[uniqueId]?.let { backup ->
-        inventory.storageContents.mapIndexed { index, itemStack ->
-            if (itemStack.isNotAir()
-                && !itemStack.isUIMarked()
-                && backup.storage[index].isAir()
-                && backup.storage.none { it?.isSimilar(itemStack) == true }
-            ) {
-                backup.storage[index] = itemStack
+fun Player.restorePlayerInventory() = storageMap[uniqueId]?.let { backup ->
+
+    for (i in 0..35) {
+        val currentSlot = inventory.storageContents.getOrNull(i)
+        val previousSlot = backup.storage.getOrNull(i)
+
+        // 当前背包槽位不为 UI 图标 时
+        if (currentSlot?.isUIMarked() != true) {
+            if (currentSlot.isNotAir()) {
+                backup.storage[i] = currentSlot
+            } else if (previousSlot.isNotAir()) {
+                backup.storage[i] = null
             }
         }
-
-        inventory.storageContents = backup.storage
     }
+
+    inventory.storageContents = backup.storage
     storageMap.remove(uniqueId)
 }
 

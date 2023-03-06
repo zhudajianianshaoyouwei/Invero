@@ -3,11 +3,8 @@ package cc.trixey.invero.core.script
 import cc.trixey.invero.core.Context
 import cc.trixey.invero.core.compat.bungeecord.Bungees
 import cc.trixey.invero.core.compat.eco.HookPlayerPoints
-import cc.trixey.invero.core.script.contextVar
 import cc.trixey.invero.core.script.loader.InveroKetherParser
-import cc.trixey.invero.core.script.player
-import cc.trixey.invero.core.script.session
-import cc.trixey.invero.core.util.fluentMessageComponent
+import cc.trixey.invero.core.util.translateFormattedMessage
 import org.bukkit.entity.Player
 import taboolib.module.kether.*
 import taboolib.platform.compat.depositBalance
@@ -31,7 +28,7 @@ internal fun actionParser() = scriptParser {
             val context = contextVar<Context?>("@context")?.variables ?: variables().toMap()
             val player = player()
 
-            s.fluentMessageComponent(player, context).toLegacyText()
+            s.translateFormattedMessage(player, context)
         }
     }
 }

@@ -3,6 +3,7 @@ package cc.trixey.invero.common.adventure
 import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
 import org.bukkit.entity.Player
 import taboolib.module.nms.MinecraftVersion
@@ -30,6 +31,10 @@ class AdventurePlatform {
         }.build()
     }
 
+    private val bungeeomponentSerializer by lazy {
+        BungeeComponentSerializer.get()
+    }
+
 
     fun parseMiniMessage(string: String): String {
         val component = parseMiniMessageComponent(string.translateLegacyColor())
@@ -40,7 +45,7 @@ class AdventurePlatform {
         return MiniMessage.miniMessage().deserialize(string)
     }
 
-    fun parseAndSendMiniMessage(string: String, player: Player) {
+    fun parseMiniMessageAndSend(string: String, player: Player) {
         bukkitAudiences.player(player).sendMessage(parseMiniMessageComponent(string.translateAmpersandColor()))
     }
 

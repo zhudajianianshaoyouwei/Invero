@@ -1,7 +1,7 @@
 package cc.trixey.invero.core
 
 import cc.trixey.invero.core.icon.IconElement
-import cc.trixey.invero.core.util.fluentMessage
+import cc.trixey.invero.core.util.translateFormattedMessage
 import cc.trixey.invero.ui.bukkit.PlayerViewer
 import cc.trixey.invero.ui.common.Panel
 import org.bukkit.entity.Player
@@ -24,7 +24,7 @@ class Context(
 
     constructor(session: Session) : this(session.viewer, session)
 
-    fun parse(input: String) = session?.parse(input, this) ?: input.fluentMessage(player, variables)
+    fun parse(input: String) = session?.parse(input, this) ?: input.translateFormattedMessage(player, variables)
 
     fun parse(input: List<String>): List<String> {
         return input.map { parse(it) }

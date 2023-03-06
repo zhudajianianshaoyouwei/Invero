@@ -9,7 +9,9 @@ import cc.trixey.invero.ui.bukkit.nms.isTitleUpdating
 import cc.trixey.invero.ui.bukkit.nms.persistContainerId
 import cc.trixey.invero.ui.bukkit.nms.updateTitle
 import cc.trixey.invero.ui.bukkit.util.synced
-import cc.trixey.invero.ui.common.*
+import cc.trixey.invero.ui.common.ContainerType
+import cc.trixey.invero.ui.common.Scale
+import cc.trixey.invero.ui.common.Window
 import cc.trixey.invero.ui.common.panel.IOPanel
 import cc.trixey.invero.ui.common.util.anyInstancePanel
 import org.bukkit.entity.Player
@@ -27,6 +29,7 @@ abstract class BukkitWindow(
     title: String = "Invero_Untitled",
     override val viewer: PlayerViewer,
     override val hidePlayerInventory: Boolean,
+    override val overridePlayerInventory: Boolean,
     val virtual: Boolean,
 ) : Window, PanelContainer {
 

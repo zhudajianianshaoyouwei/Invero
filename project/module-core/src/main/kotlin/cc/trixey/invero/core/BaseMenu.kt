@@ -99,7 +99,8 @@ class BaseMenu(
             viewer,
             virtual = isVirtual(),
             type = settings.containerType,
-            hidePlayerInventory = settings.hidePlayerInventory
+            hidePlayerInventory = settings.hidePlayerInventory,
+            overridePlayerInventory = settings.overridePlayerInventory
         ).onClose {
             // restore collection
             val player = viewer.get<Player>()

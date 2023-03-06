@@ -4,6 +4,7 @@ import cc.trixey.invero.common.adventure.Adventure
 import org.bukkit.entity.Player
 import taboolib.common.platform.function.adaptPlayer
 import taboolib.module.chat.ComponentText
+import taboolib.module.chat.colored
 import taboolib.module.chat.component
 import taboolib.platform.compat.replacePlaceholder
 
@@ -14,36 +15,55 @@ import taboolib.platform.compat.replacePlaceholder
  * @author Arasple
  * @since 2023/2/22 13:06
  */
-fun String.fluentMessage(): String {
-    if (isBlank()) return this
-    return KetherHandler
-        .parseInline(this, null, emptyMap())
-        .let { if (Adventure.isSupported) Adventure.parse(it) else it }
-        .component()
-        .build { colored() }
-        .toLegacyText()
-}
 
-fun String.fluentMessage(player: Player, variables: Map<String, Any> = emptyMap()): String {
-    return fluentMessageComponent(player, variables).toLegacyText()
-}
-
-fun String.fluentMessageComponent(
-    player: Player,
-    variables: Map<String, Any> = emptyMap(),
-    send: Boolean = false
-): ComponentText {
-    // 如果为空则直接返回
-    if (isBlank()) return component().build()
-    // 依次解析 Kether Inline，PlaceholderAPI 和 MiniMessage
-    // 最后转化为 module-chat 提供的 ComponentText
-    val component = KetherHandler
+/**
+ * 常规文本格式替换
+ * 依次翻译
+ * - Kether Inline
+ * - PlaceholderAPI
+ * - TabooLib Colored
+ * - MiniMessage Parse (if supported)
+ */
+fun String.translateFormattedMessage(player: Player, variables: Map<String, Any> = emptyMap()) =
+    KetherHandler
         .parseInline(this, player, variables)
         .replacePlaceholder(player)
+        .colored()
         .let { if (Adventure.isSupported) Adventure.parse(it) else it }
-        .component()
 
-    return component
-        .build { colored() }
-        .also { if (send) it.sendTo(adaptPlayer(player)) }
-}
+/**
+ * （默认）发送格式化消息
+ * 依次翻译
+ * - Kether Inline
+ * - Placeholder API
+ * - TabooLib Colored
+ * - MiniMessage Component Send (if supported) (else send noraml message)
+ */
+fun String.sendFormattedComponent(player: Player, variables: Map<String, Any> = emptyMap()) =
+    KetherHandler
+        .parseInline(this, player, variables)
+        .replacePlaceholder(player)
+        .colored()
+        .let {
+            if (Adventure.isSupported) {
+                Adventure.parseAndSend(it, player)
+            } else {
+                player.sendMessage(it)
+            }
+        }
+
+/**
+ * 发送 TabooLib ComponentText
+ * 依次翻译
+ * - Kether Inline
+ * - Placeholder API
+ * - TabooLib Component (with colored)
+ */
+fun String.sendFormattedTabooComponent(player: Player, variables: Map<String, Any> = emptyMap()) =
+    KetherHandler
+        .parseInline(this, player, variables)
+        .replacePlaceholder(player)
+        .colored()
+        .component()
+        .build()
+        .sendTo(adaptPlayer(player))

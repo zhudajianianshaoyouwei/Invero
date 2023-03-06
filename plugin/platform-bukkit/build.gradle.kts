@@ -52,5 +52,6 @@ dependencies {
 
 tasks.jar {
     archiveBaseName.set(rootName)
+    archiveVersion.set(rootVersion)
     includeEmptyDirs = false
 }
