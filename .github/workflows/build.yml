@@ -44,7 +44,7 @@ jobs:
         if: steps.build_3.outcome == 'failure'
         run: ./gradlew build
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: Invero Artifact
-          path: build/*.jar
+          path: build/libs/*.jar
