@@ -24,7 +24,7 @@ import taboolib.platform.compat.replacePlaceholder
  * - MiniMessage Parse (if supported)
  * - TabooLib Colored
  */
-fun String.translateFormattedMessage(player: Player, variables: Map<String, Any> = emptyMap()) =
+fun String.translateFormattedMessage(player: Player, variables: Map<String, Any?> = emptyMap()) =
     KetherHandler
         .parseInline(this, player, variables)
         .replacePlaceholder(player)
