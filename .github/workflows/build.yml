@@ -1,9 +1,8 @@
 name: Invero Build
 #############################
 on:
-  repository_dispatch:
-  release:
-    types: published
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
