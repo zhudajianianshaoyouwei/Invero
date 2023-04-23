@@ -1,10 +1,8 @@
 name: Invero Build
 #############################
 on:
-  push:
-    branches: [ stable/v3 ]
-  pull_request:
-    branches: [ stable/v3 ]
+  repository_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
