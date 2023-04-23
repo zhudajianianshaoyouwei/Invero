@@ -1,8 +1,9 @@
 name: Invero Build
 on:
   push:
-    branches:
-      - master
+    branches: [ stable/v3 ]
+  pull_request:
+    branches: [ stable/v3 ]
 jobs:
   build:
     runs-on: ubuntu-latest
